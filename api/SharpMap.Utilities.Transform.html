@@ -1,0 +1,536 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Transform
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Transform
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Utilities.Transform">
+  
+  
+  <h1 id="SharpMap_Utilities_Transform" data-uid="SharpMap.Utilities.Transform" class="text-break">Class Transform
+  </h1>
+  <div class="markdown level0 summary"><p>Class for transforming between world and image coordinate</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">Transform</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Utilities.html">SharpMap.Utilities</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Utilities_Transform_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Transform</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform_MapToWorld_System_Drawing_PointF_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform.MapToWorld(System.Drawing.PointF%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L175">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Transform_MapToWorld_" data-uid="SharpMap.Utilities.Transform.MapToWorld*"></a>
+  <h4 id="SharpMap_Utilities_Transform_MapToWorld_System_Drawing_PointF_SharpMap_Map_" data-uid="SharpMap.Utilities.Transform.MapToWorld(System.Drawing.PointF,SharpMap.Map)">MapToWorld(PointF, Map)</h4>
+  <div class="markdown level1 summary"><p>Transforms from image coordinates to world coordinate system (WCS).
+NOTE: This method is only applicable when MapTransformRotation = 0.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use MapToWorld(PointF[], Map)&quot;)]
+public static Coordinate MapToWorld(PointF p, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point in image coordinate system</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>Point in WCS</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform_MapToWorld_System_Drawing_PointF_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform.MapToWorld(System.Drawing.PointF%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L189">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Transform_MapToWorld_" data-uid="SharpMap.Utilities.Transform.MapToWorld*"></a>
+  <h4 id="SharpMap_Utilities_Transform_MapToWorld_System_Drawing_PointF_SharpMap_MapViewport_" data-uid="SharpMap.Utilities.Transform.MapToWorld(System.Drawing.PointF,SharpMap.MapViewport)">MapToWorld(PointF, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Transforms from image coordinates to world coordinate system (WCS).
+NOTE: This method is only applicable when MapTransformRotation = 0.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use MapToWorld(PointF[], MapViewport)&quot;)]
+public static Coordinate MapToWorld(PointF p, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point in image coordinate system</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>Point in WCS</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform_MapToWorld_System_Drawing_PointF___SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform.MapToWorld(System.Drawing.PointF%5B%5D%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L119">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Transform_MapToWorld_" data-uid="SharpMap.Utilities.Transform.MapToWorld*"></a>
+  <h4 id="SharpMap_Utilities_Transform_MapToWorld_System_Drawing_PointF___SharpMap_Map_" data-uid="SharpMap.Utilities.Transform.MapToWorld(System.Drawing.PointF[],SharpMap.Map)">MapToWorld(PointF[], Map)</h4>
+  <div class="markdown level1 summary"><p>Am abbreviated transform from image coordinates to world coordinate system (WCS)
+for use ONLY when MapTransformRotation == 0</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate[] MapToWorld(PointF[] points, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>Point array in image coordinates</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map defining current view properties</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform_WorldToMap_GeoAPI_Geometries_Coordinate_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform.WorldToMap(GeoAPI.Geometries.Coordinate%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Transform_WorldToMap_" data-uid="SharpMap.Utilities.Transform.WorldToMap*"></a>
+  <h4 id="SharpMap_Utilities_Transform_WorldToMap_GeoAPI_Geometries_Coordinate_SharpMap_Map_" data-uid="SharpMap.Utilities.Transform.WorldToMap(GeoAPI.Geometries.Coordinate,SharpMap.Map)">WorldToMap(Coordinate, Map)</h4>
+  <div class="markdown level1 summary"><p>Transforms from world coordinate system (WCS) to image coordinates
+NOTE: This method is only applicable when MapTransformRotation = 0.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use WorldToMap(Coordinate[], Map)&quot;)]
+public static PointF WorldToMap(Coordinate p, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point in WCS</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><p>Point in image coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform_WorldToMap_GeoAPI_Geometries_Coordinate___NetTopologySuite_Geometries_Utilities_AffineTransformation_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform.WorldToMap(GeoAPI.Geometries.Coordinate%5B%5D%2CNetTopologySuite.Geometries.Utilities.AffineTransformation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L69">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Transform_WorldToMap_" data-uid="SharpMap.Utilities.Transform.WorldToMap*"></a>
+  <h4 id="SharpMap_Utilities_Transform_WorldToMap_GeoAPI_Geometries_Coordinate___NetTopologySuite_Geometries_Utilities_AffineTransformation_" data-uid="SharpMap.Utilities.Transform.WorldToMap(GeoAPI.Geometries.Coordinate[],NetTopologySuite.Geometries.Utilities.AffineTransformation)">WorldToMap(Coordinate[], AffineTransformation)</h4>
+  <div class="markdown level1 summary"><p>Full affine transformation from world coordinate system (WCS) to image coordinates taking into
+account Zoom, Pixel Width/Height, and MapTransformRotation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PointF[] WorldToMap(Coordinate[] coordinates, AffineTransformation matrix)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span>[]</td>
+        <td><span class="parametername">coordinates</span></td>
+        <td><p>Coordinate array in WCS</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">NetTopologySuite.Geometries.Utilities.AffineTransformation</span></td>
+        <td><span class="parametername">matrix</span></td>
+        <td><p>Appropriate affine transformation as defined by <a class="xref" href="SharpMap.Utilities.Transform.html#SharpMap_Utilities_Transform_WorldToMapMatrix_GeoAPI_Geometries_Coordinate_System_Double_System_Double_System_Single_System_Drawing_Size_System_Boolean_">WorldToMapMatrix(Coordinate, Double, Double, Single, Size, Boolean)</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><p>Point array in image coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform_WorldToMapMatrix_GeoAPI_Geometries_Coordinate_System_Double_System_Double_System_Single_System_Drawing_Size_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform.WorldToMapMatrix(GeoAPI.Geometries.Coordinate%2CSystem.Double%2CSystem.Double%2CSystem.Single%2CSystem.Drawing.Size%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L93">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Transform_WorldToMapMatrix_" data-uid="SharpMap.Utilities.Transform.WorldToMapMatrix*"></a>
+  <h4 id="SharpMap_Utilities_Transform_WorldToMapMatrix_GeoAPI_Geometries_Coordinate_System_Double_System_Double_System_Single_System_Drawing_Size_System_Boolean_" data-uid="SharpMap.Utilities.Transform.WorldToMapMatrix(GeoAPI.Geometries.Coordinate,System.Double,System.Double,System.Single,System.Drawing.Size,System.Boolean)">WorldToMapMatrix(Coordinate, Double, Double, Single, Size, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Affine transformation defining complete transformation from world coordinate system (WCS) to image coordinates taking into
+account Zoom, Pixel Width/Height, and MapTransformRotation. Additionally, if <code data-dev-comment-type="paramref" class="paramref">careAboutTransform</code> = false,
+the viewport rotation will be reverted at the end of the transformation, to be re-applied by Graphics object when rendering.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static AffineTransformation WorldToMapMatrix(Coordinate worldCenter, double pixelWidth, double pixelHeight, float mapTransformRotation, Size imageSize, bool careAboutTransform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">worldCenter</span></td>
+        <td><p>Map center in WCS</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">pixelWidth</span></td>
+        <td><p>Width of pixel in world units</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">pixelHeight</span></td>
+        <td><p>Height of pixel in world units</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">mapTransformRotation</span></td>
+        <td><p>map rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td><span class="parametername">imageSize</span></td>
+        <td><p>Map Size when rendered</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">careAboutTransform</span></td>
+        <td><p>True for coordinate calculations, False if Graphics object will apply MapTransform</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">NetTopologySuite.Geometries.Utilities.AffineTransformation</span></td>
+        <td><p>Affine Transformation</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Transform.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Transform%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Transform.cs/#L28" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

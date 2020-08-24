@@ -1,0 +1,2606 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SpatialDbProvider
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SpatialDbProvider
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.SpatialDbProvider">
+  
+  
+  <h1 id="SharpMap_Data_Providers_SpatialDbProvider" data-uid="SharpMap.Data.Providers.SpatialDbProvider" class="text-break">Class SpatialDbProvider
+  </h1>
+  <div class="markdown level0 summary"><p>Abstract provider for spatially enabled databases</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html">BaseProvider</a></div>
+    <div class="level3"><span class="xref">SpatialDbProvider</span></div>
+      <div class="level4"><a class="xref" href="SharpMap.Data.Providers.MsSqlSpatial.html">MsSqlSpatial</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SridChanged">BaseProvider.SridChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Factory">BaseProvider.Factory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ConnectionID">BaseProvider.ConnectionID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_IsOpen">BaseProvider.IsOpen</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SRID">BaseProvider.SRID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_">BaseProvider.ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnEndExecuteIntersectionQuery">BaseProvider.OnEndExecuteIntersectionQuery()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Open">BaseProvider.Open()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Close">BaseProvider.Close()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_CloneTableStructure_SharpMap_Data_FeatureDataTable_">BaseProvider.CloneTableStructure(FeatureDataTable)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_SpatialDbProvider_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public abstract class SpatialDbProvider : BaseProvider, IDisposableEx, IProvider, IProvider&lt;uint&gt;, IBaseProvider, IDisposable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider__ctor_SharpMap_Data_Providers_SpatialDbUtility_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.%23ctor(SharpMap.Data.Providers.SpatialDbUtility%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L228">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider__ctor_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider__ctor_SharpMap_Data_Providers_SpatialDbUtility_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.#ctor(SharpMap.Data.Providers.SpatialDbUtility,System.String,System.String)">SpatialDbProvider(SpatialDbUtility, String, String)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected SpatialDbProvider(SpatialDbUtility spatialDbUtility, string connectionString, string table)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html">SpatialDbUtility</a></td>
+        <td><span class="parametername">spatialDbUtility</span></td>
+        <td><p>The spatial db utility class</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionString</span></td>
+        <td><p>The connection string</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">table</span></td>
+        <td><p>The table name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider__ctor_SharpMap_Data_Providers_SpatialDbUtility_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.%23ctor(SharpMap.Data.Providers.SpatialDbUtility%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L240">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider__ctor_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider__ctor_SharpMap_Data_Providers_SpatialDbUtility_System_String_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.#ctor(SharpMap.Data.Providers.SpatialDbUtility,System.String,System.String,System.String)">SpatialDbProvider(SpatialDbUtility, String, String, String)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected SpatialDbProvider(SpatialDbUtility spatialDbUtility, string connectionString, string schema, string table)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html">SpatialDbUtility</a></td>
+        <td><span class="parametername">spatialDbUtility</span></td>
+        <td><p>The spatial db utility class</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionString</span></td>
+        <td><p>The connection string</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">schema</span></td>
+        <td><p>The name of the schema</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">table</span></td>
+        <td><p>The table name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider__ctor_SharpMap_Data_Providers_SpatialDbUtility_System_String_System_String_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.%23ctor(SharpMap.Data.Providers.SpatialDbUtility%2CSystem.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L254">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider__ctor_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider__ctor_SharpMap_Data_Providers_SpatialDbUtility_System_String_System_String_System_String_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.#ctor(SharpMap.Data.Providers.SpatialDbUtility,System.String,System.String,System.String,System.String,System.String)">SpatialDbProvider(SpatialDbUtility, String, String, String, String, String)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected SpatialDbProvider(SpatialDbUtility spatialDbUtility, string connectionString, string schema, string table, string oidColumn, string geometryColumn)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html">SpatialDbUtility</a></td>
+        <td><span class="parametername">spatialDbUtility</span></td>
+        <td><p>The spatial db utility class</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionString</span></td>
+        <td><p>The connection string</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">schema</span></td>
+        <td><p>The name of the schema</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">table</span></td>
+        <td><p>The table name</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumn</span></td>
+        <td><p>The object ID column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">geometryColumn</span></td>
+        <td><p>The geometry column</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterest.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.AreaOfInterest%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L455">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterest_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.AreaOfInterest*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterest" data-uid="SharpMap.Data.Providers.SpatialDbProvider.AreaOfInterest">AreaOfInterest</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the area of interest. Setting this property</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Envelope AreaOfInterest { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_ConnectionString.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.ConnectionString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L324">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_ConnectionString_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ConnectionString*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_ConnectionString" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ConnectionString">ConnectionString</h4>
+  <div class="markdown level1 summary"><p>Gets the connection string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ConnectionString { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_DbUtility.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.DbUtility%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L43">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_DbUtility_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.DbUtility*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_DbUtility" data-uid="SharpMap.Data.Providers.SpatialDbProvider.DbUtility">DbUtility</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html">SpatialDbUtility</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected SpatialDbUtility DbUtility { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html">SpatialDbUtility</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbProvider_DbUtility_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This property can only be set once to a non-<returns>null</returns> value.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_DefinitionQuery.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.DefinitionQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L404">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_DefinitionQuery_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.DefinitionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_DefinitionQuery" data-uid="SharpMap.Data.Providers.SpatialDbProvider.DefinitionQuery">DefinitionQuery</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the definition query</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Define constraints via FeatureColumns&quot;)]
+public string DefinitionQuery { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_FeatureColumns.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.FeatureColumns%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L396">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_FeatureColumns_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.FeatureColumns*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_FeatureColumns" data-uid="SharpMap.Data.Providers.SpatialDbProvider.FeatureColumns">FeatureColumns</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name oft the geometry column</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SharpMapFeatureColumns FeatureColumns { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SharpMapFeatureColumns.html">SharpMapFeatureColumns</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_From.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.From%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L58">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_From_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.From*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_From" data-uid="SharpMap.Data.Providers.SpatialDbProvider.From">From</h4>
+  <div class="markdown level1 summary"><p>Gets the SQL-FROM statement</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual string From { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GeometryColumn.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GeometryColumn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L380">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GeometryColumn_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GeometryColumn*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GeometryColumn" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GeometryColumn">GeometryColumn</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name oft the geometry column</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GeometryColumn { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GeometryExpression.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GeometryExpression%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L443">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GeometryExpression_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GeometryExpression*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GeometryExpression" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GeometryExpression">GeometryExpression</h4>
+  <div class="markdown level1 summary"><p>Expression template for geometry column evaluation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GeometryExpression { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbProvider_GeometryExpression_examples">Examples</h5>
+  <p>You could, for instance, simplify your geometries before they're displayed.
+Simplification helps to speed the rendering of big geometries.
+Here's a sample code to simplify geometries using 100 meters of threshold.</p>
+<pre><code>datasource.GeometryExpression = &quot;ST.Simplify({0}, 100)&quot;;</code></pre>
+<p>Also you could draw a 20 meters buffer around those little points:</p>
+<pre><code>datasource.GeometryExpression = &quot;ST.Buffer({0}, 20)&quot;;</code></pre>
+
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_Name.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L576">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_Name_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Name*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_Name" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets a name describing the provider. This name is made up of <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_Schema">Schema</a>, <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_Table">Table</a> and <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_GeometryColumn">GeometryColumn</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_NeedsTransform.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.NeedsTransform%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L495">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_NeedsTransform_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.NeedsTransform*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_NeedsTransform" data-uid="SharpMap.Data.Providers.SpatialDbProvider.NeedsTransform">NeedsTransform</h4>
+  <div class="markdown level1 summary"><p>Gets whether the provider needs to use the transform function</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool NeedsTransform { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_ObjectIdColumn.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.ObjectIdColumn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L364">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_ObjectIdColumn_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ObjectIdColumn*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_ObjectIdColumn" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ObjectIdColumn">ObjectIdColumn</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name oft the object id (oid) column</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ObjectIdColumn { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OrderQuery.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OrderQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L421">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OrderQuery_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OrderQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OrderQuery" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OrderQuery">OrderQuery</h4>
+  <div class="markdown level1 summary"><p>Columns or T-SQL expressions for sorting (ORDER BY clause)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Define order by via FeatureColumns&quot;)]
+public string OrderQuery { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_Schema.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.Schema%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L332">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_Schema_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Schema*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_Schema" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Schema">Schema</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name of the database schema</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual string Schema { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_Table.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.Table%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L348">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_Table_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Table*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_Table" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Table">Table</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name oft the database table</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Table { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_TargetSRID.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.TargetSRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L476">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_TargetSRID_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.TargetSRID*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_TargetSRID" data-uid="SharpMap.Data.Providers.SpatialDbProvider.TargetSRID">TargetSRID</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the target SRID. Setting this helps to avoid using on-the-fly reprojection</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int TargetSRID { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_CreateDataAdapter.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.CreateDataAdapter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L294">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_CreateDataAdapter_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateDataAdapter*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_CreateDataAdapter" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateDataAdapter">CreateDataAdapter()</h4>
+  <div class="markdown level1 summary"><p>Convenience function to create a data adapter.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract DbDataAdapter CreateDataAdapter()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbdataadapter">DbDataAdapter</a></td>
+        <td><p>An open connection to the database backend.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_CreateNewTable.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.CreateNewTable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L594">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_CreateNewTable_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateNewTable*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_CreateNewTable" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateNewTable">CreateNewTable()</h4>
+  <div class="markdown level1 summary"><p>Function to create a new, empty <a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual FeatureDataTable CreateNewTable()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></td>
+        <td><p>A feature data table</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_CreateNewTable_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.CreateNewTable(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L604">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_CreateNewTable_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateNewTable*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_CreateNewTable_System_Boolean_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateNewTable(System.Boolean)">CreateNewTable(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Function to create a new, empty <a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual FeatureDataTable CreateNewTable(bool force)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">force</span></td>
+        <td><p>Value indicating that a new feature data table should be created, no matter what.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></td>
+        <td><p>A feature data table</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_CreateOpenDbConnection.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.CreateOpenDbConnection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L288">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_CreateOpenDbConnection_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateOpenDbConnection*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_CreateOpenDbConnection" data-uid="SharpMap.Data.Providers.SpatialDbProvider.CreateOpenDbConnection">CreateOpenDbConnection()</h4>
+  <div class="markdown level1 summary"><p>Convenience function to create and open a connection to the database backend.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract DbConnection CreateOpenDbConnection()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbconnection">DbConnection</a></td>
+        <td><p>An open connection to the database backend.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L838">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td><p>Geometry to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_">BaseProvider.ExecuteIntersectionQuery(Envelope, FeatureDataSet)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQueryInternal_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQueryInternal(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L957">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQueryInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQueryInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQueryInternal_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQueryInternal(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQueryInternal(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Method to perform the actual intersection query against a bounding box</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void ExecuteIntersectionQueryInternal(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td><p>The bounding box</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>The feature data set to store the results in.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQueryInternal_System_Object_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQueryInternal(System.Object%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L849">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQueryInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQueryInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_ExecuteIntersectionQueryInternal_System_Object_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ExecuteIntersectionQueryInternal(System.Object,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQueryInternal(Object, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void ExecuteIntersectionQueryInternal(object spatialWhere, FeatureDataSet fds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">spatialWhere</span></td>
+        <td><p>Geometry to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">fds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetExtents.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetExtents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L504">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetExtents_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetExtents*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetExtents" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetExtents">GetExtents()</h4>
+  <div class="markdown level1 summary"><p><span class="xref">GeoAPI.Geometries.Envelope</span> of dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed Envelope GetExtents()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>boundingbox</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetExtents">BaseProvider.GetExtents()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetExtentsInternal.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetExtentsInternal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L520">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetExtentsInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetExtentsInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetExtentsInternal" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetExtentsInternal">GetExtentsInternal()</h4>
+  <div class="markdown level1 summary"><p>Function to determine the extents of the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract Envelope GetExtentsInternal()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>The extents</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetFeature_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetFeature(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L567">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetFeature_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeature*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetFeature_System_UInt32_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeature(System.UInt32)">GetFeature(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns a <a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a> based on a RowID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed FeatureDataRow GetFeature(uint rowId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">rowId</span></td>
+        <td><p>The id of the row</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>The feature data row</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetFeature_System_UInt32_">BaseProvider.GetFeature(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetFeatureCount.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetFeatureCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L526">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetFeatureCount_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeatureCount*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetFeatureCount" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeatureCount">GetFeatureCount()</h4>
+  <div class="markdown level1 summary"><p>Returns the number of features in the dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed int GetFeatureCount()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>number of features</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetFeatureCount">BaseProvider.GetFeatureCount()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetFeatureCountInternal.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetFeatureCountInternal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L539">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetFeatureCountInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeatureCountInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetFeatureCountInternal" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeatureCountInternal">GetFeatureCountInternal()</h4>
+  <div class="markdown level1 summary"><p>Method to get the number of features in the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual int GetFeatureCountInternal()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>The number of features</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetFeatureInternal_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetFeatureInternal(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L650">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetFeatureInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeatureInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetFeatureInternal_System_UInt32_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFeatureInternal(System.UInt32)">GetFeatureInternal(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Function to get a specific feature from the database.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual FeatureDataRow GetFeatureInternal(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>The object id</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>A feature data row</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetFrom_GeoAPI_Geometries_Envelope_System_Data_Common_DbCommand_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetFrom(GeoAPI.Geometries.Envelope%2CSystem.Data.Common.DbCommand)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L924">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetFrom_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFrom*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetFrom_GeoAPI_Geometries_Envelope_System_Data_Common_DbCommand_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFrom(GeoAPI.Geometries.Envelope,System.Data.Common.DbCommand)">GetFrom(Envelope, DbCommand)</h4>
+  <div class="markdown level1 summary"><p>Method to generate a SQL-From statement for a bounding box query</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual string GetFrom(Envelope envelope, DbCommand command)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">envelope</span></td>
+        <td><p>The envelope to query</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbcommand">DbCommand</a></td>
+        <td><span class="parametername">command</span></td>
+        <td><p>The command object that is supposed to perform the query</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>A SQL From statement string</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetFrom_GeoAPI_Geometries_IGeometry_System_Data_Common_DbCommand_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetFrom(GeoAPI.Geometries.IGeometry%2CSystem.Data.Common.DbCommand)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L935">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetFrom_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFrom*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetFrom_GeoAPI_Geometries_IGeometry_System_Data_Common_DbCommand_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetFrom(GeoAPI.Geometries.IGeometry,System.Data.Common.DbCommand)">GetFrom(IGeometry, DbCommand)</h4>
+  <div class="markdown level1 summary"><p>Method to generate a SQL-From statement for a geometry query</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual string GetFrom(IGeometry geometry, DbCommand command)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td><p>The envelope to query</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbcommand">DbCommand</a></td>
+        <td><span class="parametername">command</span></td>
+        <td><p>The command object that is supposed to perform the query</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>A SQL From statement string</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetGeometriesInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L744">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometriesInView_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometriesInView*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometriesInView(GeoAPI.Geometries.Envelope)">GetGeometriesInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the geometries of features that lie within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed Collection&lt;IGeometry&gt; GetGeometriesInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>The bounding box</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td><p>Geometries within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_">BaseProvider.GetGeometriesInView(Envelope)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetGeometriesInViewInternal_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetGeometriesInViewInternal(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L755">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometriesInViewInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometriesInViewInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometriesInViewInternal_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometriesInViewInternal(GeoAPI.Geometries.Envelope)">GetGeometriesInViewInternal(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the geometries of features that lie within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Collection&lt;IGeometry&gt; GetGeometriesInViewInternal(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>The bounding box</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td><p>Geometries within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetGeometryByID_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetGeometryByID(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L704">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometryByID_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometryByID*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometryByID_System_UInt32_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometryByID(System.UInt32)">GetGeometryByID(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Function to get a specific feature's geometry from the database.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed IGeometry GetGeometryByID(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>The object id</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>A geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetGeometryByID_System_UInt32_">BaseProvider.GetGeometryByID(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetGeometryByIDInternal_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetGeometryByIDInternal(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L715">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometryByIDInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometryByIDInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetGeometryByIDInternal_System_UInt32_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetGeometryByIDInternal(System.UInt32)">GetGeometryByIDInternal(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Function to get a specific feature's geometry from the database.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual IGeometry GetGeometryByIDInternal(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>The object id</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>A geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetObjectIDsInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L799">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetObjectIDsInView_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetObjectIDsInView*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetObjectIDsInView(GeoAPI.Geometries.Envelope)">GetObjectIDsInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the object of features that lie within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override sealed Collection&lt;uint&gt; GetObjectIDsInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>The bounding box</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td><p>A collection of object ids</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_">BaseProvider.GetObjectIDsInView(Envelope)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetObjectIDsInViewInternal_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetObjectIDsInViewInternal(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L810">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetObjectIDsInViewInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetObjectIDsInViewInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetObjectIDsInViewInternal_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetObjectIDsInViewInternal(GeoAPI.Geometries.Envelope)">GetObjectIDsInViewInternal(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the object ids of features that lie within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual Collection&lt;uint&gt; GetObjectIDsInViewInternal(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>The bounding box</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td><p>A collection of object ids</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetSpatialWhere_GeoAPI_Geometries_Envelope_System_Data_Common_DbCommand_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetSpatialWhere(GeoAPI.Geometries.Envelope%2CSystem.Data.Common.DbCommand)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L784">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetSpatialWhere_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetSpatialWhere*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetSpatialWhere_GeoAPI_Geometries_Envelope_System_Data_Common_DbCommand_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetSpatialWhere(GeoAPI.Geometries.Envelope,System.Data.Common.DbCommand)">GetSpatialWhere(Envelope, DbCommand)</h4>
+  <div class="markdown level1 summary"><p>Function to generate a spatial where clause for the intersection queries.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract string GetSpatialWhere(Envelope bbox, DbCommand command)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>The bounding box</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbcommand">DbCommand</a></td>
+        <td><span class="parametername">command</span></td>
+        <td><p>The command object, that is supposed to execute the query.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The spatial component of a SQL where clause</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GetSpatialWhere_GeoAPI_Geometries_IGeometry_System_Data_Common_DbCommand_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GetSpatialWhere(GeoAPI.Geometries.IGeometry%2CSystem.Data.Common.DbCommand)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L792">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_GetSpatialWhere_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetSpatialWhere*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GetSpatialWhere_GeoAPI_Geometries_IGeometry_System_Data_Common_DbCommand_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GetSpatialWhere(GeoAPI.Geometries.IGeometry,System.Data.Common.DbCommand)">GetSpatialWhere(IGeometry, DbCommand)</h4>
+  <div class="markdown level1 summary"><p>Function to generate a spatial where clause for the intersection queries.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract string GetSpatialWhere(IGeometry bbox, DbCommand command)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>The geometry</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbcommand">DbCommand</a></td>
+        <td><span class="parametername">command</span></td>
+        <td><p>The command object, that is supposed to execute the query.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The spatial component of a SQL where clause</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_Initialize.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.Initialize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L299">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_Initialize_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Initialize*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_Initialize" data-uid="SharpMap.Data.Providers.SpatialDbProvider.Initialize">Initialize()</h4>
+  <div class="markdown level1 summary"><p>Function to initialize the provider</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Initialize()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_InitializeInternal.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.InitializeInternal%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L316">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_InitializeInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.InitializeInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_InitializeInternal" data-uid="SharpMap.Data.Providers.SpatialDbProvider.InitializeInternal">InitializeInternal()</h4>
+  <div class="markdown level1 summary"><p>Method to initialize the spatial provider</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void InitializeInternal()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnAreaOfInterestChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnAreaOfInterestChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L213">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnAreaOfInterestChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnAreaOfInterestChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnAreaOfInterestChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnAreaOfInterestChanged(System.EventArgs)">OnAreaOfInterestChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterest">AreaOfInterest</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterestChanged">AreaOfInterestChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void OnAreaOfInterestChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnBeginExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnBeginExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L944">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnBeginExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnBeginExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnBeginExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnBeginExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry)">OnBeginExecuteIntersectionQuery(IGeometry)</h4>
+  <div class="markdown level1 summary"><p>Method to perform preparatory things for executing an intersection query against the data source</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override sealed void OnBeginExecuteIntersectionQuery(IGeometry geom)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td><p>The geometry to use as filter.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnBeginExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_">BaseProvider.OnBeginExecuteIntersectionQuery(IGeometry)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnBeginExecuteIntersectionQueryInternal_GeoAPI_Geometries_IGeometry_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnBeginExecuteIntersectionQueryInternal(GeoAPI.Geometries.IGeometry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L966">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnBeginExecuteIntersectionQueryInternal_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnBeginExecuteIntersectionQueryInternal*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnBeginExecuteIntersectionQueryInternal_GeoAPI_Geometries_IGeometry_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnBeginExecuteIntersectionQueryInternal(GeoAPI.Geometries.IGeometry)">OnBeginExecuteIntersectionQueryInternal(IGeometry)</h4>
+  <div class="markdown level1 summary"><p>Method to perform preparatory things for executing an intersection query against the data source</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnBeginExecuteIntersectionQueryInternal(IGeometry geom)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td><p>The geometry to use as filter.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnDefinitionQueryChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnDefinitionQueryChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L154">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnDefinitionQueryChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnDefinitionQueryChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnDefinitionQueryChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnDefinitionQueryChanged(System.EventArgs)">OnDefinitionQueryChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_DefinitionQuery">DefinitionQuery</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_DefinitionQueryChanged">DefinitionQueryChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+protected virtual void OnDefinitionQueryChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L975">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">OnExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Method to perform the intersection query against the data source</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td><p>The geometry to use as filter</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>The feature data set to store the results in</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_">BaseProvider.OnExecuteIntersectionQuery(IGeometry, FeatureDataSet)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnGeometryColumnChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnGeometryColumnChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L135">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnGeometryColumnChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnGeometryColumnChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnGeometryColumnChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnGeometryColumnChanged(System.EventArgs)">OnGeometryColumnChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_GeometryColumn">GeometryColumn</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_GeometryColumnChanged">GeometryColumnChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnGeometryColumnChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnOidColumnChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnOidColumnChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L116">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnOidColumnChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnOidColumnChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnOidColumnChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnOidColumnChanged(System.EventArgs)">OnOidColumnChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_ObjectIdColumn">ObjectIdColumn</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_OidColumnChanged">OidColumnChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnOidColumnChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnSchemaChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnSchemaChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L78">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnSchemaChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnSchemaChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnSchemaChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnSchemaChanged(System.EventArgs)">OnSchemaChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_Schema">Schema</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_SchemaChanged">SchemaChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnSchemaChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnSridChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnSridChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L984">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnSridChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnSridChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnSridChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnSridChanged(System.EventArgs)">OnSridChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Handler method to handle changes of <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SRID">SRID</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnSridChanged(EventArgs eventArgs)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">eventArgs</span></td>
+        <td><p>Event arguments.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnSridChanged_System_EventArgs_">BaseProvider.OnSridChanged(EventArgs)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnTableChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnTableChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L97">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnTableChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnTableChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnTableChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnTableChanged(System.EventArgs)">OnTableChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_Table">Table</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_TableChanged">TableChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnTableChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OnTargetSridChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OnTargetSridChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L194">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_OnTargetSridChanged_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnTargetSridChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OnTargetSridChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OnTargetSridChanged(System.EventArgs)">OnTargetSridChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Method called when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_TargetSRID">TargetSRID</a> has been changed. This invokes the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_TargetSridChanged">TargetSridChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnTargetSridChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The arguments associated with the event</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_ReleaseManagedResources.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.ReleaseManagedResources%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L276">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbProvider_ReleaseManagedResources_" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ReleaseManagedResources*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_ReleaseManagedResources" data-uid="SharpMap.Data.Providers.SpatialDbProvider.ReleaseManagedResources">ReleaseManagedResources()</h4>
+  <div class="markdown level1 summary"><p>Releases all managed resources</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReleaseManagedResources()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ReleaseManagedResources">BaseProvider.ReleaseManagedResources()</a></div>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterestChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.AreaOfInterestChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L206">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterestChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.AreaOfInterestChanged">AreaOfInterestChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_AreaOfInterest">AreaOfInterest</a> for this provider has changed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler AreaOfInterestChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_DefinitionQueryChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.DefinitionQueryChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L147">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_DefinitionQueryChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.DefinitionQueryChanged">DefinitionQueryChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the feature columns string for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler DefinitionQueryChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_FeatureColumnsChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.FeatureColumnsChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L167">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_FeatureColumnsChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.FeatureColumnsChanged">FeatureColumnsChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_FeatureColumns">FeatureColumns</a> string for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler FeatureColumnsChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_GeometryColumnChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.GeometryColumnChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L128">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_GeometryColumnChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.GeometryColumnChanged">GeometryColumnChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the geometry column for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler GeometryColumnChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_OidColumnChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.OidColumnChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L109">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_OidColumnChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.OidColumnChanged">OidColumnChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the object id (oid) column for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler OidColumnChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_SchemaChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.SchemaChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L71">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_SchemaChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.SchemaChanged">SchemaChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the database schema for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler SchemaChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_TableChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.TableChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L90">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_TableChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.TableChanged">TableChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the table for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler TableChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider_TargetSridChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider.TargetSridChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L187">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SpatialDbProvider_TargetSridChanged" data-uid="SharpMap.Data.Providers.SpatialDbProvider.TargetSridChanged">TargetSridChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the <a class="xref" href="SharpMap.Data.Providers.SpatialDbProvider.html#SharpMap_Data_Providers_SpatialDbProvider_TargetSRID">TargetSRID</a> for this provider has changed;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler TargetSridChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider&lt;TOid&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetCoordinateSystem(IProvider)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetFactory(IProvider)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbProvider.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbProvider.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

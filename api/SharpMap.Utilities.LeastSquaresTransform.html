@@ -1,0 +1,522 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class LeastSquaresTransform
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class LeastSquaresTransform
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Utilities.LeastSquaresTransform">
+  
+  
+  <h1 id="SharpMap_Utilities_LeastSquaresTransform" data-uid="SharpMap.Utilities.LeastSquaresTransform" class="text-break">Class LeastSquaresTransform
+  </h1>
+  <div class="markdown level0 summary"><p>Calculates Affine and Helmert transformation using Least-Squares Regression of input and output points</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">LeastSquaresTransform</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Utilities.html">SharpMap.Utilities</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Utilities_LeastSquaresTransform_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class LeastSquaresTransform</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L35">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform__ctor_" data-uid="SharpMap.Utilities.LeastSquaresTransform.#ctor*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform__ctor" data-uid="SharpMap.Utilities.LeastSquaresTransform.#ctor">LeastSquaresTransform()</h4>
+  <div class="markdown level1 summary"><p>Initialize Least Squares transformations</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LeastSquaresTransform()</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_AddInputOutputPoint_GeoAPI_Geometries_Coordinate_GeoAPI_Geometries_Coordinate_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.AddInputOutputPoint(GeoAPI.Geometries.Coordinate%2CGeoAPI.Geometries.Coordinate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L46">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_AddInputOutputPoint_" data-uid="SharpMap.Utilities.LeastSquaresTransform.AddInputOutputPoint*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_AddInputOutputPoint_GeoAPI_Geometries_Coordinate_GeoAPI_Geometries_Coordinate_" data-uid="SharpMap.Utilities.LeastSquaresTransform.AddInputOutputPoint(GeoAPI.Geometries.Coordinate,GeoAPI.Geometries.Coordinate)">AddInputOutputPoint(Coordinate, Coordinate)</h4>
+  <div class="markdown level1 summary"><p>Adds an input and output value pair to the collection</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddInputOutputPoint(Coordinate input, Coordinate output)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">input</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">output</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_GetAffineTransformation.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.GetAffineTransformation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L117">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_GetAffineTransformation_" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetAffineTransformation*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_GetAffineTransformation" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetAffineTransformation">GetAffineTransformation()</h4>
+  <div class="markdown level1 summary"><p>Return an array with the six affine transformation parameters {a,b,c,d,e,f} and the sum of the squares of the residuals (s0)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double[] GetAffineTransformation()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a>[]</td>
+        <td><p>Array with the six transformation parameters and sum of squared residuals:  a,b,c,d,e,f,s0</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Utilities_LeastSquaresTransform_GetAffineTransformation_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>a,b defines scale vector 1 of coordinate system, d,e scale vector 2. c,f defines offset.</p>
+<p>
+Converting from input (X,Y) to output coordinate system (X&apos;,Y&apos;) is done by:
+X&apos; = a*X + b*Y + c, Y&apos; = d*X + e*Y + f
+</p>
+<p>
+Transformation based on Mikhail &quot;Introduction to Modern Photogrammetry&quot; p. 399-300.
+Extended to arbitrary number of measurements by M. Nielsen
+</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_GetHelmertTransformation.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.GetHelmertTransformation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L230">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_GetHelmertTransformation_" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetHelmertTransformation*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_GetHelmertTransformation" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetHelmertTransformation">GetHelmertTransformation()</h4>
+  <div class="markdown level1 summary"><p>Calculates the four helmert transformation parameters {a,b,c,d} and the sum of the squares of the residuals (s0)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double[] GetHelmertTransformation()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a>[]</td>
+        <td><p>Array with the four transformation parameters, and sum of squared residuals: a,b,c,d,s0</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Utilities_LeastSquaresTransform_GetHelmertTransformation_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>
+a,b defines scale vector 1 of coordinate system, d,e scale vector 2.
+c,f defines offset.
+</p>
+<p>
+Converting from input (X,Y) to output coordinate system (X&apos;,Y&apos;) is done by:
+X&apos; = a*X + b*Y + c, Y&apos; = -b*X + a*Y + d
+</p>
+<p>This is a transformation initially based on the affine transformation but slightly simpler.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_GetInputPoint_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.GetInputPoint(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L67">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_GetInputPoint_" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetInputPoint*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_GetInputPoint_System_Int32_" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetInputPoint(System.Int32)">GetInputPoint(Int32)</h4>
+  <div class="markdown level1 summary"><p>Gets the input point value at the specified index</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coordinate GetInputPoint(int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>Input point value a index 'i'</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_GetOutputPoint_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.GetOutputPoint(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L87">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_GetOutputPoint_" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetOutputPoint*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_GetOutputPoint_System_Int32_" data-uid="SharpMap.Utilities.LeastSquaresTransform.GetOutputPoint(System.Int32)">GetOutputPoint(Int32)</h4>
+  <div class="markdown level1 summary"><p>Gets the output point value at the specified index</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coordinate GetOutputPoint(int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>Output point value a index 'i'</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_RemoveInputOutputPointAt_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.RemoveInputOutputPointAt(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L56">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_RemoveInputOutputPointAt_" data-uid="SharpMap.Utilities.LeastSquaresTransform.RemoveInputOutputPointAt*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_RemoveInputOutputPointAt_System_Int32_" data-uid="SharpMap.Utilities.LeastSquaresTransform.RemoveInputOutputPointAt(System.Int32)">RemoveInputOutputPointAt(Int32)</h4>
+  <div class="markdown level1 summary"><p>Removes input and output value pair at the specified index</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveInputOutputPointAt(int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">i</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_SetInputPointAt_GeoAPI_Geometries_Coordinate_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.SetInputPointAt(GeoAPI.Geometries.Coordinate%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L77">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_SetInputPointAt_" data-uid="SharpMap.Utilities.LeastSquaresTransform.SetInputPointAt*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_SetInputPointAt_GeoAPI_Geometries_Coordinate_System_Int32_" data-uid="SharpMap.Utilities.LeastSquaresTransform.SetInputPointAt(GeoAPI.Geometries.Coordinate,System.Int32)">SetInputPointAt(Coordinate, Int32)</h4>
+  <div class="markdown level1 summary"><p>Sets the input point value at the specified index</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetInputPointAt(Coordinate p, int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform_SetOutputPointAt_GeoAPI_Geometries_Coordinate_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform.SetOutputPointAt(GeoAPI.Geometries.Coordinate%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L97">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_LeastSquaresTransform_SetOutputPointAt_" data-uid="SharpMap.Utilities.LeastSquaresTransform.SetOutputPointAt*"></a>
+  <h4 id="SharpMap_Utilities_LeastSquaresTransform_SetOutputPointAt_GeoAPI_Geometries_Coordinate_System_Int32_" data-uid="SharpMap.Utilities.LeastSquaresTransform.SetOutputPointAt(GeoAPI.Geometries.Coordinate,System.Int32)">SetOutputPointAt(Coordinate, Int32)</h4>
+  <div class="markdown level1 summary"><p>Sets the output point value at the specified index</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetOutputPointAt(Coordinate p, int i)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">i</span></td>
+        <td><p>index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_LeastSquaresTransform.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.LeastSquaresTransform%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/LeastSquaresTransform.cs/#L27" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

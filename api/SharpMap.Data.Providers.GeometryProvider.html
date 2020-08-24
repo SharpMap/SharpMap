@@ -1,0 +1,888 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GeometryProvider
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GeometryProvider
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.GeometryProvider">
+  
+  
+  <h1 id="SharpMap_Data_Providers_GeometryProvider" data-uid="SharpMap.Data.Providers.GeometryProvider" class="text-break">Class GeometryProvider
+  </h1>
+  <div class="markdown level0 summary"><p>Datasource for storing a limited set of geometries.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html">BaseProvider</a></div>
+    <div class="level3"><a class="xref" href="SharpMap.Data.Providers.PreparedGeometryProvider.html">PreparedGeometryProvider</a></div>
+    <div class="level4"><span class="xref">GeometryProvider</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.PreparedGeometryProvider.html#SharpMap_Data_Providers_PreparedGeometryProvider_PreparedGeometry">PreparedGeometryProvider.PreparedGeometry</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.PreparedGeometryProvider.html#SharpMap_Data_Providers_PreparedGeometryProvider_OnBeginExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_">PreparedGeometryProvider.OnBeginExecuteIntersectionQuery(IGeometry)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.PreparedGeometryProvider.html#SharpMap_Data_Providers_PreparedGeometryProvider_OnEndExecuteIntersectionQuery">PreparedGeometryProvider.OnEndExecuteIntersectionQuery()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SridChanged">BaseProvider.SridChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Factory">BaseProvider.Factory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ConnectionID">BaseProvider.ConnectionID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_IsOpen">BaseProvider.IsOpen</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SRID">BaseProvider.SRID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnSridChanged_System_EventArgs_">BaseProvider.OnSridChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_">BaseProvider.ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Open">BaseProvider.Open()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Close">BaseProvider.Close()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_CloneTableStructure_SharpMap_Data_FeatureDataTable_">BaseProvider.CloneTableStructure(FeatureDataTable)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_GeometryProvider_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class GeometryProvider : PreparedGeometryProvider, IDisposableEx, IProvider, IProvider&lt;uint&gt;, IBaseProvider, IDisposable</code></pre>
+  </div>
+  <h5 id="SharpMap_Data_Providers_GeometryProvider_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>The GeometryProvider doesn’t utilize performance optimizations of spatial indexing,
+and thus is primarily meant for rendering a limited set of Geometries.</p>
+<p>A common use of the GeometryProvider is for highlighting a set of selected features.</p>
+<example>
+The following example gets data within a BoundingBox of another datasource and adds it to the map.
+<pre><code>List&lt;Geometry> geometries = myMap.Layers[0].DataSource.GetGeometriesInView(myBox);
+VectorLayer laySelected = new VectorLayer(&quot;Selected Features&quot;);
+laySelected.DataSource = new GeometryProvider(geometries);
+laySelected.Style.Outline = new Pen(Color.Magenta, 3f);
+laySelected.Style.EnableOutline = true;
+myMap.Layers.Add(laySelected);</code></pre>
+</example>
+<example>
+Adding points of interest to the map. This is useful for vehicle tracking etc.
+<pre><code>GeoAPI.Geometries.IGeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
+List&lt;GeoAPI.Geometries.IGeometry> geometries = new List&lt;GeoAPI.Geometries.IGeometry>();
+//Add two points
+geometries.Add(new gf.CreatePoint(23.345,64.325));
+geometries.Add(new gf.CreatePoint(23.879,64.194));
+SharpMap.Layers.VectorLayer layerVehicles = new SharpMap.Layers.VectorLayer(&quot;Vehicles&quot;);
+layerVehicles.DataSource = new SharpMap.Data.Providers.GeometryProvider(geometries);
+layerVehicles.Style.Symbol = Bitmap.FromFile(@&quot;C:\data\car.gif&quot;);
+myMap.Layers.Add(layerVehicles);</code></pre>
+</example>
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider__ctor_GeoAPI_Geometries_IGeometry_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.%23ctor(GeoAPI.Geometries.IGeometry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L122">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider__ctor_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider__ctor_GeoAPI_Geometries_IGeometry_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor(GeoAPI.Geometries.IGeometry)">GeometryProvider(IGeometry)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Data.Providers.GeometryProvider.html">GeometryProvider</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeometryProvider(IGeometry geometry)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td><p>Geometry to be in this datasource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider__ctor_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.%23ctor(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L101">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider__ctor_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider__ctor_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor(SharpMap.Data.FeatureDataRow)">GeometryProvider(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Data.Providers.GeometryProvider.html">GeometryProvider</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeometryProvider(FeatureDataRow feature)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">feature</span></td>
+        <td><p>Feature to be in this datasource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider__ctor_SharpMap_Data_FeatureDataTable_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.%23ctor(SharpMap.Data.FeatureDataTable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L110">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider__ctor_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider__ctor_SharpMap_Data_FeatureDataTable_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor(SharpMap.Data.FeatureDataTable)">GeometryProvider(FeatureDataTable)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Data.Providers.GeometryProvider.html">GeometryProvider</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeometryProvider(FeatureDataTable features)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></td>
+        <td><span class="parametername">features</span></td>
+        <td><p>Features to be included in this datasource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider__ctor_System_Byte___.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.%23ctor(System.Byte%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L131">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider__ctor_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider__ctor_System_Byte___" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor(System.Byte[])">GeometryProvider(Byte[])</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Data.Providers.GeometryProvider.html">GeometryProvider</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeometryProvider(byte[] wellKnownBinaryGeometry)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]</td>
+        <td><span class="parametername">wellKnownBinaryGeometry</span></td>
+        <td><p><span class="xref">GeoAPI.Geometries.IGeometry</span> as Well-known Binary to be included in this datasource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider__ctor_System_Collections_Generic_IEnumerable_GeoAPI_Geometries_IGeometry__.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.%23ctor(System.Collections.Generic.IEnumerable%7BGeoAPI.Geometries.IGeometry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L92">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider__ctor_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider__ctor_System_Collections_Generic_IEnumerable_GeoAPI_Geometries_IGeometry__" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor(System.Collections.Generic.IEnumerable{GeoAPI.Geometries.IGeometry})">GeometryProvider(IEnumerable&lt;IGeometry&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Data.Providers.GeometryProvider.html">GeometryProvider</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeometryProvider(IEnumerable&lt;IGeometry&gt; geometries)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td><span class="parametername">geometries</span></td>
+        <td><p>Set of geometries that this datasource should contain</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider__ctor_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L140">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider__ctor_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider__ctor_System_String_" data-uid="SharpMap.Data.Providers.GeometryProvider.#ctor(System.String)">GeometryProvider(String)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Data.Providers.GeometryProvider.html">GeometryProvider</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GeometryProvider(string wellKnownTextGeometry)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">wellKnownTextGeometry</span></td>
+        <td><p><span class="xref">GeoAPI.Geometries.IGeometry</span> as Well-known Text to be included in this datasource</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_Geometries.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.Geometries%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L70">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_Geometries_" data-uid="SharpMap.Data.Providers.GeometryProvider.Geometries*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_Geometries" data-uid="SharpMap.Data.Providers.GeometryProvider.Geometries">Geometries</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the geometries this datasource contains</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IList&lt;IGeometry&gt; Geometries { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1">IList</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L209">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.GeometryProvider.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.GeometryProvider.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Throws an NotSupportedException. Attribute data is not supported by this datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_">BaseProvider.ExecuteIntersectionQuery(Envelope, FeatureDataSet)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_GetExtents.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.GetExtents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L238">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_GetExtents_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetExtents*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_GetExtents" data-uid="SharpMap.Data.Providers.GeometryProvider.GetExtents">GetExtents()</h4>
+  <div class="markdown level1 summary"><p>Boundingbox of dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Envelope GetExtents()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>boundingbox</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetExtents">BaseProvider.GetExtents()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_GetFeature_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.GetFeature(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L229">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_GetFeature_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetFeature*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_GetFeature_System_UInt32_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetFeature(System.UInt32)">GetFeature(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Throws an NotSupportedException. Attribute data is not supported by this datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override FeatureDataRow GetFeature(uint rowId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">rowId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetFeature_System_UInt32_">BaseProvider.GetFeature(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_GetFeatureCount.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.GetFeatureCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L218">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_GetFeatureCount_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetFeatureCount*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_GetFeatureCount" data-uid="SharpMap.Data.Providers.GeometryProvider.GetFeatureCount">GetFeatureCount()</h4>
+  <div class="markdown level1 summary"><p>Returns the number of features in the dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetFeatureCount()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>number of features</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetFeatureCount">BaseProvider.GetFeatureCount()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.GetGeometriesInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L153">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_GetGeometriesInView_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetGeometriesInView*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetGeometriesInView(GeoAPI.Geometries.Envelope)">GetGeometriesInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns features within the specified bounding box</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Collection&lt;IGeometry&gt; GetGeometriesInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_">BaseProvider.GetGeometriesInView(Envelope)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_GetGeometryByID_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.GetGeometryByID(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L188">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_GetGeometryByID_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetGeometryByID*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_GetGeometryByID_System_UInt32_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetGeometryByID(System.UInt32)">GetGeometryByID(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns the geometry corresponding to the Object ID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IGeometry GetGeometryByID(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>Object ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetGeometryByID_System_UInt32_">BaseProvider.GetGeometryByID(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.GetObjectIDsInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L171">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_GetObjectIDsInView_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetObjectIDsInView*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.GeometryProvider.GetObjectIDsInView(GeoAPI.Geometries.Envelope)">GetObjectIDsInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns all objects whose boundingbox intersects 'bbox'.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Collection&lt;uint&gt; GetObjectIDsInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_">BaseProvider.GetObjectIDsInView(Envelope)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.OnExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L199">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_OnExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.GeometryProvider.OnExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.GeometryProvider.OnExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">OnExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Throws an NotSupportedException. Attribute data is not supported by this datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.PreparedGeometryProvider.html#SharpMap_Data_Providers_PreparedGeometryProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_">PreparedGeometryProvider.OnExecuteIntersectionQuery(IGeometry, FeatureDataSet)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider_ReleaseManagedResources.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider.ReleaseManagedResources%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L258">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_GeometryProvider_ReleaseManagedResources_" data-uid="SharpMap.Data.Providers.GeometryProvider.ReleaseManagedResources*"></a>
+  <h4 id="SharpMap_Data_Providers_GeometryProvider_ReleaseManagedResources" data-uid="SharpMap.Data.Providers.GeometryProvider.ReleaseManagedResources">ReleaseManagedResources()</h4>
+  <div class="markdown level1 summary"><p>Disposes the object</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReleaseManagedResources()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.PreparedGeometryProvider.html#SharpMap_Data_Providers_PreparedGeometryProvider_ReleaseManagedResources">PreparedGeometryProvider.ReleaseManagedResources()</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider&lt;TOid&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetCoordinateSystem(IProvider)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetFactory(IProvider)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_GeometryProvider.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.GeometryProvider%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/GeometryProvider.cs/#L61" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

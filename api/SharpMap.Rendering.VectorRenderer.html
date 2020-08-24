@@ -1,0 +1,2101 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class VectorRenderer
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class VectorRenderer
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.VectorRenderer">
+  
+  
+  <h1 id="SharpMap_Rendering_VectorRenderer" data-uid="SharpMap.Rendering.VectorRenderer" class="text-break">Class VectorRenderer
+  </h1>
+  <div class="markdown level0 summary"><p>This class renders individual geometry features to a graphics object using the settings of a map object.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">VectorRenderer</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.html">SharpMap.Rendering</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_VectorRenderer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class VectorRenderer</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_SizeOfString.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.SizeOfString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L352">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_SizeOfString_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfString*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_SizeOfString" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfString">SizeOfString</h4>
+  <div class="markdown level1 summary"><p>Delegate used to determine the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a> of a given string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static VectorRenderer.SizeOfStringDelegate SizeOfString { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.VectorRenderer.SizeOfStringDelegate.html">VectorRenderer.SizeOfStringDelegate</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawLabel_System_Drawing_Graphics_System_Drawing_PointF_System_Drawing_PointF_System_Drawing_Font_System_Drawing_Color_System_Drawing_Brush_System_Drawing_Pen_System_Single_System_String_SharpMap_MapViewport_SharpMap_Styles_LabelStyle_HorizontalAlignmentEnum_System_Nullable_System_Drawing_PointF__.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawLabel(System.Drawing.Graphics%2CSystem.Drawing.PointF%2CSystem.Drawing.PointF%2CSystem.Drawing.Font%2CSystem.Drawing.Color%2CSystem.Drawing.Brush%2CSystem.Drawing.Pen%2CSystem.Single%2CSystem.String%2CSharpMap.MapViewport%2CSharpMap.Styles.LabelStyle.HorizontalAlignmentEnum%2CSystem.Nullable%7BSystem.Drawing.PointF%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L415">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawLabel_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLabel*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawLabel_System_Drawing_Graphics_System_Drawing_PointF_System_Drawing_PointF_System_Drawing_Font_System_Drawing_Color_System_Drawing_Brush_System_Drawing_Pen_System_Single_System_String_SharpMap_MapViewport_SharpMap_Styles_LabelStyle_HorizontalAlignmentEnum_System_Nullable_System_Drawing_PointF__" data-uid="SharpMap.Rendering.VectorRenderer.DrawLabel(System.Drawing.Graphics,System.Drawing.PointF,System.Drawing.PointF,System.Drawing.Font,System.Drawing.Color,System.Drawing.Brush,System.Drawing.Pen,System.Single,System.String,SharpMap.MapViewport,SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum,System.Nullable{System.Drawing.PointF})">DrawLabel(Graphics, PointF, PointF, Font, Color, Brush, Pen, Single, String, MapViewport, LabelStyle.HorizontalAlignmentEnum, Nullable&lt;PointF&gt;)</h4>
+  <div class="markdown level1 summary"><p>Renders a label to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawLabel(Graphics g, PointF labelPoint, PointF offset, Font font, Color foreColor, Brush backColor, Pen halo, float rotation, string text, MapViewport map, LabelStyle.HorizontalAlignmentEnum alignment = LabelStyle.HorizontalAlignmentEnum.Left, PointF? rotationPoint = default(PointF? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">labelPoint</span></td>
+        <td><p>Label placement</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Offset of label in screen coordinates</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>Font used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><span class="parametername">foreColor</span></td>
+        <td><p>Font foreground color</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">backColor</span></td>
+        <td><p>Background color</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">halo</span></td>
+        <td><p>Color of halo</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>Text rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>Text to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.html">LabelStyle.HorizontalAlignmentEnum</a></td>
+        <td><span class="parametername">alignment</span></td>
+        <td><p>Horizontal alignment for multi line labels. If not set <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.stringalignment#System_Drawing_StringAlignment_Near">Near</a> is used</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>&gt;</td>
+        <td><span class="parametername">rotationPoint</span></td>
+        <td><p>Point where the rotation should take place</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawLabelEx_System_Drawing_Graphics_System_Drawing_PointF_System_Drawing_PointF_System_Drawing_Font_System_Drawing_Color_System_Drawing_Brush_System_Drawing_Pen_System_Single_System_String_SharpMap_MapViewport_SharpMap_Styles_LabelStyle_HorizontalAlignmentEnum_System_Nullable_System_Drawing_PointF__.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawLabelEx(System.Drawing.Graphics%2CSystem.Drawing.PointF%2CSystem.Drawing.PointF%2CSystem.Drawing.Font%2CSystem.Drawing.Color%2CSystem.Drawing.Brush%2CSystem.Drawing.Pen%2CSystem.Single%2CSystem.String%2CSharpMap.MapViewport%2CSharpMap.Styles.LabelStyle.HorizontalAlignmentEnum%2CSystem.Nullable%7BSystem.Drawing.PointF%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L439">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawLabelEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLabelEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawLabelEx_System_Drawing_Graphics_System_Drawing_PointF_System_Drawing_PointF_System_Drawing_Font_System_Drawing_Color_System_Drawing_Brush_System_Drawing_Pen_System_Single_System_String_SharpMap_MapViewport_SharpMap_Styles_LabelStyle_HorizontalAlignmentEnum_System_Nullable_System_Drawing_PointF__" data-uid="SharpMap.Rendering.VectorRenderer.DrawLabelEx(System.Drawing.Graphics,System.Drawing.PointF,System.Drawing.PointF,System.Drawing.Font,System.Drawing.Color,System.Drawing.Brush,System.Drawing.Pen,System.Single,System.String,SharpMap.MapViewport,SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum,System.Nullable{System.Drawing.PointF})">DrawLabelEx(Graphics, PointF, PointF, Font, Color, Brush, Pen, Single, String, MapViewport, LabelStyle.HorizontalAlignmentEnum, Nullable&lt;PointF&gt;)</h4>
+  <div class="markdown level1 summary"><p>Renders a label to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawLabelEx(Graphics g, PointF labelPoint, PointF offset, Font font, Color foreColor, Brush backColor, Pen halo, float rotation, string text, MapViewport map, LabelStyle.HorizontalAlignmentEnum alignment = LabelStyle.HorizontalAlignmentEnum.Left, PointF? rotationPoint = default(PointF? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">labelPoint</span></td>
+        <td><p>Label placement</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Offset of label in screen coordinates</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>Font used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><span class="parametername">foreColor</span></td>
+        <td><p>Font foreground color</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">backColor</span></td>
+        <td><p>Background color</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">halo</span></td>
+        <td><p>Color of halo</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>Text rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>Text to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.html">LabelStyle.HorizontalAlignmentEnum</a></td>
+        <td><span class="parametername">alignment</span></td>
+        <td><p>Horizontal alignment for multi line labels. If not set <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.stringalignment#System_Drawing_StringAlignment_Near">Near</a> is used</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>&gt;</td>
+        <td><span class="parametername">rotationPoint</span></td>
+        <td><p>Point where the rotation should take place</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawLineString_System_Drawing_Graphics_GeoAPI_Geometries_ILineString_System_Drawing_Pen_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawLineString(System.Drawing.Graphics%2CGeoAPI.Geometries.ILineString%2CSystem.Drawing.Pen%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L144">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawLineString_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLineString*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawLineString_System_Drawing_Graphics_GeoAPI_Geometries_ILineString_System_Drawing_Pen_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLineString(System.Drawing.Graphics,GeoAPI.Geometries.ILineString,System.Drawing.Pen,SharpMap.MapViewport)">DrawLineString(Graphics, ILineString, Pen, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a LineString to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Not called, will be removed&quot;)]
+public static void DrawLineString(Graphics g, ILineString line, Pen pen, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILineString</span></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>LineString to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Pen style used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawLineString_System_Drawing_Graphics_GeoAPI_Geometries_ILineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawLineString(System.Drawing.Graphics%2CGeoAPI.Geometries.ILineString%2CSystem.Drawing.Pen%2CSharpMap.MapViewport%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawLineString_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLineString*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawLineString_System_Drawing_Graphics_GeoAPI_Geometries_ILineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLineString(System.Drawing.Graphics,GeoAPI.Geometries.ILineString,System.Drawing.Pen,SharpMap.MapViewport,System.Single)">DrawLineString(Graphics, ILineString, Pen, MapViewport, Single)</h4>
+  <div class="markdown level1 summary"><p>Renders a LineString to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawLineString(Graphics g, ILineString line, Pen pen, MapViewport map, float offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILineString</span></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>LineString to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Pen style used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Offset by which line will be moved to right</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawLineStringEx_System_Drawing_Graphics_GeoAPI_Geometries_ILineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawLineStringEx(System.Drawing.Graphics%2CGeoAPI.Geometries.ILineString%2CSystem.Drawing.Pen%2CSharpMap.MapViewport%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L173">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawLineStringEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLineStringEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawLineStringEx_System_Drawing_Graphics_GeoAPI_Geometries_ILineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_" data-uid="SharpMap.Rendering.VectorRenderer.DrawLineStringEx(System.Drawing.Graphics,GeoAPI.Geometries.ILineString,System.Drawing.Pen,SharpMap.MapViewport,System.Single)">DrawLineStringEx(Graphics, ILineString, Pen, MapViewport, Single)</h4>
+  <div class="markdown level1 summary"><p>Renders a LineString to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawLineStringEx(Graphics g, ILineString line, Pen pen, MapViewport map, float offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILineString</span></td>
+        <td><span class="parametername">line</span></td>
+        <td><p>LineString to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Pen style used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Offset by which line will be moved to right</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td><p>The area of the map that was affected by the drawing of the geometry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiLineString_System_Drawing_Graphics_GeoAPI_Geometries_IMultiLineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiLineString(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiLineString%2CSystem.Drawing.Pen%2CSharpMap.MapViewport%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L58">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiLineString_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiLineString*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiLineString_System_Drawing_Graphics_GeoAPI_Geometries_IMultiLineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiLineString(System.Drawing.Graphics,GeoAPI.Geometries.IMultiLineString,System.Drawing.Pen,SharpMap.MapViewport,System.Single)">DrawMultiLineString(Graphics, IMultiLineString, Pen, MapViewport, Single)</h4>
+  <div class="markdown level1 summary"><p>Renders a MultiLineString to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawMultiLineString(Graphics g, IMultiLineString lines, Pen pen, MapViewport map, float offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiLineString</span></td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>MultiLineString to be rendered</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Pen style used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Offset by which line will be moved to right</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiLineStringEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiLineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiLineStringEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiLineString%2CSystem.Drawing.Pen%2CSharpMap.MapViewport%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L73">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiLineStringEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiLineStringEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiLineStringEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiLineString_System_Drawing_Pen_SharpMap_MapViewport_System_Single_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiLineStringEx(System.Drawing.Graphics,GeoAPI.Geometries.IMultiLineString,System.Drawing.Pen,SharpMap.MapViewport,System.Single)">DrawMultiLineStringEx(Graphics, IMultiLineString, Pen, MapViewport, Single)</h4>
+  <div class="markdown level1 summary"><p>Renders a MultiLineString to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawMultiLineStringEx(Graphics g, IMultiLineString lines, Pen pen, MapViewport map, float offset)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiLineString</span></td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>MultiLineString to be rendered</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Pen style used for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Offset by which line will be moved to right</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td><p>The area of the map that was affected by the drawing operation</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPoint_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPoint(SharpMap.Rendering.Symbolizer.IPointSymbolizer%2CSystem.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPoint%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L869">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPoint_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPoint*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPoint_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPoint(SharpMap.Rendering.Symbolizer.IPointSymbolizer,System.Drawing.Graphics,GeoAPI.Geometries.IMultiPoint,SharpMap.MapViewport)">DrawMultiPoint(IPointSymbolizer, Graphics, IMultiPoint, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a <span class="xref">GeoAPI.Geometries.IMultiPoint</span> to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawMultiPoint(IPointSymbolizer symbolizer, Graphics g, IMultiPoint points, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></td>
+        <td><span class="parametername">symbolizer</span></td>
+        <td><p>Symbolizer to decorate point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPoint_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPoint(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPoint%2CSystem.Drawing.Brush%2CSystem.Single%2CSystem.Drawing.PointF%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L896">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPoint_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPoint*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPoint_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPoint(System.Drawing.Graphics,GeoAPI.Geometries.IMultiPoint,System.Drawing.Brush,System.Single,System.Drawing.PointF,SharpMap.MapViewport)">DrawMultiPoint(Graphics, IMultiPoint, Brush, Single, PointF, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a <span class="xref">GeoAPI.Geometries.IMultiPoint</span> to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawMultiPoint(Graphics g, IMultiPoint points, Brush brush, float size, PointF offset, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>Brush reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>Size of drawn Point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPoint_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPoint(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPoint%2CSystem.Drawing.Image%2CSystem.Single%2CSystem.Drawing.PointF%2CSystem.Single%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L835">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPoint_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPoint*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPoint_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPoint(System.Drawing.Graphics,GeoAPI.Geometries.IMultiPoint,System.Drawing.Image,System.Single,System.Drawing.PointF,System.Single,SharpMap.MapViewport)">DrawMultiPoint(Graphics, IMultiPoint, Image, Single, PointF, Single, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a <span class="xref">GeoAPI.Geometries.IMultiPoint</span> to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawMultiPoint(Graphics g, IMultiPoint points, Image symbol, float symbolScale, PointF offset, float rotation, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.image">Image</a></td>
+        <td><span class="parametername">symbol</span></td>
+        <td><p>Symbol to place over point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">symbolScale</span></td>
+        <td><p>The amount that the symbol should be scaled. A scale of '1' equals to no scaling</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>Symbol rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPointEx(SharpMap.Rendering.Symbolizer.IPointSymbolizer%2CSystem.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPoint%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L880">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPointEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPointEx(SharpMap.Rendering.Symbolizer.IPointSymbolizer,System.Drawing.Graphics,GeoAPI.Geometries.IMultiPoint,SharpMap.MapViewport)">DrawMultiPointEx(IPointSymbolizer, Graphics, IMultiPoint, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a <span class="xref">GeoAPI.Geometries.IMultiPoint</span> to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawMultiPointEx(IPointSymbolizer symbolizer, Graphics g, IMultiPoint points, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></td>
+        <td><span class="parametername">symbolizer</span></td>
+        <td><p>Symbolizer to decorate point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPointEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPoint%2CSystem.Drawing.Brush%2CSystem.Single%2CSystem.Drawing.PointF%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L909">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPointEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPointEx(System.Drawing.Graphics,GeoAPI.Geometries.IMultiPoint,System.Drawing.Brush,System.Single,System.Drawing.PointF,SharpMap.MapViewport)">DrawMultiPointEx(Graphics, IMultiPoint, Brush, Single, PointF, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a <span class="xref">GeoAPI.Geometries.IMultiPoint</span> to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawMultiPointEx(Graphics g, IMultiPoint points, Brush brush, float size, PointF offset, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>Brush reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>Size of drawn Point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPointEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPoint%2CSystem.Drawing.Image%2CSystem.Single%2CSystem.Drawing.PointF%2CSystem.Single%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L849">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPointEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPointEx(System.Drawing.Graphics,GeoAPI.Geometries.IMultiPoint,System.Drawing.Image,System.Single,System.Drawing.PointF,System.Single,SharpMap.MapViewport)">DrawMultiPointEx(Graphics, IMultiPoint, Image, Single, PointF, Single, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a <span class="xref">GeoAPI.Geometries.IMultiPoint</span> to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawMultiPointEx(Graphics g, IMultiPoint points, Image symbol, float symbolScale, PointF offset, float rotation, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.image">Image</a></td>
+        <td><span class="parametername">symbol</span></td>
+        <td><p>Symbol to place over point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">symbolScale</span></td>
+        <td><p>The amount that the symbol should be scaled. A scale of '1' equals to no scaling</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>Symbol rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPolygon_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPolygon(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPolygon%2CSystem.Drawing.Brush%2CSystem.Drawing.Pen%2CSystem.Boolean%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L201">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPolygon_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPolygon*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPolygon_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPolygon(System.Drawing.Graphics,GeoAPI.Geometries.IMultiPolygon,System.Drawing.Brush,System.Drawing.Pen,System.Boolean,SharpMap.MapViewport)">DrawMultiPolygon(Graphics, IMultiPolygon, Brush, Pen, Boolean, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a multipolygon byt rendering each polygon in the collection by calling DrawPolygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawMultiPolygon(Graphics g, IMultiPolygon multiPolygon, Brush brush, Pen pen, bool clip, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPolygon</span></td>
+        <td><span class="parametername">multiPolygon</span></td>
+        <td><p>MultiPolygon to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>Brush used for filling (null or transparent for no filling)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Outline pen style (null if no outline)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">clip</span></td>
+        <td><p>Specifies whether polygon clipping should be applied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawMultiPolygonEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawMultiPolygonEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IMultiPolygon%2CSystem.Drawing.Brush%2CSystem.Drawing.Pen%2CSystem.Boolean%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L217">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawMultiPolygonEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPolygonEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawMultiPolygonEx_System_Drawing_Graphics_GeoAPI_Geometries_IMultiPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawMultiPolygonEx(System.Drawing.Graphics,GeoAPI.Geometries.IMultiPolygon,System.Drawing.Brush,System.Drawing.Pen,System.Boolean,SharpMap.MapViewport)">DrawMultiPolygonEx(Graphics, IMultiPolygon, Brush, Pen, Boolean, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a multipolygon byt rendering each polygon in the collection by calling DrawPolygon.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawMultiPolygonEx(Graphics g, IMultiPolygon multiPolygon, Brush brush, Pen pen, bool clip, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPolygon</span></td>
+        <td><span class="parametername">multiPolygon</span></td>
+        <td><p>MultiPolygon to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>Brush used for filling (null or transparent for no filling)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Outline pen style (null if no outline)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">clip</span></td>
+        <td><p>Specifies whether polygon clipping should be applied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td><p>The area of the map that was affected by the drawing of the geometry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPoint_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPoint(SharpMap.Rendering.Symbolizer.IPointSymbolizer%2CSystem.Drawing.Graphics%2CGeoAPI.Geometries.IPoint%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L721">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPoint_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPoint*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPoint_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPoint(SharpMap.Rendering.Symbolizer.IPointSymbolizer,System.Drawing.Graphics,GeoAPI.Geometries.IPoint,SharpMap.MapViewport)">DrawPoint(IPointSymbolizer, Graphics, IPoint, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a point to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawPoint(IPointSymbolizer symbolizer, Graphics g, IPoint point, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></td>
+        <td><span class="parametername">symbolizer</span></td>
+        <td><p>Symbolizer to decorate point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPoint_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPoint(System.Drawing.Graphics%2CGeoAPI.Geometries.IPoint%2CSystem.Drawing.Brush%2CSystem.Single%2CSystem.Drawing.PointF%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L681">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPoint_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPoint*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPoint_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPoint(System.Drawing.Graphics,GeoAPI.Geometries.IPoint,System.Drawing.Brush,System.Single,System.Drawing.PointF,SharpMap.MapViewport)">DrawPoint(Graphics, IPoint, Brush, Single, PointF, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a point to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawPoint(Graphics g, IPoint point, Brush b, float size, PointF offset, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>Brush reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>Size of drawn Point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPoint_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPoint(System.Drawing.Graphics%2CGeoAPI.Geometries.IPoint%2CSystem.Drawing.Image%2CSystem.Single%2CSystem.Drawing.PointF%2CSystem.Single%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L751">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPoint_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPoint*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPoint_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPoint(System.Drawing.Graphics,GeoAPI.Geometries.IPoint,System.Drawing.Image,System.Single,System.Drawing.PointF,System.Single,SharpMap.MapViewport)">DrawPoint(Graphics, IPoint, Image, Single, PointF, Single, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a point to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawPoint(Graphics g, IPoint point, Image symbol, float symbolscale, PointF offset, float rotation, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.image">Image</a></td>
+        <td><span class="parametername">symbol</span></td>
+        <td><p>Symbol to place over point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">symbolscale</span></td>
+        <td><p>The amount that the symbol should be scaled. A scale of '1' equals to no scaling</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>Symbol rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPointEx_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPointEx(SharpMap.Rendering.Symbolizer.IPointSymbolizer%2CSystem.Drawing.Graphics%2CGeoAPI.Geometries.IPoint%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L731">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPointEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPointEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPointEx_SharpMap_Rendering_Symbolizer_IPointSymbolizer_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPointEx(SharpMap.Rendering.Symbolizer.IPointSymbolizer,System.Drawing.Graphics,GeoAPI.Geometries.IPoint,SharpMap.MapViewport)">DrawPointEx(IPointSymbolizer, Graphics, IPoint, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a point to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawPointEx(IPointSymbolizer symbolizer, Graphics g, IPoint point, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></td>
+        <td><span class="parametername">symbolizer</span></td>
+        <td><p>Symbolizer to decorate point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPointEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IPoint%2CSystem.Drawing.Brush%2CSystem.Single%2CSystem.Drawing.PointF%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L695">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPointEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPointEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Brush_System_Single_System_Drawing_PointF_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPointEx(System.Drawing.Graphics,GeoAPI.Geometries.IPoint,System.Drawing.Brush,System.Single,System.Drawing.PointF,SharpMap.MapViewport)">DrawPointEx(Graphics, IPoint, Brush, Single, PointF, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a point to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawPointEx(Graphics g, IPoint point, Brush b, float size, PointF offset, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">b</span></td>
+        <td><p>Brush reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>Size of drawn Point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPointEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IPoint%2CSystem.Drawing.Image%2CSystem.Single%2CSystem.Drawing.PointF%2CSystem.Single%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L765">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPointEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPointEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPointEx_System_Drawing_Graphics_GeoAPI_Geometries_IPoint_System_Drawing_Image_System_Single_System_Drawing_PointF_System_Single_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPointEx(System.Drawing.Graphics,GeoAPI.Geometries.IPoint,System.Drawing.Image,System.Single,System.Drawing.PointF,System.Single,SharpMap.MapViewport)">DrawPointEx(Graphics, IPoint, Image, Single, PointF, Single, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a point to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawPointEx(Graphics g, IPoint point, Image symbol, float symbolScale, PointF offset, float rotation, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>Point to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.image">Image</a></td>
+        <td><span class="parametername">symbol</span></td>
+        <td><p>Symbol to place over point</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">symbolScale</span></td>
+        <td><p>The amount that the symbol should be scaled. A scale of '1' equals to no scaling</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">offset</span></td>
+        <td><p>Symbol offset af scale=1</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotation</span></td>
+        <td><p>Symbol rotation in degrees</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPolygon_System_Drawing_Graphics_GeoAPI_Geometries_IPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPolygon(System.Drawing.Graphics%2CGeoAPI.Geometries.IPolygon%2CSystem.Drawing.Brush%2CSystem.Drawing.Pen%2CSystem.Boolean%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L239">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPolygon_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPolygon*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPolygon_System_Drawing_Graphics_GeoAPI_Geometries_IPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPolygon(System.Drawing.Graphics,GeoAPI.Geometries.IPolygon,System.Drawing.Brush,System.Drawing.Pen,System.Boolean,SharpMap.MapViewport)">DrawPolygon(Graphics, IPolygon, Brush, Pen, Boolean, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a polygon to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawPolygon(Graphics g, IPolygon pol, Brush brush, Pen pen, bool clip, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><span class="parametername">pol</span></td>
+        <td><p>Polygon to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>Brush used for filling (null or transparent for no filling)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Outline pen style (null if no outline)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">clip</span></td>
+        <td><p>Specifies whether polygon clipping should be applied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_DrawPolygonEx_System_Drawing_Graphics_GeoAPI_Geometries_IPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.DrawPolygonEx(System.Drawing.Graphics%2CGeoAPI.Geometries.IPolygon%2CSystem.Drawing.Brush%2CSystem.Drawing.Pen%2CSystem.Boolean%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L255">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_DrawPolygonEx_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPolygonEx*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_DrawPolygonEx_System_Drawing_Graphics_GeoAPI_Geometries_IPolygon_System_Drawing_Brush_System_Drawing_Pen_System_Boolean_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.VectorRenderer.DrawPolygonEx(System.Drawing.Graphics,GeoAPI.Geometries.IPolygon,System.Drawing.Brush,System.Drawing.Pen,System.Boolean,SharpMap.MapViewport)">DrawPolygonEx(Graphics, IPolygon, Brush, Pen, Boolean, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders a polygon to the map.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF DrawPolygonEx(Graphics g, IPolygon pol, Brush brush, Pen pen, bool clip, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><span class="parametername">pol</span></td>
+        <td><p>Polygon to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>Brush used for filling (null or transparent for no filling)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">pen</span></td>
+        <td><p>Outline pen style (null if no outline)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">clip</span></td>
+        <td><p>Specifies whether polygon clipping should be applied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map reference</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td><p>The area of the map that was affected by the drawing of the geometry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_LimitValues_System_Drawing_PointF___System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.LimitValues(System.Drawing.PointF%5B%5D%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L328">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_LimitValues_" data-uid="SharpMap.Rendering.VectorRenderer.LimitValues*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_LimitValues_System_Drawing_PointF___System_Single_" data-uid="SharpMap.Rendering.VectorRenderer.LimitValues(System.Drawing.PointF[],System.Single)">LimitValues(PointF[], Single)</h4>
+  <div class="markdown level1 summary"><p>Purpose of this method is to prevent the 'overflow error' exception in the FillPath method.
+This Exception is thrown when the coordinate values become too big (values over -2E+9f always
+throw an exception, values under 1E+8f seem to be okay). This method limits the coordinates to
+the values given by the second parameter (plus an minus). Theoretically the lines to and from
+these limited points are not correct but GDI+ paints incorrect even before that limit is reached.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PointF[] LimitValues(PointF[] vertices, float limit)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><span class="parametername">vertices</span></td>
+        <td><p>The vertices that need to be limited</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">limit</span></td>
+        <td><p>The limit at which coordinate values will be cutoff</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><p>The limited vertices</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_SizeOfString74_System_Drawing_Graphics_System_String_System_Drawing_Font_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.SizeOfString74(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L381">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_SizeOfString74_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfString74*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_SizeOfString74_System_Drawing_Graphics_System_String_System_Drawing_Font_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfString74(System.Drawing.Graphics,System.String,System.Drawing.Font)">SizeOfString74(Graphics, String, Font)</h4>
+  <div class="markdown level1 summary"><p>Function to get the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a> of a string when rendered with the given font.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public static SizeF SizeOfString74(Graphics g, string text, Font font)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>the text to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>the font to use</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a></td>
+        <td><p>the size</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_SizeOfStringBase_System_Drawing_Graphics_System_String_System_Drawing_Font_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.SizeOfStringBase(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L369">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_SizeOfStringBase_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfStringBase*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_SizeOfStringBase_System_Drawing_Graphics_System_String_System_Drawing_Font_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfStringBase(System.Drawing.Graphics,System.String,System.Drawing.Font)">SizeOfStringBase(Graphics, String, Font)</h4>
+  <div class="markdown level1 summary"><p>Function to get the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a> of a string when rendered with the given font.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SizeF SizeOfStringBase(Graphics g, string text, Font font)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>the text to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>the font to use</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a></td>
+        <td><p>the size</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer_SizeOfStringCeiling_System_Drawing_Graphics_System_String_System_Drawing_Font_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer.SizeOfStringCeiling(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L394">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_VectorRenderer_SizeOfStringCeiling_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfStringCeiling*"></a>
+  <h4 id="SharpMap_Rendering_VectorRenderer_SizeOfStringCeiling_System_Drawing_Graphics_System_String_System_Drawing_Font_" data-uid="SharpMap.Rendering.VectorRenderer.SizeOfStringCeiling(System.Drawing.Graphics,System.String,System.Drawing.Font)">SizeOfStringCeiling(Graphics, String, Font)</h4>
+  <div class="markdown level1 summary"><p>Function to get the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a> of a string when rendered with the given font.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static SizeF SizeOfStringCeiling(Graphics g, string text, Font font)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>the text to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>the font to use</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.sizef">SizeF</a></td>
+        <td><p>the size</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_VectorRenderer.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.VectorRenderer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/VectorRenderer.cs/#L35" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

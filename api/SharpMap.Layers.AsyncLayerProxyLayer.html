@@ -1,0 +1,949 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class AsyncLayerProxyLayer
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class AsyncLayerProxyLayer
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Layers.AsyncLayerProxyLayer">
+  
+  
+  <h1 id="SharpMap_Layers_AsyncLayerProxyLayer" data-uid="SharpMap.Layers.AsyncLayerProxyLayer" class="text-break">Class AsyncLayerProxyLayer
+  </h1>
+  <div class="markdown level0 summary"><p>A proxy class to allow async tile rendering for static layers</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">AsyncLayerProxyLayer</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Layers.ITileAsyncLayer.html">ITileAsyncLayer</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ICanQueryLayer.html">ICanQueryLayer</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Layers.html">SharpMap.Layers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Layers_AsyncLayerProxyLayer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class AsyncLayerProxyLayer : ITileAsyncLayer, IDisposable, ICanQueryLayer, ILayer</code></pre>
+  </div>
+  <h5 id="SharpMap_Layers_AsyncLayerProxyLayer_examples"><strong>Examples</strong></h5>
+  <p>var map = new SharpMap.Map(new System.Drawing.Size(1024, 786));
+var provider = new SharpMap.Data.Providers.Shapefile(&quot;&lt;Path to shapefile&gt;&quot;, true);
+var layer = new SharpMap.Layers.VectorLayer(&quot;LAYER1&quot;, provider);
+map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layer));</p>
+
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_LayerTitle.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.LayerTitle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L130">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_LayerTitle_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.LayerTitle*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_LayerTitle" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.LayerTitle">LayerTitle</h4>
+  <div class="markdown level1 summary"><p>Optional title of the layer. It will be used for services like WMS where both Name and Title are supported.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string LayerTitle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_Create_SharpMap_Layers_ILayer_System_Nullable_System_Drawing_Size__.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.Create(SharpMap.Layers.ILayer%2CSystem.Nullable%7BSystem.Drawing.Size%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L77">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_Create_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.Create*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_Create_SharpMap_Layers_ILayer_System_Nullable_System_Drawing_Size__" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.Create(SharpMap.Layers.ILayer,System.Nullable{System.Drawing.Size})">Create(ILayer, Nullable&lt;Size&gt;)</h4>
+  <div class="markdown level1 summary"><p>Method to warp a usual layer in an async layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ILayer Create(ILayer layer, Size? tileSize = default(Size? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></td>
+        <td><span class="parametername">layer</span></td>
+        <td><p>The layer to wrap</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a>&gt;</td>
+        <td><span class="parametername">tileSize</span></td>
+        <td><p>The size of the tile</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></td>
+        <td><p>A async tile layer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_Dispose.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L378">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_Dispose_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.Dispose*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_Dispose" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"><p>Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_OnTileRendered_System_Drawing_Point_GeoAPI_Geometries_Envelope_System_Drawing_Bitmap_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.OnTileRendered(System.Drawing.Point%2CGeoAPI.Geometries.Envelope%2CSystem.Drawing.Bitmap)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L350">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_OnTileRendered_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.OnTileRendered*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_OnTileRendered_System_Drawing_Point_GeoAPI_Geometries_Envelope_System_Drawing_Bitmap_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.OnTileRendered(System.Drawing.Point,GeoAPI.Geometries.Envelope,System.Drawing.Bitmap)">OnTileRendered(Point, Envelope, Bitmap)</h4>
+  <div class="markdown level1 summary"><p>Method to raise the map tile available event</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnTileRendered(Point ptInsert, Envelope env, Bitmap bmp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a></td>
+        <td><span class="parametername">ptInsert</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">env</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.bitmap">Bitmap</a></td>
+        <td><span class="parametername">bmp</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_DownloadProgressChanged.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.DownloadProgressChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L298">View Source</a>
+  </span>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_DownloadProgressChanged" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.DownloadProgressChanged">DownloadProgressChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the rendering of tiles has made progress</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event DownloadProgressHandler DownloadProgressChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.DownloadProgressHandler.html">DownloadProgressHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_MapNewTileAvaliable.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.MapNewTileAvaliable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L293">View Source</a>
+  </span>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_MapNewTileAvaliable" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.MapNewTileAvaliable">MapNewTileAvaliable</h4>
+  <div class="markdown level1 summary"><p>Event raised when a new tile has been rendered an is now avalable</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event MapNewTileAvaliabledHandler MapNewTileAvaliable</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.MapNewTileAvaliabledHandler.html">MapNewTileAvaliabledHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ICanQueryLayer%23ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L384">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ICanQueryLayer.ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ICanQueryLayer.ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ICanQueryLayer%23ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L391">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">ICanQueryLayer.ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_IsQueryEnabled.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ICanQueryLayer%23IsQueryEnabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L398">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_IsQueryEnabled_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ICanQueryLayer#IsQueryEnabled*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ICanQueryLayer_IsQueryEnabled" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ICanQueryLayer#IsQueryEnabled">ICanQueryLayer.IsQueryEnabled</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ICanQueryLayer.IsQueryEnabled { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Enabled.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23Enabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L121">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Enabled_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Enabled*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Enabled" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Enabled">ILayer.Enabled</h4>
+  <div class="markdown level1 summary"><p>Specifies whether this layer should be rendered or not</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ILayer.Enabled { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Envelope.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23Envelope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L148">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Envelope_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Envelope*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Envelope" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Envelope">ILayer.Envelope</h4>
+  <div class="markdown level1 summary"><p>Gets the boundingbox of the entire layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Envelope ILayer.Envelope { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_LayerName.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23LayerName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L139">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_LayerName_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#LayerName*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_LayerName" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#LayerName">ILayer.LayerName</h4>
+  <div class="markdown level1 summary"><p>Name of layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ILayer.LayerName { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_MaxVisible.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23MaxVisible%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L107">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_MaxVisible_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#MaxVisible*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_MaxVisible" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#MaxVisible">ILayer.MaxVisible</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">double ILayer.MaxVisible { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_MinVisible.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23MinVisible%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L101">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_MinVisible_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#MinVisible*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_MinVisible" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#MinVisible">ILayer.MinVisible</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">double ILayer.MinVisible { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Proj4Projection.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23Proj4Projection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L176">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Proj4Projection_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Proj4Projection*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Proj4Projection" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Proj4Projection">ILayer.Proj4Projection</h4>
+  <div class="markdown level1 summary"><p>Proj4 String Projection</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ILayer.Proj4Projection { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23Render(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L187">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Render_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Render*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Render(System.Drawing.Graphics,SharpMap.Map)">ILayer.Render(Graphics, Map)</h4>
+  <div class="markdown level1 summary"><p>Renders the layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ILayer.Render(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics object reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map which is rendered</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23Render(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L192">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Render_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Render*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#Render(System.Drawing.Graphics,SharpMap.MapViewport)">ILayer.Render(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ILayer.Render(Graphics g, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_SRID.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L156">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_SRID_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#SRID*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_SRID" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#SRID">ILayer.SRID</h4>
+  <div class="markdown level1 summary"><p>The spatial reference ID (CRS)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int ILayer.SRID { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_TargetSRID.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23TargetSRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L168">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_TargetSRID_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#TargetSRID*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_TargetSRID" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#TargetSRID">ILayer.TargetSRID</h4>
+  <div class="markdown level1 summary"><p>The spatial reference ID (CRS) that can be exposed externally.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int ILayer.TargetSRID { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_TargetSRID_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>TODO: explain better why I need this property</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_VisibilityUnits.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ILayer%23VisibilityUnits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L116">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_VisibilityUnits_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#VisibilityUnits*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ILayer_VisibilityUnits" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ILayer#VisibilityUnits">ILayer.VisibilityUnits</h4>
+  <div class="markdown level1 summary"><p>Gets or Sets what level-reference the Min/Max values are defined in</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">VisibilityUnits ILayer.VisibilityUnits { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VisibilityUnits.html">VisibilityUnits</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_Cancel.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ITileAsyncLayer%23Cancel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L306">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_Cancel_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ITileAsyncLayer#Cancel*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_Cancel" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ITileAsyncLayer#Cancel">ITileAsyncLayer.Cancel()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ITileAsyncLayer.Cancel()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_NumPendingDownloads.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ITileAsyncLayer%23NumPendingDownloads%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L320">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_NumPendingDownloads_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ITileAsyncLayer#NumPendingDownloads*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_NumPendingDownloads" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ITileAsyncLayer#NumPendingDownloads">ITileAsyncLayer.NumPendingDownloads</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int ITileAsyncLayer.NumPendingDownloads { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_OnlyRedrawWhenComplete.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer.SharpMap%23Layers%23ITileAsyncLayer%23OnlyRedrawWhenComplete%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L300">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_OnlyRedrawWhenComplete_" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ITileAsyncLayer#OnlyRedrawWhenComplete*"></a>
+  <h4 id="SharpMap_Layers_AsyncLayerProxyLayer_SharpMap_Layers_ITileAsyncLayer_OnlyRedrawWhenComplete" data-uid="SharpMap.Layers.AsyncLayerProxyLayer.SharpMap#Layers#ITileAsyncLayer#OnlyRedrawWhenComplete">ITileAsyncLayer.OnlyRedrawWhenComplete</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ITileAsyncLayer.OnlyRedrawWhenComplete { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ITileAsyncLayer.html">ITileAsyncLayer</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ICanQueryLayer.html">ICanQueryLayer</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetCoordinateSystem(ILayer)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetFactory(ILayer)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_AsyncLayerProxyLayer.md&amp;value=---%0Auid%3A%20SharpMap.Layers.AsyncLayerProxyLayer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/AsyncLayerProxyLayer.cs/#L38" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

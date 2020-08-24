@@ -1,0 +1,819 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class DbaseReader
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class DbaseReader
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.DbaseReader">
+  
+  
+  <h1 id="SharpMap_Data_Providers_DbaseReader" data-uid="SharpMap.Data.Providers.DbaseReader" class="text-break">Class DbaseReader
+  </h1>
+  <div class="markdown level0 summary"><p>Straight forward Dbase file reader</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">DbaseReader</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_DbaseReader_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class DbaseReader : IDisposable</code></pre>
+  </div>
+  <h5 id="SharpMap_Data_Providers_DbaseReader_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>NOTE: This implementation assumes that the record
+index starts with <strong>0</strong> (Zero) instead of 1.</p>
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader__ctor_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L89">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader__ctor_" data-uid="SharpMap.Data.Providers.DbaseReader.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader__ctor_System_String_" data-uid="SharpMap.Data.Providers.DbaseReader.#ctor(System.String)">DbaseReader(String)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DbaseReader(string filename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">filename</span></td>
+        <td><p>The shapefile to open</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.filenotfoundexception">FileNotFoundException</a></td>
+        <td><p>Thrown if the file is not present.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_CurrentRecordOid.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.CurrentRecordOid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L279">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_CurrentRecordOid_" data-uid="SharpMap.Data.Providers.DbaseReader.CurrentRecordOid*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_CurrentRecordOid" data-uid="SharpMap.Data.Providers.DbaseReader.CurrentRecordOid">CurrentRecordOid</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the current object id</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint CurrentRecordOid { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_Encoding.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.Encoding%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L844">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_Encoding_" data-uid="SharpMap.Data.Providers.DbaseReader.Encoding*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_Encoding" data-uid="SharpMap.Data.Providers.DbaseReader.Encoding">Encoding</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a> used for parsing strings from the DBase DBF file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Encoding Encoding { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_DbaseReader_Encoding_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the encoding type isn't set, the dbase driver will try to determine the correct <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_IncludeOid.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.IncludeOid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L790">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_IncludeOid_" data-uid="SharpMap.Data.Providers.DbaseReader.IncludeOid*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_IncludeOid" data-uid="SharpMap.Data.Providers.DbaseReader.IncludeOid">IncludeOid</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the object's id should be included in attribute data or not. <p>The default value is <code>false</code></p></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IncludeOid { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_IsOpen.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.IsOpen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L101">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_IsOpen_" data-uid="SharpMap.Data.Providers.DbaseReader.IsOpen*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_IsOpen" data-uid="SharpMap.Data.Providers.DbaseReader.IsOpen">IsOpen</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the Stream to the Dbase file is open or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsOpen { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_LastUpdate.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.LastUpdate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L244">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_LastUpdate_" data-uid="SharpMap.Data.Providers.DbaseReader.LastUpdate*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_LastUpdate" data-uid="SharpMap.Data.Providers.DbaseReader.LastUpdate">LastUpdate</h4>
+  <div class="markdown level1 summary"><p>Gets the date this file was last updated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTime LastUpdate { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetime">DateTime</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_NewTable.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.NewTable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L820">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_NewTable_" data-uid="SharpMap.Data.Providers.DbaseReader.NewTable*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_NewTable" data-uid="SharpMap.Data.Providers.DbaseReader.NewTable">NewTable</h4>
+  <div class="markdown level1 summary"><p>Gets an empty table that matches the dbase structure</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataTable NewTable { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_Close.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.Close%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L147">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_Close_" data-uid="SharpMap.Data.Providers.DbaseReader.Close*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_Close" data-uid="SharpMap.Data.Providers.DbaseReader.Close">Close()</h4>
+  <div class="markdown level1 summary"><p>Closes the dbase file stream</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Close()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_CreateDbfIndex__1_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.CreateDbfIndex%60%601(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L196">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_CreateDbfIndex_" data-uid="SharpMap.Data.Providers.DbaseReader.CreateDbfIndex*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_CreateDbfIndex__1_System_Int32_" data-uid="SharpMap.Data.Providers.DbaseReader.CreateDbfIndex``1(System.Int32)">CreateDbfIndex&lt;T&gt;(Int32)</h4>
+  <div class="markdown level1 summary"><p>Indexes a DBF column in a binary tree [NOT COMPLETE]</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BinaryTree&lt;T, uint&gt; CreateDbfIndex&lt;T&gt;(int columnId)
+
+    where T : IComparable&lt;T&gt;</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">columnId</span></td>
+        <td><p>Column to index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Indexing.BinaryTree-2.html">BinaryTree</a>&lt;T, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>datatype to be indexed</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_Dispose.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_Dispose_" data-uid="SharpMap.Data.Providers.DbaseReader.Dispose*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_Dispose" data-uid="SharpMap.Data.Providers.DbaseReader.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"><p>Method to perform cleanup work for unmanaged resources</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_GetSchemaTable.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.GetSchemaTable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L664">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_GetSchemaTable_" data-uid="SharpMap.Data.Providers.DbaseReader.GetSchemaTable*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_GetSchemaTable" data-uid="SharpMap.Data.Providers.DbaseReader.GetSchemaTable">GetSchemaTable()</h4>
+  <div class="markdown level1 summary"><p>Returns a DataTable that describes the column metadata of the DBase file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DataTable GetSchemaTable()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a></td>
+        <td><p>A DataTable that describes the column metadata.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_GetValues_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.GetValues(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L1063">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_GetValues_" data-uid="SharpMap.Data.Providers.DbaseReader.GetValues*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_GetValues_System_UInt32_" data-uid="SharpMap.Data.Providers.DbaseReader.GetValues(System.UInt32)">GetValues(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Gets all attribute values for data record <code data-dev-comment-type="paramref" class="paramref">oid</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object[] GetValues(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_OnEncodingChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.OnEncodingChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L870">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_OnEncodingChanged_" data-uid="SharpMap.Data.Providers.DbaseReader.OnEncodingChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_OnEncodingChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.DbaseReader.OnEncodingChanged(System.EventArgs)">OnEncodingChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Event invoker for <a class="xref" href="SharpMap.Data.Providers.DbaseReader.html#SharpMap_Data_Providers_DbaseReader_EncodingChanged">EncodingChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnEncodingChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The event's arguments</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_DbaseReader_OnEncodingChanged_System_EventArgs__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When overridden, make sure to call <code>base.OnEncodingChanged</code> in order to make sure that subscribers are notified.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_OnIncludeOidChanged_System_EventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.OnIncludeOidChanged(System.EventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L808">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_OnIncludeOidChanged_" data-uid="SharpMap.Data.Providers.DbaseReader.OnIncludeOidChanged*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_OnIncludeOidChanged_System_EventArgs_" data-uid="SharpMap.Data.Providers.DbaseReader.OnIncludeOidChanged(System.EventArgs)">OnIncludeOidChanged(EventArgs)</h4>
+  <div class="markdown level1 summary"><p>Event invoker for <a class="xref" href="SharpMap.Data.Providers.DbaseReader.html#SharpMap_Data_Providers_DbaseReader_IncludeOidChanged">IncludeOidChanged</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnIncludeOidChanged(EventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventargs">EventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td><p>The event's arguments</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_DbaseReader_OnIncludeOidChanged_System_EventArgs__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When overridden, make sure to call <code>base.OnIncludeOidChanged</code> in order to make sure that subscribers are notified.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_Open.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.Open%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L106">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_Open_" data-uid="SharpMap.Data.Providers.DbaseReader.Open*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_Open" data-uid="SharpMap.Data.Providers.DbaseReader.Open">Open()</h4>
+  <div class="markdown level1 summary"><p>Opens the dbase stream</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Open()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_RecordDeleted_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.RecordDeleted(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L256">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_DbaseReader_RecordDeleted_" data-uid="SharpMap.Data.Providers.DbaseReader.RecordDeleted*"></a>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_RecordDeleted_System_UInt32_" data-uid="SharpMap.Data.Providers.DbaseReader.RecordDeleted(System.UInt32)">RecordDeleted(UInt32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool RecordDeleted(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.applicationexception">ApplicationException</a></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_EncodingChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.EncodingChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L47">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_EncodingChanged" data-uid="SharpMap.Data.Providers.DbaseReader.EncodingChanged">EncodingChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the <a class="xref" href="SharpMap.Data.Providers.DbaseReader.html#SharpMap_Data_Providers_DbaseReader_Encoding">Encoding</a> property has changed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler EncodingChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader_IncludeOidChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader.IncludeOidChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L42">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_DbaseReader_IncludeOidChanged" data-uid="SharpMap.Data.Providers.DbaseReader.IncludeOidChanged">IncludeOidChanged</h4>
+  <div class="markdown level1 summary"><p>Event raised when the <a class="xref" href="SharpMap.Data.Providers.DbaseReader.html#SharpMap_Data_Providers_DbaseReader_IncludeOid">IncludeOid</a> property has changed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventHandler IncludeOidChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.eventhandler">EventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_DbaseReader.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.DbaseReader%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/DbaseReader.cs/#L37" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

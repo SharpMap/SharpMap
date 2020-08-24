@@ -1,0 +1,1153 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class VectorLayer
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class VectorLayer
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Layers.VectorLayer">
+  
+  
+  <h1 id="SharpMap_Layers_VectorLayer" data-uid="SharpMap.Layers.VectorLayer" class="text-break">Class VectorLayer
+  </h1>
+  <div class="markdown level0 summary"><p>Class for vector layer properties</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Layers.Layer.html">Layer</a></div>
+    <div class="level3"><span class="xref">VectorLayer</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayerEx.html">ILayerEx</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ICanQueryLayer.html">ICanQueryLayer</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerRendered">Layer.LayerRendered</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SRIDChanged">Layer.SRIDChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnSridChanged_System_EventArgs_">Layer.OnSridChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_StyleChanged">Layer.StyleChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnStyleChanged_System_EventArgs_">Layer.OnStyleChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerNameChanged">Layer.LayerNameChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnLayerNameChanged_System_EventArgs_">Layer.OnLayerNameChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_CanvasArea">Layer.CanvasArea</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_CoordinateTransformation">Layer.CoordinateTransformation</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_CoordinateTransformationChanged">Layer.CoordinateTransformationChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnCoordinateTransformationChanged_System_EventArgs_">Layer.OnCoordinateTransformationChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SourceFactory">Layer.SourceFactory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_TargetFactory">Layer.TargetFactory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ReverseCoordinateTransformation">Layer.ReverseCoordinateTransformation</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_NeedsTransformation">Layer.NeedsTransformation</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerName">Layer.LayerName</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerTitle">Layer.LayerTitle</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_TargetSRID">Layer.TargetSRID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Render_System_Drawing_Graphics_SharpMap_Map_">Layer.Render(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SharpMap_Layers_ILayerEx_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Layer.ILayerEx.Render(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Render_System_Drawing_Graphics_SharpMap_MapViewport_System_Drawing_Rectangle__">Layer.Render(Graphics, MapViewport, Rectangle)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnLayerRendered_System_Drawing_Graphics_">Layer.OnLayerRendered(Graphics)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Proj4Projection">Layer.Proj4Projection</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_MinVisible">Layer.MinVisible</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_MaxVisible">Layer.MaxVisible</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_VisibilityUnits">Layer.VisibilityUnits</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Enabled">Layer.Enabled</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToString">Layer.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToTarget_GeoAPI_Geometries_Envelope_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformation_">Layer.ToTarget(Envelope, ICoordinateTransformation)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToTarget_GeoAPI_Geometries_Envelope_">Layer.ToTarget(Envelope)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToSource_GeoAPI_Geometries_Envelope_">Layer.ToSource(Envelope)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToTarget_GeoAPI_Geometries_IGeometry_">Layer.ToTarget(IGeometry)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToSource_GeoAPI_Geometries_IGeometry_">Layer.ToSource(IGeometry)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Layers.html">SharpMap.Layers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Layers_VectorLayer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class VectorLayer : Layer, IDisposableEx, IDisposable, ILayerEx, ICanQueryLayer, ILayer, ICloneable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer__ctor_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L52">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer__ctor_" data-uid="SharpMap.Layers.VectorLayer.#ctor*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer__ctor_System_String_" data-uid="SharpMap.Layers.VectorLayer.#ctor(System.String)">VectorLayer(String)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VectorLayer(string layername)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">layername</span></td>
+        <td><p>Name of layer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer__ctor_System_String_SharpMap_Data_Providers_IBaseProvider_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.%23ctor(System.String%2CSharpMap.Data.Providers.IBaseProvider)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L64">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer__ctor_" data-uid="SharpMap.Layers.VectorLayer.#ctor*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer__ctor_System_String_SharpMap_Data_Providers_IBaseProvider_" data-uid="SharpMap.Layers.VectorLayer.#ctor(System.String,SharpMap.Data.Providers.IBaseProvider)">VectorLayer(String, IBaseProvider)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new layer with a specified datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VectorLayer(string layername, IBaseProvider dataSource)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">layername</span></td>
+        <td><p>Name of layer</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></td>
+        <td><span class="parametername">dataSource</span></td>
+        <td><p>Data source</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_CacheExtent.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.CacheExtent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L175">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_CacheExtent_" data-uid="SharpMap.Layers.VectorLayer.CacheExtent*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_CacheExtent" data-uid="SharpMap.Layers.VectorLayer.CacheExtent">CacheExtent</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the layer envelope should be treated as static or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool CacheExtent { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Layers_VectorLayer_CacheExtent_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When CacheExtent is enabled the layer Envelope will be calculated only once from DataSource, this
+helps to speed up the Envelope calculation with some DataProviders. Default is false for backward
+compatibility.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_ClippingEnabled.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.ClippingEnabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L98">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_ClippingEnabled_" data-uid="SharpMap.Layers.VectorLayer.ClippingEnabled*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_ClippingEnabled" data-uid="SharpMap.Layers.VectorLayer.ClippingEnabled">ClippingEnabled</h4>
+  <div class="markdown level1 summary"><p>Specifies whether polygons should be clipped prior to rendering</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ClippingEnabled { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Layers_VectorLayer_ClippingEnabled_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Clipping will clip <span class="xref">GeoAPI.Geometries.IPolygon</span> and
+<span class="xref">GeoAPI.Geometries.IMultiPolygon</span> to the current view prior
+to rendering the object.</p>
+<p>Enabling clipping might improve rendering speed if you are rendering 
+only small portions of very large objects.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_DataSource.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.DataSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L116">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_DataSource_" data-uid="SharpMap.Layers.VectorLayer.DataSource*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_DataSource" data-uid="SharpMap.Layers.VectorLayer.DataSource">DataSource</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IBaseProvider DataSource { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_Envelope.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.Envelope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L139">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_Envelope_" data-uid="SharpMap.Layers.VectorLayer.Envelope*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_Envelope" data-uid="SharpMap.Layers.VectorLayer.Envelope">Envelope</h4>
+  <div class="markdown level1 summary"><p>Returns the extent of the layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Envelope Envelope { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>Bounding box corresponding to the extent of the features in the layer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Envelope">Layer.Envelope</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_IsQueryEnabled.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.IsQueryEnabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L636">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_IsQueryEnabled_" data-uid="SharpMap.Layers.VectorLayer.IsQueryEnabled*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_IsQueryEnabled" data-uid="SharpMap.Layers.VectorLayer.IsQueryEnabled">IsQueryEnabled</h4>
+  <div class="markdown level1 summary"><p>Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, ExecuteIntersectionQuery() will be possible in all other situations when set to FALSE</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsQueryEnabled { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_SmoothingMode.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.SmoothingMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L107">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_SmoothingMode_" data-uid="SharpMap.Layers.VectorLayer.SmoothingMode*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_SmoothingMode" data-uid="SharpMap.Layers.VectorLayer.SmoothingMode">SmoothingMode</h4>
+  <div class="markdown level1 summary"><p>Render whether smoothing (antialiasing) is applied to lines and curves and the edges of filled areas</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SmoothingMode SmoothingMode { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.smoothingmode">SmoothingMode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_SRID.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L180">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_SRID_" data-uid="SharpMap.Layers.VectorLayer.SRID*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_SRID" data-uid="SharpMap.Layers.VectorLayer.SRID">SRID</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the SRID of this VectorLayer's data source</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int SRID { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SRID">Layer.SRID</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_Style.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.Style%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L129">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_Style_" data-uid="SharpMap.Layers.VectorLayer.Style*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_Style" data-uid="SharpMap.Layers.VectorLayer.Style">Style</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the rendering style of the vector layer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VectorStyle Style { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_Theme.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.Theme%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L82">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_Theme_" data-uid="SharpMap.Layers.VectorLayer.Theme*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_Theme" data-uid="SharpMap.Layers.VectorLayer.Theme">Theme</h4>
+  <div class="markdown level1 summary"><p>Gets or sets thematic settings for the layer. Set to null to ignore thematics</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ITheme Theme { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_Themes.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.Themes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L71">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_Themes_" data-uid="SharpMap.Layers.VectorLayer.Themes*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_Themes" data-uid="SharpMap.Layers.VectorLayer.Themes">Themes</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a Dictionary with themes suitable for this layer. A theme in the dictionary can be used for rendering be setting the Theme Property using a delegate function</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Dictionary&lt;string, ITheme&gt; Themes { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.dictionary-2">Dictionary</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>, <a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L645">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_Clone_" data-uid="SharpMap.Layers.VectorLayer.Clone*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_Clone" data-uid="SharpMap.Layers.VectorLayer.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L580">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_ExecuteIntersectionQuery_" data-uid="SharpMap.Layers.VectorLayer.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Layers.VectorLayer.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td><p>Geometry to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L609">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_ExecuteIntersectionQuery_" data-uid="SharpMap.Layers.VectorLayer.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Layers.VectorLayer.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td><p>Geometry to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_GetStylesToRender_SharpMap_Styles_IStyle_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.GetStylesToRender(SharpMap.Styles.IStyle)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L464">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_GetStylesToRender_" data-uid="SharpMap.Layers.VectorLayer.GetStylesToRender*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_GetStylesToRender_SharpMap_Styles_IStyle_" data-uid="SharpMap.Layers.VectorLayer.GetStylesToRender(SharpMap.Styles.IStyle)">GetStylesToRender(IStyle)</h4>
+  <div class="markdown level1 summary"><p>Unpacks styles to render (can be nested group-styles)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IEnumerable&lt;IStyle&gt; GetStylesToRender(IStyle style)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><span class="parametername">style</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_ReleaseManagedResources.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.ReleaseManagedResources%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L201">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_ReleaseManagedResources_" data-uid="SharpMap.Layers.VectorLayer.ReleaseManagedResources*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_ReleaseManagedResources" data-uid="SharpMap.Layers.VectorLayer.ReleaseManagedResources">ReleaseManagedResources()</h4>
+  <div class="markdown level1 summary"><p>Disposes the object</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReleaseManagedResources()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ReleaseManagedResources">Layer.ReleaseManagedResources()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.Render(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L215">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_Render_" data-uid="SharpMap.Layers.VectorLayer.Render*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Layers.VectorLayer.Render(System.Drawing.Graphics,SharpMap.MapViewport)">Render(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders the layer to a graphics object, using the given map viewport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Render(Graphics g, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics object reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map which is rendered</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Layer.Render(Graphics, MapViewport)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_RenderGeometry_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_IGeometry_SharpMap_Styles_VectorStyle_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.RenderGeometry(System.Drawing.Graphics%2CSharpMap.MapViewport%2CGeoAPI.Geometries.IGeometry%2CSharpMap.Styles.VectorStyle)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L492">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_RenderGeometry_" data-uid="SharpMap.Layers.VectorLayer.RenderGeometry*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_RenderGeometry_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_IGeometry_SharpMap_Styles_VectorStyle_" data-uid="SharpMap.Layers.VectorLayer.RenderGeometry(System.Drawing.Graphics,SharpMap.MapViewport,GeoAPI.Geometries.IGeometry,SharpMap.Styles.VectorStyle)">RenderGeometry(Graphics, MapViewport, IGeometry, VectorStyle)</h4>
+  <div class="markdown level1 summary"><p>Method to render <code data-dev-comment-type="paramref" class="paramref">feature</code> using <code data-dev-comment-type="paramref" class="paramref">style</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RenderGeometry(Graphics g, MapViewport map, IGeometry feature, VectorStyle style)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">feature</span></td>
+        <td><p>The feature's geometry</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><span class="parametername">style</span></td>
+        <td><p>The style to apply</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_RenderGeometryEx_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_IGeometry_SharpMap_Styles_VectorStyle_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.RenderGeometryEx(System.Drawing.Graphics%2CSharpMap.MapViewport%2CGeoAPI.Geometries.IGeometry%2CSharpMap.Styles.VectorStyle)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L504">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_RenderGeometryEx_" data-uid="SharpMap.Layers.VectorLayer.RenderGeometryEx*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_RenderGeometryEx_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_IGeometry_SharpMap_Styles_VectorStyle_" data-uid="SharpMap.Layers.VectorLayer.RenderGeometryEx(System.Drawing.Graphics,SharpMap.MapViewport,GeoAPI.Geometries.IGeometry,SharpMap.Styles.VectorStyle)">RenderGeometryEx(Graphics, MapViewport, IGeometry, VectorStyle)</h4>
+  <div class="markdown level1 summary"><p>Function to render <code data-dev-comment-type="paramref" class="paramref">feature</code> using <code data-dev-comment-type="paramref" class="paramref">style</code> and returning the area covered.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected RectangleF RenderGeometryEx(Graphics g, MapViewport map, IGeometry feature, VectorStyle style)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">feature</span></td>
+        <td><p>The feature's geometry</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><span class="parametername">style</span></td>
+        <td><p>The style to apply</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_RenderInternal_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.RenderInternal(System.Drawing.Graphics%2CSharpMap.MapViewport%2CGeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L361">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_RenderInternal_" data-uid="SharpMap.Layers.VectorLayer.RenderInternal*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_RenderInternal_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Layers.VectorLayer.RenderInternal(System.Drawing.Graphics,SharpMap.MapViewport,GeoAPI.Geometries.Envelope)">RenderInternal(Graphics, MapViewport, Envelope)</h4>
+  <div class="markdown level1 summary"><p>Method to render this layer to the map, applying <a class="xref" href="SharpMap.Layers.VectorLayer.html#SharpMap_Layers_VectorLayer_Style">Style</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map object</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">envelope</span></td>
+        <td><p>The envelope to render</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer_RenderInternal_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_Envelope_SharpMap_Rendering_Thematics_ITheme_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer.RenderInternal(System.Drawing.Graphics%2CSharpMap.MapViewport%2CGeoAPI.Geometries.Envelope%2CSharpMap.Rendering.Thematics.ITheme)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L243">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VectorLayer_RenderInternal_" data-uid="SharpMap.Layers.VectorLayer.RenderInternal*"></a>
+  <h4 id="SharpMap_Layers_VectorLayer_RenderInternal_System_Drawing_Graphics_SharpMap_MapViewport_GeoAPI_Geometries_Envelope_SharpMap_Rendering_Thematics_ITheme_" data-uid="SharpMap.Layers.VectorLayer.RenderInternal(System.Drawing.Graphics,SharpMap.MapViewport,GeoAPI.Geometries.Envelope,SharpMap.Rendering.Thematics.ITheme)">RenderInternal(Graphics, MapViewport, Envelope, ITheme)</h4>
+  <div class="markdown level1 summary"><p>Method to render this layer to the map, applying <code data-dev-comment-type="paramref" class="paramref">theme</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RenderInternal(Graphics g, MapViewport map, Envelope envelope, ITheme theme)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map object</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">envelope</span></td>
+        <td><p>The envelope to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a></td>
+        <td><span class="parametername">theme</span></td>
+        <td><p>The theme to apply</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayerEx.html">ILayerEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ICanQueryLayer.html">ICanQueryLayer</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">System.ICloneable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetCoordinateSystem(ILayer)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetFactory(ILayer)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VectorLayer.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VectorLayer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VectorLayer.cs/#L36" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

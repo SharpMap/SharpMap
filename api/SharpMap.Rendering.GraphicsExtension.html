@@ -1,0 +1,827 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GraphicsExtension
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GraphicsExtension
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.GraphicsExtension">
+  
+  
+  <h1 id="SharpMap_Rendering_GraphicsExtension" data-uid="SharpMap.Rendering.GraphicsExtension" class="text-break">Class GraphicsExtension
+  </h1>
+  <div class="markdown level0 summary"><p>Extensions methods for text on path label rendering</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GraphicsExtension</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.html">SharpMap.Rendering</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_GraphicsExtension_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public static class GraphicsExtension</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Drawing_Drawing2D_GraphicsPath_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSharpMap.Rendering.TextPathAlign%2CSharpMap.Rendering.TextPathPosition%2CSystem.Drawing.Drawing2D.GraphicsPath)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L108">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_DrawString_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Drawing_Drawing2D_GraphicsPath_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,SharpMap.Rendering.TextPathAlign,SharpMap.Rendering.TextPathPosition,System.Drawing.Drawing2D.GraphicsPath)">DrawString(Graphics, String, Font, Brush, TextPathAlign, TextPathPosition, GraphicsPath)</h4>
+  <div class="markdown level1 summary"><p>Method to draw <code data-dev-comment-type="paramref" class="paramref">s</code> on the provided <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td><span class="parametername">textPathAlign</span></td>
+        <td><p>The horizontal position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td><span class="parametername">textPathPosition</span></td>
+        <td><p>The vertical position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Drawing_Drawing2D_GraphicsPath_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSharpMap.Rendering.TextPathAlign%2CSharpMap.Rendering.TextPathPosition%2CSystem.Int32%2CSystem.Drawing.Drawing2D.GraphicsPath)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L145">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_DrawString_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Drawing_Drawing2D_GraphicsPath_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,SharpMap.Rendering.TextPathAlign,SharpMap.Rendering.TextPathPosition,System.Int32,System.Drawing.Drawing2D.GraphicsPath)">DrawString(Graphics, String, Font, Brush, TextPathAlign, TextPathPosition, Int32, GraphicsPath)</h4>
+  <div class="markdown level1 summary"><p>Method to measure the length of a string along a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td><span class="parametername">textPathAlign</span></td>
+        <td><p>The horizontal position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td><span class="parametername">textPathPosition</span></td>
+        <td><p>The vertical position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">letterSpace</span></td>
+        <td><p>A value controlling the spacing between letters</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Single_System_Drawing_Drawing2D_GraphicsPath_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSharpMap.Rendering.TextPathAlign%2CSharpMap.Rendering.TextPathPosition%2CSystem.Int32%2CSystem.Single%2CSystem.Drawing.Drawing2D.GraphicsPath%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L203">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_DrawString_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Single_System_Drawing_Drawing2D_GraphicsPath_System_Boolean_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,SharpMap.Rendering.TextPathAlign,SharpMap.Rendering.TextPathPosition,System.Int32,System.Single,System.Drawing.Drawing2D.GraphicsPath,System.Boolean)">DrawString(Graphics, String, Font, Brush, TextPathAlign, TextPathPosition, Int32, Single, GraphicsPath, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Method to draw a string on a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> of a string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath, bool showPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td><span class="parametername">textPathAlign</span></td>
+        <td><p>The horizontal position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td><span class="parametername">textPathPosition</span></td>
+        <td><p>The vertical position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">letterSpace</span></td>
+        <td><p>A value controlling the spacing between letters</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotateDegree</span></td>
+        <td><p>A value controlling the rotation of <code data-dev-comment-type="paramref" class="paramref">s</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">showPath</span></td>
+        <td><p>A value indicating if the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code> should be drawn, too.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_System_Drawing_Drawing2D_GraphicsPath_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSystem.Drawing.Drawing2D.GraphicsPath)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L93">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_DrawString_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_DrawString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_System_Drawing_Drawing2D_GraphicsPath_" data-uid="SharpMap.Rendering.GraphicsExtension.DrawString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,System.Drawing.Drawing2D.GraphicsPath)">DrawString(Graphics, String, Font, Brush, GraphicsPath)</h4>
+  <div class="markdown level1 summary"><p>Method to draw <code data-dev-comment-type="paramref" class="paramref">s</code> on the provided <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void DrawString(Graphics graphics, string s, Font font, Brush brush, GraphicsPath graphicsPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Drawing_Drawing2D_GraphicsPath_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSharpMap.Rendering.TextPathAlign%2CSharpMap.Rendering.TextPathPosition%2CSystem.Drawing.Drawing2D.GraphicsPath)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L80">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_MeasureString_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Drawing_Drawing2D_GraphicsPath_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,SharpMap.Rendering.TextPathAlign,SharpMap.Rendering.TextPathPosition,System.Drawing.Drawing2D.GraphicsPath)">MeasureString(Graphics, String, Font, Brush, TextPathAlign, TextPathPosition, GraphicsPath)</h4>
+  <div class="markdown level1 summary"><p>Method to measure the length of a string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, GraphicsPath graphicsPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td><span class="parametername">textPathAlign</span></td>
+        <td><p>The horizontal position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td><span class="parametername">textPathPosition</span></td>
+        <td><p>The vertical position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>[]</td>
+        <td><p>An array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>s</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Drawing_Drawing2D_GraphicsPath_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSharpMap.Rendering.TextPathAlign%2CSharpMap.Rendering.TextPathPosition%2CSystem.Int32%2CSystem.Drawing.Drawing2D.GraphicsPath)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L125">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_MeasureString_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Drawing_Drawing2D_GraphicsPath_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,SharpMap.Rendering.TextPathAlign,SharpMap.Rendering.TextPathPosition,System.Int32,System.Drawing.Drawing2D.GraphicsPath)">MeasureString(Graphics, String, Font, Brush, TextPathAlign, TextPathPosition, Int32, GraphicsPath)</h4>
+  <div class="markdown level1 summary"><p>Method to measure the length of a string along a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td><span class="parametername">textPathAlign</span></td>
+        <td><p>The horizontal position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td><span class="parametername">textPathPosition</span></td>
+        <td><p>The vertical position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">letterSpace</span></td>
+        <td><p>A value controlling the spacing between letters</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>[]</td>
+        <td><p>An array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>s</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Single_System_Drawing_Drawing2D_GraphicsPath_System_Collections_Generic_List_System_Single___System_Collections_Generic_List_System_Drawing_PointF___System_Collections_Generic_List_System_Drawing_Point___.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSharpMap.Rendering.TextPathAlign%2CSharpMap.Rendering.TextPathPosition%2CSystem.Int32%2CSystem.Single%2CSystem.Drawing.Drawing2D.GraphicsPath%2CSystem.Collections.Generic.List%7BSystem.Single%7D%40%2CSystem.Collections.Generic.List%7BSystem.Drawing.PointF%7D%40%2CSystem.Collections.Generic.List%7BSystem.Drawing.Point%7D%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L165">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_MeasureString_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_SharpMap_Rendering_TextPathAlign_SharpMap_Rendering_TextPathPosition_System_Int32_System_Single_System_Drawing_Drawing2D_GraphicsPath_System_Collections_Generic_List_System_Single___System_Collections_Generic_List_System_Drawing_PointF___System_Collections_Generic_List_System_Drawing_Point___" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,SharpMap.Rendering.TextPathAlign,SharpMap.Rendering.TextPathPosition,System.Int32,System.Single,System.Drawing.Drawing2D.GraphicsPath,System.Collections.Generic.List{System.Single}@,System.Collections.Generic.List{System.Drawing.PointF}@,System.Collections.Generic.List{System.Drawing.Point}@)">MeasureString(Graphics, String, Font, Brush, TextPathAlign, TextPathPosition, Int32, Single, GraphicsPath, ref List&lt;Single&gt;, ref List&lt;PointF&gt;, ref List&lt;Point&gt;)</h4>
+  <div class="markdown level1 summary"><p>Method to draw a string on a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> of a string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath, ref List&lt;float&gt; angles, ref List&lt;PointF&gt; pointsText, ref List&lt;Point&gt; pointsUp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td><span class="parametername">textPathAlign</span></td>
+        <td><p>The horizontal position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td><span class="parametername">textPathPosition</span></td>
+        <td><p>The vertical position on the <code data-dev-comment-type="paramref" class="paramref">graphicsPath</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">letterSpace</span></td>
+        <td><p>A value controlling the spacing between letters</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">rotateDegree</span></td>
+        <td><p>A value controlling the rotation of <code data-dev-comment-type="paramref" class="paramref">s</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> along which to render.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td><span class="parametername">angles</span></td>
+        <td><p>A list of angle values (in degrees), one for each letter</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>&gt;</td>
+        <td><span class="parametername">pointsText</span></td>
+        <td><p>A list of positions, one for each letter</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a>&gt;</td>
+        <td><span class="parametername">pointsUp</span></td>
+        <td><p>A list of points (don't know what for)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_System_Drawing_Drawing2D_GraphicsPath_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Brush%2CSystem.Drawing.Drawing2D.GraphicsPath)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L64">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_GraphicsExtension_MeasureString_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString*"></a>
+  <h4 id="SharpMap_Rendering_GraphicsExtension_MeasureString_System_Drawing_Graphics_System_String_System_Drawing_Font_System_Drawing_Brush_System_Drawing_Drawing2D_GraphicsPath_" data-uid="SharpMap.Rendering.GraphicsExtension.MeasureString(System.Drawing.Graphics,System.String,System.Drawing.Font,System.Drawing.Brush,System.Drawing.Drawing2D.GraphicsPath)">MeasureString(Graphics, String, Font, Brush, GraphicsPath)</h4>
+  <div class="markdown level1 summary"><p>Method to measure the length of a string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static RectangleF[] MeasureString(Graphics graphics, string s, Font font, Brush brush, GraphicsPath graphicsPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a> object to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">s</span></td>
+        <td><p>The string to measure</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">brush</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> to use</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><span class="parametername">graphicsPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a> describing the</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>[]</td>
+        <td><p>An array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>s</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_GraphicsExtension.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.GraphicsExtension%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L52" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

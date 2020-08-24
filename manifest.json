@@ -18,7 +18,3703 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "8tFqfYnZ8J+YHRdpQthVuw=="
+          "hash": "VTJuVe1JSpz1fWKWH75Gkw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GeoAPI.CoordinateSystems.Transformations.GeometryTransform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GeoAPI.CoordinateSystems.Transformations.GeometryTransform.html",
+          "hash": "zdpV0QSkcPtDL9xfqmZ8pA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GeoAPI.CoordinateSystems.Transformations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GeoAPI.CoordinateSystems.Transformations.html",
+          "hash": "QR2GtAv7TpxSk1QbkAQJ8g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GeoAPI.Geometries.GeoAPIEx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GeoAPI.Geometries.GeoAPIEx.html",
+          "hash": "VMDdMzFhuwIZ1dY7be/THg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GeoAPI.Geometries.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GeoAPI.Geometries.html",
+          "hash": "5kXQCh+jx3qxSgF7ywe8YQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GeoAPI.ICoordinateSystemRepository.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GeoAPI.ICoordinateSystemRepository.html",
+          "hash": "gjAG0JXtHiTwpztyFiV62A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/GeoAPI.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/GeoAPI.html",
+          "hash": "UGHEQ381KWaT6rGYZwnvEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Base.DisposableObject.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Base.DisposableObject.html",
+          "hash": "qEwLx5CET1bJ9umhrE+5yw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Base.IDisposableEx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Base.IDisposableEx.html",
+          "hash": "JxVJ4I4z6ya0Dq08wdH3WA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Base.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Base.html",
+          "hash": "AtSzt73lKMpHuLfMKM1ORg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownBinary.GeometryFromWKB.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownBinary.GeometryFromWKB.html",
+          "hash": "i6BUWQGbGJTfod+Fk6ABew=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownBinary.GeometryToWKB.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownBinary.GeometryToWKB.html",
+          "hash": "95AH7AgqSRlw72fOaDMbpA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownBinary.WkbByteOrder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownBinary.WkbByteOrder.html",
+          "hash": "hNIDlRBaf4rcAj/CNn7ahQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownBinary.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownBinary.html",
+          "hash": "vyJAbU1HQ3kOAF+fw4VdBA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownText.GeometryFromWKT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownText.GeometryFromWKT.html",
+          "hash": "Itg35voEpXTc+xqbg3+g1w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownText.GeometryToWKT.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownText.GeometryToWKT.html",
+          "hash": "WRIUYb/qhYM+tmnO5/UemA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownText.SpatialReference.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownText.SpatialReference.html",
+          "hash": "i4wkXDbM7r4U9W68VSy8PA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Converters.WellKnownText.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Converters.WellKnownText.html",
+          "hash": "0HIRzNdVAnP3Tq3GNcxzqw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.CoordinateSystems.AxisOrderRegistry.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.CoordinateSystems.AxisOrderRegistry.html",
+          "hash": "1l5US16Ok51tKAtjyfU55A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.CoordinateSystems.CoordinateSystemExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.CoordinateSystems.CoordinateSystemExtensions.html",
+          "hash": "lDMVsPc2CcV00XgVhqbXfA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.CoordinateSystems.CoordinateSystemServices.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.CoordinateSystems.CoordinateSystemServices.html",
+          "hash": "UuhzP4kx5/7HY+a3q4hrZQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.CoordinateSystems.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.CoordinateSystems.html",
+          "hash": "CdjHpUfwATh4XXv+MZ2AmA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.FeatureDataRow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.FeatureDataRow.html",
+          "hash": "6IAnDAXbxzU6eg16UVTFIw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.FeatureDataRowChangeEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.FeatureDataRowChangeEventArgs.html",
+          "hash": "oDVCNtEyj+wJWZdvwhxEFw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.FeatureDataRowChangeEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.FeatureDataRowChangeEventHandler.html",
+          "hash": "Cs5NEOubhHnuR809yynSEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.FeatureDataSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.FeatureDataSet.html",
+          "hash": "GUuYHF8DZyDDjRUvywjuZg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.FeatureDataTable.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.FeatureDataTable.html",
+          "hash": "KmtPbn6rBrqjkEXkvzISHQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.FeatureTableCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.FeatureTableCollection.html",
+          "hash": "twbV9izaIapRewpad4R8Xg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.BaseProvider-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.BaseProvider-1.html",
+          "hash": "bArSLvktYLOhxMeWF7piEQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.BaseProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.BaseProvider.html",
+          "hash": "Kl0sejsNPL/XskOaVWhwpw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.DbPoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.DbPoint.html",
+          "hash": "y/yazJRr9k6M1Qvl4OHExg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.DbTwoPointLine.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.DbTwoPointLine.html",
+          "hash": "9roU2uknhAyOR6+/c+UAow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.DbaseReader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.DbaseReader.html",
+          "hash": "A3SZv6FDxRUksB31aG+2Vg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.FilterProvider.FilterMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.FilterProvider.FilterMethod.html",
+          "hash": "o5aL13PVooxUhDQz7g3fSQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.FilterProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.FilterProvider.html",
+          "hash": "6JGindGXblFZ/22kZdjTpw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.GeometryFeatureProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.GeometryFeatureProvider.html",
+          "hash": "pPpcAA+Y1e8oOX/lkI7ZYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.GeometryProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.GeometryProvider.html",
+          "hash": "NW6qRC5cmaIX6WgmrBMozw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.IBaseProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.IBaseProvider.html",
+          "hash": "SX+QCmUzvDOXGJMlwOIVCQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.IGuidProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.IGuidProvider.html",
+          "hash": "KM1lCRRtj88git1RQx5ESQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.IProvider-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.IProvider-1.html",
+          "hash": "io2dsCZy7KBjc7E+AxJaqQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.IProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.IProvider.html",
+          "hash": "4v2YqwE5XHsjUPs8/IR75Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.IProviderConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.IProviderConfiguration.html",
+          "hash": "zQGY02UnSYbU8jAJ5d+aJg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.MsSql.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.MsSql.html",
+          "hash": "mGg7egbHUX1wUkn9Fa8Yog=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.MsSqlSpatial.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.MsSqlSpatial.html",
+          "hash": "DFm6ecD4iTNAQaN1hJgvtw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.OleDbPoint.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.OleDbPoint.html",
+          "hash": "FFy7pdLln/YyjMnDSeVoBw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.PreparedGeometryProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.PreparedGeometryProvider.html",
+          "hash": "amQBokXQfr+C+rID/4hziw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.ShapeFile.SpatialIndexCreation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.ShapeFile.SpatialIndexCreation.html",
+          "hash": "UKCJotMdC8QRsD9xjDmd2w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.ShapeFile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.ShapeFile.html",
+          "hash": "tfeyz2DAiDIZ6Wqw1TIIyQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.ShapeFileProviderConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.ShapeFileProviderConfiguration.html",
+          "hash": "V9oBlwDC1sExpK0qGMCeOQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.ShapeType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.ShapeType.html",
+          "hash": "n+uykC/khEEp5VurDvOfyg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SharpMapFeatureColumn.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SharpMapFeatureColumn.html",
+          "hash": "TJv3YMfDO4pFboD4YRD2Gw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SharpMapFeatureColumns.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SharpMapFeatureColumns.html",
+          "hash": "L8vR6GKqDQt2We1r+TjXeg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SpatialDbProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SpatialDbProvider.html",
+          "hash": "quJM4n/c0YIQTutciix3FA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SpatialDbUtility.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SpatialDbUtility.html",
+          "hash": "J5QFMhAE00et1k8wpYbidA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SqlServer2008.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SqlServer2008.html",
+          "hash": "bku8Xd4o8NUpF6MUeOIVLw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SqlServer2008Configuration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SqlServer2008Configuration.html",
+          "hash": "e4mFc1KFy0bVffN5lzUFrA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SqlServer2008ExtentsMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SqlServer2008ExtentsMode.html",
+          "hash": "0jwamaWnSTJ75MRtM809Gw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.SqlServerSpatialObjectType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.SqlServerSpatialObjectType.html",
+          "hash": "Q02ZADnN8vsN6Tjs0Z0UwA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.WFS.WFSVersionEnum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.WFS.WFSVersionEnum.html",
+          "hash": "eiCoa+zOuP4mHZM70gOxFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.WFS.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.WFS.html",
+          "hash": "jzaa7cvCqHAb++eDXglIKA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.Providers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.Providers.html",
+          "hash": "mzSLeA2TeDMNDTUUfdOtXw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Data.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Data.html",
+          "hash": "kFVoUCTOjPgEgAfKiX3/9g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.Color.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.Color.html",
+          "hash": "O9b4jTZjoJADaPqDV8CP7g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.Matrix.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.Matrix.html",
+          "hash": "azVHbSc8/84j6BGkEM3OxQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.MatrixOrder.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.MatrixOrder.html",
+          "hash": "Uttl/BIICb/uSQTs1MNXjA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.Point.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.Point.html",
+          "hash": "oW/nv33lowBCm2BEwMartA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.PointD.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.PointD.html",
+          "hash": "JTyc1WojOpQ3UiQlfFSRpQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.PointF.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.PointF.html",
+          "hash": "7BBm9jC7VydWbBfRMl2gZw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Drawing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Drawing.html",
+          "hash": "wDdqZHA5HKaI6wqZhBTt+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.ISession.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.ISession.html",
+          "hash": "jBDzI/CtRgNEpSJdmEFXlg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.LayerRenderingEventArgs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.LayerRenderingEventArgs.html",
+          "hash": "ZcDklRCz57tIeSn9RV4mtg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.AsyncLayerProxyLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.AsyncLayerProxyLayer.html",
+          "hash": "tRjtH5PtVUtqDrBeu5KklQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.DownloadProgressHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.DownloadProgressHandler.html",
+          "hash": "jaPvkoSOu7EzdRcvHceFcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.DuplicateLayerException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.DuplicateLayerException.html",
+          "hash": "aIbf6aKpXezk4SMRJJX16A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.GdiImageLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.GdiImageLayer.html",
+          "hash": "dZ5rt/2RQc3Vl+Zbakr7eA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.GdiImageLayerProxy-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.GdiImageLayerProxy-1.html",
+          "hash": "U+6KxQOf44JJI1qIE9X2Eg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.ICanQueryLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.ICanQueryLayer.html",
+          "hash": "LAky0tq4gio6WJ159UYi6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.ILayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.ILayer.html",
+          "hash": "RA2AVmw2wj2sBl7VuI6WYg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.ILayerEx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.ILayerEx.html",
+          "hash": "WEfcd+z94bmE2V7m5yXJ3Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.ILayersContainer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.ILayersContainer.html",
+          "hash": "L4NcLeAXvUOug3q+Tv1WWg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.ITileAsyncLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.ITileAsyncLayer.html",
+          "hash": "JJnL+1ChnEjWbRuu8PTejg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LabelLayer.GetLabelMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LabelLayer.GetLabelMethod.html",
+          "hash": "WEAMonU9dsa4jvNvwf1Dfw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LabelLayer.GetLocationMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LabelLayer.GetLocationMethod.html",
+          "hash": "KKHSo66CM9bp0eRvPUlCoQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LabelLayer.GetPriorityMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LabelLayer.GetPriorityMethod.html",
+          "hash": "m8YY0mDRGmCHogdg2/NarQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LabelLayer.MultipartGeometryBehaviourEnum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LabelLayer.MultipartGeometryBehaviourEnum.html",
+          "hash": "rW3JpZbEfPUEmz5Sc5oGyg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LabelLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LabelLayer.html",
+          "hash": "E7R6Mq3bdzLFCHkr7Z1ZhA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Layer.LayerRenderedEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Layer.LayerRenderedEventHandler.html",
+          "hash": "8ed5Qpwuce2NrW4RLLB0VA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Layer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Layer.html",
+          "hash": "stbYrrBLlAiZ6RjPO6hqzw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LayerCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LayerCollection.html",
+          "hash": "xmFLomedybQO+TgPH6MepA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LayerCollectionType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LayerCollectionType.html",
+          "hash": "x6xbLc1A0GAlilvyT+FJ2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.LayerGroup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.LayerGroup.html",
+          "hash": "ki7XJ4zUgSAELt767n0Khw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.MapNewTileAvaliabledHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.MapNewTileAvaliabledHandler.html",
+          "hash": "RwaLR5cciJBMhzEzAustLQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Symbolizer.AnyGeometryVectorLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Symbolizer.AnyGeometryVectorLayer.html",
+          "hash": "wr39X44MFoa80eKHTEs2hA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Symbolizer.BaseVectorLayer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Symbolizer.BaseVectorLayer-1.html",
+          "hash": "z86JSYwW1Aq46VxyVAu3jw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Symbolizer.LinealVectorLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Symbolizer.LinealVectorLayer.html",
+          "hash": "PFl3uTilw/EvrKBxDnNCng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Symbolizer.PolygonalVectorLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Symbolizer.PolygonalVectorLayer.html",
+          "hash": "zEsNAJbNxuD+3RRELAUUwQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Symbolizer.PuntalVectorLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Symbolizer.PuntalVectorLayer.html",
+          "hash": "aylNdcj+iGNt29rYm2Nimw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.Symbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.Symbolizer.html",
+          "hash": "Rkas9bMJe30Tyz2kPODvDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.TiledWmsLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.TiledWmsLayer.html",
+          "hash": "m52I5ryO8/moyl0hZyi+4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.VariableLayerCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.VariableLayerCollection.html",
+          "hash": "UjTYQOv7Ev1nR1elaHV5Hg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.VariableLayerCollectionRequeryHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.VariableLayerCollectionRequeryHandler.html",
+          "hash": "QTcKXeA6+UjrbpOnUT5/DA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.VectorLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.VectorLayer.html",
+          "hash": "n5SH8C+Lg5g8gDjxolTFQQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.WmsLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.WmsLayer.html",
+          "hash": "ZqySOkHAf3zNvP0nVN30Mg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Layers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Layers.html",
+          "hash": "S+s4NdcWRXIKOJ9faeJnOg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Map.LayersChangedEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Map.LayersChangedEventHandler.html",
+          "hash": "oU6O0keohqV3GQ9Cun51AQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Map.MapRenderedEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Map.MapRenderedEventHandler.html",
+          "hash": "rV1F5Dr5Er7V2SM249N4ww=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Map.MapRenderingEventHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Map.MapRenderingEventHandler.html",
+          "hash": "fiJh9OFJ1+ul208NxRzyWQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Map.MapViewChangedHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Map.MapViewChangedHandler.html",
+          "hash": "GlqnU8nyiavnYnMKLCYywA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Map.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Map.html",
+          "hash": "xBaJTlOmIERBmvCu028oLw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.MapViewPortGuard.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.MapViewPortGuard.html",
+          "hash": "VfPsYk70qs3IfN57poD7KA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.MapViewport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.MapViewport.html",
+          "hash": "+RYlAmyY3glIMk51rL3J3A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.MapViewportLock.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.MapViewportLock.html",
+          "hash": "nfgmaMgqnQ2kerod+Hq0wQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.BaseLabel-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.BaseLabel-1.html",
+          "hash": "5GaMR8MdrizMOioMACbZng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.BaseLabel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.BaseLabel.html",
+          "hash": "x1EQUSalq1lOsr4eQDaZsw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Disclaimer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Disclaimer.html",
+          "hash": "LPKwdjeheUPwqQhpkoOsLw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.EyeOfSight.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.EyeOfSight.html",
+          "hash": "rVFJXa8JA3Qsnm83edYEfA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.Graticule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.Graticule.html",
+          "hash": "MFSx6JhQjWLI3rshhO7bfA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.GraticuleBorders.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.GraticuleBorders.html",
+          "hash": "gDiRWmSzrOZOhSqL0A/E5w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle.html",
+          "hash": "Np4m3a8+7LimlXvgBqkbLA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GraticuleTheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GraticuleTheme.html",
+          "hash": "8TGvrBXPWJetrxHgBsy7uw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html",
+          "hash": "C3voxRQ6APmOGiGeVyoUMw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.PcsGraticuleMode.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.PcsGraticuleMode.html",
+          "hash": "4KNwmXR40VId/e+hoNmIrA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.Graticule.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.Graticule.html",
+          "hash": "Liz0k8M9JwUj4d1RH//uPg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.IMapDecoration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.IMapDecoration.html",
+          "hash": "GkDSMFB/mR3cor2keSGFGQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.MapDecoration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.MapDecoration.html",
+          "hash": "5P4WKcCL0d3YmXOjCqdWvw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.MapDecorationAnchor.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.MapDecorationAnchor.html",
+          "hash": "YyAGm+LLoWHIfSCz5sVoqA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.MapDecorationAnchorFlags.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.MapDecorationAnchorFlags.html",
+          "hash": "TdEDWAjiutbDbWhsv3NkIw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.NorthArrow.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.NorthArrow.html",
+          "hash": "BjyNQqLl0lwqn1l+foOpwA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.html",
+          "hash": "zf2SrdUr7b9af8UVC+ASFg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.ScaleBar.ScaleBarLabelText.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.ScaleBar.ScaleBarLabelText.html",
+          "hash": "J4at+bF+PTf3XezeiopHmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.ScaleBar.ScaleBarStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.ScaleBar.ScaleBarStyle.html",
+          "hash": "uVhjvjVIgOjaMO/WqkztOg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.ScaleBar.Unit.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.ScaleBar.Unit.html",
+          "hash": "HlJJrRujayBbOdj8+jrphg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.ScaleBar.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.ScaleBar.html",
+          "hash": "ChwhwPnqFNZRtuXRvyWAJg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Decoration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Decoration.html",
+          "hash": "2TbrJDllZNr2bVOW/dnmzQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Exceptions.RenderException.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Exceptions.RenderException.html",
+          "hash": "3D7geG6Z5MK5vihrrrBieQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Exceptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Exceptions.html",
+          "hash": "cP9Xszmfcr9hqtpmjXVSSA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.GraphicsExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.GraphicsExtension.html",
+          "hash": "U2Ltfl7QPYAvBgqJIsmGPA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Label.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Label.html",
+          "hash": "hBen7mQzOx59AXllKjkYvQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.LabelBox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.LabelBox.html",
+          "hash": "btGfZemnCaoWg620XuGoAw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.LabelCollisionDetection.LabelFilterMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.LabelCollisionDetection.LabelFilterMethod.html",
+          "hash": "DH6q1iQwtzYeqhmT1yHJcg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.LabelCollisionDetection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.LabelCollisionDetection.html",
+          "hash": "3++dvVeabVT/+IFArSBttw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.LayerCollectionRenderer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.LayerCollectionRenderer.html",
+          "hash": "5Asd7i1L1p8sMGm/QqQYIw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.PathLabel.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.PathLabel.html",
+          "hash": "Rw924a7UlzGoHPSVNoTsnw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.BaseSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.BaseSymbolizer.html",
+          "hash": "5PXK2S9xhF3AyJ3ftIsHLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.BasicLineSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.BasicLineSymbolizer.html",
+          "hash": "c8VizX8pA7lccvuOXwt6yw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.BasicLineSymbolizerWithOffset.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.BasicLineSymbolizerWithOffset.html",
+          "hash": "rU17EBBw8TR3r/T8XqUUYA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer.html",
+          "hash": "7o07ERvGNuH9kGgyVKZA2w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.CachedLineSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.CachedLineSymbolizer.html",
+          "hash": "4+mPw7oSEPCymE90yorluA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer.html",
+          "hash": "GF6Pj2/qFKVnsKWYLoHEhw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.CohenSutherlandLineClipping.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.CohenSutherlandLineClipping.html",
+          "hash": "Z/D6AZ1sM1MZiODoAYX/Gw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.GeometrySymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.GeometrySymbolizer.html",
+          "hash": "XZabZcbkdxePWyZL2CE8FA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.ILineSymbolizeHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.ILineSymbolizeHandler.html",
+          "hash": "tw3i2PFNh0DsHL0T+WXFQw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.ILineSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.ILineSymbolizer.html",
+          "hash": "aIAp9VJjlT8YrAXhJrF9GQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.IPointSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.IPointSymbolizer.html",
+          "hash": "qsli8sGbWhqVFG9y02u9Tw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.IPointSymbolizerEx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.IPointSymbolizerEx.html",
+          "hash": "JRqK0ZcumbVZuZxOup8cog=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.IPolygonSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.IPolygonSymbolizer.html",
+          "hash": "zHaWv2QSVwxgE3IfWgVebw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.ISymbolizer-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.ISymbolizer-1.html",
+          "hash": "PCSQ5eGhIyfNFCnNOEkRvg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.ISymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.ISymbolizer.html",
+          "hash": "1IeEs1XWpQhTVNPKIlTAMA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.LineSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.LineSymbolizer.html",
+          "hash": "imGnNJZQpA3T3biNpWomtA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.ListPointSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.ListPointSymbolizer.html",
+          "hash": "mHlckoS9jXVljCU/3Bob1w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.PathPointSymbolizer.PathDefinition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.PathPointSymbolizer.PathDefinition.html",
+          "hash": "jOitIDkx2dYJMg72idYzMg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.PathPointSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.PathPointSymbolizer.html",
+          "hash": "0UQD4nBChoIYcb82+asYiA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.PlainLineSymbolizeHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.PlainLineSymbolizeHandler.html",
+          "hash": "xelAiw2zj4myvL1Sb5gmLQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.PointSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.PointSymbolizer.html",
+          "hash": "Er5WaK4H6jkZko8YlmpXng=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.PolygonSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.PolygonSymbolizer.html",
+          "hash": "kcvpg/mss0prDEs/f78hbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.PolygonSymbolizerUsingLineSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.PolygonSymbolizerUsingLineSymbolizer.html",
+          "hash": "TDWsqFf6lfFD6jA4zy9EwQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.RasterPointSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.RasterPointSymbolizer.html",
+          "hash": "mLzRi5r1B0NQcyZNmUCX2w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.Utility.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.Utility.html",
+          "hash": "GWMG1NNyPtQJG+tKDfIKkA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander.html",
+          "hash": "dC3pEMzTvi5ND8NWIBbc1Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.html",
+          "hash": "VCdVOSQX+ZIUnR2vTM10iw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Symbolizer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Symbolizer.html",
+          "hash": "Xybc2izctuMcXcFyi9oW7A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.TextOnPath.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.TextOnPath.html",
+          "hash": "BKtT7XuzM4r858Rk6imAVQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.TextPathAlign.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.TextPathAlign.html",
+          "hash": "LLTlXBxuvdaQAHCmeWjyYA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.TextPathPosition.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.TextPathPosition.html",
+          "hash": "9+caBpC9J9ZwgVy+yF1CBA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.ColorBlend.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.ColorBlend.html",
+          "hash": "n7UbAjVXOPJDF/RLqooSOQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod.html",
+          "hash": "NUWoGh7t9eqDc1WiRODkuQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.CustomTheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.CustomTheme.html",
+          "hash": "1VYbZEmMTsDB/7FKNTkZ+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.FontSizeTheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.FontSizeTheme.html",
+          "hash": "Rdfy+jwCOpm/5tCZMg+zCA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.GradientTheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.GradientTheme.html",
+          "hash": "2MKyd06tiA6MzmTZzh0Y5w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.GradientThemeBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.GradientThemeBase.html",
+          "hash": "D3URxo+G8ws5sbd3Y9yOQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.ITheme.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.ITheme.html",
+          "hash": "tofh4+imRYaipN/SSm6uLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.IThemeEx.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.IThemeEx.html",
+          "hash": "Au6GZRmK4Us09Kp/vBPP/w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.UniqueValuesTheme-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.UniqueValuesTheme-1.html",
+          "hash": "qqbe+kBk3ZL47Z3FkwW7MA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.Thematics.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.Thematics.html",
+          "hash": "4SzVf3H78PZAzceDEMEEpg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.VectorRenderer.SizeOfStringDelegate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.VectorRenderer.SizeOfStringDelegate.html",
+          "hash": "OCTdyEr/P8wYvh1ijKEtbQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.VectorRenderer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.VectorRenderer.html",
+          "hash": "/tdlyTC414jkPdm+OOhAzw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Rendering.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Rendering.html",
+          "hash": "HWHBM2nj/A4+Q+RBwkvhtg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Session.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Session.html",
+          "hash": "FLKSsGJeGLmO09iK7cVRzg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.GroupStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.GroupStyle.html",
+          "hash": "ElELutFMPPvaTVnQfukatw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.IStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.IStyle.html",
+          "hash": "mmUUhUHjJHS9uJSEXVJ5Ow=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.html",
+          "hash": "emBGO5m06eyLa2LvwpcUoA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.LabelStyle.VerticalAlignmentEnum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.LabelStyle.VerticalAlignmentEnum.html",
+          "hash": "28970VzQo8ZVH7OpYRMYzA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.LabelStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.LabelStyle.html",
+          "hash": "vR59j/uXMoewgnxDpugGaw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.SldConverter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.SldConverter.html",
+          "hash": "1GBKnYtRzupn6a1q69I2nw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.Style.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.Style.html",
+          "hash": "LbIaKlrNqUwPub6ewsa3rg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.VectorStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.VectorStyle.html",
+          "hash": "+DLJlEU621LYekHinujgLw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.VisibilityUnits.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.VisibilityUnits.html",
+          "hash": "UOEkGncrlGxgls6gP7g8eA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Styles.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Styles.html",
+          "hash": "WWs4aA3/8U0Vh+7E7O7YZw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.GeoSpatialMath.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.GeoSpatialMath.html",
+          "hash": "+Was1jG39YpgBGP+Ejms4g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Indexing.BinaryTree-2.ItemValue.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Indexing.BinaryTree-2.ItemValue.html",
+          "hash": "7hxHDbGwhTVBh7zENVQkdw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Indexing.BinaryTree-2.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Indexing.BinaryTree-2.html",
+          "hash": "OG2q3UapBVhggODsGZCA2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Indexing.ISpatialIndex-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Indexing.ISpatialIndex-1.html",
+          "hash": "Q93zbvaUeoWFWhQGeJC6WA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Indexing.ISpatialIndexFactory-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Indexing.ISpatialIndexFactory-1.html",
+          "hash": "/K0WMrI3H+rRiTU1WGBcxQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Indexing.ISpatialIndexItem-1.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Indexing.ISpatialIndexItem-1.html",
+          "hash": "R2mkMdB7eVs+EPUQTduRoA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Indexing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Indexing.html",
+          "hash": "VnoJvdiKiYMZrDjh1SvVPw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.LeastSquaresTransform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.LeastSquaresTransform.html",
+          "hash": "J0xdMs/qp1shBX3yGRi5Fw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.LineOffset.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.LineOffset.html",
+          "hash": "6bM90NAxvU0uuVCa33BFOA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Providers.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Providers.html",
+          "hash": "1tfbLxXqVjhi1IBK7InQJQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.ScaleCalculations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.ScaleCalculations.html",
+          "hash": "RkggvGxqOOs6wdjANB0m5A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.SpatialIndexing.Heuristic.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.SpatialIndexing.Heuristic.html",
+          "hash": "XoRRFnJuh9aL2AfFO65FcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.SpatialIndexing.QuadTree.BoxObjects.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.SpatialIndexing.QuadTree.BoxObjects.html",
+          "hash": "HEJvWsLIn4NhJaMvZQDMQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.SpatialIndexing.QuadTree.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.SpatialIndexing.QuadTree.html",
+          "hash": "6wtIOC5ModbEcB4wxu4Z6g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.SpatialIndexing.QuadTreeFactory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.SpatialIndexing.QuadTreeFactory.html",
+          "hash": "AWJsC5i4grWp6AJu5Zjxiw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.SpatialIndexing.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.SpatialIndexing.html",
+          "hash": "MLjN0DRJld5wAVg7DiLSLA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.AdjustableArrowCapSurrogate.AdjustableArrowCapRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.AdjustableArrowCapSurrogate.AdjustableArrowCapRef.html",
+          "hash": "Wlcs2L8CGwxF++HYLE3yBA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.AdjustableArrowCapSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.AdjustableArrowCapSurrogate.html",
+          "hash": "hFyBLkRMDD36mXgzVAR0Cg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.BlendSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.BlendSurrogate.html",
+          "hash": "cfOVYYIq7aDRyPI58Jxb+w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.BrushSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.BrushSurrogate.html",
+          "hash": "ASwkqDdN6999UxyTOstXcw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.ColorBlendSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.ColorBlendSurrogate.html",
+          "hash": "u/TqS7bxa/Q1qLrYe+spfw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.ColorMapSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.ColorMapSurrogate.html",
+          "hash": "6pjGDuEBmbUvnF+GnBsJWw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.ColorMatrixSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.ColorMatrixSurrogate.html",
+          "hash": "Gz76I2w0Plq16CxNgqv8eA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.CustomLineCapSurrogate.CustomLineCapRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.CustomLineCapSurrogate.CustomLineCapRef.html",
+          "hash": "UgmO77NbgKt89bIiXYcOEw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.CustomLineCapSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.CustomLineCapSurrogate.html",
+          "hash": "75mSaCablW4mnc/raM7ifw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.GraphicsPathSurrogate.GraphicsPathRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.GraphicsPathSurrogate.GraphicsPathRef.html",
+          "hash": "36KZWtIhCwDBbSeAtPES5w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.GraphicsPathSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.GraphicsPathSurrogate.html",
+          "hash": "iI2JXlOL39GeUZ/D6ckX3g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.HatchBrushSurrogate.HatchBrushRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.HatchBrushSurrogate.HatchBrushRef.html",
+          "hash": "PcQ30eWktglNgjorsvyhJQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.HatchBrushSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.HatchBrushSurrogate.html",
+          "hash": "RZGVBNDaa23qY3r+QeolJQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.LinearGradientBrushSurrogate.LinearGradientBrushRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.LinearGradientBrushSurrogate.LinearGradientBrushRef.html",
+          "hash": "qIt5kfZQyiTMmqX4m7qRlg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.LinearGradientBrushSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.LinearGradientBrushSurrogate.html",
+          "hash": "MtwvTnX3HpYxpyd5Xu6mQw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.MatrixSurrogate.MatrixRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.MatrixSurrogate.MatrixRef.html",
+          "hash": "uiNJG93gjTUJnxWTVu+SHw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.MatrixSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.MatrixSurrogate.html",
+          "hash": "GOQkrZt16CoRHlYWqKiWjA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.PenSurrogate.PenRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.PenSurrogate.PenRef.html",
+          "hash": "3fldhX3kni17AjD+migFBg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.PenSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.PenSurrogate.html",
+          "hash": "pCh6Zpfi3osm25mF2mrpiw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.SolidBrushSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.SolidBrushSurrogate.html",
+          "hash": "BEmgnYrealfIyN0KdV9tJA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.TextureBrushSurrogate.TextureBrushRef.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.TextureBrushSurrogate.TextureBrushRef.html",
+          "hash": "0FDZkdF67qzz0AXGZdAklw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.TextureBrushSurrogate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.TextureBrushSurrogate.html",
+          "hash": "kr+nG6JDzUxEBZ+CctaHUA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Surrogates.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Surrogates.html",
+          "hash": "klvjqoRwHQAtZLJT3lQZbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Transform.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Transform.html",
+          "hash": "+CEGaq6ZcqYXGcE/RCh+Sw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Version.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Version.html",
+          "hash": "HD+191LoFWmyQ/Vw0LUUoA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.FeatureIdFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.FeatureIdFilter_FE1_1_0.html",
+          "hash": "ZhWFz0QkOCObYGl3pwM6gQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.GeometryTypeEnum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.GeometryTypeEnum.html",
+          "hash": "J/mgiKnrGJmvooKVkG5kWw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.HttpClientUtil.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.HttpClientUtil.html",
+          "hash": "a02hl8u2C2w24zXkMix+Jw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.IFilter.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.IFilter.html",
+          "hash": "9CpZCzlvFHiG14vl/3Ue1g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.IWFS_TextResources.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.IWFS_TextResources.html",
+          "hash": "5c/o73nnVLCUb9X6MEIc2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.IXPathQueryManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.IXPathQueryManager.html",
+          "hash": "0M84QcbS/ufQgh6mg0hgfQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.OGCFilterBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.OGCFilterBase.html",
+          "hash": "EK4gtoM6vf7E4NC8l65zUQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.OGCFilterCollection.JunctorEnum.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.OGCFilterCollection.JunctorEnum.html",
+          "hash": "YeoLCbr9evDRSa7SnFBEdw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.OGCFilterCollection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.OGCFilterCollection.html",
+          "hash": "IEP4j+/jTybSz8LTaSZWDg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsBetweenFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsBetweenFilter_FE1_1_0.html",
+          "hash": "+Syqfm8j2LtVyPzwaqkKmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsEqualToFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsEqualToFilter_FE1_1_0.html",
+          "hash": "UODRuOYq24DbjtWT+3A8oA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsGreaterThanFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsGreaterThanFilter_FE1_1_0.html",
+          "hash": "KdundqMjo6PatP33zkKgYw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsGreaterThanOrEqualToFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsGreaterThanOrEqualToFilter_FE1_1_0.html",
+          "hash": "iBU87fIOM2kqlxZ8s1j/lQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsLessThanFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsLessThanFilter_FE1_1_0.html",
+          "hash": "Qqy5l6X/8tzyzn9+pe8iZg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsLessThanOrEqualToFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsLessThanOrEqualToFilter_FE1_1_0.html",
+          "hash": "+hzt/GPk+8LO7GprnhtQmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsLikeFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsLikeFilter_FE1_1_0.html",
+          "hash": "rxhP9fFGlrGil0UAZwMPdw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsNotEqualToFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsNotEqualToFilter_FE1_1_0.html",
+          "hash": "hhNDXzURYoO79DywsO1Kjg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.PropertyIsNullFilter_FE1_1_0.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.PropertyIsNullFilter_FE1_1_0.html",
+          "hash": "Ya9xw6ay1h5Z8X4unEJlTw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WFS_1_0_0_TextResources.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WFS_1_0_0_TextResources.html",
+          "hash": "WMI0gPoFPR4TxfUvv/vMbA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WFS_1_0_0_XPathTextResources.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WFS_1_0_0_XPathTextResources.html",
+          "hash": "JFfz1LjAeZzMdcbbl6OkRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WFS_1_1_0_TextResources.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WFS_1_1_0_TextResources.html",
+          "hash": "MHOk7UybMNHG6cJ1VKRV/g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WFS_1_1_0_XPathTextResources.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WFS_1_1_0_XPathTextResources.html",
+          "hash": "dd0k8EFrfsqu/5TtRFjD+Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WFS_XPathTextResourcesBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WFS_XPathTextResourcesBase.html",
+          "hash": "wjkPHqyghRRbkOe+HqbY1w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.BoundingBox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.BoundingBox.html",
+          "hash": "9OwAZrRAqQDM7YibcoZ+mg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.ElementInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.ElementInfo.html",
+          "hash": "XJ62WBPCWsiZ2dW0QAG15A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.GeometryInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.GeometryInfo.html",
+          "hash": "OAEZJ5cGAcIUpq+iev8Fkw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.html",
+          "hash": "00TfL9wUARasifMpc4f9jA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager.CustomQueryContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager.CustomQueryContext.html",
+          "hash": "tPkUf3ZpPk9745Yf5pEK3Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamBase.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamBase.html",
+          "hash": "sO4mLq6xn32J9IBB4CedFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamCompare.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamCompare.html",
+          "hash": "oHMVlkcHYAhYqqgcx4s8lQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamCompareWithTargetNs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamCompareWithTargetNs.html",
+          "hash": "vx4G4WAUrm5Q5TP5QLEJtA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamFunctionVar.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager.ParamFunctionVar.html",
+          "hash": "8BwSb4ZBiPQvMlaSg6uz8w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager.html",
+          "hash": "wS9+7QpEijm+zY8TEVmoLg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.html",
+          "hash": "0f72NnUqJ6/h24nlTyWdGw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html",
+          "hash": "UjCwwndBJkOSxDTxs2Kj6w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.Wfs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.Wfs.html",
+          "hash": "uEmaquSZ0lK3zyBeFRH3RQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Utilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Utilities.html",
+          "hash": "OhcYQL9nBZW9C8qEzKV8ZA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.IClient.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.IClient.html",
+          "hash": "Xhnnx9S8i9am1rDADZcZ7w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.ServiceExceptionReport.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.ServiceExceptionReport.html",
+          "hash": "1nIJVKCUQcm6ZIvA5ZbTuA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.ServiceExceptionType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.ServiceExceptionType.html",
+          "hash": "OXVA5UmW/WlvIvLoeQowXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wcs.Client.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wcs.Client.html",
+          "hash": "Pen+GGDC/OQ8LF6RkIpaPg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wcs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wcs.html",
+          "hash": "eaNbsc9xlDYtOfUSI6bVmQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.WfsServiceIdentification.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.WfsServiceIdentification.html",
+          "hash": "7Wow3IEWIeu9bDkrke0A/A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.ContactInfo.Address.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.ContactInfo.Address.html",
+          "hash": "nPVLQO/EhYqO+VKizdfJ3w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.ContactInfo.Phone.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.ContactInfo.Phone.html",
+          "hash": "lCZrSb1G5URhZ9NierD45g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.ContactInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.ContactInfo.html",
+          "hash": "9UBi34F3iksXipnK6ZtMQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.ServiceContact.html",
+          "hash": "FLNKroYriipChAtVtW0vfg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.WfsServiceProvider.html",
+          "hash": "lyheRBaymZUZBPX6sKiVOw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Capabilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Capabilities.html",
+          "hash": "/2gWoT0JW2PKW8/8bpydFA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.Client.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.Client.html",
+          "hash": "GZdctchvC3quyc+l49+rYQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wfs.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wfs.html",
+          "hash": "W27CeQuc8RY6cRznQQmkyw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Capabilities.WmsContactInformation.ContactAddress.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Capabilities.WmsContactInformation.ContactAddress.html",
+          "hash": "bQKndu1IApAO3QyUg63qdg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Capabilities.WmsContactInformation.ContactPerson.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Capabilities.WmsContactInformation.ContactPerson.html",
+          "hash": "xyDQlrYcmgUv1e8syEoRzg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Capabilities.WmsContactInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Capabilities.WmsContactInformation.html",
+          "hash": "tuFlxBuMUXk+ANu9GVIufQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Capabilities.WmsServiceDescription.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Capabilities.WmsServiceDescription.html",
+          "hash": "3JNsSjHOf3DWvzExowfLtA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Capabilities.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Capabilities.html",
+          "hash": "EInFpYoCmmhnDN1RyvjNlA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Client.WmsLayerStyle.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Client.WmsLayerStyle.html",
+          "hash": "FCbcCGE4rP/hcfNV+r2Fiw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Client.WmsOnlineResource.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Client.WmsOnlineResource.html",
+          "hash": "cS93H2lBVQxRB8x1kT18qg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Client.WmsServerLayer.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Client.WmsServerLayer.html",
+          "hash": "Hf+3z1lZxoxuSJgpSZLFMw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Client.WmsStyleLegend.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Client.WmsStyleLegend.html",
+          "hash": "Xp9xnAJdjPGngH7wkSRejg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Client.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Client.html",
+          "hash": "9fd2dX8A4I9Bgmbntco7Dg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.SpatialReferencedBoundingBox.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.SpatialReferencedBoundingBox.html",
+          "hash": "y6Lhu68BzXcUBG5ZyixKkg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Tiling.ITileCache.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Tiling.ITileCache.html",
+          "hash": "3A+ItpqQsOBfAQOFpvVRVQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Tiling.TileCacheFileStorage.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Tiling.TileCacheFileStorage.html",
+          "hash": "1uisugPe0aSyYjYuZ8Bpjg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Tiling.TileSet.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Tiling.TileSet.html",
+          "hash": "q0LqYXqbnlMwdecbthaONg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.Tiling.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.Tiling.html",
+          "hash": "5L41Z3WdgrR21fHYqnSSpQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.Wms.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.Wms.html",
+          "hash": "RBHMusiNBVczfxIJUz22rw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.Web.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.Web.html",
+          "hash": "A5oBcHcDX9wfU5GL5opPRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "obj/api/SharpMap.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/SharpMap.html",
+          "hash": "qMpBLxvbqgrIbFkzE3fkMQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "obj/api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html",
+          "hash": "UGTJXFIWuA0IRhZfk/VuAQ=="
         }
       },
       "is_incremental": false,
@@ -30,7 +3726,7 @@
       "output": {
         ".html": {
           "relative_path": "toc.html",
-          "hash": "YhJwmDjOHqxypcF8yn/Wkg=="
+          "hash": "0O2VOndaz6TJsiN7c9VRHQ=="
         }
       },
       "is_incremental": false,
@@ -40,25 +3736,29 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": false,
-        "details": "Cannot build incrementally because last build info is missing.",
+        "can_incremental": true,
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0,
-        "full_build_reason_code": "NoAvailableBuildCache"
+        "skipped_file_count": 0
       },
       "processors": {
+        "ConceptualDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 1,
+          "skipped_file_count": 1
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 307,
+          "skipped_file_count": 307
+        },
         "TocDocumentProcessor": {
           "can_incremental": false,
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build",
           "total_file_count": 0,
-          "skipped_file_count": 0
-        },
-        "ConceptualDocumentProcessor": {
-          "can_incremental": false,
-          "incrementalPhase": "build",
-          "total_file_count": 1,
           "skipped_file_count": 0
         }
       }

@@ -1,0 +1,561 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class FontSizeTheme
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class FontSizeTheme
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme">
+  
+  
+  <h1 id="SharpMap_Rendering_Thematics_FontSizeTheme" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme" class="text-break">Class FontSizeTheme
+  </h1>
+  <div class="markdown level0 summary"><p>A theme that calculates the font size dependant on the map's zoom</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><span class="xref">FontSizeTheme</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Thematics.html">SharpMap.Rendering.Thematics</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Thematics_FontSizeTheme_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class FontSizeTheme : DisposableObject, IDisposableEx, IDisposable, ITheme</code></pre>
+  </div>
+  <h5 id="SharpMap_Rendering_Thematics_FontSizeTheme_examples"><strong>Examples</strong></h5>
+  <pre><code class="lang-C#">// Create a map
+var map = new SharpMap.Map();
+// Create the label layer   
+var layer = new SharpMap.Layers.LabelLayer(&quot;Label&quot;);
+// Assign data source
+layer.DataSource = myDataSource;
+// Assign theme
+layer.Theme = new SharpMap.Rendering.Thematics.FontSizeTheme(layer, map)
+{
+   // these values are both optional
+   MinFontSize = 6f,
+   FontSizeScale = 10f,
+   //BaseTheme = SomeOtherLabelStyleTheme
+};
+// Add layer to map
+map.Layers.Add(layer);</code></pre>
+
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme__ctor_SharpMap_Layers_LabelLayer_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.%23ctor(SharpMap.Layers.LabelLayer%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L50">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme__ctor_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme__ctor_SharpMap_Layers_LabelLayer_SharpMap_Map_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.#ctor(SharpMap.Layers.LabelLayer,SharpMap.Map)">FontSizeTheme(LabelLayer, Map)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FontSizeTheme(LabelLayer layer, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.LabelLayer.html">LabelLayer</a></td>
+        <td><span class="parametername">layer</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_BaseTheme.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.BaseTheme%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L142">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_BaseTheme_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.BaseTheme*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_BaseTheme" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.BaseTheme">BaseTheme</h4>
+  <div class="markdown level1 summary"><p>Gets or sets an additional theme that has to be computed before this style is applied</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ITheme BaseTheme { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_CalculateSize.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.CalculateSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L147">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_CalculateSize_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.CalculateSize*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_CalculateSize" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.CalculateSize">CalculateSize</h4>
+  <div class="markdown level1 summary"><p>Function to calculate the size of the font in <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphicsunit#System_Drawing_GraphicsUnit_Pixel">Pixel</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;Map, float, float&gt; CalculateSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.func-3">Func</a>&lt;<a class="xref" href="SharpMap.Map.html">Map</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_FontSizeScale.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.FontSizeScale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L174">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_FontSizeScale_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.FontSizeScale*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_FontSizeScale" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.FontSizeScale">FontSizeScale</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the scale factor for the font size</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float? FontSizeScale { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_MinFontSize.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.MinFontSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L169">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_MinFontSize_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.MinFontSize*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_MinFontSize" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.MinFontSize">MinFontSize</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating at which size the font is being drawn</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float? MinFontSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_GetStyle_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.GetStyle(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L79">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_GetStyle_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.GetStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_GetStyle_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.GetStyle(SharpMap.Data.FeatureDataRow)">GetStyle(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Returns the style based on a feature</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStyle GetStyle(FeatureDataRow attribute)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">attribute</span></td>
+        <td><p>Set of attribute values to calculate the <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a> from</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><p>The style</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_ReleaseManagedResources.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.ReleaseManagedResources%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L179">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_ReleaseManagedResources_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.ReleaseManagedResources*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_ReleaseManagedResources" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.ReleaseManagedResources">ReleaseManagedResources()</h4>
+  <div class="markdown level1 summary"><p>Releases managed resources</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReleaseManagedResources()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseManagedResources">DisposableObject.ReleaseManagedResources()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_TreatSizeAsMapUnits_SharpMap_Map_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.TreatSizeAsMapUnits(SharpMap.Map%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_TreatSizeAsMapUnits_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.TreatSizeAsMapUnits*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_TreatSizeAsMapUnits_SharpMap_Map_System_Single_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.TreatSizeAsMapUnits(SharpMap.Map,System.Single)">TreatSizeAsMapUnits(Map, Single)</h4>
+  <div class="markdown level1 summary"><p>Default Implementation of a size conversion from map units to <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphicsunit#System_Drawing_GraphicsUnit_Pixel">Pixel</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float TreatSizeAsMapUnits(Map map, float sizeInMapUnits)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">sizeInMapUnits</span></td>
+        <td><p>The size of the font in map units</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><p>A font size in pixel</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme_UpdateStyle_SharpMap_Styles_LabelStyle_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme.UpdateStyle(SharpMap.Styles.LabelStyle%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L113">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_FontSizeTheme_UpdateStyle_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.UpdateStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_FontSizeTheme_UpdateStyle_SharpMap_Styles_LabelStyle_System_Single_" data-uid="SharpMap.Rendering.Thematics.FontSizeTheme.UpdateStyle(SharpMap.Styles.LabelStyle,System.Single)">UpdateStyle(LabelStyle, Single)</h4>
+  <div class="markdown level1 summary"><p>Method to update the style according to the new size</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual LabelStyle UpdateStyle(LabelStyle labelStyle, float newSize)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></td>
+        <td><span class="parametername">labelStyle</span></td>
+        <td><p>The label style</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">newSize</span></td>
+        <td><p>A new size</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></td>
+        <td><p>The updated label style</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_FontSizeTheme.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.FontSizeTheme%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/FontSizeTheme.cs/#L33" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

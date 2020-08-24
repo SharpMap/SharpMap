@@ -1,0 +1,987 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class TextOnPath
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class TextOnPath
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.TextOnPath">
+  
+  
+  <h1 id="SharpMap_Rendering_TextOnPath" data-uid="SharpMap.Rendering.TextOnPath" class="text-break">Class TextOnPath
+  </h1>
+  <div class="markdown level0 summary"><p>Text on path generator class</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">TextOnPath</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.html">SharpMap.Rendering</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_TextOnPath_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Deprecated in favor of more efficient rendering techniques&quot;)]
+public class TextOnPath</code></pre>
+  </div>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_LastError.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.LastError%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L251">View Source</a>
+  </span>
+  <h4 id="SharpMap_Rendering_TextOnPath_LastError" data-uid="SharpMap.Rendering.TextOnPath.LastError">LastError</h4>
+  <div class="markdown level1 summary"><p>The last catched exception is stored here</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Exception LastError</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_Angles.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.Angles%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L304">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_Angles_" data-uid="SharpMap.Rendering.TextOnPath.Angles*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_Angles" data-uid="SharpMap.Rendering.TextOnPath.Angles">Angles</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of angles (in radians?)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;float&gt; Angles { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_ColorHalo.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.ColorHalo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L357">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_ColorHalo_" data-uid="SharpMap.Rendering.TextOnPath.ColorHalo*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_ColorHalo" data-uid="SharpMap.Rendering.TextOnPath.ColorHalo">ColorHalo</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a> to use for halo'ing the text</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Pen ColorHalo { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_FillColorTop.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.FillColorTop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L366">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_FillColorTop_" data-uid="SharpMap.Rendering.TextOnPath.FillColorTop*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_FillColorTop" data-uid="SharpMap.Rendering.TextOnPath.FillColorTop">FillColorTop</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> used to fill the text path</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush FillColorTop { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_Font.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.Font%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L348">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_Font_" data-uid="SharpMap.Rendering.TextOnPath.Font*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_Font" data-uid="SharpMap.Rendering.TextOnPath.Font">Font</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Rendering.TextOnPath.html#SharpMap_Rendering_TextOnPath_Font">Font</a> to use for drawing the text</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Font Font { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_Graphics.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.Graphics%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L257">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_Graphics_" data-uid="SharpMap.Rendering.TextOnPath.Graphics*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_Graphics" data-uid="SharpMap.Rendering.TextOnPath.Graphics">Graphics</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Rendering.TextOnPath.html#SharpMap_Rendering_TextOnPath_Graphics">Graphics</a> object</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Graphics Graphics { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_GraphicsPath.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.GraphicsPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L262">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_GraphicsPath_" data-uid="SharpMap.Rendering.TextOnPath.GraphicsPath*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_GraphicsPath" data-uid="SharpMap.Rendering.TextOnPath.GraphicsPath">GraphicsPath</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the <a class="xref" href="SharpMap.Rendering.TextOnPath.html#SharpMap_Rendering_TextOnPath_GraphicsPath">GraphicsPath</a> used to render text along</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraphicsPath GraphicsPath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_LetterSpacePercentage.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.LetterSpacePercentage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L391">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_LetterSpacePercentage_" data-uid="SharpMap.Rendering.TextOnPath.LetterSpacePercentage*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_LetterSpacePercentage" data-uid="SharpMap.Rendering.TextOnPath.LetterSpacePercentage">LetterSpacePercentage</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value controlling the space between letters</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int LetterSpacePercentage { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Rendering_TextOnPath_LetterSpacePercentage_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The default value is <returns>100</returns></p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_MeasureString.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.MeasureString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L267">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_MeasureString_" data-uid="SharpMap.Rendering.TextOnPath.MeasureString*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_MeasureString" data-uid="SharpMap.Rendering.TextOnPath.MeasureString">MeasureString</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the string should be measured</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool MeasureString { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_PathColorTop.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.PathColorTop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L384">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_PathColorTop_" data-uid="SharpMap.Rendering.TextOnPath.PathColorTop*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_PathColorTop" data-uid="SharpMap.Rendering.TextOnPath.PathColorTop">PathColorTop</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the color of the <a class="xref" href="SharpMap.Rendering.TextOnPath.html#SharpMap_Rendering_TextOnPath_GraphicsPath">GraphicsPath</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color PathColorTop { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_PathDataTop.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.PathDataTop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L334">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_PathDataTop_" data-uid="SharpMap.Rendering.TextOnPath.PathDataTop*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_PathDataTop" data-uid="SharpMap.Rendering.TextOnPath.PathDataTop">PathDataTop</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the path's data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PathData PathDataTop { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.pathdata">PathData</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_PointsText.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.PointsText%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L286">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_PointsText_" data-uid="SharpMap.Rendering.TextOnPath.PointsText*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_PointsText" data-uid="SharpMap.Rendering.TextOnPath.PointsText">PointsText</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>s</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;PointF&gt; PointsText { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_PointsTextUp.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.PointsTextUp%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L295">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_PointsTextUp_" data-uid="SharpMap.Rendering.TextOnPath.PointsTextUp*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_PointsTextUp" data-uid="SharpMap.Rendering.TextOnPath.PointsTextUp">PointsTextUp</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>s</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;Point&gt; PointsTextUp { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_RegionList.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.RegionList%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L277">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_RegionList_" data-uid="SharpMap.Rendering.TextOnPath.RegionList*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_RegionList" data-uid="SharpMap.Rendering.TextOnPath.RegionList">RegionList</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a list of regions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public List&lt;RectangleF&gt; RegionList { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_RotateDegree.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.RotateDegree%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L312">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_RotateDegree_" data-uid="SharpMap.Rendering.TextOnPath.RotateDegree*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_RotateDegree" data-uid="SharpMap.Rendering.TextOnPath.RotateDegree">RotateDegree</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the rotation</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float RotateDegree { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_ShowPath.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.ShowPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L400">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_ShowPath_" data-uid="SharpMap.Rendering.TextOnPath.ShowPath*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_ShowPath" data-uid="SharpMap.Rendering.TextOnPath.ShowPath">ShowPath</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating that the used path should be rendered as well</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ShowPath { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_Text.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.Text%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L343">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_Text_" data-uid="SharpMap.Rendering.TextOnPath.Text*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_Text" data-uid="SharpMap.Rendering.TextOnPath.Text">Text</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the text to render</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Text { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_TextPathAlignTop.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.TextPathAlignTop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L375">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_TextPathAlignTop_" data-uid="SharpMap.Rendering.TextOnPath.TextPathAlignTop*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_TextPathAlignTop" data-uid="SharpMap.Rendering.TextOnPath.TextPathAlignTop">TextPathAlignTop</h4>
+  <div class="markdown level1 summary"><p>Get or sets a value indicating the horizontal alignment of the path</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TextPathAlign TextPathAlignTop { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathAlign.html">TextPathAlign</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_TextPathPathPosition.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.TextPathPathPosition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L325">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_TextPathPathPosition_" data-uid="SharpMap.Rendering.TextOnPath.TextPathPathPosition*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_TextPathPathPosition" data-uid="SharpMap.Rendering.TextOnPath.TextPathPathPosition">TextPathPathPosition</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the vertical alignment</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TextPathPosition TextPathPathPosition { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.TextPathPosition.html">TextPathPosition</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_DrawTextOnPath.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.DrawTextOnPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L427">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_DrawTextOnPath_" data-uid="SharpMap.Rendering.TextOnPath.DrawTextOnPath*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_DrawTextOnPath" data-uid="SharpMap.Rendering.TextOnPath.DrawTextOnPath">DrawTextOnPath()</h4>
+  <div class="markdown level1 summary"><p>Method to draw the text on the <a class="xref" href="SharpMap.Rendering.TextOnPath.html#SharpMap_Rendering_TextOnPath_GraphicsPath">GraphicsPath</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DrawTextOnPath()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_DrawTextOnPath_System_Drawing_Drawing2D_PathData_System_String_System_Drawing_Font_System_Drawing_Pen_System_Drawing_Brush_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.DrawTextOnPath(System.Drawing.Drawing2D.PathData%2CSystem.String%2CSystem.Drawing.Font%2CSystem.Drawing.Pen%2CSystem.Drawing.Brush%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L411">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_DrawTextOnPath_" data-uid="SharpMap.Rendering.TextOnPath.DrawTextOnPath*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_DrawTextOnPath_System_Drawing_Drawing2D_PathData_System_String_System_Drawing_Font_System_Drawing_Pen_System_Drawing_Brush_System_Int32_" data-uid="SharpMap.Rendering.TextOnPath.DrawTextOnPath(System.Drawing.Drawing2D.PathData,System.String,System.Drawing.Font,System.Drawing.Pen,System.Drawing.Brush,System.Int32)">DrawTextOnPath(PathData, String, Font, Pen, Brush, Int32)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void DrawTextOnPath(PathData pathdata, string text, Font font, Pen haloPen, Brush fillcolor, int letterspacepercentage)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.pathdata">PathData</a></td>
+        <td><span class="parametername">pathdata</span></td>
+        <td><p>The path data</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">text</span></td>
+        <td><p>The text</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td><span class="parametername">font</span></td>
+        <td><p>The font</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">haloPen</span></td>
+        <td><p>The halo pen</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">fillcolor</span></td>
+        <td><p>The brush to fill letters</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">letterspacepercentage</span></td>
+        <td><p>The</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_DrawTextOnPathEx.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.DrawTextOnPathEx%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L436">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_DrawTextOnPathEx_" data-uid="SharpMap.Rendering.TextOnPath.DrawTextOnPathEx*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_DrawTextOnPathEx" data-uid="SharpMap.Rendering.TextOnPath.DrawTextOnPathEx">DrawTextOnPathEx()</h4>
+  <div class="markdown level1 summary"><p>Method to draw the text on the <a class="xref" href="SharpMap.Rendering.TextOnPath.html#SharpMap_Rendering_TextOnPath_GraphicsPath">GraphicsPath</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RectangleF DrawTextOnPathEx()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td><p>The area covered by the rendering process</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_GetLinePoints_System_Drawing_PointF_System_Drawing_PointF_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.GetLinePoints(System.Drawing.PointF%2CSystem.Drawing.PointF%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L757">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_GetLinePoints_" data-uid="SharpMap.Rendering.TextOnPath.GetLinePoints*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_GetLinePoints_System_Drawing_PointF_System_Drawing_PointF_System_Int32_" data-uid="SharpMap.Rendering.TextOnPath.GetLinePoints(System.Drawing.PointF,System.Drawing.PointF,System.Int32)">GetLinePoints(PointF, PointF, Int32)</h4>
+  <div class="markdown level1 summary"><p>Metod to get</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PointF[] GetLinePoints(PointF p1, PointF p2, int stepWitdth)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">p1</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">p2</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">stepWitdth</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath_IsVisible_System_Drawing_PointF___System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath.IsVisible(System.Drawing.PointF%5B%5D%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L524">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_TextOnPath_IsVisible_" data-uid="SharpMap.Rendering.TextOnPath.IsVisible*"></a>
+  <h4 id="SharpMap_Rendering_TextOnPath_IsVisible_System_Drawing_PointF___System_Int32_" data-uid="SharpMap.Rendering.TextOnPath.IsVisible(System.Drawing.PointF[],System.Int32)">IsVisible(PointF[], Int32)</h4>
+  <div class="markdown level1 summary"><p>Method to evaluate visibility</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsVisible(PointF[] points, int maxPoints)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>An array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>s</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">maxPoints</span></td>
+        <td><p>The maximum number of points</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_TextOnPath.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.TextOnPath%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/TextOnPath.cs/#L227" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

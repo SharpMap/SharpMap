@@ -1,0 +1,1378 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ShapeFile
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ShapeFile
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.ShapeFile">
+  
+  
+  <h1 id="SharpMap_Data_Providers_ShapeFile" data-uid="SharpMap.Data.Providers.ShapeFile" class="text-break">Class ShapeFile
+  </h1>
+  <div class="markdown level0 summary"><p>Shapefile dataprovider</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Data.Providers.FilterProvider.html">FilterProvider</a></div>
+    <div class="level2"><span class="xref">ShapeFile</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.FilterProvider.html#SharpMap_Data_Providers_FilterProvider_FilterDelegate">FilterProvider.FilterDelegate</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ShapeFile : FilterProvider, IProvider, IProvider&lt;uint&gt;, IBaseProvider, IDisposable</code></pre>
+  </div>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>The ShapeFile provider is used for accessing ESRI ShapeFiles. The ShapeFile should at least contain the
+[filename].shp, [filename].idx, and if feature-data is to be used, also [filename].dbf file.</p>
+<p>The first time the ShapeFile is accessed, SharpMap will automatically create a spatial index
+of the shp-file, and save it as [filename].shp.sidx. If you change or update the contents of the .shp file,
+delete the .sidx file to force SharpMap to rebuilt it. In web applications, the index will automatically
+be cached to memory for faster access, so to reload the index, you will need to restart the web application
+as well.</p>
+<p>
+M values in a shapefile are ignored by SharpMap.
+</p>
+</div>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_examples"><strong>Examples</strong></h5>
+  <p>Adding a datasource to a layer:</p>
+<pre><code>SharpMap.Layers.VectorLayer myLayer = new SharpMap.Layers.VectorLayer(&quot;My layer&quot;);
+myLayer.DataSource = new SharpMap.Data.Providers.ShapeFile(@&quot;C:\data\MyShapeData.shp&quot;);</code></pre>
+
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile__ctor_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L135">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile__ctor_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor(System.String)">ShapeFile(String)</h4>
+  <div class="markdown level1 summary"><p>Initializes a ShapeFile DataProvider without a file-based spatial index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ShapeFile(string filename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">filename</span></td>
+        <td><p>Path to shape file</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.%23ctor(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L152">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile__ctor_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor(System.String,System.Boolean)">ShapeFile(String, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Initializes a ShapeFile DataProvider.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ShapeFile(string filename, bool fileBasedIndex)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">filename</span></td>
+        <td><p>Path to shape file</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">fileBasedIndex</span></td>
+        <td><p>Use file-based spatial index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn&apos;t exist,
+it will be generated and saved to [filename] + &apos;.sidx&apos;.</p>
+<p>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+start-up time when the cache has been emptied.
+</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.%23ctor(System.String%2CSystem.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L188">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile__ctor_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_System_Boolean_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor(System.String,System.Boolean,System.Boolean)">ShapeFile(String, Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Initializes a ShapeFile DataProvider.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">filename</span></td>
+        <td><p>Path to shape file</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">fileBasedIndex</span></td>
+        <td><p>Use file-based spatial index</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">useMemoryCache</span></td>
+        <td><p>Use the memory cache. BEWARE in case of large shapefiles</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_System_Boolean__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn&apos;t exist,
+it will be generated and saved to [filename] + &apos;.sidx&apos;.</p>
+<p>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+start-up time when the cache has been emptied.
+</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_System_Boolean_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.%23ctor(System.String%2CSystem.Boolean%2CSystem.Boolean%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L207">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile__ctor_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_System_Boolean_System_Int32_" data-uid="SharpMap.Data.Providers.ShapeFile.#ctor(System.String,System.Boolean,System.Boolean,System.Int32)">ShapeFile(String, Boolean, Boolean, Int32)</h4>
+  <div class="markdown level1 summary"><p>Initializes a ShapeFile DataProvider.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ShapeFile(string filename, bool fileBasedIndex, bool useMemoryCache, int srid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">filename</span></td>
+        <td><p>Path to shape file</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">fileBasedIndex</span></td>
+        <td><p>Use file-based spatial index</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">useMemoryCache</span></td>
+        <td><p>Use the memory cache. BEWARE in case of large shapefiles</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The spatial reference id</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile__ctor_System_String_System_Boolean_System_Boolean_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If FileBasedIndex is true, the spatial index will be read from a local copy. If it doesn&apos;t exist,
+it will be generated and saved to [filename] + &apos;.sidx&apos;.</p>
+<p>Using a file-based index is especially recommended for ASP.NET applications which will speed up
+start-up time when the cache has been emptied.
+</p>
+</div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_CheckIfRecordIsDeleted.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.CheckIfRecordIsDeleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L790">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_CheckIfRecordIsDeleted_" data-uid="SharpMap.Data.Providers.ShapeFile.CheckIfRecordIsDeleted*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_CheckIfRecordIsDeleted" data-uid="SharpMap.Data.Providers.ShapeFile.CheckIfRecordIsDeleted">CheckIfRecordIsDeleted</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating that the provider should check if geometry belongs to a deleted record.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CheckIfRecordIsDeleted { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_CheckIfRecordIsDeleted_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This really slows rendering performance down</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_ConnectionID.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.ConnectionID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L890">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_ConnectionID_" data-uid="SharpMap.Data.Providers.ShapeFile.ConnectionID*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_ConnectionID" data-uid="SharpMap.Data.Providers.ShapeFile.ConnectionID">ConnectionID</h4>
+  <div class="markdown level1 summary"><p>Gets the connection ID of the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ConnectionID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_ConnectionID_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The connection ID of a shapefile is its filename</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_CoordinateSystem.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.CoordinateSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L277">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_CoordinateSystem_" data-uid="SharpMap.Data.Providers.ShapeFile.CoordinateSystem*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_CoordinateSystem" data-uid="SharpMap.Data.Providers.ShapeFile.CoordinateSystem">CoordinateSystem</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the coordinate system of the ShapeFile. If a shapefile has
+a corresponding [filename].prj file containing a Well-Known Text
+description of the coordinate system this will automatically be read.
+If this is not the case, the coordinate system will default to null.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICoordinateSystem CoordinateSystem { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.applicationexception">ApplicationException</a></td>
+        <td><p>An exception is thrown if the coordinate system is read from file.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_DoTrueIntersectionQuery.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.DoTrueIntersectionQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L784">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_DoTrueIntersectionQuery_" data-uid="SharpMap.Data.Providers.ShapeFile.DoTrueIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_DoTrueIntersectionQuery" data-uid="SharpMap.Data.Providers.ShapeFile.DoTrueIntersectionQuery">DoTrueIntersectionQuery</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating that for <a class="xref" href="SharpMap.Data.Providers.ShapeFile.html#SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</a> the intersection of the geometries and the envelope should be tested.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool DoTrueIntersectionQuery { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Encoding.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Encoding%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L338">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Encoding_" data-uid="SharpMap.Data.Providers.ShapeFile.Encoding*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Encoding" data-uid="SharpMap.Data.Providers.ShapeFile.Encoding">Encoding</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the encoding used for parsing strings from the DBase DBF file.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Encoding Encoding { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_Encoding_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The DBase default encoding is <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding.utf8#System_Text_Encoding_UTF8">UTF8</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Factory.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Factory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L1215">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Factory_" data-uid="SharpMap.Data.Providers.ShapeFile.Factory*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Factory" data-uid="SharpMap.Data.Providers.ShapeFile.Factory">Factory</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the geometry factory</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected IGeometryFactory Factory { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Filename.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Filename%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L308">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Filename_" data-uid="SharpMap.Data.Providers.ShapeFile.Filename*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Filename" data-uid="SharpMap.Data.Providers.ShapeFile.Filename">Filename</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the filename of the shapefile</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Filename { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_Filename_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>If the filename changes, indexes will be rebuilt</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_IncludeOid.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.IncludeOid%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L465">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_IncludeOid_" data-uid="SharpMap.Data.Providers.ShapeFile.IncludeOid*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_IncludeOid" data-uid="SharpMap.Data.Providers.ShapeFile.IncludeOid">IncludeOid</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the object's id
+should be included in attribute data or not.</p>
+<p>The default value is <code>false</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IncludeOid { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_IsOpen.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.IsOpen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L554">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_IsOpen_" data-uid="SharpMap.Data.Providers.ShapeFile.IsOpen*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_IsOpen" data-uid="SharpMap.Data.Providers.ShapeFile.IsOpen">IsOpen</h4>
+  <div class="markdown level1 summary"><p>Returns true if the datasource is currently open</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsOpen { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_MemoryCacheLimit.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.MemoryCacheLimit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L255">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_MemoryCacheLimit_" data-uid="SharpMap.Data.Providers.ShapeFile.MemoryCacheLimit*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_MemoryCacheLimit" data-uid="SharpMap.Data.Providers.ShapeFile.MemoryCacheLimit">MemoryCacheLimit</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating how many features are allowed for memory cache approach</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static int MemoryCacheLimit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_ShapeType.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.ShapeType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L298">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_ShapeType_" data-uid="SharpMap.Data.Providers.ShapeFile.ShapeType*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_ShapeType" data-uid="SharpMap.Data.Providers.ShapeFile.ShapeType">ShapeType</h4>
+  <div class="markdown level1 summary"><p>Gets the <a class="xref" href="SharpMap.Data.Providers.ShapeType.html">ShapeType</a> in this shapefile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ShapeType ShapeType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.ShapeType.html">ShapeType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_ShapeType_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The property isn't set until the first time the datasource has been opened,
+and will throw an exception if this property has been called since initialization.</p>
+<p>All the non-Null shapes in a shapefile are required to be of the same shape
+type.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_SpatialIndexCreationOption.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.SpatialIndexCreationOption%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L1099">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_SpatialIndexCreationOption_" data-uid="SharpMap.Data.Providers.ShapeFile.SpatialIndexCreationOption*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_SpatialIndexCreationOption" data-uid="SharpMap.Data.Providers.ShapeFile.SpatialIndexCreationOption">SpatialIndexCreationOption</h4>
+  <div class="markdown level1 summary"><p>The Spatial index create</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use SpatialIndexFactory&quot;)]
+public static ShapeFile.SpatialIndexCreation SpatialIndexCreationOption { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.ShapeFile.SpatialIndexCreation.html">ShapeFile.SpatialIndexCreation</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_SpatialIndexFactory.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.SpatialIndexFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L1078">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_SpatialIndexFactory_" data-uid="SharpMap.Data.Providers.ShapeFile.SpatialIndexFactory*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_SpatialIndexFactory" data-uid="SharpMap.Data.Providers.ShapeFile.SpatialIndexFactory">SpatialIndexFactory</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the spatial index factory</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ISpatialIndexFactory&lt;uint&gt; SpatialIndexFactory { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Indexing.ISpatialIndexFactory-1.html">ISpatialIndexFactory</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_SRID.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L898">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_SRID_" data-uid="SharpMap.Data.Providers.ShapeFile.SRID*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_SRID" data-uid="SharpMap.Data.Providers.ShapeFile.SRID">SRID</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the spatial reference ID (CRS)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int SRID { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Close.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Close%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L548">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Close_" data-uid="SharpMap.Data.Providers.ShapeFile.Close*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Close" data-uid="SharpMap.Data.Providers.ShapeFile.Close">Close()</h4>
+  <div class="markdown level1 summary"><p>Closes the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Close()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Dispose.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L362">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Dispose_" data-uid="SharpMap.Data.Providers.ShapeFile.Dispose*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Dispose" data-uid="SharpMap.Data.Providers.ShapeFile.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"><p>Disposes the object</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L650">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.ShapeFile.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.ShapeFile.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns all objects whose boundingbox intersects bbox.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>
+Please note that this method doesn&apos;t guarantee that the geometries returned actually intersect &apos;bbox&apos;, but only
+that their boundingbox intersects &apos;bbox&apos;.
+</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L797">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.ShapeFile.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.ShapeFile.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by <code data-dev-comment-type="paramref" class="paramref">geom</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td><p>The geometry to test intersection for</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Finalize.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Finalize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L424">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Finalize_" data-uid="SharpMap.Data.Providers.ShapeFile.Finalize*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Finalize" data-uid="SharpMap.Data.Providers.ShapeFile.Finalize">Finalize()</h4>
+  <div class="markdown level1 summary"><p>Finalizes the object</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void Finalize()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetExtents.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetExtents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L873">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetExtents_" data-uid="SharpMap.Data.Providers.ShapeFile.GetExtents*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetExtents" data-uid="SharpMap.Data.Providers.ShapeFile.GetExtents">GetExtents()</h4>
+  <div class="markdown level1 summary"><p>Returns the extents of the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Envelope GetExtents()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetFeature_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetFeature(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L1407">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetFeature_" data-uid="SharpMap.Data.Providers.ShapeFile.GetFeature*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetFeature_System_UInt32_" data-uid="SharpMap.Data.Providers.ShapeFile.GetFeature(System.UInt32)">GetFeature(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Gets a <a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a> from the datasource at the specified index</p>
+<p>
+Please note well: It is not checked whether 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataRow GetFeature(uint rowId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">rowId</span></td>
+        <td><p>The object identifier for the record</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>The feature data row</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetFeature_System_UInt32_SharpMap_Data_FeatureDataTable_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetFeature(System.UInt32%2CSharpMap.Data.FeatureDataTable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L1423">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetFeature_" data-uid="SharpMap.Data.Providers.ShapeFile.GetFeature*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetFeature_System_UInt32_SharpMap_Data_FeatureDataTable_" data-uid="SharpMap.Data.Providers.ShapeFile.GetFeature(System.UInt32,SharpMap.Data.FeatureDataTable)">GetFeature(UInt32, FeatureDataTable)</h4>
+  <div class="markdown level1 summary"><p>Gets a datarow from the datasource at the specified index belonging to the specified datatable</p>
+<p>
+Please note well: It is not checked whether 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataRow GetFeature(uint rowId, FeatureDataTable dt)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">rowId</span></td>
+        <td><p>The object identifier for the record</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></td>
+        <td><span class="parametername">dt</span></td>
+        <td><p>The datatable the feature should belong to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>The feature data row</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetFeatureCount.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetFeatureCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L862">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetFeatureCount_" data-uid="SharpMap.Data.Providers.ShapeFile.GetFeatureCount*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetFeatureCount" data-uid="SharpMap.Data.Providers.ShapeFile.GetFeatureCount">GetFeatureCount()</h4>
+  <div class="markdown level1 summary"><p>Returns the total number of features in the datasource (without any filter applied)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int GetFeatureCount()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetGeometriesInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetGeometriesInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L570">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetGeometriesInView_" data-uid="SharpMap.Data.Providers.ShapeFile.GetGeometriesInView*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetGeometriesInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.ShapeFile.GetGeometriesInView(GeoAPI.Geometries.Envelope)">GetGeometriesInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns geometries whose bounding box intersects 'bbox'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Collection&lt;IGeometry&gt; GetGeometriesInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_GetGeometriesInView_GeoAPI_Geometries_Envelope__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Please note that this method doesn&apos;t guarantee that the geometries returned actually intersect &apos;bbox&apos;, but only
+that their boundingbox intersects &apos;bbox&apos;.</p>
+<p>This method is much faster than the QueryFeatures method, because intersection tests
+are performed on objects simplified by their boundingbox, and using the Spatial Index.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetGeometryByID_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetGeometryByID(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L734">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetGeometryByID_" data-uid="SharpMap.Data.Providers.ShapeFile.GetGeometryByID*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetGeometryByID_System_UInt32_" data-uid="SharpMap.Data.Providers.ShapeFile.GetGeometryByID(System.UInt32)">GetGeometryByID(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns the geometry corresponding to the Object ID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IGeometry GetGeometryByID(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>Object ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>The geometry at the Id</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_ShapeFile_GetGeometryByID_System_UInt32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>FilterDelegate is no longer applied to this ge</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_GetObjectIDsInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.GetObjectIDsInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L696">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_GetObjectIDsInView_" data-uid="SharpMap.Data.Providers.ShapeFile.GetObjectIDsInView*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_GetObjectIDsInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.ShapeFile.GetObjectIDsInView(GeoAPI.Geometries.Envelope)">GetObjectIDsInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns geometry Object IDs whose bounding box intersects 'bbox'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Collection&lt;uint&gt; GetObjectIDsInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_Open.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.Open%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L470">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_Open_" data-uid="SharpMap.Data.Providers.ShapeFile.Open*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_Open" data-uid="SharpMap.Data.Providers.ShapeFile.Open">Open()</h4>
+  <div class="markdown level1 summary"><p>Opens the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Open()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile_RebuildSpatialIndex.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile.RebuildSpatialIndex%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L1159">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_ShapeFile_RebuildSpatialIndex_" data-uid="SharpMap.Data.Providers.ShapeFile.RebuildSpatialIndex*"></a>
+  <h4 id="SharpMap_Data_Providers_ShapeFile_RebuildSpatialIndex" data-uid="SharpMap.Data.Providers.ShapeFile.RebuildSpatialIndex">RebuildSpatialIndex()</h4>
+  <div class="markdown level1 summary"><p>Forces a rebuild of the spatial index. If the instance of the ShapeFile provider
+uses a file-based index the file is rewritten to disk.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RebuildSpatialIndex()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider&lt;TOid&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetCoordinateSystem(IProvider)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetFactory(IProvider)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_ShapeFile.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.ShapeFile%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/ShapeFile.cs/#L58" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

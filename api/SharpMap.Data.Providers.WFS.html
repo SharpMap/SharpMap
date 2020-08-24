@@ -1,0 +1,1731 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class WFS
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class WFS
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.WFS">
+  
+  
+  <h1 id="SharpMap_Data_Providers_WFS" data-uid="SharpMap.Data.Providers.WFS" class="text-break">Class WFS
+  </h1>
+  <div class="markdown level0 summary"><p>WFS dataprovider
+This provider can be used to obtain data from an OGC Web Feature Service.
+It performs the following requests: 'GetCapabilities', 'DescribeFeatureType' and 'GetFeature'.
+This class is optimized for performing requests to GeoServer (<a href="http://geoserver.org">http://geoserver.org</a>).
+Supported geometries are:</p>
+<ul>
+<li>PointPropertyType</li>
+<li>LineStringPropertyType</li>
+<li>PolygonPropertyType</li>
+<li>CurvePropertyType</li>
+<li>SurfacePropertyType</li>
+<li>MultiPointPropertyType</li>
+<li>MultiLineStringPropertyType</li>
+<li>MultiPolygonPropertyType</li>
+<li>MultiCurvePropertyType</li>
+<li>MultiSurfacePropertyType</li>
+</ul>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">WFS</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_WFS_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class WFS : IProvider, IProvider&lt;uint&gt;, IBaseProvider, IDisposable</code></pre>
+  </div>
+  <h5 id="SharpMap_Data_Providers_WFS_examples"><strong>Examples</strong></h5>
+  <pre><code>SharpMap.Map demoMap;
+
+const string getCapabilitiesURI = &quot;http://localhost:8080/geoserver/wfs&quot;;
+const string serviceURI = &quot;http://localhost:8080/geoserver/wfs&quot;;
+
+demoMap = new SharpMap.Map(new Size(600, 600));
+demoMap.MinimumZoom = 0.005;
+demoMap.BackColor = Color.White;
+
+SharpMap.Layers.VectorLayer layer1 = new SharpMap.Layers.VectorLayer(&quot;States&quot;);
+SharpMap.Layers.VectorLayer layer2 = new SharpMap.Layers.VectorLayer(&quot;SelectedStatesAndHousholds&quot;);
+SharpMap.Layers.VectorLayer layer3 = new SharpMap.Layers.VectorLayer(&quot;New Jersey&quot;);
+SharpMap.Layers.VectorLayer layer4 = new SharpMap.Layers.VectorLayer(&quot;Roads&quot;);
+SharpMap.Layers.VectorLayer layer5 = new SharpMap.Layers.VectorLayer(&quot;Landmarks&quot;);
+SharpMap.Layers.VectorLayer layer6 = new SharpMap.Layers.VectorLayer(&quot;Poi&quot;);
+
+// Demo data from Geoserver 1.5.3 and Geoserver 1.6.0 
+
+WFS prov1 = new WFS(getCapabilitiesURI, &quot;topp&quot;, &quot;states&quot;, WFS.WFSVersionEnum.WFS1_0_0);
+
+// Bypass &apos;GetCapabilities&apos; and &apos;DescribeFeatureType&apos;, if you know all necessary metadata.
+WfsFeatureTypeInfo featureTypeInfo = new WfsFeatureTypeInfo(serviceURI, &quot;topp&quot;, null, &quot;states&quot;, &quot;the_geom&quot;);
+// &apos;WFS.WFSVersionEnum.WFS1_1_0&apos; supported by Geoserver 1.6.x
+WFS prov2 = new SharpMap.Data.Providers.WFS(featureTypeInfo, WFS.WFSVersionEnum.WFS1_1_0);
+// Bypass &apos;GetCapabilities&apos; and &apos;DescribeFeatureType&apos; again...
+// It&apos;s possible to specify the geometry type, if &apos;DescribeFeatureType&apos; does not...(.e.g &apos;GeometryAssociationType&apos;)
+// This helps to accelerate the initialization process in case of unprecise geometry information.
+WFS prov3 = new WFS(serviceURI, &quot;topp&quot;, &quot;http://www.openplans.org/topp&quot;, &quot;states&quot;, &quot;the_geom&quot;, GeometryTypeEnum.MultiSurfacePropertyType, WFS.WFSVersionEnum.WFS1_1_0);
+
+// Get data-filled FeatureTypeInfo after initialization of dataprovider (useful in Web Applications for caching metadata.
+WfsFeatureTypeInfo info = prov1.FeatureTypeInfo;
+
+// Use cached &apos;GetCapabilities&apos; response of prov1 (featuretype hosted by same service).
+// Compiled XPath expressions are re-used automatically!
+// If you use a cached &apos;GetCapabilities&apos; response make sure the data provider uses the same version of WFS as the one providing the cache!!!
+WFS prov4 = new WFS(prov1.GetCapabilitiesCache, &quot;tiger&quot;, &quot;tiger_roads&quot;, WFS.WFSVersionEnum.WFS1_0_0);
+WFS prov5 = new WFS(prov1.GetCapabilitiesCache, &quot;tiger&quot;, &quot;poly_landmarks&quot;, WFS.WFSVersionEnum.WFS1_0_0);
+WFS prov6 = new WFS(prov1.GetCapabilitiesCache, &quot;tiger&quot;, &quot;poi&quot;, WFS.WFSVersionEnum.WFS1_0_0);
+// Clear cache of prov1 - data providers do not have any cache, if they use the one of another data provider  
+prov1.GetCapabilitiesCache = null;
+
+//Filters
+IFilter filter1 = new PropertyIsEqualToFilter_FE1_1_0(&quot;STATE_NAME&quot;, &quot;California&quot;);
+IFilter filter2 = new PropertyIsEqualToFilter_FE1_1_0(&quot;STATE_NAME&quot;, &quot;Vermont&quot;);
+IFilter filter3 = new PropertyIsBetweenFilter_FE1_1_0(&quot;HOUSHOLD&quot;, &quot;600000&quot;, &quot;4000000&quot;);
+IFilter filter4 = new PropertyIsLikeFilter_FE1_1_0(&quot;STATE_NAME&quot;, &quot;New*&quot;);
+
+// SelectedStatesAndHousholds: Green
+OGCFilterCollection filterCollection1 = new OGCFilterCollection();
+filterCollection1.AddFilter(filter1);
+filterCollection1.AddFilter(filter2);
+OGCFilterCollection filterCollection2 = new OGCFilterCollection();
+filterCollection2.AddFilter(filter3);
+filterCollection1.AddFilterCollection(filterCollection2);
+filterCollection1.Junctor = OGCFilterCollection.JunctorEnum.Or;
+prov2.OGCFilter = filterCollection1;
+
+// Like-Filter(&apos;New*&apos;): Bisque
+prov3.OGCFilter = filter4;
+
+// Layer Style
+layer1.Style.Fill = new SolidBrush(Color.IndianRed);    // States
+layer2.Style.Fill = new SolidBrush(Color.Green); // SelectedStatesAndHousholds
+layer3.Style.Fill = new SolidBrush(Color.Bisque); // e.g. New York, New Jersey,...
+layer5.Style.Fill = new SolidBrush(Color.LightBlue);
+
+// Labels
+// Labels are collected when parsing the geometry. So there&apos;s just one &apos;GetFeature&apos; call necessary.
+// Otherwise (when calling twice for retrieving labels) there may be an inconsistent read...
+// If a label property is set, the quick geometry option is automatically set to &apos;false&apos;.
+prov3.Label = &quot;STATE_NAME&quot;;
+SharpMap.Layers.LabelLayer layLabel = new SharpMap.Layers.LabelLayer(&quot;labels&quot;);
+layLabel.DataSource = prov3;
+layLabel.Enabled = true;
+layLabel.LabelColumn = prov3.Label;
+layLabel.Style = new SharpMap.Styles.LabelStyle();
+layLabel.Style.CollisionDetection = false;
+layLabel.Style.CollisionBuffer = new SizeF(5, 5);
+layLabel.Style.ForeColor = Color.Black;
+layLabel.Style.Font = new Font(FontFamily.GenericSerif, 10);
+layLabel.MaxVisible = 90;
+layLabel.Style.HorizontalAlignment = SharpMap.Styles.LabelStyle.HorizontalAlignmentEnum.Center;
+// Options 
+// Defaults: MultiGeometries: true, QuickGeometries: false, GetFeatureGETRequest: false
+// Render with validation...
+prov1.QuickGeometries = false;
+// Important when connecting to an UMN MapServer
+prov1.GetFeatureGETRequest = true;
+// Ignore multi-geometries...
+prov1.MultiGeometries = false;
+
+// Quick geometries
+// We need this option for prov2 since we have not passed a featuretype namespace
+prov2.QuickGeometries = true;
+prov4.QuickGeometries = true;
+prov5.QuickGeometries = true;
+prov6.QuickGeometries = true;
+
+layer1.DataSource = prov1;
+layer2.DataSource = prov2;
+layer3.DataSource = prov3;
+layer4.DataSource = prov4;
+layer5.DataSource = prov5;
+layer6.DataSource = prov6;
+
+demoMap.Layers.Add(layer1);
+demoMap.Layers.Add(layer2);
+demoMap.Layers.Add(layer3);
+demoMap.Layers.Add(layer4);
+demoMap.Layers.Add(layer5);
+demoMap.Layers.Add(layer6);
+demoMap.Layers.Add(layLabel);
+
+demoMap.Center = new GeoAPI.Geometries.Coordinate(-74.0, 40.7);
+demoMap.Zoom = 10;
+// Alternatively zoom closer
+// demoMap.Zoom = 0.2;
+// Render map
+this.mapImage1.Image = demoMap.GetMap();</code></pre> 
+
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_SharpMap_Utilities_Wfs_IXPathQueryManager_System_String_System_String_SharpMap_Data_Providers_WFS_WFSVersionEnum_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(SharpMap.Utilities.Wfs.IXPathQueryManager%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.WFS.WFSVersionEnum)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L525">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_SharpMap_Utilities_Wfs_IXPathQueryManager_System_String_System_String_SharpMap_Data_Providers_WFS_WFSVersionEnum_" data-uid="SharpMap.Data.Providers.WFS.#ctor(SharpMap.Utilities.Wfs.IXPathQueryManager,System.String,System.String,SharpMap.Data.Providers.WFS.WFSVersionEnum)">WFS(IXPathQueryManager, String, String, WFS.WFSVersionEnum)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with all necessary
+parameters to gather metadata from 'GetCapabilities' contract.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(IXPathQueryManager getCapabilitiesCache, string nsPrefix, string featureType, WFS.WFSVersionEnum wfsVersion)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td><span class="parametername">getCapabilitiesCache</span></td>
+        <td><p>This cache (obtained from an already instantiated dataprovider that retrieves a featuretype hosted by the same service)
+helps to speed up gathering metadata. It caches the 'GetCapabilities' response.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">nsPrefix</span></td>
+        <td><p>Use an empty string or 'null', if there is no prefix for the featuretype.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureType</span></td>
+        <td><p>The name of the feature type</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td><p>The desired WFS Server version.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_SharpMap_Utilities_Wfs_IXPathQueryManager_System_String_System_String_SharpMap_Utilities_Wfs_GeometryTypeEnum_SharpMap_Data_Providers_WFS_WFSVersionEnum_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(SharpMap.Utilities.Wfs.IXPathQueryManager%2CSystem.String%2CSystem.String%2CSharpMap.Utilities.Wfs.GeometryTypeEnum%2CSharpMap.Data.Providers.WFS.WFSVersionEnum%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L487">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_SharpMap_Utilities_Wfs_IXPathQueryManager_System_String_System_String_SharpMap_Utilities_Wfs_GeometryTypeEnum_SharpMap_Data_Providers_WFS_WFSVersionEnum_System_String_" data-uid="SharpMap.Data.Providers.WFS.#ctor(SharpMap.Utilities.Wfs.IXPathQueryManager,System.String,System.String,SharpMap.Utilities.Wfs.GeometryTypeEnum,SharpMap.Data.Providers.WFS.WFSVersionEnum,System.String)">WFS(IXPathQueryManager, String, String, GeometryTypeEnum, WFS.WFSVersionEnum, String)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with all necessary
+parameters to gather metadata from 'GetCapabilities' contract.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(IXPathQueryManager getCapabilitiesCache, string nsPrefix, string featureType, GeometryTypeEnum geometryType, WFS.WFSVersionEnum wfsVersion, string proxyUrl = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td><span class="parametername">getCapabilitiesCache</span></td>
+        <td><p>This cache (obtained from an already instantiated dataprovider that retrieves a featuretype hosted by the same service)
+helps to speed up gathering metadata. It caches the 'GetCapabilities' response.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">nsPrefix</span></td>
+        <td><p>Use an empty string or 'null', if there is no prefix for the featuretype.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureType</span></td>
+        <td><p>The name of the feature type</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.GeometryTypeEnum.html">GeometryTypeEnum</a></td>
+        <td><span class="parametername">geometryType</span></td>
+        <td><p>Specifying the geometry type helps to accelerate the rendering process,
+if the geometry type in 'DescribeFeatureType is unprecise.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td><p>The desired WFS Server version.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">proxyUrl</span></td>
+        <td><p>Optional proxy url</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_SharpMap_Utilities_Wfs_WfsFeatureTypeInfo_SharpMap_Data_Providers_WFS_WFSVersionEnum_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(SharpMap.Utilities.Wfs.WfsFeatureTypeInfo%2CSharpMap.Data.Providers.WFS.WFSVersionEnum)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L402">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_SharpMap_Utilities_Wfs_WfsFeatureTypeInfo_SharpMap_Data_Providers_WFS_WFSVersionEnum_" data-uid="SharpMap.Data.Providers.WFS.#ctor(SharpMap.Utilities.Wfs.WfsFeatureTypeInfo,SharpMap.Data.Providers.WFS.WFSVersionEnum)">WFS(WfsFeatureTypeInfo, WFS.WFSVersionEnum)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with a
+<a class="xref" href="SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.html">WfsFeatureTypeInfo</a> object,
+so that 'GetCapabilities' and 'DescribeFeatureType' can be bypassed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(WfsFeatureTypeInfo featureTypeInfo, WFS.WFSVersionEnum wfsVersion)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.html">WfsFeatureTypeInfo</a></td>
+        <td><span class="parametername">featureTypeInfo</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_SharpMap_Data_Providers_WFS_WFSVersionEnum_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.WFS.WFSVersionEnum)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L392">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_SharpMap_Data_Providers_WFS_WFSVersionEnum_" data-uid="SharpMap.Data.Providers.WFS.#ctor(System.String,System.String,System.String,SharpMap.Data.Providers.WFS.WFSVersionEnum)">WFS(String, String, String, WFS.WFSVersionEnum)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with all necessary
+parameters to gather metadata from 'GetCapabilities' contract.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(string getCapabilitiesURI, string nsPrefix, string featureType, WFS.WFSVersionEnum wfsVersion)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">getCapabilitiesURI</span></td>
+        <td><p>The URL for the 'GetCapabilities' request.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">nsPrefix</span></td>
+        <td><p>Use an empty string or 'null', if there is no prefix for the featuretype.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureType</span></td>
+        <td><p>The name of the feature type</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td><p>The desired WFS Server version.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_SharpMap_Utilities_Wfs_GeometryTypeEnum_SharpMap_Data_Providers_WFS_WFSVersionEnum_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSharpMap.Utilities.Wfs.GeometryTypeEnum%2CSharpMap.Data.Providers.WFS.WFSVersionEnum%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L357">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_SharpMap_Utilities_Wfs_GeometryTypeEnum_SharpMap_Data_Providers_WFS_WFSVersionEnum_System_String_" data-uid="SharpMap.Data.Providers.WFS.#ctor(System.String,System.String,System.String,SharpMap.Utilities.Wfs.GeometryTypeEnum,SharpMap.Data.Providers.WFS.WFSVersionEnum,System.String)">WFS(String, String, String, GeometryTypeEnum, WFS.WFSVersionEnum, String)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with all necessary
+parameters to gather metadata from 'GetCapabilities' contract.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(string getCapabilitiesURI, string nsPrefix, string featureType, GeometryTypeEnum geometryType, WFS.WFSVersionEnum wfsVersion, string proxyUrl = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">getCapabilitiesURI</span></td>
+        <td><p>The URL for the 'GetCapabilities' request.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">nsPrefix</span></td>
+        <td><p>Use an empty string or 'null', if there is no prefix for the featuretype.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureType</span></td>
+        <td><p>The name of the feature type</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.GeometryTypeEnum.html">GeometryTypeEnum</a></td>
+        <td><span class="parametername">geometryType</span></td>
+        <td><p>Specifying the geometry type helps to accelerate the rendering process,
+if the geometry type in 'DescribeFeatureType is unprecise.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td><p>The desired WFS Server version.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">proxyUrl</span></td>
+        <td><p>Optional Proxy url</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_WFS_WFSVersionEnum_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.WFS.WFSVersionEnum)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L461">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_WFS_WFSVersionEnum_" data-uid="SharpMap.Data.Providers.WFS.#ctor(System.String,System.String,System.String,System.String,System.String,SharpMap.Data.Providers.WFS.WFSVersionEnum)">WFS(String, String, String, String, String, WFS.WFSVersionEnum)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with all mandatory
+metadata for retrieving a featuretype, so that 'GetCapabilities' and 'DescribeFeatureType' can be bypassed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType, string geometryName, WFS.WFSVersionEnum wfsVersion)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">serviceURI</span></td>
+        <td><p>The service URL</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">nsPrefix</span></td>
+        <td><p>Use an empty string or 'null', if there is no prefix for the featuretype.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureTypeNamespace</span></td>
+        <td><p>Use an empty string or 'null', if there is no namespace for the featuretype.
+You don't need to know the namespace of the feature type, if you use the quick geometries option.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureType</span></td>
+        <td><p>The name of the feature type</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">geometryName</span></td>
+        <td><p>The name of the geometry</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td><p>The desired WFS Server version.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_System_String_System_String_SharpMap_Utilities_Wfs_GeometryTypeEnum_SharpMap_Data_Providers_WFS_WFSVersionEnum_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSharpMap.Utilities.Wfs.GeometryTypeEnum%2CSharpMap.Data.Providers.WFS.WFSVersionEnum)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L433">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS__ctor_" data-uid="SharpMap.Data.Providers.WFS.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS__ctor_System_String_System_String_System_String_System_String_System_String_SharpMap_Utilities_Wfs_GeometryTypeEnum_SharpMap_Data_Providers_WFS_WFSVersionEnum_" data-uid="SharpMap.Data.Providers.WFS.#ctor(System.String,System.String,System.String,System.String,System.String,SharpMap.Utilities.Wfs.GeometryTypeEnum,SharpMap.Data.Providers.WFS.WFSVersionEnum)">WFS(String, String, String, String, String, GeometryTypeEnum, WFS.WFSVersionEnum)</h4>
+  <div class="markdown level1 summary"><p>Use this constructor for initializing this dataprovider with all mandatory
+metadata for retrieving a featuretype, so that 'GetCapabilities' and 'DescribeFeatureType' can be bypassed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WFS(string serviceURI, string nsPrefix, string featureTypeNamespace, string featureType, string geometryName, GeometryTypeEnum geometryType, WFS.WFSVersionEnum wfsVersion)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">serviceURI</span></td>
+        <td><p>The service URL</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">nsPrefix</span></td>
+        <td><p>Use an empty string or 'null', if there is no prefix for the featuretype.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureTypeNamespace</span></td>
+        <td><p>Use an empty string or 'null', if there is no namespace for the featuretype.
+You don't need to know the namespace of the feature type, if you use the quick geometries option.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">featureType</span></td>
+        <td><p>The name of the feature type</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">geometryName</span></td>
+        <td><p>The name of the geometry.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.GeometryTypeEnum.html">GeometryTypeEnum</a></td>
+        <td><span class="parametername">geometryType</span></td>
+        <td><p>Specifying the geometry type helps to accelerate the rendering process.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.WFS.WFSVersionEnum.html">WFS.WFSVersionEnum</a></td>
+        <td><span class="parametername">wfsVersion</span></td>
+        <td><p>The desired WFS Server version.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_SpatialIndexFactory.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.SpatialIndexFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L265">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_WFS_SpatialIndexFactory" data-uid="SharpMap.Data.Providers.WFS.SpatialIndexFactory">SpatialIndexFactory</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the spatial index factory</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ISpatialIndexFactory&lt;uint&gt; SpatialIndexFactory</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Indexing.ISpatialIndexFactory-1.html">ISpatialIndexFactory</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_AxisOrder.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.AxisOrder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L243">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_AxisOrder_" data-uid="SharpMap.Data.Providers.WFS.AxisOrder*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_AxisOrder" data-uid="SharpMap.Data.Providers.WFS.AxisOrder">AxisOrder</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating the axis order</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int[] AxisOrder { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>[]</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_WFS_AxisOrder_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The axis order is an array of array offsets. It can be einter {0, 1} or {1, 0}.</p>
+<p>If not set explictly, <a class="xref" href="SharpMap.CoordinateSystems.AxisOrderRegistry.html">AxisOrderRegistry</a> is asked for a value based on <a class="xref" href="SharpMap.Data.Providers.WFS.html#SharpMap_Data_Providers_WFS_SRID">SRID</a>.
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_ConnectionID.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.ConnectionID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L749">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_ConnectionID_" data-uid="SharpMap.Data.Providers.WFS.ConnectionID*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_ConnectionID" data-uid="SharpMap.Data.Providers.WFS.ConnectionID">ConnectionID</h4>
+  <div class="markdown level1 summary"><p>Gets the service-qualified name of the featuretype.
+The service-qualified name enables the differentiation between featuretypes
+from different services with an equal qualified name and therefore can be
+regarded as an ID for the featuretype.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ConnectionID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_Credentials.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.Credentials%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L323">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_Credentials_" data-uid="SharpMap.Data.Providers.WFS.Credentials*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_Credentials" data-uid="SharpMap.Data.Providers.WFS.Credentials">Credentials</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the network credentials used for authenticating the request with the Internet resource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICredentials Credentials { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.icredentials">ICredentials</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_FeatureTypeInfo.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.FeatureTypeInfo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L232">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_FeatureTypeInfo_" data-uid="SharpMap.Data.Providers.WFS.FeatureTypeInfo*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_FeatureTypeInfo" data-uid="SharpMap.Data.Providers.WFS.FeatureTypeInfo">FeatureTypeInfo</h4>
+  <div class="markdown level1 summary"><p>Gets feature metadata</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WfsFeatureTypeInfo FeatureTypeInfo { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.WfsFeatureTypeInfo.html">WfsFeatureTypeInfo</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetCapabilitiesCache.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetCapabilitiesCache%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L223">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetCapabilitiesCache_" data-uid="SharpMap.Data.Providers.WFS.GetCapabilitiesCache*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetCapabilitiesCache" data-uid="SharpMap.Data.Providers.WFS.GetCapabilitiesCache">GetCapabilitiesCache</h4>
+  <div class="markdown level1 summary"><p>This cache (obtained from an already instantiated dataprovider that retrieves a featuretype hosted by the same service)
+helps to speed up gathering metadata. It caches the 'GetCapabilities' response.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IXPathQueryManager GetCapabilitiesCache { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetFeatureGETRequest.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetFeatureGETRequest%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L296">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetFeatureGETRequest_" data-uid="SharpMap.Data.Providers.WFS.GetFeatureGETRequest*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetFeatureGETRequest" data-uid="SharpMap.Data.Providers.WFS.GetFeatureGETRequest">GetFeatureGETRequest</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the 'GetFeature' request
+should be done with HTTP GET. This option can be important when obtaining
+data from a WFS provided by an UMN MapServer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool GetFeatureGETRequest { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_IsOpen.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.IsOpen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L774">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_IsOpen_" data-uid="SharpMap.Data.Providers.WFS.IsOpen*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_IsOpen" data-uid="SharpMap.Data.Providers.WFS.IsOpen">IsOpen</h4>
+  <div class="markdown level1 summary"><p>Returns true if the datasource is currently open</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsOpen { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_Label.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.Label%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L314">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_Label_" data-uid="SharpMap.Data.Providers.WFS.Label*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_Label" data-uid="SharpMap.Data.Providers.WFS.Label">Label</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the property of the featuretype responsible for labels</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Label { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_MultiGeometries.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.MultiGeometries%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L285">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_MultiGeometries_" data-uid="SharpMap.Data.Providers.WFS.MultiGeometries*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_MultiGeometries" data-uid="SharpMap.Data.Providers.WFS.MultiGeometries">MultiGeometries</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the 'GetFeature' parser
+should ignore multi-geometries (MultiPoint, MultiLineString, MultiCurve, MultiPolygon, MultiSurface).
+By default it does not. Ignoring multi-geometries can lead to a better performance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool MultiGeometries { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_OGCFilter.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.OGCFilter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L305">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_OGCFilter_" data-uid="SharpMap.Data.Providers.WFS.OGCFilter*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_OGCFilter" data-uid="SharpMap.Data.Providers.WFS.OGCFilter">OGCFilter</h4>
+  <div class="markdown level1 summary"><p>Gets or sets an OGC Filter.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IFilter OGCFilter { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IFilter.html">IFilter</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_ProxyUrl.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.ProxyUrl%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L332">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_ProxyUrl_" data-uid="SharpMap.Data.Providers.WFS.ProxyUrl*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_ProxyUrl" data-uid="SharpMap.Data.Providers.WFS.ProxyUrl">ProxyUrl</h4>
+  <div class="markdown level1 summary"><p>Gets and sets the proxy Url of the request.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ProxyUrl { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_QuickGeometries.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.QuickGeometries%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L274">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_QuickGeometries_" data-uid="SharpMap.Data.Providers.WFS.QuickGeometries*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_QuickGeometries" data-uid="SharpMap.Data.Providers.WFS.QuickGeometries">QuickGeometries</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether extracting geometry information
+from 'GetFeature' response shall be done quickly without paying attention to
+context validation, polygon boundaries and multi-geometries.
+This option accelerates the geometry parsing process,
+but in scarce cases can lead to errors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool QuickGeometries { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_SRID.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L782">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_SRID_" data-uid="SharpMap.Data.Providers.WFS.SRID*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_SRID" data-uid="SharpMap.Data.Providers.WFS.SRID">SRID</h4>
+  <div class="markdown level1 summary"><p>The spatial reference ID (CRS)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int SRID { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_UseCache.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.UseCache%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L795">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_UseCache_" data-uid="SharpMap.Data.Providers.WFS.UseCache*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_UseCache" data-uid="SharpMap.Data.Providers.WFS.UseCache">UseCache</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether caching is enabled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool UseCache { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_WFS_UseCache_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When cache is enabled all geometries are downloaded from server depending on the OGC filter set,
+and then cached on client to fullfill next requests.</p>
+</div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_Close.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.Close%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L765">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_Close_" data-uid="SharpMap.Data.Providers.WFS.Close*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_Close" data-uid="SharpMap.Data.Providers.WFS.Close">Close()</h4>
+  <div class="markdown level1 summary"><p>Closes the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Close()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_Dispose.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L804">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_Dispose_" data-uid="SharpMap.Data.Providers.WFS.Dispose*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_Dispose" data-uid="SharpMap.Data.Providers.WFS.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"><p>Method to perform cleanup work</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_Dispose_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.Dispose(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L813">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_Dispose_" data-uid="SharpMap.Data.Providers.WFS.Dispose*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_Dispose_System_Boolean_" data-uid="SharpMap.Data.Providers.WFS.Dispose(System.Boolean)">Dispose(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Implementation of the Dispose patter</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void Dispose(bool disposing)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">disposing</span></td>
+        <td><p>Flag indicating if called from <a class="xref" href="SharpMap.Data.Providers.WFS.html#SharpMap_Data_Providers_WFS_Dispose">Dispose()</a> or a finalizer.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L656">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.WFS.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.WFS.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td><p>Geometry to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L610">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.WFS.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.WFS.ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the data associated with all the geometries that are intersected by 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td><p>Geometry to intersect with</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetExtents.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetExtents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L720">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetExtents_" data-uid="SharpMap.Data.Providers.WFS.GetExtents*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetExtents" data-uid="SharpMap.Data.Providers.WFS.GetExtents">GetExtents()</h4>
+  <div class="markdown level1 summary"><p>The <span class="xref">GeoAPI.Geometries.Envelope</span> of dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Envelope GetExtents()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>The 2d extent of the layer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetFeature_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetFeature(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L711">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetFeature_" data-uid="SharpMap.Data.Providers.WFS.GetFeature*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetFeature_System_UInt32_" data-uid="SharpMap.Data.Providers.WFS.GetFeature(System.UInt32)">GetFeature(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns a <a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a> based on a RowID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual FeatureDataRow GetFeature(uint rowId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">rowId</span></td>
+        <td><p>The id of the row.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>datarow</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><p>Thrown in any case</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetFeatureCount.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetFeatureCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L700">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetFeatureCount_" data-uid="SharpMap.Data.Providers.WFS.GetFeatureCount*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetFeatureCount" data-uid="SharpMap.Data.Providers.WFS.GetFeatureCount">GetFeatureCount()</h4>
+  <div class="markdown level1 summary"><p>Returns the number of features in the dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int GetFeatureCount()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>number of features</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><p>Thrown in any case</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetGeometriesInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetGeometriesInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L540">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetGeometriesInView_" data-uid="SharpMap.Data.Providers.WFS.GetGeometriesInView*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetGeometriesInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.WFS.GetGeometriesInView(GeoAPI.Geometries.Envelope)">GetGeometriesInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the features within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Collection&lt;IGeometry&gt; GetGeometriesInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td><p>Features within the specified <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetGeometryByID_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetGeometryByID(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L600">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetGeometryByID_" data-uid="SharpMap.Data.Providers.WFS.GetGeometryByID*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetGeometryByID_System_UInt32_" data-uid="SharpMap.Data.Providers.WFS.GetGeometryByID(System.UInt32)">GetGeometryByID(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns the geometry corresponding to the Object ID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IGeometry GetGeometryByID(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>Object ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><p>Thrown in any case</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_GetObjectIDsInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.GetObjectIDsInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L589">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_GetObjectIDsInView_" data-uid="SharpMap.Data.Providers.WFS.GetObjectIDsInView*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_GetObjectIDsInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.WFS.GetObjectIDsInView(GeoAPI.Geometries.Envelope)">GetObjectIDsInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns all objects whose <span class="xref">GeoAPI.Geometries.Envelope</span> intersects 'bbox'.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual Collection&lt;uint&gt; GetObjectIDsInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>Box that objects should intersect</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_WFS_GetObjectIDsInView_GeoAPI_Geometries_Envelope__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This method is usually much faster than the QueryFeatures method, because intersection tests
+are performed on objects simplified by their <span class="xref">GeoAPI.Geometries.Envelope</span>, and using the Spatial Index</p>
+</div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.exception">Exception</a></td>
+        <td><p>Thrown in any case</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS_Open.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS.Open%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L757">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_WFS_Open_" data-uid="SharpMap.Data.Providers.WFS.Open*"></a>
+  <h4 id="SharpMap_Data_Providers_WFS_Open" data-uid="SharpMap.Data.Providers.WFS.Open">Open()</h4>
+  <div class="markdown level1 summary"><p>Opens the datasource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Open()</code></pre>
+  </div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider&lt;TOid&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetCoordinateSystem(IProvider)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetFactory(IProvider)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_WFS.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.WFS%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/WFSClient.cs/#L159" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

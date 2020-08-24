@@ -1,0 +1,837 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GeometryTransform
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GeometryTransform
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform">
+  
+  
+  <h1 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform" class="text-break">Class GeometryTransform
+  </h1>
+  <div class="markdown level0 summary"><p>Helper class for transforming <span class="xref">GeoAPI.Geometries.IGeometry</span></p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GeometryTransform</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="GeoAPI.CoordinateSystems.Transformations.html">GeoAPI.CoordinateSystems.Transformations</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class GeometryTransform</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformBox_GeoAPI_Geometries_Envelope_GeoAPI_CoordinateSystems_Transformations_IMathTransform_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformBox(GeoAPI.Geometries.Envelope%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L35">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformBox_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformBox*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformBox_GeoAPI_Geometries_Envelope_GeoAPI_CoordinateSystems_Transformations_IMathTransform_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformBox(GeoAPI.Geometries.Envelope,GeoAPI.CoordinateSystems.Transformations.IMathTransform)">TransformBox(Envelope, IMathTransform)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.Envelope</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Envelope TransformBox(Envelope box, IMathTransform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td><p>BoundingBox to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>Math Transform</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>Transformed object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformCoordinate_GeoAPI_Geometries_Coordinate_GeoAPI_CoordinateSystems_Transformations_IMathTransform_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformCoordinate(GeoAPI.Geometries.Coordinate%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L89">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformCoordinate_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformCoordinate*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformCoordinate_GeoAPI_Geometries_Coordinate_GeoAPI_CoordinateSystems_Transformations_IMathTransform_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformCoordinate(GeoAPI.Geometries.Coordinate,GeoAPI.CoordinateSystems.Transformations.IMathTransform)">TransformCoordinate(Coordinate, IMathTransform)</h4>
+  <div class="markdown level1 summary"><p>Function to transform a <code data-dev-comment-type="paramref" class="paramref">c</code> using <code data-dev-comment-type="paramref" class="paramref">transform</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate TransformCoordinate(Coordinate c, IMathTransform transform)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The coordinate</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>The transformation</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>A transformed coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformGeometry_GeoAPI_Geometries_IGeometry_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(GeoAPI.Geometries.IGeometry%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L62">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformGeometry_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformGeometry_GeoAPI_Geometries_IGeometry_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(GeoAPI.Geometries.IGeometry,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformGeometry(IGeometry, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IGeometry</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IGeometry TransformGeometry(IGeometry g, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Geometry to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>Transformed Geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformGeometryCollection_GeoAPI_Geometries_IGeometryCollection_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometryCollection(GeoAPI.Geometries.IGeometryCollection%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L246">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformGeometryCollection_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometryCollection*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformGeometryCollection_GeoAPI_Geometries_IGeometryCollection_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometryCollection(GeoAPI.Geometries.IGeometryCollection,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformGeometryCollection(IGeometryCollection, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IGeometryCollection</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IGeometryCollection TransformGeometryCollection(IGeometryCollection geoms, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryCollection</span></td>
+        <td><span class="parametername">geoms</span></td>
+        <td><p>GeometryCollection to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryCollection</span></td>
+        <td><p>Transformed GeometryCollection</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformLinearRing_GeoAPI_Geometries_ILinearRing_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformLinearRing(GeoAPI.Geometries.ILinearRing%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L158">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformLinearRing_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformLinearRing*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformLinearRing_GeoAPI_Geometries_ILinearRing_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformLinearRing(GeoAPI.Geometries.ILinearRing,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformLinearRing(ILinearRing, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.ILinearRing</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ILinearRing TransformLinearRing(ILinearRing r, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILinearRing</span></td>
+        <td><span class="parametername">r</span></td>
+        <td><p>LinearRing to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILinearRing</span></td>
+        <td><p>Transformed LinearRing</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformLineString_GeoAPI_Geometries_ILineString_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformLineString(GeoAPI.Geometries.ILineString%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L139">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformLineString_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformLineString*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformLineString_GeoAPI_Geometries_ILineString_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformLineString(GeoAPI.Geometries.ILineString,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformLineString(ILineString, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.ILineString</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ILineString TransformLineString(ILineString l, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILineString</span></td>
+        <td><span class="parametername">l</span></td>
+        <td><p>LineString to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILineString</span></td>
+        <td><p>Transformed LineString</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiLineString_GeoAPI_Geometries_IMultiLineString_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiLineString(GeoAPI.Geometries.IMultiLineString%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L210">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiLineString_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiLineString*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiLineString_GeoAPI_Geometries_IMultiLineString_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiLineString(GeoAPI.Geometries.IMultiLineString,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformMultiLineString(IMultiLineString, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IMultiLineString</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IMultiLineString TransformMultiLineString(IMultiLineString lines, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiLineString</span></td>
+        <td><span class="parametername">lines</span></td>
+        <td><p>MultiLineString to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiLineString</span></td>
+        <td><p>Transformed MultiLineString</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiPoint_GeoAPI_Geometries_IMultiPoint_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiPoint(GeoAPI.Geometries.IMultiPoint%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L198">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiPoint_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiPoint*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiPoint_GeoAPI_Geometries_IMultiPoint_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiPoint(GeoAPI.Geometries.IMultiPoint,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformMultiPoint(IMultiPoint, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IMultiPoint</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IMultiPoint TransformMultiPoint(IMultiPoint points, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><span class="parametername">points</span></td>
+        <td><p>MultiPoint to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPoint</span></td>
+        <td><p>Transformed MultiPoint</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiPolygon_GeoAPI_Geometries_IMultiPolygon_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiPolygon(GeoAPI.Geometries.IMultiPolygon%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L228">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiPolygon_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiPolygon*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformMultiPolygon_GeoAPI_Geometries_IMultiPolygon_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformMultiPolygon(GeoAPI.Geometries.IMultiPolygon,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformMultiPolygon(IMultiPolygon, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IMultiPolygon</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IMultiPolygon TransformMultiPolygon(IMultiPolygon polys, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPolygon</span></td>
+        <td><span class="parametername">polys</span></td>
+        <td><p>MultiPolygon to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IMultiPolygon</span></td>
+        <td><p>Transformed MultiPolygon</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformPoint_GeoAPI_Geometries_IPoint_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformPoint(GeoAPI.Geometries.IPoint%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L119">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformPoint_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformPoint*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformPoint_GeoAPI_Geometries_IPoint_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformPoint(GeoAPI.Geometries.IPoint,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformPoint(IPoint, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IPoint</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IPoint TransformPoint(IPoint p, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPoint</span></td>
+        <td><p>Transformed Point</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformPolygon_GeoAPI_Geometries_IPolygon_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformPolygon(GeoAPI.Geometries.IPolygon%2CGeoAPI.CoordinateSystems.Transformations.IMathTransform%2CGeoAPI.Geometries.IGeometryFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L177">View Source</a>
+  </span>
+  <a id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformPolygon_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformPolygon*"></a>
+  <h4 id="GeoAPI_CoordinateSystems_Transformations_GeometryTransform_TransformPolygon_GeoAPI_Geometries_IPolygon_GeoAPI_CoordinateSystems_Transformations_IMathTransform_GeoAPI_Geometries_IGeometryFactory_" data-uid="GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformPolygon(GeoAPI.Geometries.IPolygon,GeoAPI.CoordinateSystems.Transformations.IMathTransform,GeoAPI.Geometries.IGeometryFactory)">TransformPolygon(IPolygon, IMathTransform, IGeometryFactory)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IPolygon</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IPolygon TransformPolygon(IPolygon p, IMathTransform transform, IGeometryFactory targetFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Polygon to transform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.IMathTransform</span></td>
+        <td><span class="parametername">transform</span></td>
+        <td><p>MathTransform</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometryFactory</span></td>
+        <td><span class="parametername">targetFactory</span></td>
+        <td><p>The factory to create the target geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><p>Transformed Polygon</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_CoordinateSystems_Transformations_GeometryTransform.md&amp;value=---%0Auid%3A%20GeoAPI.CoordinateSystems.Transformations.GeometryTransform%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/Transformations/GeometryTransform.cs/#L27" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

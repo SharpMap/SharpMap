@@ -1,0 +1,1080 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class MapDecoration
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class MapDecoration
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Decoration.MapDecoration">
+  
+  
+  <h1 id="SharpMap_Rendering_Decoration_MapDecoration" data-uid="SharpMap.Rendering.Decoration.MapDecoration" class="text-break">Class MapDecoration
+  </h1>
+  <div class="markdown level0 summary"><p>Abstract base class for all map decorations.</p>
+<p>
+Handles framing and positioning of the decoration
+</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">MapDecoration</span></div>
+      <div class="level2"><a class="xref" href="SharpMap.Rendering.Decoration.Disclaimer.html">Disclaimer</a></div>
+      <div class="level2"><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.Graticule.html">Graticule</a></div>
+      <div class="level2"><a class="xref" href="SharpMap.Rendering.Decoration.NorthArrow.html">NorthArrow</a></div>
+      <div class="level2"><a class="xref" href="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.html">ScaleBar</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Rendering.Decoration.IMapDecoration.html">IMapDecoration</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Decoration.html">SharpMap.Rendering.Decoration</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Decoration_MapDecoration_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public abstract class MapDecoration : IMapDecoration</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L29">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration__ctor_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration__ctor" data-uid="SharpMap.Rendering.Decoration.MapDecoration.#ctor">MapDecoration()</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected MapDecoration()</code></pre>
+  </div>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration__boundingRectangle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration._boundingRectangle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L24">View Source</a>
+  </span>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration__boundingRectangle" data-uid="SharpMap.Rendering.Decoration.MapDecoration._boundingRectangle">_boundingRectangle</h4>
+  <div class="markdown level1 summary"><p>The bounding rectangle around the map decoration</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Rectangle _boundingRectangle</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectangle">Rectangle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration__cachedSize.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration._cachedSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L20">View Source</a>
+  </span>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration__cachedSize" data-uid="SharpMap.Rendering.Decoration.MapDecoration._cachedSize">_cachedSize</h4>
+  <div class="markdown level1 summary"><p>The size of this map decoration as computed/assigned previously</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Size _cachedSize</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Anchor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Anchor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L51">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Anchor_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Anchor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Anchor" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Anchor">Anchor</h4>
+  <div class="markdown level1 summary"><p>The anchor of the map Decoration</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MapDecorationAnchor Anchor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.MapDecorationAnchor.html">MapDecorationAnchor</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_BackgroundColor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.BackgroundColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L119">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_BackgroundColor_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BackgroundColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_BackgroundColor" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BackgroundColor">BackgroundColor</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the background color for the map decoration</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color BackgroundColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_BorderColor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.BorderColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L147">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_BorderColor_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BorderColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_BorderColor" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BorderColor">BorderColor</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the color of the border</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color BorderColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_BorderMargin.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.BorderMargin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L142">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_BorderMargin_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BorderMargin*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_BorderMargin" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BorderMargin">BorderMargin</h4>
+  <div class="markdown level1 summary"><p>The margin between decoration and border</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Size BorderMargin { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_BorderWidth.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.BorderWidth%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L152">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_BorderWidth_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BorderWidth*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_BorderWidth" data-uid="SharpMap.Rendering.Decoration.MapDecoration.BorderWidth">BorderWidth</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the width of the border</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int BorderWidth { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Enabled.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Enabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L43">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Enabled_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Enabled*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Enabled" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Enabled">Enabled</h4>
+  <div class="markdown level1 summary"><p>Gets or sets enabled status</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Enabled { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Location.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Location%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L56">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Location_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Location*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Location" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Location">Location</h4>
+  <div class="markdown level1 summary"><p>The point that defines the location</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Point Location { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Opacity.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Opacity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L126">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Opacity_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Opacity*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Opacity" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Opacity">Opacity</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the opacity of map decoration</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Opacity { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Padding.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Padding%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L99">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Padding_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Padding*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Padding" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Padding">Padding</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the Padding of the map decoration</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Size Padding { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_RoundedEdges.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.RoundedEdges%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L157">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_RoundedEdges_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.RoundedEdges*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_RoundedEdges" data-uid="SharpMap.Rendering.Decoration.MapDecoration.RoundedEdges">RoundedEdges</h4>
+  <div class="markdown level1 summary"><p>Gets or sets whether the border should be rendered with rounded edges</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool RoundedEdges { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_InternalSize_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.InternalSize(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L177">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_InternalSize_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.InternalSize*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_InternalSize_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.InternalSize(System.Drawing.Graphics,SharpMap.Map)">InternalSize(Graphics, Map)</h4>
+  <div class="markdown level1 summary"><p>Function to compute the required size for rendering the map decoration object</p>
+<p>This is just the size of the decoration object, border settings are excluded</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use InternalSize(Graphics, MapViewport&quot;)]
+protected virtual Size InternalSize(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td><p>The size of the map decoration</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_InternalSize_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.InternalSize(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L168">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_InternalSize_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.InternalSize*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_InternalSize_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.InternalSize(System.Drawing.Graphics,SharpMap.MapViewport)">InternalSize(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Function to compute the required size for rendering the map decoration object</p>
+<p>This is just the size of the decoration object, border settings are excluded</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract Size InternalSize(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td><p>The map's viewport</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td><p>The size of the map decoration</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OnRender_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OnRender(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L317">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OnRender_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRender*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OnRender_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRender(System.Drawing.Graphics,SharpMap.Map)">OnRender(Graphics, Map)</h4>
+  <div class="markdown level1 summary"><p>Render the actual map decoration.</p>
+<p>Refer to MapDecoration.<a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Render(Graphics, MapViewport)</a> for underlying management of <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform</p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use OnRender(Graphics, MapViewport&quot;)]
+protected virtual void OnRender(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>A map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OnRender_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OnRender(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L307">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OnRender_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRender*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OnRender_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRender(System.Drawing.Graphics,SharpMap.MapViewport)">OnRender(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Render the actual map decoration.</p>
+<p>Refer to MapDecoration.<a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Render(Graphics, MapViewport)</a> for underlying management of <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform</p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnRender(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td><p>A map viewport</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OnRendered_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OnRendered(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L362">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OnRendered_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendered*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OnRendered_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendered(System.Drawing.Graphics,SharpMap.Map)">OnRendered(Graphics, Map)</h4>
+  <div class="markdown level1 summary"><p>Signal completion of rendering</p>
+<p>Refer to MapDecoration.<a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_Map_">Render(Graphics, Map)</a> for underlying management of <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform</p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use OnRendered(Graphics, MapViewport&quot;)]
+protected virtual void OnRendered(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>A map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OnRendered_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OnRendered(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L352">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OnRendered_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendered*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OnRendered_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendered(System.Drawing.Graphics,SharpMap.MapViewport)">OnRendered(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Signal completion of rendering</p>
+<p>Refer to MapDecoration.<a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Render(Graphics, MapViewport)</a> for underlying management of <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform</p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnRendered(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td><p>A map viewport</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OnRendering_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OnRendering(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L340">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OnRendering_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendering*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OnRendering_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendering(System.Drawing.Graphics,SharpMap.Map)">OnRendering(Graphics, Map)</h4>
+  <div class="markdown level1 summary"><p>Signal commencing rendering</p>
+<p>Refer to MapDecoration. <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Render(Graphics, MapViewport)</a> for underlying management of <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform</p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use OnRendering(Graphics, MapViewport&quot;)]
+protected virtual void OnRendering(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>A map viewport</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OnRendering_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OnRendering(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L329">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OnRendering_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendering*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OnRendering_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OnRendering(System.Drawing.Graphics,SharpMap.MapViewport)">OnRendering(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Signal commencing rendering</p>
+<p>Refer to MapDecoration.<a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Render(Graphics, MapViewport)</a> for underlying management of <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform</p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void OnRendering(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td><p>A map viewport</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_OpacityColor_System_Drawing_Color_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.OpacityColor(System.Drawing.Color)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L108">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_OpacityColor_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OpacityColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_OpacityColor_System_Drawing_Color_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.OpacityColor(System.Drawing.Color)">OpacityColor(Color)</h4>
+  <div class="markdown level1 summary"><p>Function to compute an transparent color by combining <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Opacity">Opacity</a> with <code data-dev-comment-type="paramref" class="paramref">color</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Color OpacityColor(Color color)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><span class="parametername">color</span></td>
+        <td><p>The base color</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><p>The (semi) transparent color</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Render(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L294">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Render_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Render*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Render(System.Drawing.Graphics,SharpMap.Map)">Render(Graphics, Map)</h4>
+  <div class="markdown level1 summary"><p>Draw the map decoration.</p>
+<p>Note that this base class&apos; implementation resets <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform
+prior to raising event OnRendering, and restore the <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform prior to
+raising event OnRendered.</p>
+Likewise, <code data-dev-comment-type="paramref" class="paramref">g</code>.Clip is reset prior to rendering map decoration, and restored
+immediately after rendering.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use Render(Graphics, Map&quot;)]
+public void Render(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object to use for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The viewport for rendering</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration.Render(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L242">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_MapDecoration_Render_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Render*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.MapDecoration.Render(System.Drawing.Graphics,SharpMap.MapViewport)">Render(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Draw the map decoration.</p>
+<p>Note that this base class&apos; implementation resets <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform
+prior to raising event OnRendering, and restore the <code data-dev-comment-type="paramref" class="paramref">g</code>.Transform prior to
+raising event OnRendered.</p>
+Likewise, <code data-dev-comment-type="paramref" class="paramref">g</code>.Clip is reset prior to rendering map decoration, and restored
+immediately after rendering.
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Render(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>A graphics object to use for rendering</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td><p>The viewport for rendering</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.IMapDecoration.html">IMapDecoration</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_MapDecoration.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.MapDecoration%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/MapDecoration.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

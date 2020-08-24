@@ -1,0 +1,936 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IXPathQueryManager
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IXPathQueryManager
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager">
+  
+  
+  <h1 id="SharpMap_Utilities_Wfs_IXPathQueryManager" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager" class="text-break">Interface IXPathQueryManager
+  </h1>
+  <div class="markdown level0 summary"><p>XPathQueryManager interface</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Utilities.Wfs.html">SharpMap.Utilities.Wfs</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Utilities_Wfs_IXPathQueryManager_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IXPathQueryManager</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_AddNamespace_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.AddNamespace(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L21">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_AddNamespace_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.AddNamespace*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_AddNamespace_System_String_System_String_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.AddNamespace(System.String,System.String)">AddNamespace(String, String)</h4>
+  <div class="markdown level1 summary"><p>Method to add/register an xml-namespace</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddNamespace(string prefix, string ns)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">prefix</span></td>
+        <td><p>The prefix used to identify the namespace</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">ns</span></td>
+        <td><p>The full namespace qualifier</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L34">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_Clone_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.Clone*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_Clone" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.Clone">Clone()</h4>
+  <div class="markdown level1 summary"><p>Function to create a deep-copy clone of this <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IXPathQueryManager Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td><p>An <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a> instance resembling this one.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_Compile_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.Compile(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L28">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_Compile_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.Compile*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_Compile_System_String_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.Compile(System.String)">Compile(String)</h4>
+  <div class="markdown level1 summary"><p>Method to compile a <code data-dev-comment-type="paramref" class="paramref">xPath</code> to a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">XPathExpression Compile(string xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The xpath to compile</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><p>The compiled <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetContextOfNextNode.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetContextOfNextNode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L102">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetContextOfNextNode_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetContextOfNextNode*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetContextOfNextNode" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetContextOfNextNode">GetContextOfNextNode()</h4>
+  <div class="markdown level1 summary"><p>This method moves the current instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager.html">XPathQueryManager</a>
+to the context of the next node a previously handed over XPath expression addresses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool GetContextOfNextNode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetContextOfNode_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetContextOfNode(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L109">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetContextOfNode_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetContextOfNode*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetContextOfNode_System_UInt32_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetContextOfNode(System.UInt32)">GetContextOfNode(UInt32)</h4>
+  <div class="markdown level1 summary"><p>This method moves the current instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager.html">XPathQueryManager</a>
+to the context of node[index] of current position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool GetContextOfNode(uint index)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>The index of the node to search</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetIterator_System_Xml_XPath_XPathExpression_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetIterator(System.Xml.XPath.XPathExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L41">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetIterator_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetIterator*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetIterator_System_Xml_XPath_XPathExpression_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetIterator(System.Xml.XPath.XPathExpression)">GetIterator(XPathExpression)</h4>
+  <div class="markdown level1 summary"><p>Function to get an iterator over <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">XPathNodeIterator GetIterator(XPathExpression xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The xPath expression to iterate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathnodeiterator">XPathNodeIterator</a></td>
+        <td><p>An <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathnodeiterator">XPathNodeIterator</a> iterator over <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetIterator_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetIterator(System.Xml.XPath.XPathExpression%2CSystem.Collections.DictionaryEntry%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L49">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetIterator_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetIterator*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetIterator_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetIterator(System.Xml.XPath.XPathExpression,System.Collections.DictionaryEntry[])">GetIterator(XPathExpression, DictionaryEntry[])</h4>
+  <div class="markdown level1 summary"><p>Function to get an iterator over <code data-dev-comment-type="paramref" class="paramref">xPath</code>, narrowed by <code data-dev-comment-type="paramref" class="paramref">queryParameters</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">XPathNodeIterator GetIterator(XPathExpression xPath, DictionaryEntry[] queryParameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The xPath expression to iterate</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.dictionaryentry">DictionaryEntry</a>[]</td>
+        <td><span class="parametername">queryParameters</span></td>
+        <td><p>The parameters to narrow the <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathnodeiterator">XPathNodeIterator</a></td>
+        <td><p>An <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathnodeiterator">XPathNodeIterator</a> iterator over <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetValueFromNode_System_Xml_XPath_XPathExpression_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetValueFromNode(System.Xml.XPath.XPathExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L56">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValueFromNode_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValueFromNode*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValueFromNode_System_Xml_XPath_XPathExpression_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValueFromNode(System.Xml.XPath.XPathExpression)">GetValueFromNode(XPathExpression)</h4>
+  <div class="markdown level1 summary"><p>Function to get a value from  <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string GetValueFromNode(XPathExpression xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a> to get the value from</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>A string value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetValueFromNode_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetValueFromNode(System.Xml.XPath.XPathExpression%2CSystem.Collections.DictionaryEntry%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L64">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValueFromNode_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValueFromNode*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValueFromNode_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValueFromNode(System.Xml.XPath.XPathExpression,System.Collections.DictionaryEntry[])">GetValueFromNode(XPathExpression, DictionaryEntry[])</h4>
+  <div class="markdown level1 summary"><p>Function to get a value from  <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string GetValueFromNode(XPathExpression xPath, DictionaryEntry[] queryParameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a> to get the value from</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.dictionaryentry">DictionaryEntry</a>[]</td>
+        <td><span class="parametername">queryParameters</span></td>
+        <td><p>The parameters for narrowing the <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>A string value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetValuesFromNodes_System_Xml_XPath_XPathExpression_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetValuesFromNodes(System.Xml.XPath.XPathExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L71">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValuesFromNodes_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValuesFromNodes*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValuesFromNodes_System_Xml_XPath_XPathExpression_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValuesFromNodes(System.Xml.XPath.XPathExpression)">GetValuesFromNodes(XPathExpression)</h4>
+  <div class="markdown level1 summary"><p>Function to get a list of value from  <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">List&lt;string&gt; GetValuesFromNodes(XPathExpression xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a> to get the values from</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><p>A  list of string value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetValuesFromNodes_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetValuesFromNodes(System.Xml.XPath.XPathExpression%2CSystem.Collections.DictionaryEntry%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L79">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValuesFromNodes_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValuesFromNodes*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetValuesFromNodes_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetValuesFromNodes(System.Xml.XPath.XPathExpression,System.Collections.DictionaryEntry[])">GetValuesFromNodes(XPathExpression, DictionaryEntry[])</h4>
+  <div class="markdown level1 summary"><p>Function to get a list of value from  <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">List&lt;string&gt; GetValuesFromNodes(XPathExpression xPath, DictionaryEntry[] queryParameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a> to get the values from</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.dictionaryentry">DictionaryEntry</a>[]</td>
+        <td><span class="parametername">queryParameters</span></td>
+        <td><p>The parameters for narrowing the <code data-dev-comment-type="paramref" class="paramref">xPath</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><p>A  list of string value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L87">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetXPathQueryManagerInContext_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetXPathQueryManagerInContext*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression)">GetXPathQueryManagerInContext(XPathExpression)</h4>
+  <div class="markdown level1 summary"><p>Function to return an instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager.html">XPathQueryManager</a>
+in the context of the first node the XPath expression addresses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The compiled XPath expression</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td><p>A <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression%2CSystem.Collections.DictionaryEntry%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L96">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetXPathQueryManagerInContext_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetXPathQueryManagerInContext*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression,System.Collections.DictionaryEntry[])">GetXPathQueryManagerInContext(XPathExpression, DictionaryEntry[])</h4>
+  <div class="markdown level1 summary"><p>Function to return an instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager.html">XPathQueryManager</a>
+in the context of the first node the XPath expression addresses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath, DictionaryEntry[] queryParameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The compiled XPath expression</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.dictionaryentry">DictionaryEntry</a>[]</td>
+        <td><span class="parametername">queryParameters</span></td>
+        <td><p>Parameters for the compiled XPath expression</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td><p>A <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_ResetNamespaces.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.ResetNamespaces%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L114">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_ResetNamespaces_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.ResetNamespaces*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_ResetNamespaces" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.ResetNamespaces">ResetNamespaces()</h4>
+  <div class="markdown level1 summary"><p>Method to reset/delete the current namespace context</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ResetNamespaces()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_ResetNavigator.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.ResetNavigator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L119">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_ResetNavigator_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.ResetNavigator*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_ResetNavigator" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.ResetNavigator">ResetNavigator()</h4>
+  <div class="markdown level1 summary"><p>Method to reset the inherent <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathnavigator">XPathNavigator</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ResetNavigator()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_SharpMap_Utilities_Wfs_HttpClientUtil_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(SharpMap.Utilities.Wfs.HttpClientUtil)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L137">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_SharpMap_Utilities_Wfs_HttpClientUtil_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(SharpMap.Utilities.Wfs.HttpClientUtil)">SetDocumentToParse(HttpClientUtil)</h4>
+  <div class="markdown level1 summary"><p>Method to set the document to sth defined by <a class="xref" href="SharpMap.Utilities.Wfs.HttpClientUtil.html">HttpClientUtil</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SetDocumentToParse(HttpClientUtil httpClientUtil)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.HttpClientUtil.html">HttpClientUtil</a></td>
+        <td><span class="parametername">httpClientUtil</span></td>
+        <td><p>The name of the file to parse</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_System_Byte___.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(System.Byte%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L131">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_System_Byte___" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(System.Byte[])">SetDocumentToParse(Byte[])</h4>
+  <div class="markdown level1 summary"><p>Method to set the document to parse to <code data-dev-comment-type="paramref" class="paramref">document</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SetDocumentToParse(byte[] document)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.byte">Byte</a>[]</td>
+        <td><span class="parametername">document</span></td>
+        <td><p>The document stream</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_System_IO_Stream_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(System.IO.Stream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L125">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_System_IO_Stream_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(System.IO.Stream)">SetDocumentToParse(Stream)</h4>
+  <div class="markdown level1 summary"><p>Method to set the document to parse to <code data-dev-comment-type="paramref" class="paramref">documentStream</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SetDocumentToParse(Stream documentStream)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
+        <td><span class="parametername">documentStream</span></td>
+        <td><p>The document stream</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L143">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_IXPathQueryManager_SetDocumentToParse_System_String_" data-uid="SharpMap.Utilities.Wfs.IXPathQueryManager.SetDocumentToParse(System.String)">SetDocumentToParse(String)</h4>
+  <div class="markdown level1 summary"><p>Method to set the document to parse to a file named <code data-dev-comment-type="paramref" class="paramref">documentFilename</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SetDocumentToParse(string documentFilename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">documentFilename</span></td>
+        <td><p>The name of the file to parse</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_IXPathQueryManager.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.IXPathQueryManager%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/IXPathQueryManager.cs/#L14" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

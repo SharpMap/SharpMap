@@ -1,0 +1,1854 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SqlServer2008
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SqlServer2008
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.SqlServer2008">
+  
+  
+  <h1 id="SharpMap_Data_Providers_SqlServer2008" data-uid="SharpMap.Data.Providers.SqlServer2008" class="text-break">Class SqlServer2008
+  </h1>
+  <div class="markdown level0 summary"><p>SQL Server 2008 data provider</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html">BaseProvider</a></div>
+    <div class="level3"><span class="xref">SqlServer2008</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a></div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</div>
+    <div><a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SridChanged">BaseProvider.SridChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Factory">BaseProvider.Factory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ReleaseManagedResources">BaseProvider.ReleaseManagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ConnectionID">BaseProvider.ConnectionID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_IsOpen">BaseProvider.IsOpen</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_SRID">BaseProvider.SRID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnSridChanged_System_EventArgs_">BaseProvider.OnSridChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_">BaseProvider.ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnBeginExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_">BaseProvider.OnBeginExecuteIntersectionQuery(IGeometry)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnEndExecuteIntersectionQuery">BaseProvider.OnEndExecuteIntersectionQuery()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Open">BaseProvider.Open()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_Close">BaseProvider.Close()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_CloneTableStructure_SharpMap_Data_FeatureDataTable_">BaseProvider.CloneTableStructure(FeatureDataTable)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_SqlServer2008_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class SqlServer2008 : BaseProvider, IDisposableEx, IProvider, IProvider&lt;uint&gt;, IBaseProvider, IDisposable</code></pre>
+  </div>
+  <h5 id="SharpMap_Data_Providers_SqlServer2008_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This provider was developed against the SQL Server 2008 November CTP. The platform may change significantly before release.</p>   
+<example>   
+Adding a datasource to a layer:   
+<pre><code>   
+Layers.VectorLayer myLayer = new Layers.VectorLayer(&quot;My layer&quot;);   
+string ConnStr = @&quot;Integrated Security=SSPI;Persist Security Info=False;Initial Catalog=myDB;Data Source=myServer\myInstance&quot;;   
+myLayer.DataSource = new Data.Providers.SqlServer2008(ConnStr, &quot;myTable&quot;, &quot;GeomColumn&quot;, &quot;OidColumn&quot;);   </code></pre>   
+</example>   
+<p>SQL Server 2008 provider by Bill Dollins (dollins.bill@gmail.com). Based on the Oracle provider written by Humberto Ferreira.</p>   
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L205">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String)">SqlServer2008(String, String, String)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server for <a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a>.Geometry in column named SHAPE with default <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ExtentsMode">ExtentsMode</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public SqlServer2008(string connectionStr, string tablename, string oidColumnName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.SqlServerSpatialObjectType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L218">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String,SharpMap.Data.Providers.SqlServerSpatialObjectType)">SqlServer2008(String, String, String, SqlServerSpatialObjectType)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server for spatial column named SHAPE with default <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ExtentsMode">ExtentsMode</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public SqlServer2008(string connectionStr, string tablename, string oidColumnName, SqlServerSpatialObjectType spatialObjectType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a></td>
+        <td><span class="parametername">spatialObjectType</span></td>
+        <td><p>The type of the spatial object to use for spatial queries</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L232">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String,System.String)">SqlServer2008(String, String, String, String)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server for <a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a>.Geometry with default <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ExtentsMode">ExtentsMode</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public SqlServer2008(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">geometryColumnName</span></td>
+        <td><p>Name of geometry column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.SqlServerSpatialObjectType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L246">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String,System.String,SharpMap.Data.Providers.SqlServerSpatialObjectType)">SqlServer2008(String, String, String, String, SqlServerSpatialObjectType)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server with default <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ExtentsMode">ExtentsMode</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">spatialColumnName</span></td>
+        <td><p>Name of spatial column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a></td>
+        <td><span class="parametername">spatialObjectType</span></td>
+        <td><p>spatial type (Geometry or Geography)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.SqlServerSpatialObjectType%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L262">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_System_Boolean_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String,System.String,SharpMap.Data.Providers.SqlServerSpatialObjectType,System.Boolean)">SqlServer2008(String, String, String, String, SqlServerSpatialObjectType, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">spatialColumnName</span></td>
+        <td><p>Name of spatial column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a></td>
+        <td><span class="parametername">spatialObjectType</span></td>
+        <td><p>spatial type (Geometry or Geography)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">useSpatialIndexExtentAsExtent</span></td>
+        <td><p>True sets ExtentsMode to SqlServer2008ExtentsMode.SpatialIndex</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_System_Boolean_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.SqlServerSpatialObjectType%2CSystem.Boolean%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L281">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_System_Boolean_System_Int32_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String,System.String,SharpMap.Data.Providers.SqlServerSpatialObjectType,System.Boolean,System.Int32)">SqlServer2008(String, String, String, String, SqlServerSpatialObjectType, Boolean, Int32)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete]
+public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, bool useSpatialIndexExtentAsExtent, int srid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">spatialColumnName</span></td>
+        <td><p>Name of spatial column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a></td>
+        <td><span class="parametername">spatialObjectType</span></td>
+        <td><p>spatial type (Geometry or Geography)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">useSpatialIndexExtentAsExtent</span></td>
+        <td><p>True sets ExtentsMode to SqlServer2008ExtentsMode.SpatialIndex</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The spatial reference id</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_System_Int32_SharpMap_Data_Providers_SqlServer2008ExtentsMode_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.%23ctor(System.String%2CSystem.String%2CSystem.String%2CSystem.String%2CSharpMap.Data.Providers.SqlServerSpatialObjectType%2CSystem.Int32%2CSharpMap.Data.Providers.SqlServer2008ExtentsMode)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L302">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008__ctor_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__ctor_System_String_System_String_System_String_System_String_SharpMap_Data_Providers_SqlServerSpatialObjectType_System_Int32_SharpMap_Data_Providers_SqlServer2008ExtentsMode_" data-uid="SharpMap.Data.Providers.SqlServer2008.#ctor(System.String,System.String,System.String,System.String,SharpMap.Data.Providers.SqlServerSpatialObjectType,System.Int32,SharpMap.Data.Providers.SqlServer2008ExtentsMode)">SqlServer2008(String, String, String, String, SqlServerSpatialObjectType, Int32, SqlServer2008ExtentsMode)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new connection to SQL Server</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SqlServer2008(string connectionStr, string tablename, string spatialColumnName, string oidColumnName, SqlServerSpatialObjectType spatialObjectType, int srid, SqlServer2008ExtentsMode extentsMode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">connectionStr</span></td>
+        <td><p>Connectionstring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>Name of data table</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">spatialColumnName</span></td>
+        <td><p>Name of spatial column</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">oidColumnName</span></td>
+        <td><p>Name of column with unique identifier</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a></td>
+        <td><span class="parametername">spatialObjectType</span></td>
+        <td><p>spatial type (Geometry or Geography)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The spatial reference id</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServer2008ExtentsMode.html">SqlServer2008ExtentsMode</a></td>
+        <td><span class="parametername">extentsMode</span></td>
+        <td><p>Mode for calculating full extents of the data</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__reorientObject.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008._reorientObject%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L122">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__reorientObject" data-uid="SharpMap.Data.Providers.SqlServer2008._reorientObject">_reorientObject</h4>
+  <div class="markdown level1 summary"><p>T-SQL command to &quot;reorient&quot; a geography</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected readonly string _reorientObject</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SqlServer2008__reorientObject_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><ul><li>SqlGeographypolygon interior defined by left hand/foot rule (anti-clockwise orientation)</li><li>SqlGeometryorientation is irrelevant</li></ul>
+GeometryToWKT returns Envelope with clockwise ring, so need to call .ReorientObject() for WKT used to query SqlGeography
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008__spatialTypeString.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008._spatialTypeString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L127">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008__spatialTypeString" data-uid="SharpMap.Data.Providers.SqlServer2008._spatialTypeString">_spatialTypeString</h4>
+  <div class="markdown level1 summary"><p>Used for static spatial methods in SQL string</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected readonly string _spatialTypeString</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GeogMaxExtents.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GeogMaxExtents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L110">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GeogMaxExtents" data-uid="SharpMap.Data.Providers.SqlServer2008.GeogMaxExtents">GeogMaxExtents</h4>
+  <div class="markdown level1 summary"><p>Envelope required for restricting extents of WKT (eg bbox) used to query SqlGeography to work around error
+24206 &quot;The specified input cannot be accepted because it contains an edge with antipodal points&quot;
+FullGlobe will be used when map extents exceed this envelope.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static readonly Envelope GeogMaxExtents</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_Columns.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.Columns%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L700">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_Columns_" data-uid="SharpMap.Data.Providers.SqlServer2008.Columns*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_Columns" data-uid="SharpMap.Data.Providers.SqlServer2008.Columns">Columns</h4>
+  <div class="markdown level1 summary"><p>Gets a collection of columns in the dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DataColumnCollection Columns { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datacolumncollection">DataColumnCollection</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ConnectionString.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ConnectionString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L355">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ConnectionString_" data-uid="SharpMap.Data.Providers.SqlServer2008.ConnectionString*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ConnectionString" data-uid="SharpMap.Data.Providers.SqlServer2008.ConnectionString">ConnectionString</h4>
+  <div class="markdown level1 summary"><p>Connectionstring</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ConnectionString { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_DefinitionQuery.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.DefinitionQuery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L695">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_DefinitionQuery_" data-uid="SharpMap.Data.Providers.SqlServer2008.DefinitionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_DefinitionQuery" data-uid="SharpMap.Data.Providers.SqlServer2008.DefinitionQuery">DefinitionQuery</h4>
+  <div class="markdown level1 summary"><p>Definition query used for limiting dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DefinitionQuery { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ExtentsMode.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ExtentsMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L340">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ExtentsMode_" data-uid="SharpMap.Data.Providers.SqlServer2008.ExtentsMode*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ExtentsMode" data-uid="SharpMap.Data.Providers.SqlServer2008.ExtentsMode">ExtentsMode</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the method used in the <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_GetExtents">GetExtents()</a> method.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SqlServer2008ExtentsMode ExtentsMode { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServer2008ExtentsMode.html">SqlServer2008ExtentsMode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ForceIndex.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ForceIndex%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L187">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ForceIndex_" data-uid="SharpMap.Data.Providers.SqlServer2008.ForceIndex*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ForceIndex" data-uid="SharpMap.Data.Providers.SqlServer2008.ForceIndex">ForceIndex</h4>
+  <div class="markdown level1 summary"><p>When set, forces use of the specified index, possibly over-riding <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ValidateGeometries">ValidateGeometries</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ForceIndex { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ForceSeekHint.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ForceSeekHint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L177">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ForceSeekHint_" data-uid="SharpMap.Data.Providers.SqlServer2008.ForceSeekHint*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ForceSeekHint" data-uid="SharpMap.Data.Providers.SqlServer2008.ForceSeekHint">ForceSeekHint</h4>
+  <div class="markdown level1 summary"><p>When <pre><code>true</code></pre>, uses the FORCESEEK table hint, possibly over-riding <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ValidateGeometries">ValidateGeometries</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ForceSeekHint { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GeometryColumn.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GeometryColumn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L160">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GeometryColumn_" data-uid="SharpMap.Data.Providers.SqlServer2008.GeometryColumn*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GeometryColumn" data-uid="SharpMap.Data.Providers.SqlServer2008.GeometryColumn">GeometryColumn</h4>
+  <div class="markdown level1 summary"><p>Name of geometry column</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string GeometryColumn { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_MaxDop.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.MaxDop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L197">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_MaxDop_" data-uid="SharpMap.Data.Providers.SqlServer2008.MaxDop*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_MaxDop" data-uid="SharpMap.Data.Providers.SqlServer2008.MaxDop">MaxDop</h4>
+  <div class="markdown level1 summary"><p>If set, sends an Option MaxDop to the SQL-Server to override the Parallel Execution of indexes
+This can be used if Spatial indexes are not used on SQL-Servers with many processors.</p>
+<p>MaxDop = 0 // Default behaviour
+MaxDop = 1 // Suppress Parallel execution of Queryplan
+MaxDop = [2..n] // Use X cores in in execution plan</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MaxDop { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_NoLockHint.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.NoLockHint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L182">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_NoLockHint_" data-uid="SharpMap.Data.Providers.SqlServer2008.NoLockHint*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_NoLockHint" data-uid="SharpMap.Data.Providers.SqlServer2008.NoLockHint">NoLockHint</h4>
+  <div class="markdown level1 summary"><p>When <pre><code>true</code></pre>, uses the NOLOCK table hint.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool NoLockHint { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ObjectIdColumn.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ObjectIdColumn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L155">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ObjectIdColumn_" data-uid="SharpMap.Data.Providers.SqlServer2008.ObjectIdColumn*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ObjectIdColumn" data-uid="SharpMap.Data.Providers.SqlServer2008.ObjectIdColumn">ObjectIdColumn</h4>
+  <div class="markdown level1 summary"><p>Name of column that contains the Object ID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ObjectIdColumn { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_QualifiedTable.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.QualifiedTable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L150">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_QualifiedTable_" data-uid="SharpMap.Data.Providers.SqlServer2008.QualifiedTable*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_QualifiedTable" data-uid="SharpMap.Data.Providers.SqlServer2008.QualifiedTable">QualifiedTable</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the qualified schema table name in square brackets</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string QualifiedTable { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_SpatialObjectType.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.SpatialObjectType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L165">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_SpatialObjectType_" data-uid="SharpMap.Data.Providers.SqlServer2008.SpatialObjectType*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_SpatialObjectType" data-uid="SharpMap.Data.Providers.SqlServer2008.SpatialObjectType">SpatialObjectType</h4>
+  <div class="markdown level1 summary"><p>Spatial object type for</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SqlServerSpatialObjectType SpatialObjectType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_Table.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.Table%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L145">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_Table_" data-uid="SharpMap.Data.Providers.SqlServer2008.Table*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_Table" data-uid="SharpMap.Data.Providers.SqlServer2008.Table">Table</h4>
+  <div class="markdown level1 summary"><p>Data table name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Table { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_TableSchema.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.TableSchema%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L140">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_TableSchema_" data-uid="SharpMap.Data.Providers.SqlServer2008.TableSchema*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_TableSchema" data-uid="SharpMap.Data.Providers.SqlServer2008.TableSchema">TableSchema</h4>
+  <div class="markdown level1 summary"><p>Data table schema</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string TableSchema { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ValidateGeometries.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ValidateGeometries%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L172">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ValidateGeometries_" data-uid="SharpMap.Data.Providers.SqlServer2008.ValidateGeometries*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ValidateGeometries" data-uid="SharpMap.Data.Providers.SqlServer2008.ValidateGeometries">ValidateGeometries</h4>
+  <div class="markdown level1 summary"><p>When <code>true</code>, attempts to repair invalid SqlServer spatial objects by appending .MakeValid() in SQL statements.
+Ignored for <a class="xref" href="SharpMap.Data.Providers.SqlServerSpatialObjectType.html">SqlServerSpatialObjectType</a>.Geometry
+when <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ForceSeekHint">ForceSeekHint</a> or <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_ForceIndex">ForceIndex</a> is enabled due to SQL Server query execution plan.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool ValidateGeometries { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_BuildTableHints.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.BuildTableHints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L470">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_BuildTableHints_" data-uid="SharpMap.Data.Providers.SqlServer2008.BuildTableHints*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_BuildTableHints" data-uid="SharpMap.Data.Providers.SqlServer2008.BuildTableHints">BuildTableHints()</h4>
+  <div class="markdown level1 summary"><p>Builds the WITH clause containing all specified table hints</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string BuildTableHints()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The WITH clause</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L883">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.SqlServer2008.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SqlServer2008.ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns all features with the view box</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet fds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td><p>view box</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">fds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_">BaseProvider.ExecuteIntersectionQuery(Envelope, FeatureDataSet)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ExecuteIntersectionQuery_System_String_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ExecuteIntersectionQuery(System.String%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L910">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.SqlServer2008.ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ExecuteIntersectionQuery_System_String_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SqlServer2008.ExecuteIntersectionQuery(System.String,SharpMap.Data.FeatureDataSet)">ExecuteIntersectionQuery(String, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual void ExecuteIntersectionQuery(string sql, FeatureDataSet fds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">sql</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">fds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetAttributeColumnNames.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetAttributeColumnNames%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L425">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetAttributeColumnNames_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetAttributeColumnNames*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetAttributeColumnNames" data-uid="SharpMap.Data.Providers.SqlServer2008.GetAttributeColumnNames">GetAttributeColumnNames()</h4>
+  <div class="markdown level1 summary"><p>Method to get the name of the attribute columns</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string GetAttributeColumnNames()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>A</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetBoxFilterStr_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetBoxFilterStr(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L617">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetBoxFilterStr_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetBoxFilterStr*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetBoxFilterStr_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetBoxFilterStr(GeoAPI.Geometries.Envelope)">GetBoxFilterStr(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns the box filter string needed in SQL query</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string GetBoxFilterStr(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetExtents.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetExtents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L758">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetExtents_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetExtents*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetExtents" data-uid="SharpMap.Data.Providers.SqlServer2008.GetExtents">GetExtents()</h4>
+  <div class="markdown level1 summary"><p>Boundingbox of dataset</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Envelope GetExtents()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>boundingbox</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetExtents">BaseProvider.GetExtents()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetExtraOptions.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetExtraOptions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L454">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetExtraOptions_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetExtraOptions*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetExtraOptions" data-uid="SharpMap.Data.Providers.SqlServer2008.GetExtraOptions">GetExtraOptions()</h4>
+  <div class="markdown level1 summary"><p>Function to transform <a class="xref" href="SharpMap.Data.Providers.SqlServer2008.html#SharpMap_Data_Providers_SqlServer2008_MaxDop">MaxDop</a> to sql for the query</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string GetExtraOptions()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>MAXDOP option striong</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetFeature_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetFeature(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L710">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetFeature_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetFeature*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetFeature_System_UInt32_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetFeature(System.UInt32)">GetFeature(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns a datarow based on a RowID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override FeatureDataRow GetFeature(uint rowId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">rowId</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>datarow</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetFeature_System_UInt32_">BaseProvider.GetFeature(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetFeatureCount.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetFeatureCount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L671">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetFeatureCount_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetFeatureCount*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetFeatureCount" data-uid="SharpMap.Data.Providers.SqlServer2008.GetFeatureCount">GetFeatureCount()</h4>
+  <div class="markdown level1 summary"><p>Returns the number of records in the dataset (including NULL, EMPTY, and Invalid geometries)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetFeatureCount()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>number of features</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetFeatureCount">BaseProvider.GetFeatureCount()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetGeometriesInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetGeometriesInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L497">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetGeometriesInView_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetGeometriesInView*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetGeometriesInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetGeometriesInView(GeoAPI.Geometries.Envelope)">GetGeometriesInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns geometries within the specified bounding box</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Collection&lt;IGeometry&gt; GetGeometriesInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<span class="xref">GeoAPI.Geometries.IGeometry</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetGeometriesInView_GeoAPI_Geometries_Envelope_">BaseProvider.GetGeometriesInView(Envelope)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetGeometryByID_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetGeometryByID(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L542">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetGeometryByID_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetGeometryByID*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetGeometryByID_System_UInt32_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetGeometryByID(System.UInt32)">GetGeometryByID(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Returns the geometry corresponding to the Object ID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IGeometry GetGeometryByID(uint oid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">oid</span></td>
+        <td><p>Object ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><p>geometry</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetGeometryByID_System_UInt32_">BaseProvider.GetGeometryByID(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetMakeValidString.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetMakeValidString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L366">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetMakeValidString_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetMakeValidString*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetMakeValidString" data-uid="SharpMap.Data.Providers.SqlServer2008.GetMakeValidString">GetMakeValidString()</h4>
+  <div class="markdown level1 summary"><p>Gets the T-SQL string to enforce that a geometry is valid.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected string GetMakeValidString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_GetObjectIDsInView_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.GetObjectIDsInView(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L574">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_GetObjectIDsInView_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetObjectIDsInView*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_GetObjectIDsInView_GeoAPI_Geometries_Envelope_" data-uid="SharpMap.Data.Providers.SqlServer2008.GetObjectIDsInView(GeoAPI.Geometries.Envelope)">GetObjectIDsInView(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Returns geometry Object IDs whose bounding box intersects 'bbox'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Collection&lt;uint&gt; GetObjectIDsInView(Envelope bbox)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">bbox</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_GetObjectIDsInView_GeoAPI_Geometries_Envelope_">BaseProvider.GetObjectIDsInView(Envelope)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.OnExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L638">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_OnExecuteIntersectionQuery_" data-uid="SharpMap.Data.Providers.SqlServer2008.OnExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Data.Providers.SqlServer2008.OnExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">OnExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"><p>Returns the features that intersects with 'geom'</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet fds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">fds</span></td>
+        <td><p>FeatureDataSet to fill data into</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Data.Providers.BaseProvider.html#SharpMap_Data_Providers_BaseProvider_OnExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_">BaseProvider.OnExecuteIntersectionQuery(IGeometry, FeatureDataSet)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008_ParseTablename_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008.ParseTablename(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L373">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SqlServer2008_ParseTablename_" data-uid="SharpMap.Data.Providers.SqlServer2008.ParseTablename*"></a>
+  <h4 id="SharpMap_Data_Providers_SqlServer2008_ParseTablename_System_String_" data-uid="SharpMap.Data.Providers.SqlServer2008.ParseTablename(System.String)">ParseTablename(String)</h4>
+  <div class="markdown level1 summary"><p>Method to parse TableSchema and Table from a (fully qualified) tablename</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void ParseTablename(string tablename)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">tablename</span></td>
+        <td><p>The table name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider.html">IProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IProvider-1.html">IProvider&lt;TOid&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Data.Providers.IBaseProvider.html">IBaseProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetCoordinateSystem(IProvider)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Data_Providers_IProvider_">CoordinateSystemExtensions.GetFactory(IProvider)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SqlServer2008.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SqlServer2008%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/SqlServer2008.cs/#L97" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,905 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class TiledWmsLayer
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class TiledWmsLayer
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Layers.TiledWmsLayer">
+  
+  
+  <h1 id="SharpMap_Layers_TiledWmsLayer" data-uid="SharpMap.Layers.TiledWmsLayer" class="text-break">Class TiledWmsLayer
+  </h1>
+  <div class="markdown level0 summary"><p>Client layer for WMS-C service</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Layers.Layer.html">Layer</a></div>
+    <div class="level3"><span class="xref">TiledWmsLayer</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayerEx.html">ILayerEx</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerRendered">Layer.LayerRendered</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SRIDChanged">Layer.SRIDChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnSridChanged_System_EventArgs_">Layer.OnSridChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_StyleChanged">Layer.StyleChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnStyleChanged_System_EventArgs_">Layer.OnStyleChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerNameChanged">Layer.LayerNameChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnLayerNameChanged_System_EventArgs_">Layer.OnLayerNameChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_CanvasArea">Layer.CanvasArea</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ReleaseManagedResources">Layer.ReleaseManagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_CoordinateTransformation">Layer.CoordinateTransformation</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_CoordinateTransformationChanged">Layer.CoordinateTransformationChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnCoordinateTransformationChanged_System_EventArgs_">Layer.OnCoordinateTransformationChanged(EventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SourceFactory">Layer.SourceFactory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_TargetFactory">Layer.TargetFactory</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ReverseCoordinateTransformation">Layer.ReverseCoordinateTransformation</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_NeedsTransformation">Layer.NeedsTransformation</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerName">Layer.LayerName</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_LayerTitle">Layer.LayerTitle</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SRID">Layer.SRID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_TargetSRID">Layer.TargetSRID</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Render_System_Drawing_Graphics_SharpMap_Map_">Layer.Render(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_SharpMap_Layers_ILayerEx_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Layer.ILayerEx.Render(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Render_System_Drawing_Graphics_SharpMap_MapViewport_System_Drawing_Rectangle__">Layer.Render(Graphics, MapViewport, Rectangle)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_OnLayerRendered_System_Drawing_Graphics_">Layer.OnLayerRendered(Graphics)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Proj4Projection">Layer.Proj4Projection</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_MinVisible">Layer.MinVisible</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_MaxVisible">Layer.MaxVisible</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_VisibilityUnits">Layer.VisibilityUnits</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Enabled">Layer.Enabled</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Style">Layer.Style</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToString">Layer.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToTarget_GeoAPI_Geometries_Envelope_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformation_">Layer.ToTarget(Envelope, ICoordinateTransformation)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToTarget_GeoAPI_Geometries_Envelope_">Layer.ToTarget(Envelope)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToSource_GeoAPI_Geometries_Envelope_">Layer.ToSource(Envelope)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToTarget_GeoAPI_Geometries_IGeometry_">Layer.ToTarget(IGeometry)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_ToSource_GeoAPI_Geometries_IGeometry_">Layer.ToSource(IGeometry)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Layers.html">SharpMap.Layers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Layers_TiledWmsLayer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;use TileLayer instead&quot;)]
+public class TiledWmsLayer : Layer, IDisposableEx, IDisposable, ILayerEx, ILayer</code></pre>
+  </div>
+  <h5 id="SharpMap_Layers_TiledWmsLayer_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Initialize the TiledWmsLayer with the url to the capabilities document
+and it will set the remaining BoundingBox property and proper requests that changes between the requests.
+See the example below.</p>
+</div>
+  <h5 id="SharpMap_Layers_TiledWmsLayer_examples"><strong>Examples</strong></h5>
+  <p>The following example creates a map with a TiledWmsLayer the metacarta tile server</p>
+<pre><code>map = new SharpMap.Map(mapImage1.Size);
+string url = &quot;http://labs.metacarta.com/wms-c/tilecache.py?version=1.1.1&amp;request=GetCapabilities&amp;service=wms-c&quot;;
+TiledWmsLayer tiledWmsLayer = new TiledWmsLayer(&quot;Metacarta&quot;, url);
+tiledWmsLayer.TileSetsActive.Add(tiledWmsLayer.TileSets[&quot;satellite&quot;].Name);
+map.Layers.Add(tiledWmsLayer);
+map.ZoomToBox(new GeoAPI.Geometries.Envelope(-180.0, 180.0, -90.0, 90.0));</code></pre>
+
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.%23ctor(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L85">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer__ctor_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor(System.String,System.String)">TiledWmsLayer(String, String)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new layer, and downloads and parses the service description</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TiledWmsLayer(string layername, string url)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">layername</span></td>
+        <td><p>Layername</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>Url of WMS server's Capabilities</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_Net_WebProxy_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.%23ctor(System.String%2CSystem.String%2CSystem.Net.WebProxy)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L109">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer__ctor_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_Net_WebProxy_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor(System.String,System.String,System.Net.WebProxy)">TiledWmsLayer(String, String, WebProxy)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new layer, and downloads and parses the service description</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TiledWmsLayer(string layername, string url, WebProxy proxy)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">layername</span></td>
+        <td><p>Layername</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>Url of WMS server's Capabilities</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.webproxy">WebProxy</a></td>
+        <td><span class="parametername">proxy</span></td>
+        <td><p>Proxy</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_Net_WebProxy__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>In and ASP.NET application the service description is automatically cached for 24 hours when not specified</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_TimeSpan_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.%23ctor(System.String%2CSystem.String%2CSystem.TimeSpan)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L97">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer__ctor_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_TimeSpan_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor(System.String,System.String,System.TimeSpan)">TiledWmsLayer(String, String, TimeSpan)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new layer, and downloads and parses the service description</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TiledWmsLayer(string layername, string url, TimeSpan cachetime)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">layername</span></td>
+        <td><p>Layername</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>Url of WMS server's Capabilities</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></td>
+        <td><span class="parametername">cachetime</span></td>
+        <td><p>Time for caching Service Description (ASP.NET only)</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_TimeSpan_System_Net_WebProxy_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.%23ctor(System.String%2CSystem.String%2CSystem.TimeSpan%2CSystem.Net.WebProxy)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L121">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer__ctor_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer__ctor_System_String_System_String_System_TimeSpan_System_Net_WebProxy_" data-uid="SharpMap.Layers.TiledWmsLayer.#ctor(System.String,System.String,System.TimeSpan,System.Net.WebProxy)">TiledWmsLayer(String, String, TimeSpan, WebProxy)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new layer, and downloads and parses the service description</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TiledWmsLayer(string layername, string url, TimeSpan cachetime, WebProxy proxy)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">layername</span></td>
+        <td><p>Layername</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">url</span></td>
+        <td><p>Url of WMS server's Capabilities</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.timespan">TimeSpan</a></td>
+        <td><span class="parametername">cachetime</span></td>
+        <td><p>Time for caching Service Description (ASP.NET only)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.webproxy">WebProxy</a></td>
+        <td><span class="parametername">proxy</span></td>
+        <td><p>Proxy</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_ContinueOnError.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.ContinueOnError%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L193">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_ContinueOnError_" data-uid="SharpMap.Layers.TiledWmsLayer.ContinueOnError*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_ContinueOnError" data-uid="SharpMap.Layers.TiledWmsLayer.ContinueOnError">ContinueOnError</h4>
+  <div class="markdown level1 summary"><p>Specifies whether to throw an exception if the Wms request failed, or to just skip rendering the layer.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ContinueOnError { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_Credentials.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.Credentials%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L150">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_Credentials_" data-uid="SharpMap.Layers.TiledWmsLayer.Credentials*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_Credentials" data-uid="SharpMap.Layers.TiledWmsLayer.Credentials">Credentials</h4>
+  <div class="markdown level1 summary"><p>Provides the base authentication interface for retrieving credentials for Web client authentication.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICredentials Credentials { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.icredentials">ICredentials</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_Envelope.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.Envelope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L287">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_Envelope_" data-uid="SharpMap.Layers.TiledWmsLayer.Envelope*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_Envelope" data-uid="SharpMap.Layers.TiledWmsLayer.Envelope">Envelope</h4>
+  <div class="markdown level1 summary"><p>Returns the extent of the layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Envelope Envelope { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><p>Bounding box corresponding to the extent of the features in the layer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Envelope">Layer.Envelope</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_OutputFormats.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.OutputFormats%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L202">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_OutputFormats_" data-uid="SharpMap.Layers.TiledWmsLayer.OutputFormats*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_OutputFormats" data-uid="SharpMap.Layers.TiledWmsLayer.OutputFormats">OutputFormats</h4>
+  <div class="markdown level1 summary"><p>Gets the list of available formats</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Collection&lt;string&gt; OutputFormats { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_Proxy.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.Proxy%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_Proxy_" data-uid="SharpMap.Layers.TiledWmsLayer.Proxy*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_Proxy" data-uid="SharpMap.Layers.TiledWmsLayer.Proxy">Proxy</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the proxy used for requesting a webresource</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WebProxy Proxy { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.webproxy">WebProxy</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_TileSets.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.TileSets%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L185">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_TileSets_" data-uid="SharpMap.Layers.TiledWmsLayer.TileSets*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_TileSets" data-uid="SharpMap.Layers.TiledWmsLayer.TileSets">TileSets</h4>
+  <div class="markdown level1 summary"><p>Gets the collection of TileSets that will be rendered</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SortedList&lt;string, TileSet&gt; TileSets { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.sortedlist-2">SortedList</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>, <a class="xref" href="SharpMap.Web.Wms.Tiling.TileSet.html">TileSet</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_TileSetsActive.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.TileSetsActive%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L177">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_TileSetsActive_" data-uid="SharpMap.Layers.TiledWmsLayer.TileSetsActive*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_TileSetsActive" data-uid="SharpMap.Layers.TiledWmsLayer.TileSetsActive">TileSetsActive</h4>
+  <div class="markdown level1 summary"><p>Gets a list of tile sets that are currently active</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Collection&lt;string&gt; TileSetsActive { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_TimeOut.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.TimeOut%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L168">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_TimeOut_" data-uid="SharpMap.Layers.TiledWmsLayer.TimeOut*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_TimeOut" data-uid="SharpMap.Layers.TiledWmsLayer.TimeOut">TimeOut</h4>
+  <div class="markdown level1 summary"><p>Timeout of webrequest in milliseconds. Defaults to 10 seconds</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int TimeOut { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_AddCustomParameter_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.AddCustomParameter(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L304">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_AddCustomParameter_" data-uid="SharpMap.Layers.TiledWmsLayer.AddCustomParameter*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_AddCustomParameter_System_String_System_String_" data-uid="SharpMap.Layers.TiledWmsLayer.AddCustomParameter(System.String,System.String)">AddCustomParameter(String, String)</h4>
+  <div class="markdown level1 summary"><p>Appends a custom parameter name-value pair to the WMS request</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddCustomParameter(string name, string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>Name of custom parameter</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>Value of custom parameter</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_RemoveAllCustomParameters.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.RemoveAllCustomParameters%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L321">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_RemoveAllCustomParameters_" data-uid="SharpMap.Layers.TiledWmsLayer.RemoveAllCustomParameters*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_RemoveAllCustomParameters" data-uid="SharpMap.Layers.TiledWmsLayer.RemoveAllCustomParameters">RemoveAllCustomParameters()</h4>
+  <div class="markdown level1 summary"><p>Removes all custom parameter from the WMS request</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveAllCustomParameters()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_RemoveCustomParameter_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.RemoveCustomParameter(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L313">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_RemoveCustomParameter_" data-uid="SharpMap.Layers.TiledWmsLayer.RemoveCustomParameter*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_RemoveCustomParameter_System_String_" data-uid="SharpMap.Layers.TiledWmsLayer.RemoveCustomParameter(System.String)">RemoveCustomParameter(String)</h4>
+  <div class="markdown level1 summary"><p>Removes a custom parameter name-value pair from the WMS request</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveCustomParameter(string name)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>Name of the custom parameter to remove</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer.Render(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L218">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_TiledWmsLayer_Render_" data-uid="SharpMap.Layers.TiledWmsLayer.Render*"></a>
+  <h4 id="SharpMap_Layers_TiledWmsLayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Layers.TiledWmsLayer.Render(System.Drawing.Graphics,SharpMap.MapViewport)">Render(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Renders the layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Render(Graphics g, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>Graphics object reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>Map which is rendered</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.Layer.html#SharpMap_Layers_Layer_Render_System_Drawing_Graphics_SharpMap_MapViewport_">Layer.Render(Graphics, MapViewport)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayerEx.html">ILayerEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetCoordinateSystem(ILayer)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetFactory(ILayer)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_TiledWmsLayer.md&amp;value=---%0Auid%3A%20SharpMap.Layers.TiledWmsLayer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/TiledWmsLayer.cs/#L57" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

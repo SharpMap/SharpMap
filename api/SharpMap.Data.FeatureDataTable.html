@@ -1,0 +1,1318 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class FeatureDataTable
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class FeatureDataTable
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.FeatureDataTable">
+  
+  
+  <h1 id="SharpMap_Data_FeatureDataTable" data-uid="SharpMap.Data.FeatureDataTable" class="text-break">Class FeatureDataTable
+  </h1>
+  <div class="markdown level0 summary"><p>Represents one feature table of in-memory spatial data.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent">MarshalByValueComponent</a></div>
+    <div class="level2"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a></div>
+    <div class="level3"><span class="xref">FeatureDataTable</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.icomponent">IComponent</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iserviceprovider">IServiceProvider</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.ilistsource">IListSource</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.isupportinitializenotification">ISupportInitializeNotification</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.isupportinitialize">ISupportInitialize</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.iserializable">ISerializable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.serialization.ixmlserializable">IXmlSerializable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.finitinprogress">DataTable.fInitInProgress</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.acceptchanges#System_Data_DataTable_AcceptChanges">DataTable.AcceptChanges()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.begininit#System_Data_DataTable_BeginInit">DataTable.BeginInit()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.beginloaddata#System_Data_DataTable_BeginLoadData">DataTable.BeginLoadData()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.clear#System_Data_DataTable_Clear">DataTable.Clear()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.compute#System_Data_DataTable_Compute_System_String_System_String_">DataTable.Compute(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.copy#System_Data_DataTable_Copy">DataTable.Copy()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.createdatareader#System_Data_DataTable_CreateDataReader">DataTable.CreateDataReader()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.endinit#System_Data_DataTable_EndInit">DataTable.EndInit()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.endloaddata#System_Data_DataTable_EndLoadData">DataTable.EndLoadData()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.getchanges#System_Data_DataTable_GetChanges">DataTable.GetChanges()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.getchanges#System_Data_DataTable_GetChanges_System_Data_DataRowState_">DataTable.GetChanges(DataRowState)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.getdatatableschema#System_Data_DataTable_GetDataTableSchema_System_Xml_Schema_XmlSchemaSet_">DataTable.GetDataTableSchema(XmlSchemaSet)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.geterrors#System_Data_DataTable_GetErrors">DataTable.GetErrors()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.getschema#System_Data_DataTable_GetSchema">DataTable.GetSchema()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.importrow#System_Data_DataTable_ImportRow_System_Data_DataRow_">DataTable.ImportRow(DataRow)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.load#System_Data_DataTable_Load_System_Data_IDataReader_">DataTable.Load(IDataReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.load#System_Data_DataTable_Load_System_Data_IDataReader_System_Data_LoadOption_">DataTable.Load(IDataReader, LoadOption)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.load#System_Data_DataTable_Load_System_Data_IDataReader_System_Data_LoadOption_System_Data_FillErrorEventHandler_">DataTable.Load(IDataReader, LoadOption, FillErrorEventHandler)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.loaddatarow#System_Data_DataTable_LoadDataRow_System_Object___System_Boolean_">DataTable.LoadDataRow(Object[], Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.loaddatarow#System_Data_DataTable_LoadDataRow_System_Object___System_Data_LoadOption_">DataTable.LoadDataRow(Object[], LoadOption)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.merge#System_Data_DataTable_Merge_System_Data_DataTable_">DataTable.Merge(DataTable)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.merge#System_Data_DataTable_Merge_System_Data_DataTable_System_Boolean_">DataTable.Merge(DataTable, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.merge#System_Data_DataTable_Merge_System_Data_DataTable_System_Boolean_System_Data_MissingSchemaAction_">DataTable.Merge(DataTable, Boolean, MissingSchemaAction)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.newrowarray#System_Data_DataTable_NewRowArray_System_Int32_">DataTable.NewRowArray(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.oncolumnchanged#System_Data_DataTable_OnColumnChanged_System_Data_DataColumnChangeEventArgs_">DataTable.OnColumnChanged(DataColumnChangeEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.oncolumnchanging#System_Data_DataTable_OnColumnChanging_System_Data_DataColumnChangeEventArgs_">DataTable.OnColumnChanging(DataColumnChangeEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.onpropertychanging#System_Data_DataTable_OnPropertyChanging_System_ComponentModel_PropertyChangedEventArgs_">DataTable.OnPropertyChanging(PropertyChangedEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.onremovecolumn#System_Data_DataTable_OnRemoveColumn_System_Data_DataColumn_">DataTable.OnRemoveColumn(DataColumn)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.ontablecleared#System_Data_DataTable_OnTableCleared_System_Data_DataTableClearEventArgs_">DataTable.OnTableCleared(DataTableClearEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.ontableclearing#System_Data_DataTable_OnTableClearing_System_Data_DataTableClearEventArgs_">DataTable.OnTableClearing(DataTableClearEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.ontablenewrow#System_Data_DataTable_OnTableNewRow_System_Data_DataTableNewRowEventArgs_">DataTable.OnTableNewRow(DataTableNewRowEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxml#System_Data_DataTable_ReadXml_System_IO_Stream_">DataTable.ReadXml(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxml#System_Data_DataTable_ReadXml_System_IO_TextReader_">DataTable.ReadXml(TextReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxml#System_Data_DataTable_ReadXml_System_String_">DataTable.ReadXml(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxml#System_Data_DataTable_ReadXml_System_Xml_XmlReader_">DataTable.ReadXml(XmlReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxmlschema#System_Data_DataTable_ReadXmlSchema_System_IO_Stream_">DataTable.ReadXmlSchema(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxmlschema#System_Data_DataTable_ReadXmlSchema_System_IO_TextReader_">DataTable.ReadXmlSchema(TextReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxmlschema#System_Data_DataTable_ReadXmlSchema_System_String_">DataTable.ReadXmlSchema(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxmlschema#System_Data_DataTable_ReadXmlSchema_System_Xml_XmlReader_">DataTable.ReadXmlSchema(XmlReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.readxmlserializable#System_Data_DataTable_ReadXmlSerializable_System_Xml_XmlReader_">DataTable.ReadXmlSerializable(XmlReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.rejectchanges#System_Data_DataTable_RejectChanges">DataTable.RejectChanges()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.reset#System_Data_DataTable_Reset">DataTable.Reset()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.select#System_Data_DataTable_Select">DataTable.Select()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.select#System_Data_DataTable_Select_System_String_">DataTable.Select(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.select#System_Data_DataTable_Select_System_String_System_String_">DataTable.Select(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.select#System_Data_DataTable_Select_System_String_System_String_System_Data_DataViewRowState_">DataTable.Select(String, String, DataViewRowState)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.system-componentmodel-ilistsource-getlist#System_Data_DataTable_System_ComponentModel_IListSource_GetList">DataTable.IListSource.GetList()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.system-xml-serialization-ixmlserializable-getschema#System_Data_DataTable_System_Xml_Serialization_IXmlSerializable_GetSchema">DataTable.IXmlSerializable.GetSchema()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.system-xml-serialization-ixmlserializable-readxml#System_Data_DataTable_System_Xml_Serialization_IXmlSerializable_ReadXml_System_Xml_XmlReader_">DataTable.IXmlSerializable.ReadXml(XmlReader)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.system-xml-serialization-ixmlserializable-writexml#System_Data_DataTable_System_Xml_Serialization_IXmlSerializable_WriteXml_System_Xml_XmlWriter_">DataTable.IXmlSerializable.WriteXml(XmlWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.tostring#System_Data_DataTable_ToString">DataTable.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_Stream_">DataTable.WriteXml(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_Stream_System_Boolean_">DataTable.WriteXml(Stream, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_Stream_System_Data_XmlWriteMode_">DataTable.WriteXml(Stream, XmlWriteMode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_Stream_System_Data_XmlWriteMode_System_Boolean_">DataTable.WriteXml(Stream, XmlWriteMode, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_TextWriter_">DataTable.WriteXml(TextWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_TextWriter_System_Boolean_">DataTable.WriteXml(TextWriter, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_TextWriter_System_Data_XmlWriteMode_">DataTable.WriteXml(TextWriter, XmlWriteMode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_IO_TextWriter_System_Data_XmlWriteMode_System_Boolean_">DataTable.WriteXml(TextWriter, XmlWriteMode, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_String_">DataTable.WriteXml(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_String_System_Boolean_">DataTable.WriteXml(String, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_String_System_Data_XmlWriteMode_">DataTable.WriteXml(String, XmlWriteMode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_String_System_Data_XmlWriteMode_System_Boolean_">DataTable.WriteXml(String, XmlWriteMode, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_Xml_XmlWriter_">DataTable.WriteXml(XmlWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_Xml_XmlWriter_System_Boolean_">DataTable.WriteXml(XmlWriter, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_Xml_XmlWriter_System_Data_XmlWriteMode_">DataTable.WriteXml(XmlWriter, XmlWriteMode)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexml#System_Data_DataTable_WriteXml_System_Xml_XmlWriter_System_Data_XmlWriteMode_System_Boolean_">DataTable.WriteXml(XmlWriter, XmlWriteMode, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_IO_Stream_">DataTable.WriteXmlSchema(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_IO_Stream_System_Boolean_">DataTable.WriteXmlSchema(Stream, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_IO_TextWriter_">DataTable.WriteXmlSchema(TextWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_IO_TextWriter_System_Boolean_">DataTable.WriteXmlSchema(TextWriter, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_String_">DataTable.WriteXmlSchema(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_String_System_Boolean_">DataTable.WriteXmlSchema(String, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_Xml_XmlWriter_">DataTable.WriteXmlSchema(XmlWriter)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.writexmlschema#System_Data_DataTable_WriteXmlSchema_System_Xml_XmlWriter_System_Boolean_">DataTable.WriteXmlSchema(XmlWriter, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.casesensitive#System_Data_DataTable_CaseSensitive">DataTable.CaseSensitive</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.childrelations#System_Data_DataTable_ChildRelations">DataTable.ChildRelations</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.columns#System_Data_DataTable_Columns">DataTable.Columns</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.constraints#System_Data_DataTable_Constraints">DataTable.Constraints</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.dataset#System_Data_DataTable_DataSet">DataTable.DataSet</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.defaultview#System_Data_DataTable_DefaultView">DataTable.DefaultView</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.displayexpression#System_Data_DataTable_DisplayExpression">DataTable.DisplayExpression</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.extendedproperties#System_Data_DataTable_ExtendedProperties">DataTable.ExtendedProperties</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.haserrors#System_Data_DataTable_HasErrors">DataTable.HasErrors</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.isinitialized#System_Data_DataTable_IsInitialized">DataTable.IsInitialized</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.locale#System_Data_DataTable_Locale">DataTable.Locale</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.minimumcapacity#System_Data_DataTable_MinimumCapacity">DataTable.MinimumCapacity</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.namespace#System_Data_DataTable_Namespace">DataTable.Namespace</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.parentrelations#System_Data_DataTable_ParentRelations">DataTable.ParentRelations</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.prefix#System_Data_DataTable_Prefix">DataTable.Prefix</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.primarykey#System_Data_DataTable_PrimaryKey">DataTable.PrimaryKey</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.remotingformat#System_Data_DataTable_RemotingFormat">DataTable.RemotingFormat</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.rows#System_Data_DataTable_Rows">DataTable.Rows</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.site#System_Data_DataTable_Site">DataTable.Site</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.system-componentmodel-ilistsource-containslistcollection#System_Data_DataTable_System_ComponentModel_IListSource_ContainsListCollection">DataTable.IListSource.ContainsListCollection</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.tablename#System_Data_DataTable_TableName">DataTable.TableName</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.columnchanged">DataTable.ColumnChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.columnchanging">DataTable.ColumnChanging</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.initialized">DataTable.Initialized</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.rowchanged">DataTable.RowChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.rowchanging">DataTable.RowChanging</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.rowdeleted">DataTable.RowDeleted</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.rowdeleting">DataTable.RowDeleting</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.tablecleared">DataTable.TableCleared</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.tableclearing">DataTable.TableClearing</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.tablenewrow">DataTable.TableNewRow</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.dispose#System_ComponentModel_MarshalByValueComponent_Dispose">MarshalByValueComponent.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.dispose#System_ComponentModel_MarshalByValueComponent_Dispose_System_Boolean_">MarshalByValueComponent.Dispose(Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.getservice#System_ComponentModel_MarshalByValueComponent_GetService_System_Type_">MarshalByValueComponent.GetService(Type)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.container#System_ComponentModel_MarshalByValueComponent_Container">MarshalByValueComponent.Container</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.designmode#System_ComponentModel_MarshalByValueComponent_DesignMode">MarshalByValueComponent.DesignMode</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.events#System_ComponentModel_MarshalByValueComponent_Events">MarshalByValueComponent.Events</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.marshalbyvaluecomponent.disposed">MarshalByValueComponent.Disposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.html">SharpMap.Data</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_FeatureDataTable_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class FeatureDataTable : DataTable, IComponent, IDisposable, IServiceProvider, IListSource, ISupportInitializeNotification, ISupportInitialize, ISerializable, IXmlSerializable, IEnumerable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L337">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable__ctor_" data-uid="SharpMap.Data.FeatureDataTable.#ctor*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable__ctor" data-uid="SharpMap.Data.FeatureDataTable.#ctor">FeatureDataTable()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the FeatureDataTable class with no arguments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataTable()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable__ctor_System_Data_DataTable_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.%23ctor(System.Data.DataTable)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L372">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable__ctor_" data-uid="SharpMap.Data.FeatureDataTable.#ctor*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable__ctor_System_Data_DataTable_" data-uid="SharpMap.Data.FeatureDataTable.#ctor(System.Data.DataTable)">FeatureDataTable(DataTable)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the FeatureDataTable class with the specified table name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataTable(DataTable table)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable__ctor_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.%23ctor(System.Runtime.Serialization.SerializationInfo%2CSystem.Runtime.Serialization.StreamingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L347">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable__ctor_" data-uid="SharpMap.Data.FeatureDataTable.#ctor*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable__ctor_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_" data-uid="SharpMap.Data.FeatureDataTable.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">FeatureDataTable(SerializationInfo, StreamingContext)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class from serialization</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataTable(SerializationInfo info, StreamingContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo">SerializationInfo</a></td>
+        <td><span class="parametername">info</span></td>
+        <td><p>The serialization info</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The streaming context</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_Count.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.Count%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L399">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_Count_" data-uid="SharpMap.Data.FeatureDataTable.Count*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_Count" data-uid="SharpMap.Data.FeatureDataTable.Count">Count</h4>
+  <div class="markdown level1 summary"><p>Gets the number of rows in the table</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Browsable(false)]
+public int Count { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_Item_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.Item(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L410">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_Item_" data-uid="SharpMap.Data.FeatureDataTable.Item*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_Item_System_Int32_" data-uid="SharpMap.Data.FeatureDataTable.Item(System.Int32)">Item[Int32]</h4>
+  <div class="markdown level1 summary"><p>Gets the feature data row at the specified index</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataRow this[int index] { get; }</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>row index</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><p>FeatureDataRow</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_AddRow_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.AddRow(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L452">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_AddRow_" data-uid="SharpMap.Data.FeatureDataTable.AddRow*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_AddRow_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Data.FeatureDataTable.AddRow(SharpMap.Data.FeatureDataRow)">AddRow(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Adds a row to the FeatureDataTable</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddRow(FeatureDataRow row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">row</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L461">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_Clone_" data-uid="SharpMap.Data.FeatureDataTable.Clone*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_Clone" data-uid="SharpMap.Data.FeatureDataTable.Clone">Clone()</h4>
+  <div class="markdown level1 summary"><p>Clones the structure of the FeatureDataTable, including all FeatureDataTable schemas and constraints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataTable Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataTable.html">FeatureDataTable</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_CreateInstance.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.CreateInstance%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L472">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_CreateInstance_" data-uid="SharpMap.Data.FeatureDataTable.CreateInstance*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_CreateInstance" data-uid="SharpMap.Data.FeatureDataTable.CreateInstance">CreateInstance()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override DataTable CreateInstance()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.createinstance#System_Data_DataTable_CreateInstance">DataTable.CreateInstance()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_GetEnumerator.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L421">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_GetEnumerator_" data-uid="SharpMap.Data.FeatureDataTable.GetEnumerator*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_GetEnumerator" data-uid="SharpMap.Data.FeatureDataTable.GetEnumerator">GetEnumerator()</h4>
+  <div class="markdown level1 summary"><p>Returns an enumerator for enumerating the rows of the FeatureDataTable</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerator GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_GetObjectData_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.GetObjectData(System.Runtime.Serialization.SerializationInfo%2CSystem.Runtime.Serialization.StreamingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L590">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_GetObjectData_" data-uid="SharpMap.Data.FeatureDataTable.GetObjectData*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_GetObjectData_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_" data-uid="SharpMap.Data.FeatureDataTable.GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">GetObjectData(SerializationInfo, StreamingContext)</h4>
+  <div class="markdown level1 summary"><p>Populates a serialization information object with the data needed to serialize the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void GetObjectData(SerializationInfo info, StreamingContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo">SerializationInfo</a></td>
+        <td><span class="parametername">info</span></td>
+        <td><p>A <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo">SerializationInfo</a> object that holds the serialized data associated with the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a>.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>A <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a> object that contains the source and destination of the serialized stream associated with the <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable">DataTable</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.getobjectdata#System_Data_DataTable_GetObjectData_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_">DataTable.GetObjectData(SerializationInfo, StreamingContext)</a></div>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>The <code data-dev-comment-type="paramref" class="paramref">info</code> parameter is a null reference (Nothing in Visual Basic).</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_GetRowType.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.GetRowType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L511">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_GetRowType_" data-uid="SharpMap.Data.FeatureDataTable.GetRowType*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_GetRowType" data-uid="SharpMap.Data.FeatureDataTable.GetRowType">GetRowType()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override Type GetRowType()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.getrowtype#System_Data_DataTable_GetRowType">DataTable.GetRowType()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_NewRow.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.NewRow%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L492">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_NewRow_" data-uid="SharpMap.Data.FeatureDataTable.NewRow*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_NewRow" data-uid="SharpMap.Data.FeatureDataTable.NewRow">NewRow()</h4>
+  <div class="markdown level1 summary"><p>Creates a new FeatureDataRow with the same schema as the table.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public FeatureDataRow NewRow()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_NewRowFromBuilder_System_Data_DataRowBuilder_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.NewRowFromBuilder(System.Data.DataRowBuilder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L502">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_NewRowFromBuilder_" data-uid="SharpMap.Data.FeatureDataTable.NewRowFromBuilder*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_NewRowFromBuilder_System_Data_DataRowBuilder_" data-uid="SharpMap.Data.FeatureDataTable.NewRowFromBuilder(System.Data.DataRowBuilder)">NewRowFromBuilder(DataRowBuilder)</h4>
+  <div class="markdown level1 summary"><p>Creates a new FeatureDataRow with the same schema as the table, based on a datarow builder</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override DataRow NewRowFromBuilder(DataRowBuilder builder)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datarowbuilder">DataRowBuilder</a></td>
+        <td><span class="parametername">builder</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datarow">DataRow</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.newrowfrombuilder#System_Data_DataTable_NewRowFromBuilder_System_Data_DataRowBuilder_">DataTable.NewRowFromBuilder(DataRowBuilder)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_OnRowChanged_System_Data_DataRowChangeEventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.OnRowChanged(System.Data.DataRowChangeEventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L520">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_OnRowChanged_" data-uid="SharpMap.Data.FeatureDataTable.OnRowChanged*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_OnRowChanged_System_Data_DataRowChangeEventArgs_" data-uid="SharpMap.Data.FeatureDataTable.OnRowChanged(System.Data.DataRowChangeEventArgs)">OnRowChanged(DataRowChangeEventArgs)</h4>
+  <div class="markdown level1 summary"><p>Raises the FeatureDataRowChanged event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnRowChanged(DataRowChangeEventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datarowchangeeventargs">DataRowChangeEventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.onrowchanged#System_Data_DataTable_OnRowChanged_System_Data_DataRowChangeEventArgs_">DataTable.OnRowChanged(DataRowChangeEventArgs)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_OnRowChanging_System_Data_DataRowChangeEventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.OnRowChanging(System.Data.DataRowChangeEventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L533">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_OnRowChanging_" data-uid="SharpMap.Data.FeatureDataTable.OnRowChanging*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_OnRowChanging_System_Data_DataRowChangeEventArgs_" data-uid="SharpMap.Data.FeatureDataTable.OnRowChanging(System.Data.DataRowChangeEventArgs)">OnRowChanging(DataRowChangeEventArgs)</h4>
+  <div class="markdown level1 summary"><p>Raises the FeatureDataRowChanging event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnRowChanging(DataRowChangeEventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datarowchangeeventargs">DataRowChangeEventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.onrowchanging#System_Data_DataTable_OnRowChanging_System_Data_DataRowChangeEventArgs_">DataTable.OnRowChanging(DataRowChangeEventArgs)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_OnRowDeleted_System_Data_DataRowChangeEventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.OnRowDeleted(System.Data.DataRowChangeEventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L546">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_OnRowDeleted_" data-uid="SharpMap.Data.FeatureDataTable.OnRowDeleted*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_OnRowDeleted_System_Data_DataRowChangeEventArgs_" data-uid="SharpMap.Data.FeatureDataTable.OnRowDeleted(System.Data.DataRowChangeEventArgs)">OnRowDeleted(DataRowChangeEventArgs)</h4>
+  <div class="markdown level1 summary"><p>Raises the FeatureDataRowDeleted event</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnRowDeleted(DataRowChangeEventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datarowchangeeventargs">DataRowChangeEventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.onrowdeleted#System_Data_DataTable_OnRowDeleted_System_Data_DataRowChangeEventArgs_">DataTable.OnRowDeleted(DataRowChangeEventArgs)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_OnRowDeleting_System_Data_DataRowChangeEventArgs_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.OnRowDeleting(System.Data.DataRowChangeEventArgs)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L559">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_OnRowDeleting_" data-uid="SharpMap.Data.FeatureDataTable.OnRowDeleting*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_OnRowDeleting_System_Data_DataRowChangeEventArgs_" data-uid="SharpMap.Data.FeatureDataTable.OnRowDeleting(System.Data.DataRowChangeEventArgs)">OnRowDeleting(DataRowChangeEventArgs)</h4>
+  <div class="markdown level1 summary"><p>Raises the FeatureDataRowDeleting event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnRowDeleting(DataRowChangeEventArgs e)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datarowchangeeventargs">DataRowChangeEventArgs</a></td>
+        <td><span class="parametername">e</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.datatable.onrowdeleting#System_Data_DataTable_OnRowDeleting_System_Data_DataRowChangeEventArgs_">DataTable.OnRowDeleting(DataRowChangeEventArgs)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_RemoveRow_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.RemoveRow(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L581">View Source</a>
+  </span>
+  <a id="SharpMap_Data_FeatureDataTable_RemoveRow_" data-uid="SharpMap.Data.FeatureDataTable.RemoveRow*"></a>
+  <h4 id="SharpMap_Data_FeatureDataTable_RemoveRow_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Data.FeatureDataTable.RemoveRow(SharpMap.Data.FeatureDataRow)">RemoveRow(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Removes the row from the table</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RemoveRow(FeatureDataRow row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">row</span></td>
+        <td><p>Row to remove</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_FeatureDataRowChanged.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.FeatureDataRowChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L431">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_FeatureDataTable_FeatureDataRowChanged" data-uid="SharpMap.Data.FeatureDataTable.FeatureDataRowChanged">FeatureDataRowChanged</h4>
+  <div class="markdown level1 summary"><p>Occurs after a FeatureDataRow has been changed successfully.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event FeatureDataRowChangeEventHandler FeatureDataRowChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRowChangeEventHandler.html">FeatureDataRowChangeEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_FeatureDataRowChanging.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.FeatureDataRowChanging%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L436">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_FeatureDataTable_FeatureDataRowChanging" data-uid="SharpMap.Data.FeatureDataTable.FeatureDataRowChanging">FeatureDataRowChanging</h4>
+  <div class="markdown level1 summary"><p>Occurs when a FeatureDataRow is changing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event FeatureDataRowChangeEventHandler FeatureDataRowChanging</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRowChangeEventHandler.html">FeatureDataRowChangeEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_FeatureDataRowDeleted.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.FeatureDataRowDeleted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L441">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_FeatureDataTable_FeatureDataRowDeleted" data-uid="SharpMap.Data.FeatureDataTable.FeatureDataRowDeleted">FeatureDataRowDeleted</h4>
+  <div class="markdown level1 summary"><p>Occurs after a row in the table has been deleted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event FeatureDataRowChangeEventHandler FeatureDataRowDeleted</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRowChangeEventHandler.html">FeatureDataRowChangeEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable_FeatureDataRowDeleting.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable.FeatureDataRowDeleting%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L446">View Source</a>
+  </span>
+  <h4 id="SharpMap_Data_FeatureDataTable_FeatureDataRowDeleting" data-uid="SharpMap.Data.FeatureDataTable.FeatureDataRowDeleting">FeatureDataRowDeleting</h4>
+  <div class="markdown level1 summary"><p>Occurs before a row in the table is about to be deleted.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event FeatureDataRowChangeEventHandler FeatureDataRowDeleting</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRowChangeEventHandler.html">FeatureDataRowChangeEventHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.icomponent">System.ComponentModel.IComponent</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iserviceprovider">System.IServiceProvider</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.ilistsource">System.ComponentModel.IListSource</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.isupportinitializenotification">System.ComponentModel.ISupportInitializeNotification</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.isupportinitialize">System.ComponentModel.ISupportInitialize</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.iserializable">System.Runtime.Serialization.ISerializable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.serialization.ixmlserializable">System.Xml.Serialization.IXmlSerializable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">System.Collections.IEnumerable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_FeatureDataTable.md&amp;value=---%0Auid%3A%20SharpMap.Data.FeatureDataTable%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/FeatureDataSet.cs/#L330" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

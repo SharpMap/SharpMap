@@ -1,0 +1,1152 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class MapViewport
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class MapViewport
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.MapViewport">
+  
+  
+  <h1 id="SharpMap_MapViewport" data-uid="SharpMap.MapViewport" class="text-break">Class MapViewport
+  </h1>
+  <div class="markdown level0 summary"><p>A <a class="xref" href="SharpMap.Map.html">Map</a> utility class, that encapsulates all data required for rendering.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">MapViewport</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.html">SharpMap</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_MapViewport_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class MapViewport</code></pre>
+  </div>
+  <h5 id="SharpMap_MapViewport_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This is a value class</p>
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport__ctor_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.%23ctor(SharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L84">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport__ctor_" data-uid="SharpMap.MapViewport.#ctor*"></a>
+  <h4 id="SharpMap_MapViewport__ctor_SharpMap_Map_" data-uid="SharpMap.MapViewport.#ctor(SharpMap.Map)">MapViewport(Map)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class based on the provided map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MapViewport(Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The Map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport__ctor_System_Guid_System_Int32_System_Double_System_Double_GeoAPI_Geometries_Envelope_System_Drawing_Size_System_Double_System_Drawing_Drawing2D_Matrix_System_Drawing_Drawing2D_Matrix_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.%23ctor(System.Guid%2CSystem.Int32%2CSystem.Double%2CSystem.Double%2CGeoAPI.Geometries.Envelope%2CSystem.Drawing.Size%2CSystem.Double%2CSystem.Drawing.Drawing2D.Matrix%2CSystem.Drawing.Drawing2D.Matrix%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L43">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport__ctor_" data-uid="SharpMap.MapViewport.#ctor*"></a>
+  <h4 id="SharpMap_MapViewport__ctor_System_Guid_System_Int32_System_Double_System_Double_GeoAPI_Geometries_Envelope_System_Drawing_Size_System_Double_System_Drawing_Drawing2D_Matrix_System_Drawing_Drawing2D_Matrix_System_Single_" data-uid="SharpMap.MapViewport.#ctor(System.Guid,System.Int32,System.Double,System.Double,GeoAPI.Geometries.Envelope,System.Drawing.Size,System.Double,System.Drawing.Drawing2D.Matrix,System.Drawing.Drawing2D.Matrix,System.Single)">MapViewport(Guid, Int32, Double, Double, Envelope, Size, Double, Matrix, Matrix, Single)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MapViewport(Guid mapId, int srid, double zoom, double mapHeight, Envelope env, Size size, double pixelAspectRatio, Matrix mapTransform, Matrix mapTransformInverted, float mapTransformRotation)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.guid">Guid</a></td>
+        <td><span class="parametername">mapId</span></td>
+        <td><p>The id of the map</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The spatial reference</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">zoom</span></td>
+        <td><p>current map zoom</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">mapHeight</span></td>
+        <td><p>map height</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">env</span></td>
+        <td><p>The envelope containing the viewport</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>The size of the viewport</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">pixelAspectRatio</span></td>
+        <td><p>A ratio between width and height</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.matrix">Matrix</a></td>
+        <td><span class="parametername">mapTransform</span></td>
+        <td><p>An affine map transform matrix</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.matrix">Matrix</a></td>
+        <td><span class="parametername">mapTransformInverted</span></td>
+        <td><p>The affine map transformation that inverts <code data-dev-comment-type="paramref" class="paramref">mapTransform</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">mapTransformRotation</span></td>
+        <td><p>The rotation in degrees applied by <code data-dev-comment-type="paramref" class="paramref">mapTransform</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_Center.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.Center%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L189">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_Center_" data-uid="SharpMap.MapViewport.Center*"></a>
+  <h4 id="SharpMap_MapViewport_Center" data-uid="SharpMap.MapViewport.Center">Center</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the center of the map viewport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coordinate Center { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_CenterOfInterest.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.CenterOfInterest%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L194">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_CenterOfInterest_" data-uid="SharpMap.MapViewport.CenterOfInterest*"></a>
+  <h4 id="SharpMap_MapViewport_CenterOfInterest" data-uid="SharpMap.MapViewport.CenterOfInterest">CenterOfInterest</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the center of the map viewport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coordinate CenterOfInterest { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_Envelope.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.Envelope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L114">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_Envelope_" data-uid="SharpMap.MapViewport.Envelope*"></a>
+  <h4 id="SharpMap_MapViewport_Envelope" data-uid="SharpMap.MapViewport.Envelope">Envelope</h4>
+  <div class="markdown level1 summary"><p>Gets the rectilinear extents of the map based on the current <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Zoom">Zoom</a>,
+<a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Center">Center</a>, map <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Size">Size</a>, and (optionally) the <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a></p>
+<p>If a <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a> is applied, the envelope CONTAINING the rotated view
+will be returned (used by layers to spatially select data) and the aspect ratio will NOT be the
+same as map <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Size">Size</a>. If aspect ratio is important then refer to <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Zoom">Zoom</a>
+and <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapHeight">MapHeight</a></p> 
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Envelope Envelope { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_ID.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.ID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L94">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_ID_" data-uid="SharpMap.MapViewport.ID*"></a>
+  <h4 id="SharpMap_MapViewport_ID" data-uid="SharpMap.MapViewport.ID">ID</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the which <a class="xref" href="SharpMap.Map.html">Map</a> this viewport belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Guid ID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.guid">Guid</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_Left.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.Left%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L220">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_Left_" data-uid="SharpMap.MapViewport.Left*"></a>
+  <h4 id="SharpMap_MapViewport_Left" data-uid="SharpMap.MapViewport.Left">Left</h4>
+  <div class="markdown level1 summary"><p>Applicable to non-rotated views only, returning the minimum X value of the map viewport in world units</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Left { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_MapHeight.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.MapHeight%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L209">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_MapHeight_" data-uid="SharpMap.MapViewport.MapHeight*"></a>
+  <h4 id="SharpMap_MapViewport_MapHeight" data-uid="SharpMap.MapViewport.MapHeight">MapHeight</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the height of the map viewport in world units</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double MapHeight { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_MapTransform.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.MapTransform%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L120">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_MapTransform_" data-uid="SharpMap.MapViewport.MapTransform*"></a>
+  <h4 id="SharpMap_MapViewport_MapTransform" data-uid="SharpMap.MapViewport.MapTransform">MapTransform</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the transformation that has to be applied when
+rendering the map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Matrix MapTransform { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.matrix">Matrix</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_MapTransformInverted.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.MapTransformInverted%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L139">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_MapTransformInverted_" data-uid="SharpMap.MapViewport.MapTransformInverted*"></a>
+  <h4 id="SharpMap_MapViewport_MapTransformInverted" data-uid="SharpMap.MapViewport.MapTransformInverted">MapTransformInverted</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the inverse transformation that is applied when
+rendering the map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Matrix MapTransformInverted { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.matrix">Matrix</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_MapTransformRotation.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.MapTransformRotation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L157">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_MapTransformRotation_" data-uid="SharpMap.MapViewport.MapTransformRotation*"></a>
+  <h4 id="SharpMap_MapViewport_MapTransformRotation" data-uid="SharpMap.MapViewport.MapTransformRotation">MapTransformRotation</h4>
+  <div class="markdown level1 summary"><p>Map rotation in degrees (defined by <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a>)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float MapTransformRotation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_PixelAspectRatio.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.PixelAspectRatio%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L232">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_PixelAspectRatio_" data-uid="SharpMap.MapViewport.PixelAspectRatio*"></a>
+  <h4 id="SharpMap_MapViewport_PixelAspectRatio" data-uid="SharpMap.MapViewport.PixelAspectRatio">PixelAspectRatio</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the aspect-ratio of the pixel scales. A value less than
+1 will make the map stretch upwards, and larger than 1 will make it smaller.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double PixelAspectRatio { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentexception">ArgumentException</a></td>
+        <td><p>Throws an argument exception when value is 0 or less.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_PixelHeight.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.PixelHeight%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L242">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_PixelHeight_" data-uid="SharpMap.MapViewport.PixelHeight*"></a>
+  <h4 id="SharpMap_MapViewport_PixelHeight" data-uid="SharpMap.MapViewport.PixelHeight">PixelHeight</h4>
+  <div class="markdown level1 summary"><p>Returns the height of a pixel in world coordinate units.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double PixelHeight { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_PixelWidth.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.PixelWidth%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L237">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_PixelWidth_" data-uid="SharpMap.MapViewport.PixelWidth*"></a>
+  <h4 id="SharpMap_MapViewport_PixelWidth" data-uid="SharpMap.MapViewport.PixelWidth">PixelWidth</h4>
+  <div class="markdown level1 summary"><p>Returns the width of a pixel in world coordinate units.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double PixelWidth { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_Size.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.Size%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L104">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_Size_" data-uid="SharpMap.MapViewport.Size*"></a>
+  <h4 id="SharpMap_MapViewport_Size" data-uid="SharpMap.MapViewport.Size">Size</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the size of the map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Size Size { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_SRID.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L99">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_SRID_" data-uid="SharpMap.MapViewport.SRID*"></a>
+  <h4 id="SharpMap_MapViewport_SRID" data-uid="SharpMap.MapViewport.SRID">SRID</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the spatial reference id of the map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int SRID { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_Top.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.Top%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L225">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_Top_" data-uid="SharpMap.MapViewport.Top*"></a>
+  <h4 id="SharpMap_MapViewport_Top" data-uid="SharpMap.MapViewport.Top">Top</h4>
+  <div class="markdown level1 summary"><p>Applicable to non-rotated views only, returning the maximum Y value of the map viewport in world units</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Top { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_Zoom.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.Zoom%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L204">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_Zoom_" data-uid="SharpMap.MapViewport.Zoom*"></a>
+  <h4 id="SharpMap_MapViewport_Zoom" data-uid="SharpMap.MapViewport.Zoom">Zoom</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the zoom of the map viewport</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Zoom { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_MapViewport_Zoom_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This value is identical to <span class="xref">SharpMap.MapViewport.MapWidth</span></p>
+</div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_GetMapScale_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.GetMapScale(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L249">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_GetMapScale_" data-uid="SharpMap.MapViewport.GetMapScale*"></a>
+  <h4 id="SharpMap_MapViewport_GetMapScale_System_Int32_" data-uid="SharpMap.MapViewport.GetMapScale(System.Int32)">GetMapScale(Int32)</h4>
+  <div class="markdown level1 summary"><p>Function to compute the denominator of the viewport's scale when using a given <code data-dev-comment-type="paramref" class="paramref">dpi</code> resolution.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double GetMapScale(int dpi)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">dpi</span></td>
+        <td><p>The resolution</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>The scale's denominator</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_ImageToWorld_System_Drawing_PointF_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.ImageToWorld(System.Drawing.PointF%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L321">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_ImageToWorld_" data-uid="SharpMap.MapViewport.ImageToWorld*"></a>
+  <h4 id="SharpMap_MapViewport_ImageToWorld_System_Drawing_PointF_System_Boolean_" data-uid="SharpMap.MapViewport.ImageToWorld(System.Drawing.PointF,System.Boolean)">ImageToWorld(PointF, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Converts a point from image coordinates to world coordinates based on the current <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Zoom">Zoom</a>, <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Center">Center</a>,
+map <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Size">Size</a>, and (optionally) the <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coordinate ImageToWorld(PointF p, bool careAboutMapTransform = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point in image coordinates. Note: if you wish to preserve the input value then
+you must clone the point as it will be modified if a MapTransform is applied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">careAboutMapTransform</span></td>
+        <td><p>Indicates whether <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a> should be applied.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>Point in world coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_ImageToWorld_System_Drawing_PointF___System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.ImageToWorld(System.Drawing.PointF%5B%5D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L304">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_ImageToWorld_" data-uid="SharpMap.MapViewport.ImageToWorld*"></a>
+  <h4 id="SharpMap_MapViewport_ImageToWorld_System_Drawing_PointF___System_Boolean_" data-uid="SharpMap.MapViewport.ImageToWorld(System.Drawing.PointF[],System.Boolean)">ImageToWorld(PointF[], Boolean)</h4>
+  <div class="markdown level1 summary"><p>Converts a point array from image coordinates to world coordinates based on the current <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Zoom">Zoom</a>, <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Center">Center</a>,
+map <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Size">Size</a>, and (optionally) the <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Coordinate[] ImageToWorld(PointF[] points, bool careAboutMapTransform = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><span class="parametername">points</span></td>
+        <td><p>Point array in image coordinates. Note: if you wish to preserve the input values then
+you must clone the point array as it will be modified if a MapTransform is applied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">careAboutMapTransform</span></td>
+        <td><p>Indicates whether <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a> should be applied.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span>[]</td>
+        <td><p>Point array in world coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_WorldToImage_GeoAPI_Geometries_Coordinate_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.WorldToImage(GeoAPI.Geometries.Coordinate%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L290">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_WorldToImage_" data-uid="SharpMap.MapViewport.WorldToImage*"></a>
+  <h4 id="SharpMap_MapViewport_WorldToImage_GeoAPI_Geometries_Coordinate_System_Boolean_" data-uid="SharpMap.MapViewport.WorldToImage(GeoAPI.Geometries.Coordinate,System.Boolean)">WorldToImage(Coordinate, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Converts a point in world coordinates to image coordinates based on the current <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Zoom">Zoom</a>, <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Center">Center</a>,
+map <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Size">Size</a>, and (optionally) the <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PointF WorldToImage(Coordinate p, bool careAboutMapTransform = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">p</span></td>
+        <td><p>Point in world coordinates</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">careAboutMapTransform</span></td>
+        <td><p>Indicates whether <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a> should be applied. When rendering to image,
+the Graphics object has usually applied MapTransform</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td><p>PointF in image coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_WorldToImage_GeoAPI_Geometries_Coordinate___System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.WorldToImage(GeoAPI.Geometries.Coordinate%5B%5D%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L272">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_WorldToImage_" data-uid="SharpMap.MapViewport.WorldToImage*"></a>
+  <h4 id="SharpMap_MapViewport_WorldToImage_GeoAPI_Geometries_Coordinate___System_Boolean_" data-uid="SharpMap.MapViewport.WorldToImage(GeoAPI.Geometries.Coordinate[],System.Boolean)">WorldToImage(Coordinate[], Boolean)</h4>
+  <div class="markdown level1 summary"><p>Converts an array of world coordinates to image coordinates based on the current <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Zoom">Zoom</a>, <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Center">Center</a>,
+map <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_Size">Size</a>, and (optionally) the <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PointF[] WorldToImage(Coordinate[] coordinates, bool careAboutMapTransform = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span>[]</td>
+        <td><span class="parametername">coordinates</span></td>
+        <td><p>Coordinate array in world coordinates</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">careAboutMapTransform</span></td>
+        <td><p>Indicates whether <a class="xref" href="SharpMap.MapViewport.html#SharpMap_MapViewport_MapTransform">MapTransform</a> should be applied. True for typical coordinate calcs,
+False when rendering to image as the Graphics object has already applied the MapTransform</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><p>PointF array in image coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="operators">Operators
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport_op_Implicit_SharpMap_Map__SharpMap_MapViewport.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport.op_Implicit(SharpMap.Map)~SharpMap.MapViewport%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L332">View Source</a>
+  </span>
+  <a id="SharpMap_MapViewport_op_Implicit_" data-uid="SharpMap.MapViewport.op_Implicit*"></a>
+  <h4 id="SharpMap_MapViewport_op_Implicit_SharpMap_Map__SharpMap_MapViewport" data-uid="SharpMap.MapViewport.op_Implicit(SharpMap.Map)~SharpMap.MapViewport">Implicit(Map to MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Creates a map viewport from a given map</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static implicit operator MapViewport(Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_MapViewport.md&amp;value=---%0Auid%3A%20SharpMap.MapViewport%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Map/MapViewport.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

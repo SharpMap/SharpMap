@@ -1,0 +1,606 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SpatialReferencedBoundingBox
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SpatialReferencedBoundingBox
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox">
+  
+  
+  <h1 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox" class="text-break">Class SpatialReferencedBoundingBox
+  </h1>
+  <div class="markdown level0 summary"><p>Spatial referenced boundingbox</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GeoAPI.Geometries.Envelope</span></div>
+    <div class="level2"><span class="xref">SpatialReferencedBoundingBox</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">GeoAPI.Geometries.IEnvelope</span></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable">IComparable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<span class="xref">GeoAPI.Geometries.IEnvelope</span>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">IComparable</a>&lt;<span class="xref">GeoAPI.Geometries.Envelope</span>&gt;</div>
+    <div><span class="xref">GeoAPI.Geometries.IIntersectable</span>&lt;<span class="xref">GeoAPI.Geometries.Envelope</span>&gt;</div>
+    <div><span class="xref">GeoAPI.Geometries.IExpandable</span>&lt;<span class="xref">GeoAPI.Geometries.Envelope</span>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersects(GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersects(GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Init()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Init(System.Double, System.Double, System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Init(GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Init(GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Init(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.SetToNull()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ExpandBy(System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ExpandBy(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ExpandToInclude(GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ExpandToInclude(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ExpandToInclude(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ExpandedBy(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Translate(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersection(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersects(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Overlaps(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Overlaps(GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Overlaps(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersects(GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersects(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Intersects(GeoAPI.Geometries.Coordinate, GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Contains(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Contains(GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Contains(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Covers(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Covers(GeoAPI.Geometries.Coordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Covers(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Distance(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Equals(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.CompareTo(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.CompareTo(GeoAPI.Geometries.Envelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.ToString()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.System.ICloneable.Clone()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Copy()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Clone()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Union(GeoAPI.Geometries.IPoint)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Union(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Union(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.SetCentre(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.SetCentre(GeoAPI.Geometries.IPoint)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.SetCentre(System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.SetCentre(GeoAPI.Geometries.IPoint, System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.SetCentre(GeoAPI.Geometries.ICoordinate, System.Double, System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Zoom(System.Double)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Init()</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Init(GeoAPI.Geometries.ICoordinate, GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Init(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Init(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.ExpandToInclude(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.ExpandToInclude(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Intersection(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Intersects(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Overlaps(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Overlaps(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Intersects(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Contains(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Contains(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Covers(GeoAPI.Geometries.ICoordinate)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Covers(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Distance(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.System.IComparable&lt;GeoAPI.Geometries.IEnvelope&gt;.CompareTo(GeoAPI.Geometries.IEnvelope)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Parse(System.String)</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.IsNull</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Width</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Height</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.MinX</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.MaxX</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.MinY</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.MaxY</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Area</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.MinExtent</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.MaxExtent</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.Centre</span>
+    </div>
+    <div>
+      <span class="xref">GeoAPI.Geometries.Envelope.GeoAPI.Geometries.IEnvelope.Centre</span>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Web.Wms.html">SharpMap.Web.Wms</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SpatialReferencedBoundingBox : Envelope, IEnvelope, ICloneable, IComparable, IComparable&lt;IEnvelope&gt;, IComparable&lt;Envelope&gt;, IIntersectable&lt;Envelope&gt;, IExpandable&lt;Envelope&gt;</code></pre>
+  </div>
+  <h5 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>The spatial referenced boundingbox is used to communicate boundingboxes of WMS layers together
+with their spatial reference system in which they are specified</p>
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_GeoAPI_Geometries_Envelope_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Web.Wms.SpatialReferencedBoundingBox.%23ctor(GeoAPI.Geometries.Envelope%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Web/Wms/SpatialReferencedBoundingBox.cs/#L35">View Source</a>
+  </span>
+  <a id="SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox.#ctor*"></a>
+  <h4 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_GeoAPI_Geometries_Envelope_System_Int32_" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox.#ctor(GeoAPI.Geometries.Envelope,System.Int32)">SpatialReferencedBoundingBox(Envelope, Int32)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new SpatialReferencedBoundingBox which stores a boundingbox together with the SRID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SpatialReferencedBoundingBox(Envelope boundingBox, int srid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">boundingBox</span></td>
+        <td><p>BoundingBox</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>Spatial Reference ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_GeoAPI_Geometries_Envelope_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This class is used to communicate all the boundingboxes of a WMS server between client.cs and wmslayer.cs</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_System_Double_System_Double_System_Double_System_Double_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Web.Wms.SpatialReferencedBoundingBox.%23ctor(System.Double%2CSystem.Double%2CSystem.Double%2CSystem.Double%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Web/Wms/SpatialReferencedBoundingBox.cs/#L23">View Source</a>
+  </span>
+  <a id="SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox.#ctor*"></a>
+  <h4 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_System_Double_System_Double_System_Double_System_Double_System_Int32_" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox.#ctor(System.Double,System.Double,System.Double,System.Double,System.Int32)">SpatialReferencedBoundingBox(Double, Double, Double, Double, Int32)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new SpatialReferencedBoundingBox which stores a boundingbox together with the SRID</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">minX</span></td>
+        <td><p>The minimum x-ordinate value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">minY</span></td>
+        <td><p>The minimum y-ordinate value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">maxX</span></td>
+        <td><p>The maximum x-ordinate value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">maxY</span></td>
+        <td><p>The maximum y-ordinate value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>Spatial Reference ID</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox__ctor_System_Double_System_Double_System_Double_System_Double_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This class is used to communicate all the boundingboxes of a WMS server between client.cs and wmslayer.cs</p>
+</div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Web_Wms_SpatialReferencedBoundingBox_SRID.md&amp;value=---%0Auid%3A%20SharpMap.Web.Wms.SpatialReferencedBoundingBox.SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Web/Wms/SpatialReferencedBoundingBox.cs/#L44">View Source</a>
+  </span>
+  <a id="SharpMap_Web_Wms_SpatialReferencedBoundingBox_SRID_" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox.SRID*"></a>
+  <h4 id="SharpMap_Web_Wms_SpatialReferencedBoundingBox_SRID" data-uid="SharpMap.Web.Wms.SpatialReferencedBoundingBox.SRID">SRID</h4>
+  <div class="markdown level1 summary"><p>The spatial reference ID (CRS)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int SRID { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">GeoAPI.Geometries.IEnvelope</span>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">System.ICloneable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable">System.IComparable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">System.IComparable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icomparable-1">System.IComparable&lt;T&gt;</a>
+  </div>
+  <div>
+      <span class="xref">GeoAPI.Geometries.IIntersectable&lt;T&gt;</span>
+  </div>
+  <div>
+      <span class="xref">GeoAPI.Geometries.IExpandable&lt;T&gt;</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Min_GeoAPI_Geometries_Envelope_">GeoAPIEx.Min(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Max_GeoAPI_Geometries_Envelope_">GeoAPIEx.Max(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_LongestAxis_GeoAPI_Geometries_Envelope_">GeoAPIEx.LongestAxis(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_BottomLeft_GeoAPI_Geometries_Envelope_">GeoAPIEx.BottomLeft(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_BottomRight_GeoAPI_Geometries_Envelope_">GeoAPIEx.BottomRight(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_TopLeft_GeoAPI_Geometries_Envelope_">GeoAPIEx.TopLeft(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_TopRight_GeoAPI_Geometries_Envelope_">GeoAPIEx.TopRight(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Bottom_GeoAPI_Geometries_Envelope_">GeoAPIEx.Bottom(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Top_GeoAPI_Geometries_Envelope_">GeoAPIEx.Top(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Left_GeoAPI_Geometries_Envelope_">GeoAPIEx.Left(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Right_GeoAPI_Geometries_Envelope_">GeoAPIEx.Right(Envelope)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Grow_GeoAPI_Geometries_Envelope_System_Double_">GeoAPIEx.Grow(Envelope, Double)</a>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.Geometries.GeoAPIEx.html#GeoAPI_Geometries_GeoAPIEx_Grow_GeoAPI_Geometries_Envelope_System_Double_System_Double_">GeoAPIEx.Grow(Envelope, Double, Double)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Web_Wms_SpatialReferencedBoundingBox.md&amp;value=---%0Auid%3A%20SharpMap.Web.Wms.SpatialReferencedBoundingBox%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Web/Wms/SpatialReferencedBoundingBox.cs/#L12" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

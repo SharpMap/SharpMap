@@ -1,0 +1,676 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class VariableLayerCollection
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class VariableLayerCollection
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Layers.VariableLayerCollection">
+  
+  
+  <h1 id="SharpMap_Layers_VariableLayerCollection" data-uid="SharpMap.Layers.VariableLayerCollection" class="text-break">Class VariableLayerCollection
+  </h1>
+  <div class="markdown level0 summary"><p>Layer collection</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1">Collection</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div class="level2"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1">BindingList</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div class="level3"><a class="xref" href="SharpMap.Layers.LayerCollection.html">LayerCollection</a></div>
+    <div class="level4"><span class="xref">VariableLayerCollection</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1">IList</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">ICollection</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.ibindinglist">IBindingList</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ilist">IList</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.icollection">ICollection</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.icanceladdnew">ICancelAddNew</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.iraiseitemchangedevents">IRaiseItemChangedEvents</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.specialized.inotifycollectionchanged">INotifyCollectionChanged</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayersContainer.html">ILayersContainer</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_Item_System_String_">LayerCollection.Item[String]</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_Clone">LayerCollection.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_AddCollection_SharpMap_Layers_LayerCollection_">LayerCollection.AddCollection(LayerCollection)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_Insert_System_Int32_SharpMap_Layers_ILayer_">LayerCollection.Insert(Int32, ILayer)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_OnAddingNew_System_ComponentModel_AddingNewEventArgs_">LayerCollection.OnAddingNew(AddingNewEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_GetLayerByName_System_String_">LayerCollection.GetLayerByName(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_ClearItems">LayerCollection.ClearItems()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_CollectionChanged">LayerCollection.CollectionChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_OnCollectionChanged_System_Collections_Specialized_NotifyCollectionChangedEventArgs_">LayerCollection.OnCollectionChanged(NotifyCollectionChangedEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_RemoveItem_System_Int32_">LayerCollection.RemoveItem(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_SetItem_System_Int32_SharpMap_Layers_ILayer_">LayerCollection.SetItem(Int32, ILayer)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_SharpMap_Layers_ILayersContainer_Layers">LayerCollection.ILayersContainer.Layers</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.addnew#System_ComponentModel_BindingList_1_AddNew">BindingList&lt;ILayer&gt;.AddNew()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.addnewcore#System_ComponentModel_BindingList_1_AddNewCore">BindingList&lt;ILayer&gt;.AddNewCore()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.applysortcore#System_ComponentModel_BindingList_1_ApplySortCore_System_ComponentModel_PropertyDescriptor_System_ComponentModel_ListSortDirection_">BindingList&lt;ILayer&gt;.ApplySortCore(PropertyDescriptor, ListSortDirection)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.cancelnew#System_ComponentModel_BindingList_1_CancelNew_System_Int32_">BindingList&lt;ILayer&gt;.CancelNew(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.endnew#System_ComponentModel_BindingList_1_EndNew_System_Int32_">BindingList&lt;ILayer&gt;.EndNew(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.findcore#System_ComponentModel_BindingList_1_FindCore_System_ComponentModel_PropertyDescriptor_System_Object_">BindingList&lt;ILayer&gt;.FindCore(PropertyDescriptor, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.onlistchanged#System_ComponentModel_BindingList_1_OnListChanged_System_ComponentModel_ListChangedEventArgs_">BindingList&lt;ILayer&gt;.OnListChanged(ListChangedEventArgs)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.removesortcore#System_ComponentModel_BindingList_1_RemoveSortCore">BindingList&lt;ILayer&gt;.RemoveSortCore()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.resetbindings#System_ComponentModel_BindingList_1_ResetBindings">BindingList&lt;ILayer&gt;.ResetBindings()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.resetitem#System_ComponentModel_BindingList_1_ResetItem_System_Int32_">BindingList&lt;ILayer&gt;.ResetItem(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-addindex#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_AddIndex_System_ComponentModel_PropertyDescriptor_">BindingList&lt;ILayer&gt;.IBindingList.AddIndex(PropertyDescriptor)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-addnew#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_AddNew">BindingList&lt;ILayer&gt;.IBindingList.AddNew()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-applysort#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_ApplySort_System_ComponentModel_PropertyDescriptor_System_ComponentModel_ListSortDirection_">BindingList&lt;ILayer&gt;.IBindingList.ApplySort(PropertyDescriptor, ListSortDirection)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-find#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_Find_System_ComponentModel_PropertyDescriptor_System_Object_">BindingList&lt;ILayer&gt;.IBindingList.Find(PropertyDescriptor, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-removeindex#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_RemoveIndex_System_ComponentModel_PropertyDescriptor_">BindingList&lt;ILayer&gt;.IBindingList.RemoveIndex(PropertyDescriptor)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-removesort#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_RemoveSort">BindingList&lt;ILayer&gt;.IBindingList.RemoveSort()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.allowedit#System_ComponentModel_BindingList_1_AllowEdit">BindingList&lt;ILayer&gt;.AllowEdit</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.allownew#System_ComponentModel_BindingList_1_AllowNew">BindingList&lt;ILayer&gt;.AllowNew</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.allowremove#System_ComponentModel_BindingList_1_AllowRemove">BindingList&lt;ILayer&gt;.AllowRemove</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.issortedcore#System_ComponentModel_BindingList_1_IsSortedCore">BindingList&lt;ILayer&gt;.IsSortedCore</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.raiselistchangedevents#System_ComponentModel_BindingList_1_RaiseListChangedEvents">BindingList&lt;ILayer&gt;.RaiseListChangedEvents</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.sortdirectioncore#System_ComponentModel_BindingList_1_SortDirectionCore">BindingList&lt;ILayer&gt;.SortDirectionCore</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.sortpropertycore#System_ComponentModel_BindingList_1_SortPropertyCore">BindingList&lt;ILayer&gt;.SortPropertyCore</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.supportschangenotificationcore#System_ComponentModel_BindingList_1_SupportsChangeNotificationCore">BindingList&lt;ILayer&gt;.SupportsChangeNotificationCore</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.supportssearchingcore#System_ComponentModel_BindingList_1_SupportsSearchingCore">BindingList&lt;ILayer&gt;.SupportsSearchingCore</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.supportssortingcore#System_ComponentModel_BindingList_1_SupportsSortingCore">BindingList&lt;ILayer&gt;.SupportsSortingCore</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-allowedit#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_AllowEdit">BindingList&lt;ILayer&gt;.IBindingList.AllowEdit</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-allownew#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_AllowNew">BindingList&lt;ILayer&gt;.IBindingList.AllowNew</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-allowremove#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_AllowRemove">BindingList&lt;ILayer&gt;.IBindingList.AllowRemove</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-issorted#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_IsSorted">BindingList&lt;ILayer&gt;.IBindingList.IsSorted</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-sortdirection#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_SortDirection">BindingList&lt;ILayer&gt;.IBindingList.SortDirection</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-sortproperty#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_SortProperty">BindingList&lt;ILayer&gt;.IBindingList.SortProperty</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-supportschangenotification#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_SupportsChangeNotification">BindingList&lt;ILayer&gt;.IBindingList.SupportsChangeNotification</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-supportssearching#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_SupportsSearching">BindingList&lt;ILayer&gt;.IBindingList.SupportsSearching</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-ibindinglist-supportssorting#System_ComponentModel_BindingList_1_System_ComponentModel_IBindingList_SupportsSorting">BindingList&lt;ILayer&gt;.IBindingList.SupportsSorting</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.system-componentmodel-iraiseitemchangedevents-raisesitemchangedevents#System_ComponentModel_BindingList_1_System_ComponentModel_IRaiseItemChangedEvents_RaisesItemChangedEvents">BindingList&lt;ILayer&gt;.IRaiseItemChangedEvents.RaisesItemChangedEvents</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.addingnew">BindingList&lt;ILayer&gt;.AddingNew</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.bindinglist-1.listchanged">BindingList&lt;ILayer&gt;.ListChanged</a>
+    </div>
+    <div>
+      <span class="xref">System.Collections.ObjectModel.Collection&lt;SharpMap.Layers.ILayer&gt;.System.Collections.IList.get_Item(System.Int32)</span>
+    </div>
+    <div>
+      <span class="xref">System.Collections.ObjectModel.Collection&lt;SharpMap.Layers.ILayer&gt;.System.Collections.IList.set_Item(System.Int32, System.Object)</span>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.add#System_Collections_ObjectModel_Collection_1_Add__0_">Collection&lt;ILayer&gt;.Add(ILayer)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.clear#System_Collections_ObjectModel_Collection_1_Clear">Collection&lt;ILayer&gt;.Clear()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.contains#System_Collections_ObjectModel_Collection_1_Contains__0_">Collection&lt;ILayer&gt;.Contains(ILayer)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.copyto#System_Collections_ObjectModel_Collection_1_CopyTo__0___System_Int32_">Collection&lt;ILayer&gt;.CopyTo(ILayer[], Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.getenumerator#System_Collections_ObjectModel_Collection_1_GetEnumerator">Collection&lt;ILayer&gt;.GetEnumerator()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.indexof#System_Collections_ObjectModel_Collection_1_IndexOf__0_">Collection&lt;ILayer&gt;.IndexOf(ILayer)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.remove#System_Collections_ObjectModel_Collection_1_Remove__0_">Collection&lt;ILayer&gt;.Remove(ILayer)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.removeat#System_Collections_ObjectModel_Collection_1_RemoveAt_System_Int32_">Collection&lt;ILayer&gt;.RemoveAt(Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-icollection-copyto#System_Collections_ObjectModel_Collection_1_System_Collections_ICollection_CopyTo_System_Array_System_Int32_">Collection&lt;ILayer&gt;.ICollection.CopyTo(Array, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ienumerable-getenumerator#System_Collections_ObjectModel_Collection_1_System_Collections_IEnumerable_GetEnumerator">Collection&lt;ILayer&gt;.IEnumerable.GetEnumerator()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-add#System_Collections_ObjectModel_Collection_1_System_Collections_IList_Add_System_Object_">Collection&lt;ILayer&gt;.IList.Add(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-contains#System_Collections_ObjectModel_Collection_1_System_Collections_IList_Contains_System_Object_">Collection&lt;ILayer&gt;.IList.Contains(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-indexof#System_Collections_ObjectModel_Collection_1_System_Collections_IList_IndexOf_System_Object_">Collection&lt;ILayer&gt;.IList.IndexOf(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-insert#System_Collections_ObjectModel_Collection_1_System_Collections_IList_Insert_System_Int32_System_Object_">Collection&lt;ILayer&gt;.IList.Insert(Int32, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-remove#System_Collections_ObjectModel_Collection_1_System_Collections_IList_Remove_System_Object_">Collection&lt;ILayer&gt;.IList.Remove(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.count#System_Collections_ObjectModel_Collection_1_Count">Collection&lt;ILayer&gt;.Count</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.item#System_Collections_ObjectModel_Collection_1_Item_System_Int32_">Collection&lt;ILayer&gt;.Item[Int32]</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.items#System_Collections_ObjectModel_Collection_1_Items">Collection&lt;ILayer&gt;.Items</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-generic-icollection-t--isreadonly#System_Collections_ObjectModel_Collection_1_System_Collections_Generic_ICollection_T__IsReadOnly">Collection&lt;ILayer&gt;.ICollection&lt;ILayer&gt;.IsReadOnly</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-icollection-issynchronized#System_Collections_ObjectModel_Collection_1_System_Collections_ICollection_IsSynchronized">Collection&lt;ILayer&gt;.ICollection.IsSynchronized</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-icollection-syncroot#System_Collections_ObjectModel_Collection_1_System_Collections_ICollection_SyncRoot">Collection&lt;ILayer&gt;.ICollection.SyncRoot</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-isfixedsize#System_Collections_ObjectModel_Collection_1_System_Collections_IList_IsFixedSize">Collection&lt;ILayer&gt;.IList.IsFixedSize</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-isreadonly#System_Collections_ObjectModel_Collection_1_System_Collections_IList_IsReadOnly">Collection&lt;ILayer&gt;.IList.IsReadOnly</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.objectmodel.collection-1.system-collections-ilist-item#System_Collections_ObjectModel_Collection_1_System_Collections_IList_Item_System_Int32_">Collection&lt;ILayer&gt;.IList.Item[Int32]</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Layers.html">SharpMap.Layers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Layers_VariableLayerCollection_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class VariableLayerCollection : LayerCollection, IList&lt;ILayer&gt;, ICollection&lt;ILayer&gt;, IReadOnlyList&lt;ILayer&gt;, IReadOnlyCollection&lt;ILayer&gt;, IEnumerable&lt;ILayer&gt;, IBindingList, IList, ICollection, IEnumerable, ICancelAddNew, IRaiseItemChangedEvents, INotifyCollectionChanged, ILayersContainer</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection__ctor_SharpMap_Layers_LayerCollection_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.%23ctor(SharpMap.Layers.LayerCollection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L87">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VariableLayerCollection__ctor_" data-uid="SharpMap.Layers.VariableLayerCollection.#ctor*"></a>
+  <h4 id="SharpMap_Layers_VariableLayerCollection__ctor_SharpMap_Layers_LayerCollection_" data-uid="SharpMap.Layers.VariableLayerCollection.#ctor(SharpMap.Layers.LayerCollection)">VariableLayerCollection(LayerCollection)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VariableLayerCollection(LayerCollection variableLayers)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.LayerCollection.html">LayerCollection</a></td>
+        <td><span class="parametername">variableLayers</span></td>
+        <td><p>Layer collection that holds layers with data sources updating frequently</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection_Interval.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.Interval%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L160">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VariableLayerCollection_Interval_" data-uid="SharpMap.Layers.VariableLayerCollection.Interval*"></a>
+  <h4 id="SharpMap_Layers_VariableLayerCollection_Interval" data-uid="SharpMap.Layers.VariableLayerCollection.Interval">Interval</h4>
+  <div class="markdown level1 summary"><p>Gets/sets the interval in which to update layers</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Interval { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection_Pause.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.Pause%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L181">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VariableLayerCollection_Pause_" data-uid="SharpMap.Layers.VariableLayerCollection.Pause*"></a>
+  <h4 id="SharpMap_Layers_VariableLayerCollection_Pause" data-uid="SharpMap.Layers.VariableLayerCollection.Pause">Pause</h4>
+  <div class="markdown level1 summary"><p>Gets/Sets whether this collection should currently be updated or not</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Pause { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection_InsertItem_System_Int32_SharpMap_Layers_ILayer_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.InsertItem(System.Int32%2CSharpMap.Layers.ILayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L104">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VariableLayerCollection_InsertItem_" data-uid="SharpMap.Layers.VariableLayerCollection.InsertItem*"></a>
+  <h4 id="SharpMap_Layers_VariableLayerCollection_InsertItem_System_Int32_SharpMap_Layers_ILayer_" data-uid="SharpMap.Layers.VariableLayerCollection.InsertItem(System.Int32,SharpMap.Layers.ILayer)">InsertItem(Int32, ILayer)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void InsertItem(int index, ILayer layer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">index</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></td>
+        <td><span class="parametername">layer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Layers.LayerCollection.html#SharpMap_Layers_LayerCollection_InsertItem_System_Int32_SharpMap_Layers_ILayer_">LayerCollection.InsertItem(Int32, ILayer)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection_OnDeserializing_System_Runtime_Serialization_StreamingContext_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.OnDeserializing(System.Runtime.Serialization.StreamingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L72">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VariableLayerCollection_OnDeserializing_" data-uid="SharpMap.Layers.VariableLayerCollection.OnDeserializing*"></a>
+  <h4 id="SharpMap_Layers_VariableLayerCollection_OnDeserializing_System_Runtime_Serialization_StreamingContext_" data-uid="SharpMap.Layers.VariableLayerCollection.OnDeserializing(System.Runtime.Serialization.StreamingContext)">OnDeserializing(StreamingContext)</h4>
+  <div class="markdown level1 summary"><p>Method called when deserializing this object.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[OnDeserializing]
+public void OnDeserializing(StreamingContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection_TouchTimer.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.TouchTimer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L58">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_VariableLayerCollection_TouchTimer_" data-uid="SharpMap.Layers.VariableLayerCollection.TouchTimer*"></a>
+  <h4 id="SharpMap_Layers_VariableLayerCollection_TouchTimer" data-uid="SharpMap.Layers.VariableLayerCollection.TouchTimer">TouchTimer()</h4>
+  <div class="markdown level1 summary"><p>Method to restart the internal Timer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TouchTimer()</code></pre>
+  </div>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection_VariableLayerCollectionRequery.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection.VariableLayerCollectionRequery%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L81">View Source</a>
+  </span>
+  <h4 id="SharpMap_Layers_VariableLayerCollection_VariableLayerCollectionRequery" data-uid="SharpMap.Layers.VariableLayerCollection.VariableLayerCollectionRequery">VariableLayerCollectionRequery</h4>
+  <div class="markdown level1 summary"><p>Event fired every <a class="xref" href="SharpMap.Layers.VariableLayerCollection.html#SharpMap_Layers_VariableLayerCollection_Interval">Interval</a> to force requery;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event VariableLayerCollectionRequeryHandler VariableLayerCollectionRequery</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.VariableLayerCollectionRequeryHandler.html">VariableLayerCollectionRequeryHandler</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ilist-1">System.Collections.Generic.IList&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.icollection-1">System.Collections.Generic.ICollection&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">System.Collections.Generic.IReadOnlyList&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">System.Collections.Generic.IReadOnlyCollection&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">System.Collections.Generic.IEnumerable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.ibindinglist">System.ComponentModel.IBindingList</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ilist">System.Collections.IList</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.icollection">System.Collections.ICollection</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">System.Collections.IEnumerable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.icanceladdnew">System.ComponentModel.ICancelAddNew</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.componentmodel.iraiseitemchangedevents">System.ComponentModel.IRaiseItemChangedEvents</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.specialized.inotifycollectionchanged">System.Collections.Specialized.INotifyCollectionChanged</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayersContainer.html">ILayersContainer</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_VariableLayerCollection.md&amp;value=---%0Auid%3A%20SharpMap.Layers.VariableLayerCollection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/VariableLayerCollection.cs/#L40" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,1514 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GeoAPIEx
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GeoAPIEx
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="GeoAPI.Geometries.GeoAPIEx">
+  
+  
+  <h1 id="GeoAPI_Geometries_GeoAPIEx" data-uid="GeoAPI.Geometries.GeoAPIEx" class="text-break">Class GeoAPIEx
+  </h1>
+  <div class="markdown level0 summary"><p>Set of extension methods for use of GeoAPI within SharpMap</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GeoAPIEx</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="GeoAPI.Geometries.html">GeoAPI.Geometries</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="GeoAPI_Geometries_GeoAPIEx_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static class GeoAPIEx</code></pre>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Add_GeoAPI_Geometries_Coordinate_GeoAPI_Geometries_Coordinate_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Add(GeoAPI.Geometries.Coordinate%2CGeoAPI.Geometries.Coordinate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L141">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Add_" data-uid="GeoAPI.Geometries.GeoAPIEx.Add*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Add_GeoAPI_Geometries_Coordinate_GeoAPI_Geometries_Coordinate_" data-uid="GeoAPI.Geometries.GeoAPIEx.Add(GeoAPI.Geometries.Coordinate,GeoAPI.Geometries.Coordinate)">Add(Coordinate, Coordinate)</h4>
+  <div class="markdown level1 summary"><p>Adds to coordinate's</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate Add(this Coordinate self, Coordinate summand)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>the first coordinate</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">summand</span></td>
+        <td><p>The second coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Bottom_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Bottom(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L229">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Bottom_" data-uid="GeoAPI.Geometries.GeoAPIEx.Bottom*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Bottom_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.Bottom(GeoAPI.Geometries.Envelope)">Bottom(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the minimum y-value of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double Bottom(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>The minimum y-value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_BottomLeft_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.BottomLeft(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L189">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_BottomLeft_" data-uid="GeoAPI.Geometries.GeoAPIEx.BottomLeft*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_BottomLeft_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.BottomLeft(GeoAPI.Geometries.Envelope)">BottomLeft(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the bottom-left coordinate of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate BottomLeft(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>The bottom-left coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_BottomRight_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.BottomRight(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L199">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_BottomRight_" data-uid="GeoAPI.Geometries.GeoAPIEx.BottomRight*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_BottomRight_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.BottomRight(GeoAPI.Geometries.Envelope)">BottomRight(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the bottom-right coordinate of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate BottomRight(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>The bottom-right coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Copy_GeoAPI_Geometries_ICoordinateSequence_System_Int32_GeoAPI_Geometries_ICoordinateSequence_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Copy(GeoAPI.Geometries.ICoordinateSequence%2CSystem.Int32%2CGeoAPI.Geometries.ICoordinateSequence%2CSystem.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L77">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Copy_" data-uid="GeoAPI.Geometries.GeoAPIEx.Copy*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Copy_GeoAPI_Geometries_ICoordinateSequence_System_Int32_GeoAPI_Geometries_ICoordinateSequence_System_Int32_System_Int32_" data-uid="GeoAPI.Geometries.GeoAPIEx.Copy(GeoAPI.Geometries.ICoordinateSequence,System.Int32,GeoAPI.Geometries.ICoordinateSequence,System.Int32,System.Int32)">Copy(ICoordinateSequence, Int32, ICoordinateSequence, Int32, Int32)</h4>
+  <div class="markdown level1 summary"><p>Copies a section of a <span class="xref">GeoAPI.Geometries.ICoordinateSequence</span> to another <span class="xref">GeoAPI.Geometries.ICoordinateSequence</span>.
+The sequences may have different dimensions;
+in this case only the common dimensions are copied.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void Copy(ICoordinateSequence src, int srcPos, ICoordinateSequence dest, int destPos, int length)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequence</span></td>
+        <td><span class="parametername">src</span></td>
+        <td><p>The sequence to copy coordinates from</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srcPos</span></td>
+        <td><p>The starting index of the coordinates to copy</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequence</span></td>
+        <td><span class="parametername">dest</span></td>
+        <td><p>The sequence to which the coordinates should be copied to</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">destPos</span></td>
+        <td><p>The starting index of the coordinates in <see paramref="dest"></see></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">length</span></td>
+        <td><p>The number of coordinates to copy</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_CopyCoord_GeoAPI_Geometries_ICoordinateSequence_System_Int32_GeoAPI_Geometries_ICoordinateSequence_System_Int32_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.CopyCoord(GeoAPI.Geometries.ICoordinateSequence%2CSystem.Int32%2CGeoAPI.Geometries.ICoordinateSequence%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L92">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_CopyCoord_" data-uid="GeoAPI.Geometries.GeoAPIEx.CopyCoord*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_CopyCoord_GeoAPI_Geometries_ICoordinateSequence_System_Int32_GeoAPI_Geometries_ICoordinateSequence_System_Int32_" data-uid="GeoAPI.Geometries.GeoAPIEx.CopyCoord(GeoAPI.Geometries.ICoordinateSequence,System.Int32,GeoAPI.Geometries.ICoordinateSequence,System.Int32)">CopyCoord(ICoordinateSequence, Int32, ICoordinateSequence, Int32)</h4>
+  <div class="markdown level1 summary"><p>Copies a coordinate of a <span class="xref">GeoAPI.Geometries.ICoordinateSequence</span> to another <span class="xref">GeoAPI.Geometries.ICoordinateSequence</span>.
+The sequences may have different dimensions;
+in this case only the common dimensions are copied.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void CopyCoord(ICoordinateSequence src, int srcPos, ICoordinateSequence dest, int destPos)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequence</span></td>
+        <td><span class="parametername">src</span></td>
+        <td><p>The sequence to copy coordinate from</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srcPos</span></td>
+        <td><p>The index of the coordinate to copy</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequence</span></td>
+        <td><span class="parametername">dest</span></td>
+        <td><p>The sequence to which the coordinate should be copied to</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">destPos</span></td>
+        <td><p>The index of the coordinate in <see paramref="dest"></see></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_EnsureValidRing_GeoAPI_Geometries_ICoordinateSequenceFactory_GeoAPI_Geometries_ICoordinateSequence_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.EnsureValidRing(GeoAPI.Geometries.ICoordinateSequenceFactory%2CGeoAPI.Geometries.ICoordinateSequence)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L40">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_EnsureValidRing_" data-uid="GeoAPI.Geometries.GeoAPIEx.EnsureValidRing*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_EnsureValidRing_GeoAPI_Geometries_ICoordinateSequenceFactory_GeoAPI_Geometries_ICoordinateSequence_" data-uid="GeoAPI.Geometries.GeoAPIEx.EnsureValidRing(GeoAPI.Geometries.ICoordinateSequenceFactory,GeoAPI.Geometries.ICoordinateSequence)">EnsureValidRing(ICoordinateSequenceFactory, ICoordinateSequence)</h4>
+  <div class="markdown level1 summary"><p>Ensures that a CoordinateSequence forms a valid ring,
+returning a new closed sequence of the correct length if required.
+If the input sequence is already a valid ring, it is returned
+without modification.
+If the input sequence is too short or is not closed,
+it is extended with one or more copies of the start point.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ICoordinateSequence EnsureValidRing(ICoordinateSequenceFactory fact, ICoordinateSequence seq)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequenceFactory</span></td>
+        <td><span class="parametername">fact</span></td>
+        <td><p>The CoordinateSequenceFactory to use to create the new sequence</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequence</span></td>
+        <td><span class="parametername">seq</span></td>
+        <td><p>The sequence to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ICoordinateSequence</span></td>
+        <td><p>The original sequence, if it was a valid ring, or a new sequence which is valid.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_EnsureValidRing_System_Collections_Generic_List_GeoAPI_Geometries_Coordinate__.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.EnsureValidRing(System.Collections.Generic.List%7BGeoAPI.Geometries.Coordinate%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L113">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_EnsureValidRing_" data-uid="GeoAPI.Geometries.GeoAPIEx.EnsureValidRing*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_EnsureValidRing_System_Collections_Generic_List_GeoAPI_Geometries_Coordinate__" data-uid="GeoAPI.Geometries.GeoAPIEx.EnsureValidRing(System.Collections.Generic.List{GeoAPI.Geometries.Coordinate})">EnsureValidRing(List&lt;Coordinate&gt;)</h4>
+  <div class="markdown level1 summary"><p>Ensures that a CoordinateSequence forms a valid ring,
+returning a new closed sequence of the correct length if required.
+If the input sequence is already a valid ring, it is returned
+without modification.
+If the input sequence is too short or is not closed,
+it is extended with one or more copies of the start point.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void EnsureValidRing(this List&lt;Coordinate&gt; coordinates)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.list-1">List</a>&lt;<span class="xref">GeoAPI.Geometries.Coordinate</span>&gt;</td>
+        <td><span class="parametername">coordinates</span></td>
+        <td><p>List of coordinates</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_GeomFromText_GeoAPI_Geometries_IGeometry_System_String_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.GeomFromText(GeoAPI.Geometries.IGeometry%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L368">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_GeomFromText_" data-uid="GeoAPI.Geometries.GeoAPIEx.GeomFromText*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_GeomFromText_GeoAPI_Geometries_IGeometry_System_String_" data-uid="GeoAPI.Geometries.GeoAPIEx.GeomFromText(GeoAPI.Geometries.IGeometry,System.String)">GeomFromText(IGeometry, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static IGeometry GeomFromText(this IGeometry self, string wkt)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">self</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">wkt</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Grow_GeoAPI_Geometries_Envelope_System_Double_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Grow(GeoAPI.Geometries.Envelope%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L303">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Grow_" data-uid="GeoAPI.Geometries.GeoAPIEx.Grow*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Grow_GeoAPI_Geometries_Envelope_System_Double_" data-uid="GeoAPI.Geometries.GeoAPIEx.Grow(GeoAPI.Geometries.Envelope,System.Double)">Grow(Envelope, Double)</h4>
+  <div class="markdown level1 summary"><p>Increases the size of the boundingbox by the given amount in all directions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Envelope Grow(this Envelope self, double amount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope to grow</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>Amount to grow in all directions</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Grow_GeoAPI_Geometries_Envelope_System_Double_System_Double_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Grow(GeoAPI.Geometries.Envelope%2CSystem.Double%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L315">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Grow_" data-uid="GeoAPI.Geometries.GeoAPIEx.Grow*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Grow_GeoAPI_Geometries_Envelope_System_Double_System_Double_" data-uid="GeoAPI.Geometries.GeoAPIEx.Grow(GeoAPI.Geometries.Envelope,System.Double,System.Double)">Grow(Envelope, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Increases the size of the boundingbox by the given amount in horizontal and vertical directions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Envelope Grow(this Envelope self, double amountInX, double amountInY)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">amountInX</span></td>
+        <td><p>Amount to grow in horizontal direction</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">amountInY</span></td>
+        <td><p>Amount to grow in vertical direction</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_IsCCW_GeoAPI_Geometries_ILinearRing_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.IsCCW(GeoAPI.Geometries.ILinearRing)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L293">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_IsCCW_" data-uid="GeoAPI.Geometries.GeoAPIEx.IsCCW*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_IsCCW_GeoAPI_Geometries_ILinearRing_" data-uid="GeoAPI.Geometries.GeoAPIEx.IsCCW(GeoAPI.Geometries.ILinearRing)">IsCCW(ILinearRing)</h4>
+  <div class="markdown level1 summary"><p>Abbreviation to counter clockwise function</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsCCW(this ILinearRing self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILinearRing</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The ring</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><code>true</code> if the ring is oriented counter clockwise</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_IsEmpty_GeoAPI_Geometries_Coordinate_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.IsEmpty(GeoAPI.Geometries.Coordinate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L354">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_IsEmpty_" data-uid="GeoAPI.Geometries.GeoAPIEx.IsEmpty*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_IsEmpty_GeoAPI_Geometries_Coordinate_" data-uid="GeoAPI.Geometries.GeoAPIEx.IsEmpty(GeoAPI.Geometries.Coordinate)">IsEmpty(Coordinate)</h4>
+  <div class="markdown level1 summary"><p>Tests if a coordinate is empty</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool IsEmpty(this Coordinate c)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">c</span></td>
+        <td><p>The coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Left_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Left(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L249">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Left_" data-uid="GeoAPI.Geometries.GeoAPIEx.Left*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Left_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.Left(GeoAPI.Geometries.Envelope)">Left(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the minimum x-value of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double Left(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>The minimum x-value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_LongestAxis_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.LongestAxis(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L177">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_LongestAxis_" data-uid="GeoAPI.Geometries.GeoAPIEx.LongestAxis*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_LongestAxis_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.LongestAxis(GeoAPI.Geometries.Envelope)">LongestAxis(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the axis of the longest axis</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Ordinate LongestAxis(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Ordinate</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Max_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Max(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L131">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Max_" data-uid="GeoAPI.Geometries.GeoAPIEx.Max*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Max_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.Max(GeoAPI.Geometries.Envelope)">Max(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum coordinate of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate Max(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>The maximum coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Min_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Min(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L24">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Min_" data-uid="GeoAPI.Geometries.GeoAPIEx.Min*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Min_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.Min(GeoAPI.Geometries.Envelope)">Min(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the minimum coordinate of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate Min(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>The minimum coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Right_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Right(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L259">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Right_" data-uid="GeoAPI.Geometries.GeoAPIEx.Right*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Right_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.Right(GeoAPI.Geometries.Envelope)">Right(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum x-value of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double Right(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>The maximum x-value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_SetExtent_NetTopologySuite_Geometries_Geometry_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.SetExtent(NetTopologySuite.Geometries.Geometry%2CGeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L391">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_SetExtent_" data-uid="GeoAPI.Geometries.GeoAPIEx.SetExtent*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_SetExtent_NetTopologySuite_Geometries_Geometry_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.SetExtent(NetTopologySuite.Geometries.Geometry,GeoAPI.Geometries.Envelope)">SetExtent(Geometry, Envelope)</h4>
+  <div class="markdown level1 summary"><p>Utility function to set the <span class="xref">NetTopologySuite.Geometries.Geometry.EnvelopeInternal</span> when it is known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static void SetExtent(Geometry geom, Envelope envelope)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">NetTopologySuite.Geometries.Geometry</span></td>
+        <td><span class="parametername">geom</span></td>
+        <td><p>The geometry</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">envelope</span></td>
+        <td><p>The envelope of <code data-dev-comment-type="paramref" class="paramref">geom</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Subtract_GeoAPI_Geometries_Coordinate_GeoAPI_Geometries_Coordinate_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Subtract(GeoAPI.Geometries.Coordinate%2CGeoAPI.Geometries.Coordinate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L159">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Subtract_" data-uid="GeoAPI.Geometries.GeoAPIEx.Subtract*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Subtract_GeoAPI_Geometries_Coordinate_GeoAPI_Geometries_Coordinate_" data-uid="GeoAPI.Geometries.GeoAPIEx.Subtract(GeoAPI.Geometries.Coordinate,GeoAPI.Geometries.Coordinate)">Subtract(Coordinate, Coordinate)</h4>
+  <div class="markdown level1 summary"><p>Subtracts two coordinates from one another</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate Subtract(this Coordinate self, Coordinate summand)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The first coordinate</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">summand</span></td>
+        <td><p>The second coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_ToDoubleArray_GeoAPI_Geometries_Coordinate_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.ToDoubleArray(GeoAPI.Geometries.Coordinate)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L283">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_ToDoubleArray_" data-uid="GeoAPI.Geometries.GeoAPIEx.ToDoubleArray*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_ToDoubleArray_GeoAPI_Geometries_Coordinate_" data-uid="GeoAPI.Geometries.GeoAPIEx.ToDoubleArray(GeoAPI.Geometries.Coordinate)">ToDoubleArray(Coordinate)</h4>
+  <div class="markdown level1 summary"><p>Converts a <span class="xref">GeoAPI.Geometries.Coordinate</span> to an array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a>s.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double[] ToDoubleArray(this Coordinate self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a>[]</td>
+        <td><p>An array of doubles</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_Top_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.Top(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L239">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_Top_" data-uid="GeoAPI.Geometries.GeoAPIEx.Top*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_Top_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.Top(GeoAPI.Geometries.Envelope)">Top(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum y-value of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static double Top(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>The maximum y-value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_TopLeft_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.TopLeft(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L209">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_TopLeft_" data-uid="GeoAPI.Geometries.GeoAPIEx.TopLeft*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_TopLeft_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.TopLeft(GeoAPI.Geometries.Envelope)">TopLeft(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the top-left coordinate of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate TopLeft(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>The top-left coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_TopRight_GeoAPI_Geometries_Envelope_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.TopRight(GeoAPI.Geometries.Envelope)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L219">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_TopRight_" data-uid="GeoAPI.Geometries.GeoAPIEx.TopRight*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_TopRight_GeoAPI_Geometries_Envelope_" data-uid="GeoAPI.Geometries.GeoAPIEx.TopRight(GeoAPI.Geometries.Envelope)">TopRight(Envelope)</h4>
+  <div class="markdown level1 summary"><p>Gets the top-right coordinate of the <span class="xref">GeoAPI.Geometries.Envelope</span></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Coordinate TopRight(this Envelope self)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The envelope</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><p>The top-right coordinate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_TransformToImage_GeoAPI_Geometries_ILineString_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.TransformToImage(GeoAPI.Geometries.ILineString%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L270">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_TransformToImage_" data-uid="GeoAPI.Geometries.GeoAPIEx.TransformToImage*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_TransformToImage_GeoAPI_Geometries_ILineString_SharpMap_MapViewport_" data-uid="GeoAPI.Geometries.GeoAPIEx.TransformToImage(GeoAPI.Geometries.ILineString,SharpMap.MapViewport)">TransformToImage(ILineString, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.ILineString</span> to an array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>s.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static PointF[] TransformToImage(this ILineString self, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.ILineString</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The linestring</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The mapviewport defining transformation parameters</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>[]</td>
+        <td><p>The array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>s</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx_TransformToImage_GeoAPI_Geometries_IPolygon_SharpMap_MapViewport_System_Boolean_.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx.TransformToImage(GeoAPI.Geometries.IPolygon%2CSharpMap.MapViewport%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L328">View Source</a>
+  </span>
+  <a id="GeoAPI_Geometries_GeoAPIEx_TransformToImage_" data-uid="GeoAPI.Geometries.GeoAPIEx.TransformToImage*"></a>
+  <h4 id="GeoAPI_Geometries_GeoAPIEx_TransformToImage_GeoAPI_Geometries_IPolygon_SharpMap_MapViewport_System_Boolean_" data-uid="GeoAPI.Geometries.GeoAPIEx.TransformToImage(GeoAPI.Geometries.IPolygon,SharpMap.MapViewport,System.Boolean)">TransformToImage(IPolygon, MapViewport, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Transforms a <span class="xref">GeoAPI.Geometries.IPolygon</span> to an array of <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a>s</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GraphicsPath TransformToImage(this IPolygon self, MapViewport map, bool useClipping = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><span class="parametername">self</span></td>
+        <td><p>The polygon</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map that defines the affine coordinate transformation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">useClipping</span></td>
+        <td><p>Use clipping for the polygon</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><p>An array of PointFs</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=GeoAPI_Geometries_GeoAPIEx.md&amp;value=---%0Auid%3A%20GeoAPI.Geometries.GeoAPIEx%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Geometries/GeoAPIEx.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

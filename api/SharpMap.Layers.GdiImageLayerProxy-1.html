@@ -1,0 +1,912 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GdiImageLayerProxy&lt;T&gt;
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GdiImageLayerProxy&lt;T&gt;
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Layers.GdiImageLayerProxy`1">
+  
+  
+  <h1 id="SharpMap_Layers_GdiImageLayerProxy_1" data-uid="SharpMap.Layers.GdiImageLayerProxy`1" class="text-break">Class GdiImageLayerProxy&lt;T&gt;
+  </h1>
+  <div class="markdown level0 summary"><p>Image manipulation proxy layer</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GdiImageLayerProxy&lt;T&gt;</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Layers.ICanQueryLayer.html">ICanQueryLayer</a></div>
+    <div><a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Layers.html">SharpMap.Layers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Layers_GdiImageLayerProxy_1_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class GdiImageLayerProxy&lt;T&gt; : ICanQueryLayer, ILayer, IDisposable where T : class, ILayer</code></pre>
+  </div>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>The type of the proxy layer. <a class="xref" href="SharpMap.Layers.ITileAsyncLayer.html">ITileAsyncLayer</a> are not excluded, but are not handled in any way.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Layers_GdiImageLayerProxy_1_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>This layer is not for layers implementing <a class="xref" href="SharpMap.Layers.ITileAsyncLayer.html">ITileAsyncLayer</a>. Every</p>
+</div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1__ctor__0_System_Drawing_Imaging_ColorMap___.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.%23ctor(%600%2CSystem.Drawing.Imaging.ColorMap%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L97">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1__ctor_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.#ctor*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1__ctor__0_System_Drawing_Imaging_ColorMap___" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.#ctor(`0,System.Drawing.Imaging.ColorMap[])">GdiImageLayerProxy(T, ColorMap[])</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided <code data-dev-comment-type="paramref" class="paramref">colorMap</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GdiImageLayerProxy(T layer, params ColorMap[] colorMap)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">layer</span></td>
+        <td><p>The layer to be proxied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.imaging.colormap">ColorMap</a>[]</td>
+        <td><span class="parametername">colorMap</span></td>
+        <td><p>The color map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1__ctor__0_System_Drawing_Imaging_ColorMatrix_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.%23ctor(%600%2CSystem.Drawing.Imaging.ColorMatrix)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L81">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1__ctor_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.#ctor*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1__ctor__0_System_Drawing_Imaging_ColorMatrix_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.#ctor(`0,System.Drawing.Imaging.ColorMatrix)">GdiImageLayerProxy(T, ColorMatrix)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided <code data-dev-comment-type="paramref" class="paramref">colorMatrix</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GdiImageLayerProxy(T layer, ColorMatrix colorMatrix)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">layer</span></td>
+        <td><p>The layer to be proxied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.imaging.colormatrix">ColorMatrix</a></td>
+        <td><span class="parametername">colorMatrix</span></td>
+        <td><p>A color matrix that is to be applied upon drawing</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1__ctor__0_System_Single_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.%23ctor(%600%2CSystem.Single)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L71">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1__ctor_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.#ctor*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1__ctor__0_System_Single_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.#ctor(`0,System.Single)">GdiImageLayerProxy(T, Single)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided <code data-dev-comment-type="paramref" class="paramref">opacity</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GdiImageLayerProxy(T layer, float opacity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">layer</span></td>
+        <td><p>The layer to be proxied</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">opacity</span></td>
+        <td><p>An opacity value in the range of [0f, 1f]. Values outside of that range will be clipped.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_BaseLayer.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.BaseLayer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L111">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_BaseLayer_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.BaseLayer*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_BaseLayer" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.BaseLayer">BaseLayer</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the proxied base layer</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public T BaseLayer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_LayerTitle.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.LayerTitle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L144">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_LayerTitle_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.LayerTitle*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_LayerTitle" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.LayerTitle">LayerTitle</h4>
+  <div class="markdown level1 summary"><p>Optional title of layer. It will be used for services like WMS where both Name and Title are supported.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string LayerTitle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_VisibilityUnits.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.VisibilityUnits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L129">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_VisibilityUnits_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.VisibilityUnits*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_VisibilityUnits" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.VisibilityUnits">VisibilityUnits</h4>
+  <div class="markdown level1 summary"><p>Gets or Sets what level-reference the Min/Max values are defined in</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VisibilityUnits VisibilityUnits { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VisibilityUnits.html">VisibilityUnits</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_CreateGreyScale__0_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.CreateGreyScale(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L46">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_CreateGreyScale_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.CreateGreyScale*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_CreateGreyScale__0_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.CreateGreyScale(`0)">CreateGreyScale(T)</h4>
+  <div class="markdown level1 summary"><p>Creates a proxy class that transforms all colors to grey scale</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static GdiImageLayerProxy&lt;T&gt; CreateGreyScale(T baseLayer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">T</span></td>
+        <td><span class="parametername">baseLayer</span></td>
+        <td><p>The layer to be proxied</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Layers.GdiImageLayerProxy-1.html">GdiImageLayerProxy</a>&lt;T&gt;</td>
+        <td><p>A proxy layer</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_Dispose.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L223">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_Dispose_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.Dispose*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_Dispose" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.Dispose">Dispose()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+  </div>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ICanQueryLayer%23ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L231">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_Envelope_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)">ICanQueryLayer.ExecuteIntersectionQuery(Envelope, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ICanQueryLayer.ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td><span class="parametername">box</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ICanQueryLayer%23ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry%2CSharpMap.Data.FeatureDataSet)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L239">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_ExecuteIntersectionQuery_GeoAPI_Geometries_IGeometry_SharpMap_Data_FeatureDataSet_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ICanQueryLayer#ExecuteIntersectionQuery(GeoAPI.Geometries.IGeometry,SharpMap.Data.FeatureDataSet)">ICanQueryLayer.ExecuteIntersectionQuery(IGeometry, FeatureDataSet)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IGeometry</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataSet.html">FeatureDataSet</a></td>
+        <td><span class="parametername">ds</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_IsQueryEnabled.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ICanQueryLayer%23IsQueryEnabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L247">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_IsQueryEnabled_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ICanQueryLayer#IsQueryEnabled*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ICanQueryLayer_IsQueryEnabled" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ICanQueryLayer#IsQueryEnabled">ICanQueryLayer.IsQueryEnabled</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ICanQueryLayer.IsQueryEnabled { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Enabled.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23Enabled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L135">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Enabled_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Enabled*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Enabled" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Enabled">ILayer.Enabled</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ILayer.Enabled { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Envelope.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23Envelope%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L156">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Envelope_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Envelope*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Envelope" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Envelope">ILayer.Envelope</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Envelope ILayer.Envelope { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Envelope</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_LayerName.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23LayerName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L150">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_LayerName_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#LayerName*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_LayerName" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#LayerName">ILayer.LayerName</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ILayer.LayerName { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_MaxVisible.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23MaxVisible%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L119">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_MaxVisible_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#MaxVisible*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_MaxVisible" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#MaxVisible">ILayer.MaxVisible</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">double ILayer.MaxVisible { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_MinVisible.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23MinVisible%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L113">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_MinVisible_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#MinVisible*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_MinVisible" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#MinVisible">ILayer.MinVisible</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">double ILayer.MinVisible { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Proj4Projection.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23Proj4Projection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L172">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Proj4Projection_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Proj4Projection*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Proj4Projection" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Proj4Projection">ILayer.Proj4Projection</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string ILayer.Proj4Projection { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_Map_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23Render(System.Drawing.Graphics%2CSharpMap.Map)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L178">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Render_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Render*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_Map_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Render(System.Drawing.Graphics,SharpMap.Map)">ILayer.Render(Graphics, Map)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ILayer.Render(Graphics g, Map map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23Render(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L183">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Render_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Render*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_Render_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#Render(System.Drawing.Graphics,SharpMap.MapViewport)">ILayer.Render(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ILayer.Render(Graphics g, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_SRID.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23SRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L161">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_SRID_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#SRID*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_SRID" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#SRID">ILayer.SRID</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int ILayer.SRID { get; set; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_TargetSRID.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601.SharpMap%23Layers%23ILayer%23TargetSRID%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L167">View Source</a>
+  </span>
+  <a id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_TargetSRID_" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#TargetSRID*"></a>
+  <h4 id="SharpMap_Layers_GdiImageLayerProxy_1_SharpMap_Layers_ILayer_TargetSRID" data-uid="SharpMap.Layers.GdiImageLayerProxy`1.SharpMap#Layers#ILayer#TargetSRID">ILayer.TargetSRID</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int ILayer.TargetSRID { get; }</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ICanQueryLayer.html">ICanQueryLayer</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Layers.ILayer.html">ILayer</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetCoordinateSystem_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetCoordinateSystem(ILayer)</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.CoordinateSystems.CoordinateSystemExtensions.html#SharpMap_CoordinateSystems_CoordinateSystemExtensions_GetFactory_SharpMap_Layers_ILayer_">CoordinateSystemExtensions.GetFactory(ILayer)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Layers_GdiImageLayerProxy_1.md&amp;value=---%0Auid%3A%20SharpMap.Layers.GdiImageLayerProxy%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Layers/GdiImageLayerProxy.cs/#L37" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

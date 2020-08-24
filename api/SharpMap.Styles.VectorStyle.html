@@ -1,0 +1,984 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class VectorStyle
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class VectorStyle
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Styles.VectorStyle">
+  
+  
+  <h1 id="SharpMap_Styles_VectorStyle" data-uid="SharpMap.Styles.VectorStyle" class="text-break">Class VectorStyle
+  </h1>
+  <div class="markdown level0 summary"><p>Defines a style used for rendering vector data</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Styles.Style.html">Style</a></div>
+    <div class="level3"><span class="xref">VectorStyle</span></div>
+      <div class="level4"><a class="xref" href="SharpMap.Styles.GroupStyle.html">GroupStyle</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Styles.Style.html#SharpMap_Styles_Style_MinVisible">Style.MinVisible</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Styles.Style.html#SharpMap_Styles_Style_MaxVisible">Style.MaxVisible</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Styles.Style.html#SharpMap_Styles_Style_VisibilityUnits">Style.VisibilityUnits</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Styles.Style.html#SharpMap_Styles_Style_Enabled">Style.Enabled</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Styles.html">SharpMap.Styles</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Styles_VectorStyle_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class VectorStyle : Style, IDisposableEx, IStyle, IDisposable, ICloneable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L126">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle__ctor_" data-uid="SharpMap.Styles.VectorStyle.#ctor*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle__ctor" data-uid="SharpMap.Styles.VectorStyle.#ctor">VectorStyle()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new VectorStyle and sets the default values</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VectorStyle()</code></pre>
+  </div>
+  <h5 id="SharpMap_Styles_VectorStyle__ctor_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Default style values when initialized:<br>
+*LineStyle: 1px solid black<br>
+*FillStyle: Solid black<br>
+*Outline: No Outline
+*Symbol: null-reference</p>
+</div>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_DefaultSymbol.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.DefaultSymbol%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L46">View Source</a>
+  </span>
+  <h4 id="SharpMap_Styles_VectorStyle_DefaultSymbol" data-uid="SharpMap.Styles.VectorStyle.DefaultSymbol">DefaultSymbol</h4>
+  <div class="markdown level1 summary"><p>Default Symbol</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static readonly Image DefaultSymbol</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.image">Image</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_EnableOutline.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.EnableOutline%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L168">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_EnableOutline_" data-uid="SharpMap.Styles.VectorStyle.EnableOutline*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_EnableOutline" data-uid="SharpMap.Styles.VectorStyle.EnableOutline">EnableOutline</h4>
+  <div class="markdown level1 summary"><p>Specified whether the objects are rendered with or without outlining</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool EnableOutline { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_Fill.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.Fill%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L177">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_Fill_" data-uid="SharpMap.Styles.VectorStyle.Fill*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_Fill" data-uid="SharpMap.Styles.VectorStyle.Fill">Fill</h4>
+  <div class="markdown level1 summary"><p>Fillstyle for Polygon geometries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush Fill { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_Line.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.Line%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L150">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_Line_" data-uid="SharpMap.Styles.VectorStyle.Line*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_Line" data-uid="SharpMap.Styles.VectorStyle.Line">Line</h4>
+  <div class="markdown level1 summary"><p>Linestyle for line geometries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Pen Line { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_LineOffset.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.LineOffset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L250">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_LineOffset_" data-uid="SharpMap.Styles.VectorStyle.LineOffset*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_LineOffset" data-uid="SharpMap.Styles.VectorStyle.LineOffset">LineOffset</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the offset (in pixel units) by which line will be offset from its original posision (perpendicular).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float LineOffset { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Styles_VectorStyle_LineOffset_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>A positive value offsets the line to the right
+A negative value offsets to the left</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_LineSymbolizer.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.LineSymbolizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L266">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_LineSymbolizer_" data-uid="SharpMap.Styles.VectorStyle.LineSymbolizer*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_LineSymbolizer" data-uid="SharpMap.Styles.VectorStyle.LineSymbolizer">LineSymbolizer</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the symbolizer for lineal geometries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ILineSymbolizer LineSymbolizer { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.ILineSymbolizer.html">ILineSymbolizer</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Styles_VectorStyle_LineSymbolizer_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Setting this property will lead to ignorance towards all <span class="xref">GeoAPI.Geometries.ILineal</span> related style settings</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_Outline.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.Outline%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_Outline_" data-uid="SharpMap.Styles.VectorStyle.Outline*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_Outline" data-uid="SharpMap.Styles.VectorStyle.Outline">Outline</h4>
+  <div class="markdown level1 summary"><p>Outline style for line and polygon geometries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Pen Outline { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_PointColor.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.PointColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L186">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_PointColor_" data-uid="SharpMap.Styles.VectorStyle.PointColor*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_PointColor" data-uid="SharpMap.Styles.VectorStyle.PointColor">PointColor</h4>
+  <div class="markdown level1 summary"><p>Fillstyle for Point geometries (will be used if no Symbol is set)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush PointColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_PointSize.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.PointSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L195">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_PointSize_" data-uid="SharpMap.Styles.VectorStyle.PointSize*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_PointSize" data-uid="SharpMap.Styles.VectorStyle.PointSize">PointSize</h4>
+  <div class="markdown level1 summary"><p>Size for Point geometries (if drawn with PointColor), will not have affect for Points drawn with Symbol</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float PointSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_PointSymbolizer.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.PointSymbolizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L260">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_PointSymbolizer_" data-uid="SharpMap.Styles.VectorStyle.PointSymbolizer*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_PointSymbolizer" data-uid="SharpMap.Styles.VectorStyle.PointSymbolizer">PointSymbolizer</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the symbolizer for puntal geometries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IPointSymbolizer PointSymbolizer { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Styles_VectorStyle_PointSymbolizer_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Setting this property will lead to ignorance towards all <span class="xref">GeoAPI.Geometries.IPuntal</span> related style settings</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_PolygonSymbolizer.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.PolygonSymbolizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L272">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_PolygonSymbolizer_" data-uid="SharpMap.Styles.VectorStyle.PolygonSymbolizer*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_PolygonSymbolizer" data-uid="SharpMap.Styles.VectorStyle.PolygonSymbolizer">PolygonSymbolizer</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the symbolizer for polygonal geometries</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IPolygonSymbolizer PolygonSymbolizer { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPolygonSymbolizer.html">IPolygonSymbolizer</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Styles_VectorStyle_PolygonSymbolizer_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Setting this property will lead to ignorance towards all <span class="xref">GeoAPI.Geometries.IPolygonal</span> related style settings</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_Symbol.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.Symbol%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L204">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_Symbol_" data-uid="SharpMap.Styles.VectorStyle.Symbol*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_Symbol" data-uid="SharpMap.Styles.VectorStyle.Symbol">Symbol</h4>
+  <div class="markdown level1 summary"><p>Symbol used for rendering points</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Image Symbol { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.image">Image</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_SymbolOffset.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.SymbolOffset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L228">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_SymbolOffset_" data-uid="SharpMap.Styles.VectorStyle.SymbolOffset*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_SymbolOffset" data-uid="SharpMap.Styles.VectorStyle.SymbolOffset">SymbolOffset</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the offset in pixels of the symbol.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PointF SymbolOffset { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Styles_VectorStyle_SymbolOffset_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The symbol offset is scaled with the <a class="xref" href="SharpMap.Styles.VectorStyle.html#SharpMap_Styles_VectorStyle_SymbolScale">SymbolScale</a> property and refers to the offset af <a class="xref" href="SharpMap.Styles.VectorStyle.html#SharpMap_Styles_VectorStyle_SymbolScale">SymbolScale</a>=1.0.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_SymbolRotation.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.SymbolRotation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L237">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_SymbolRotation_" data-uid="SharpMap.Styles.VectorStyle.SymbolRotation*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_SymbolRotation" data-uid="SharpMap.Styles.VectorStyle.SymbolRotation">SymbolRotation</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the rotation of the symbol in degrees (clockwise is positive)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float SymbolRotation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_SymbolScale.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.SymbolScale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L216">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_SymbolScale_" data-uid="SharpMap.Styles.VectorStyle.SymbolScale*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_SymbolScale" data-uid="SharpMap.Styles.VectorStyle.SymbolScale">SymbolScale</h4>
+  <div class="markdown level1 summary"><p>Scale of the symbol (defaults to 1)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float SymbolScale { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Styles_VectorStyle_SymbolScale_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Setting the symbolscale to '2.0' doubles the size of the symbol, where a scale of 0.5 makes the scale half the size of the original image</p>
+</div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L62">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_Clone_" data-uid="SharpMap.Styles.VectorStyle.Clone*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_Clone" data-uid="SharpMap.Styles.VectorStyle.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VectorStyle Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_CreateRandomKnownColor_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.CreateRandomKnownColor(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L465">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_CreateRandomKnownColor_" data-uid="SharpMap.Styles.VectorStyle.CreateRandomKnownColor*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_CreateRandomKnownColor_System_Int32_" data-uid="SharpMap.Styles.VectorStyle.CreateRandomKnownColor(System.Int32)">CreateRandomKnownColor(Int32)</h4>
+  <div class="markdown level1 summary"><p>Factory method to create a random color from the <span class="xref">SharpMap.Drawing.KnownColor</span>s enumeration</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static Color CreateRandomKnownColor(int alpha = 255)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">alpha</span></td>
+        <td><p>An optional alpha value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_CreateRandomLinealStyle.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.CreateRandomLinealStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L348">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_CreateRandomLinealStyle_" data-uid="SharpMap.Styles.VectorStyle.CreateRandomLinealStyle*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_CreateRandomLinealStyle" data-uid="SharpMap.Styles.VectorStyle.CreateRandomLinealStyle">CreateRandomLinealStyle()</h4>
+  <div class="markdown level1 summary"><p>Factory method to create a random puntal style</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static VectorStyle CreateRandomLinealStyle()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><p>A puntal vector style</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_CreateRandomPolygonalStyle.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.CreateRandomPolygonalStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L361">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_CreateRandomPolygonalStyle_" data-uid="SharpMap.Styles.VectorStyle.CreateRandomPolygonalStyle*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_CreateRandomPolygonalStyle" data-uid="SharpMap.Styles.VectorStyle.CreateRandomPolygonalStyle">CreateRandomPolygonalStyle()</h4>
+  <div class="markdown level1 summary"><p>Factory method to create a random puntal style</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static VectorStyle CreateRandomPolygonalStyle()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><p>A puntal vector style</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_CreateRandomPuntalStyle.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.CreateRandomPuntalStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L335">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_CreateRandomPuntalStyle_" data-uid="SharpMap.Styles.VectorStyle.CreateRandomPuntalStyle*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_CreateRandomPuntalStyle" data-uid="SharpMap.Styles.VectorStyle.CreateRandomPuntalStyle">CreateRandomPuntalStyle()</h4>
+  <div class="markdown level1 summary"><p>Factory method to create a random puntal style</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static VectorStyle CreateRandomPuntalStyle()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><p>A puntal vector style</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_CreateRandomStyle.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.CreateRandomStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L322">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_CreateRandomStyle_" data-uid="SharpMap.Styles.VectorStyle.CreateRandomStyle*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_CreateRandomStyle" data-uid="SharpMap.Styles.VectorStyle.CreateRandomStyle">CreateRandomStyle()</h4>
+  <div class="markdown level1 summary"><p>Utility function to create a random style</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static VectorStyle CreateRandomStyle()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><p>A vector style</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_ReleaseManagedResources.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.ReleaseManagedResources%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L279">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_ReleaseManagedResources_" data-uid="SharpMap.Styles.VectorStyle.ReleaseManagedResources*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_ReleaseManagedResources" data-uid="SharpMap.Styles.VectorStyle.ReleaseManagedResources">ReleaseManagedResources()</h4>
+  <div class="markdown level1 summary"><p>Releases managed resources</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReleaseManagedResources()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseManagedResources">DisposableObject.ReleaseManagedResources()</a></div>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle_System_ICloneable_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle.System%23ICloneable%23Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L100">View Source</a>
+  </span>
+  <a id="SharpMap_Styles_VectorStyle_System_ICloneable_Clone_" data-uid="SharpMap.Styles.VectorStyle.System#ICloneable#Clone*"></a>
+  <h4 id="SharpMap_Styles_VectorStyle_System_ICloneable_Clone" data-uid="SharpMap.Styles.VectorStyle.System#ICloneable#Clone">ICloneable.Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">object ICloneable.Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">System.ICloneable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Styles_VectorStyle.md&amp;value=---%0Auid%3A%20SharpMap.Styles.VectorStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Styles/VectorStyle.cs/#L37" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

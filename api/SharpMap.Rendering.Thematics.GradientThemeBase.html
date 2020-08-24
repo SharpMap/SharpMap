@@ -1,0 +1,1103 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GradientThemeBase
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GradientThemeBase
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase">
+  
+  
+  <h1 id="SharpMap_Rendering_Thematics_GradientThemeBase" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase" class="text-break">Class GradientThemeBase
+  </h1>
+  <div class="markdown level0 summary"><p>Gradient theme base class</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GradientThemeBase</span></div>
+      <div class="level2"><a class="xref" href="SharpMap.Rendering.Thematics.GradientTheme.html">GradientTheme</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Thematics.html">SharpMap.Rendering.Thematics</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Thematics_GradientThemeBase_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public abstract class GradientThemeBase : ITheme</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase__ctor_System_Double_System_Double_SharpMap_Styles_IStyle_SharpMap_Styles_IStyle_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.%23ctor(System.Double%2CSystem.Double%2CSharpMap.Styles.IStyle%2CSharpMap.Styles.IStyle)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L47">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase__ctor_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase__ctor_System_Double_System_Double_SharpMap_Styles_IStyle_SharpMap_Styles_IStyle_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.#ctor(System.Double,System.Double,SharpMap.Styles.IStyle,SharpMap.Styles.IStyle)">GradientThemeBase(Double, Double, IStyle, IStyle)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected GradientThemeBase(double minValue, double maxValue, IStyle minStyle, IStyle maxStyle)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">minValue</span></td>
+        <td><p>The minimum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">maxValue</span></td>
+        <td><p>The maximum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><span class="parametername">minStyle</span></td>
+        <td><p>The <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a> to apply for values equal to <code data-dev-comment-type="paramref" class="paramref">minValue</code></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><span class="parametername">maxStyle</span></td>
+        <td><p>The <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a> to apply for values equal to <code data-dev-comment-type="paramref" class="paramref">maxValue</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_FillColorBlend.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.FillColorBlend%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L112">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_FillColorBlend_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.FillColorBlend*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_FillColorBlend" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.FillColorBlend">FillColorBlend</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Rendering.Thematics.ColorBlend.html">ColorBlend</a> used as Fill</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ColorBlend FillColorBlend { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.ColorBlend.html">ColorBlend</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_LineColorBlend.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.LineColorBlend%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L103">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_LineColorBlend_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.LineColorBlend*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_LineColorBlend" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.LineColorBlend">LineColorBlend</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Rendering.Thematics.ColorBlend.html">ColorBlend</a> used on lines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ColorBlend LineColorBlend { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.ColorBlend.html">ColorBlend</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_Max.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.Max%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L67">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_Max_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.Max*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_Max" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.Max">Max</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the maximum value of the gradient</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Max { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_MaxStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.MaxStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L85">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_MaxStyle_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.MaxStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_MaxStyle" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.MaxStyle">MaxStyle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a> for the maximum value</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStyle MaxStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_Min.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.Min%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L58">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_Min_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.Min*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_Min" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.Min">Min</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the minimum value of the gradient</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Min { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_MinStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.MinStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L76">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_MinStyle_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.MinStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_MinStyle" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.MinStyle">MinStyle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a> for the minimum value</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStyle MinStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_TextColorBlend.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.TextColorBlend%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L94">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_TextColorBlend_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.TextColorBlend*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_TextColorBlend" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.TextColorBlend">TextColorBlend</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the <a class="xref" href="SharpMap.Rendering.Thematics.ColorBlend.html">ColorBlend</a> used on labels</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ColorBlend TextColorBlend { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.ColorBlend.html">ColorBlend</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_CalculateLabelStyle_SharpMap_Styles_LabelStyle_SharpMap_Styles_LabelStyle_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.CalculateLabelStyle(SharpMap.Styles.LabelStyle%2CSharpMap.Styles.LabelStyle%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L161">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_CalculateLabelStyle_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.CalculateLabelStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_CalculateLabelStyle_SharpMap_Styles_LabelStyle_SharpMap_Styles_LabelStyle_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.CalculateLabelStyle(SharpMap.Styles.LabelStyle,SharpMap.Styles.LabelStyle,System.Double)">CalculateLabelStyle(LabelStyle, LabelStyle, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to compute a new <a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a> for the given <code data-dev-comment-type="paramref" class="paramref">value</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected LabelStyle CalculateLabelStyle(LabelStyle min, LabelStyle max, double value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The minimum <a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The maximum <a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></td>
+        <td><p>A <a class="xref" href="SharpMap.Styles.LabelStyle.html">LabelStyle</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_CalculateVectorStyle_SharpMap_Styles_VectorStyle_SharpMap_Styles_VectorStyle_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.CalculateVectorStyle(SharpMap.Styles.VectorStyle%2CSharpMap.Styles.VectorStyle%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L125">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_CalculateVectorStyle_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.CalculateVectorStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_CalculateVectorStyle_SharpMap_Styles_VectorStyle_SharpMap_Styles_VectorStyle_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.CalculateVectorStyle(SharpMap.Styles.VectorStyle,SharpMap.Styles.VectorStyle,System.Double)">CalculateVectorStyle(VectorStyle, VectorStyle, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to compute a new <a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a> for the given <code data-dev-comment-type="paramref" class="paramref">value</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected VectorStyle CalculateVectorStyle(VectorStyle min, VectorStyle max, double value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The minimum <a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The maximum <a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></td>
+        <td><p>A <a class="xref" href="SharpMap.Styles.VectorStyle.html">VectorStyle</a></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_Fraction_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.Fraction(System.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L191">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_Fraction_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.Fraction*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_Fraction_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.Fraction(System.Double)">Fraction(Double)</h4>
+  <div class="markdown level1 summary"><p>Function to compute the fraction for <code data-dev-comment-type="paramref" class="paramref">attr</code> based on <a class="xref" href="SharpMap.Rendering.Thematics.GradientThemeBase.html#SharpMap_Rendering_Thematics_GradientThemeBase_Min">Min</a> and <a class="xref" href="SharpMap.Rendering.Thematics.GradientThemeBase.html#SharpMap_Rendering_Thematics_GradientThemeBase_Max">Max</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected double Fraction(double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The attribute value to compute the fraction for</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>A value in the ℝ[0, 1]</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_GetAttributeValue_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.GetAttributeValue(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L354">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_GetAttributeValue_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.GetAttributeValue*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_GetAttributeValue_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.GetAttributeValue(SharpMap.Data.FeatureDataRow)">GetAttributeValue(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Function to get a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a> value from <code data-dev-comment-type="paramref" class="paramref">row</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract double GetAttributeValue(FeatureDataRow row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">row</span></td>
+        <td><p>The row</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>A <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a> value</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_GetStyle_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.GetStyle(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L323">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_GetStyle_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.GetStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_GetStyle_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.GetStyle(SharpMap.Data.FeatureDataRow)">GetStyle(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Returns the style based on a numeric DataColumn, where style
+properties are linearly interpolated between max and min values.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IStyle GetStyle(FeatureDataRow row)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">row</span></td>
+        <td><p>Feature</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><p><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a> calculated by a linear interpolation between the min/max styles</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBool_System_Boolean_System_Boolean_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateBool(System.Boolean%2CSystem.Boolean%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L205">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBool_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateBool*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBool_System_Boolean_System_Boolean_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateBool(System.Boolean,System.Boolean,System.Double)">InterpolateBool(Boolean, Boolean, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to interpolate a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a> value for <code data-dev-comment-type="paramref" class="paramref">attr</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool InterpolateBool(bool min, bool max, double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The value to return if <a class="xref" href="SharpMap.Rendering.Thematics.GradientThemeBase.html#SharpMap_Rendering_Thematics_GradientThemeBase_Fraction_System_Double_">Fraction(Double)</a>/<code data-dev-comment-type="paramref" class="paramref">attr</code>) &lt;= <returns>0.5d</returns></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The value to return if <a class="xref" href="SharpMap.Rendering.Thematics.GradientThemeBase.html#SharpMap_Rendering_Thematics_GradientThemeBase_Fraction_System_Double_">Fraction(Double)</a>/<code data-dev-comment-type="paramref" class="paramref">attr</code>) &gt; <returns>0.5d</returns></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The value to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><code data-dev-comment-type="paramref" class="paramref">min</code>, if <a class="xref" href="SharpMap.Rendering.Thematics.GradientThemeBase.html#SharpMap_Rendering_Thematics_GradientThemeBase_Fraction_System_Double_">Fraction(Double)</a>/<code data-dev-comment-type="paramref" class="paramref">attr</code>) &lt;= <returns>0.5d</returns>, else <code data-dev-comment-type="paramref" class="paramref">max</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBrush_System_Drawing_Brush_System_Drawing_Brush_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateBrush(System.Drawing.Brush%2CSystem.Drawing.Brush%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L242">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBrush_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateBrush*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBrush_System_Drawing_Brush_System_Drawing_Brush_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateBrush(System.Drawing.Brush,System.Drawing.Brush,System.Double)">InterpolateBrush(Brush, Brush, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to interpolate a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a> value for <code data-dev-comment-type="paramref" class="paramref">attr</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected SolidBrush InterpolateBrush(Brush min, Brush max, double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The minimum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The maximum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The value to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.solidbrush">SolidBrush</a></td>
+        <td><p>An interpolated <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.solidbrush">SolidBrush</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateBrush_System_Drawing_Brush_System_Drawing_Brush_System_Double__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Currently only <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.solidbrush">SolidBrush</a>es are interpolated</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateColor_System_Drawing_Color_System_Drawing_Color_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateColor(System.Drawing.Color%2CSystem.Drawing.Color%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L295">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateColor_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateColor*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateColor_System_Drawing_Color_System_Drawing_Color_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateColor(System.Drawing.Color,System.Drawing.Color,System.Double)">InterpolateColor(Color, Color, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to interpolate a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a> value for <code data-dev-comment-type="paramref" class="paramref">attr</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Color InterpolateColor(Color minCol, Color maxCol, double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><span class="parametername">minCol</span></td>
+        <td><p>The minimum <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><span class="parametername">maxCol</span></td>
+        <td><p>The maximum <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The value to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td><p>An interpolated <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateDouble_System_Double_System_Double_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateDouble(System.Double%2CSystem.Double%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L229">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateDouble_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateDouble*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateDouble_System_Double_System_Double_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateDouble(System.Double,System.Double,System.Double)">InterpolateDouble(Double, Double, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to interpolate a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a> value for <code data-dev-comment-type="paramref" class="paramref">attr</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected double InterpolateDouble(double min, double max, double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The minimum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The maximum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The value to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><p>A value in the ℝ[<code data-dev-comment-type="paramref" class="paramref">min</code>, <code data-dev-comment-type="paramref" class="paramref">max</code>]</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateFloat_System_Single_System_Single_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateFloat(System.Single%2CSystem.Single%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L217">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateFloat_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateFloat*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolateFloat_System_Single_System_Single_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolateFloat(System.Single,System.Single,System.Double)">InterpolateFloat(Single, Single, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to interpolate a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a> value for <code data-dev-comment-type="paramref" class="paramref">attr</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected float InterpolateFloat(float min, float max, double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The minimum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The maximum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The value to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td><p>A value in the ℝ[<code data-dev-comment-type="paramref" class="paramref">min</code>, <code data-dev-comment-type="paramref" class="paramref">max</code>]</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase_InterpolatePen_System_Drawing_Pen_System_Drawing_Pen_System_Double_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase.InterpolatePen(System.Drawing.Pen%2CSystem.Drawing.Pen%2CSystem.Double)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L257">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolatePen_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolatePen*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolatePen_System_Drawing_Pen_System_Drawing_Pen_System_Double_" data-uid="SharpMap.Rendering.Thematics.GradientThemeBase.InterpolatePen(System.Drawing.Pen,System.Drawing.Pen,System.Double)">InterpolatePen(Pen, Pen, Double)</h4>
+  <div class="markdown level1 summary"><p>Function to interpolate a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a> value for <code data-dev-comment-type="paramref" class="paramref">attr</code></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Pen InterpolatePen(Pen min, Pen max, double attr)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">min</span></td>
+        <td><p>The minimum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><span class="parametername">max</span></td>
+        <td><p>The maximum value</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">attr</span></td>
+        <td><p>The value to test</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td><p>An interpolated <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Rendering_Thematics_GradientThemeBase_InterpolatePen_System_Drawing_Pen_System_Drawing_Pen_System_Double__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Currently only <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.pentype#System_Drawing_Drawing2D_PenType_SolidColor">SolidColor</a> pens are interpolated</p>
+</div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_GradientThemeBase.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.GradientThemeBase%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/GradientTheme.cs/#L29" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

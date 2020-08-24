@@ -1,0 +1,1131 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SpatialDbUtility
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SpatialDbUtility
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Data.Providers.SpatialDbUtility">
+  
+  
+  <h1 id="SharpMap_Data_Providers_SpatialDbUtility" data-uid="SharpMap.Data.Providers.SpatialDbUtility" class="text-break">Class SpatialDbUtility
+  </h1>
+  <div class="markdown level0 summary"><p>Database entity decorator object</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">SpatialDbUtility</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Data.Providers.html">SharpMap.Data.Providers</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Data_Providers_SpatialDbUtility_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class SpatialDbUtility</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L19">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility__ctor_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility__ctor" data-uid="SharpMap.Data.Providers.SpatialDbUtility.#ctor">SpatialDbUtility()</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the default decorator strings</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SpatialDbUtility()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility__ctor_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.%23ctor(System.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L30">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility__ctor_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility__ctor_System_String_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.#ctor(System.String,System.String,System.String)">SpatialDbUtility(String, String, String)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided decorator strings</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">entityDecoratorFormat</span></td>
+        <td><p>The format string to decorate database entities</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">literalDecoratorFormat</span></td>
+        <td><p>The format string to decorate literals (strings)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">parameterDecoratorFormat</span></td>
+        <td><p>The format string to decorate parameters</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility__ctor_System_String_System_String_System_String_GeoAPI_IO_IBinaryGeometryReader_GeoAPI_IO_IBinaryGeometryWriter_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.%23ctor(System.String%2CSystem.String%2CSystem.String%2CGeoAPI.IO.IBinaryGeometryReader%2CGeoAPI.IO.IBinaryGeometryWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L44">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility__ctor_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.#ctor*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility__ctor_System_String_System_String_System_String_GeoAPI_IO_IBinaryGeometryReader_GeoAPI_IO_IBinaryGeometryWriter_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.#ctor(System.String,System.String,System.String,GeoAPI.IO.IBinaryGeometryReader,GeoAPI.IO.IBinaryGeometryWriter)">SpatialDbUtility(String, String, String, IBinaryGeometryReader, IBinaryGeometryWriter)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided decorator strings</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat, IBinaryGeometryReader reader, IBinaryGeometryWriter writer)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">entityDecoratorFormat</span></td>
+        <td><p>The format string to decorate database entities</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">literalDecoratorFormat</span></td>
+        <td><p>The format string to decorate literals (strings)</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">parameterDecoratorFormat</span></td>
+        <td><p>The format string to decorate parameters</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.IO.IBinaryGeometryReader</span></td>
+        <td><span class="parametername">reader</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.IO.IBinaryGeometryWriter</span></td>
+        <td><span class="parametername">writer</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_EntityDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.EntityDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L66">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_EntityDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.EntityDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_EntityDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.EntityDecoratorFormat">EntityDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Gets the database entity decorator format.</p>
+<p>
+For e.g. PostgreSQL that would be &quot;\&quot;{0}\&quot;&quot;, so that a table named smTable would be decorated to &quot;smTable&quot;
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string EntityDecoratorFormat { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_FromGeometryDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.FromGeometryDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L333">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_FromGeometryDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.FromGeometryDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_FromGeometryDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.FromGeometryDecoratorFormat">FromGeometryDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Decorator for the transformation of the geometry data, in case the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html#SharpMap_Data_Providers_SpatialDbUtility_Reader">Reader</a> can only read a format (e.g. WKB) that does
+not match the backend's format.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string FromGeometryDecoratorFormat { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbUtility_FromGeometryDecoratorFormat_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The format must have</p>
+<ul><li></li></ul>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_LiteralDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.LiteralDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L71">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_LiteralDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.LiteralDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_LiteralDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.LiteralDecoratorFormat">LiteralDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Gets the database literal (string) decorator</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string LiteralDecoratorFormat { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_ParameterDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.ParameterDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L76">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_ParameterDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ParameterDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_ParameterDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ParameterDecoratorFormat">ParameterDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Gets the database parameter decorator</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ParameterDecoratorFormat { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_Reader.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.Reader%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L338">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_Reader_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.Reader*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_Reader" data-uid="SharpMap.Data.Providers.SpatialDbUtility.Reader">Reader</h4>
+  <div class="markdown level1 summary"><p>Reader for geometry data</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IBinaryGeometryReader Reader { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.IO.IBinaryGeometryReader</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_SetSridDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.SetSridDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L216">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_SetSridDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.SetSridDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_SetSridDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.SetSridDecoratorFormat">SetSridDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Decorator for the function to assign a specific SRID value to a geometry</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string SetSridDecoratorFormat { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbUtility_SetSridDecoratorFormat_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The format must have</p>
+<ul><li></li><li></li></ul>
+<example language="C#">
+//e.g. Postgis
+this.SetSridDecoratorFormat = &quot;ST_SetSrid({0}, {1})&quot;;
+</example>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_ToEnvelopeDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.ToEnvelopeDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L257">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_ToEnvelopeDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ToEnvelopeDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_ToEnvelopeDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ToEnvelopeDecoratorFormat">ToEnvelopeDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Decorator for the transformation of the envelope data, in case the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html#SharpMap_Data_Providers_SpatialDbUtility_Reader">Reader</a> expects a specific format (e.g. WKB).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ToEnvelopeDecoratorFormat { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbUtility_ToEnvelopeDecoratorFormat_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The format must have</p>
+<ul><li></li></ul>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_ToGeometryDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.ToGeometryDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L245">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_ToGeometryDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ToGeometryDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_ToGeometryDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ToGeometryDecoratorFormat">ToGeometryDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Decorator for the transformation of the geometry data, in case the
+<a class="xref" href="SharpMap.Data.Providers.SpatialDbUtility.html#SharpMap_Data_Providers_SpatialDbUtility_Writer">Writer</a> produces a specific format (e.g. WKB) that does
+not match the backend's format.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string ToGeometryDecoratorFormat { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbUtility_ToGeometryDecoratorFormat_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The format must have</p>
+<ul><li></li></ul>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_TransformDecoratorFormat.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.TransformDecoratorFormat%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L232">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_TransformDecoratorFormat_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.TransformDecoratorFormat*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_TransformDecoratorFormat" data-uid="SharpMap.Data.Providers.SpatialDbUtility.TransformDecoratorFormat">TransformDecoratorFormat</h4>
+  <div class="markdown level1 summary"><p>Decorator for the format to transform a geometry to a specified</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string TransformDecoratorFormat { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Data_Providers_SpatialDbUtility_TransformDecoratorFormat_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The format must have</p>
+<ul><li></li><li></li></ul>
+<example language="C#">
+//e.g. Postgis
+this.TransformDecoratorFormat = &quot;ST_Transform({0}, {1})&quot;;
+</example>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_Writer.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.Writer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L343">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_Writer_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.Writer*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_Writer" data-uid="SharpMap.Data.Providers.SpatialDbUtility.Writer">Writer</h4>
+  <div class="markdown level1 summary"><p>Writer for geometry</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IBinaryGeometryWriter Writer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.IO.IBinaryGeometryWriter</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateAs_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateAs(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L180">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateAs_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateAs*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateAs_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateAs(System.String)">DecorateAs(String)</h4>
+  <div class="markdown level1 summary"><p>Renames an already decorated entity using the SQL AS statement</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateAs(string decoratedEntity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">decoratedEntity</span></td>
+        <td><p>The decorated entity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated entity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateAs_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateAs(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L191">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateAs_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateAs*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateAs_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateAs(System.String,System.String)">DecorateAs(String, String)</h4>
+  <div class="markdown level1 summary"><p>Renames an already decorated entity using the SQL AS statement</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateAs(string decoratedEntity, string asSuffix)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">decoratedEntity</span></td>
+        <td><p>The decorated entity</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">asSuffix</span></td>
+        <td><p>The suffix</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated entity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateColumn_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateColumn(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L155">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateColumn_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateColumn*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateColumn_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateColumn(System.String)">DecorateColumn(String)</h4>
+  <div class="markdown level1 summary"><p>Decorates a column name, optionally with a prefix</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateColumn(string columnName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">columnName</span></td>
+        <td><p>The column name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated column name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateColumn_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateColumn(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L166">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateColumn_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateColumn*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateColumn_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateColumn(System.String,System.String)">DecorateColumn(String, String)</h4>
+  <div class="markdown level1 summary"><p>Decorates a column name, optionally with a prefix</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateColumn(string columnName, string prefix)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">columnName</span></td>
+        <td><p>The column name</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">prefix</span></td>
+        <td><p>The (optional) prefix</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated column name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateEntity_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateEntity(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L83">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateEntity_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateEntity*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateEntity_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateEntity(System.String)">DecorateEntity(String)</h4>
+  <div class="markdown level1 summary"><p>Function to decorate a database entity</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateEntity(string entity)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>The name of the entity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated database entity</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateEntityConstraintWithParameter_System_Data_Common_DbCommand_SharpMap_Data_Providers_SharpMapFeatureColumn_System_String_System_Object___.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateEntityConstraintWithParameter(System.Data.Common.DbCommand%2CSharpMap.Data.Providers.SharpMapFeatureColumn%2CSystem.String%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L96">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateEntityConstraintWithParameter_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateEntityConstraintWithParameter*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateEntityConstraintWithParameter_System_Data_Common_DbCommand_SharpMap_Data_Providers_SharpMapFeatureColumn_System_String_System_Object___" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateEntityConstraintWithParameter(System.Data.Common.DbCommand,SharpMap.Data.Providers.SharpMapFeatureColumn,System.String,System.Object[])">DecorateEntityConstraintWithParameter(DbCommand, SharpMapFeatureColumn, String, Object[])</h4>
+  <div class="markdown level1 summary"><p>Decorates a constraint with parameters</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateEntityConstraintWithParameter(DbCommand command, SharpMapFeatureColumn entity, string constraint, params object[] parameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.common.dbcommand">DbCommand</a></td>
+        <td><span class="parametername">command</span></td>
+        <td><p>The command object to add the parameters to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.Providers.SharpMapFeatureColumn.html">SharpMapFeatureColumn</a></td>
+        <td><span class="parametername">entity</span></td>
+        <td><p>The entity</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">constraint</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>[]</td>
+        <td><span class="parametername">parameters</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateTable_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateTable(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L123">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateTable_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateTable*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateTable_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateTable(System.String,System.String)">DecorateTable(String, String)</h4>
+  <div class="markdown level1 summary"><p>Decorates the table name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateTable(string schema, string table)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">schema</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated table name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_DecorateTable_System_String_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.DecorateTable(System.String%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L132">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_DecorateTable_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateTable*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_DecorateTable_System_String_System_String_System_String_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.DecorateTable(System.String,System.String,System.String)">DecorateTable(String, String, String)</h4>
+  <div class="markdown level1 summary"><p>Decorates the table name</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string DecorateTable(string schema, string table, string asSuffix)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">schema</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">table</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">asSuffix</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The decorated table name</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility_ToDbType_System_Object_System_Data_DbType_.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility.ToDbType(System.Object%2CSystem.Data.DbType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L265">View Source</a>
+  </span>
+  <a id="SharpMap_Data_Providers_SpatialDbUtility_ToDbType_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ToDbType*"></a>
+  <h4 id="SharpMap_Data_Providers_SpatialDbUtility_ToDbType_System_Object_System_Data_DbType_" data-uid="SharpMap.Data.Providers.SpatialDbUtility.ToDbType(System.Object,System.Data.DbType)">ToDbType(Object, DbType)</h4>
+  <div class="markdown level1 summary"><p>Converts <code data-dev-comment-type="paramref" class="paramref">obj</code> to the type required for the database</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual object ToDbType(object obj, DbType type)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>The object</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.data.dbtype">DbType</a></td>
+        <td><span class="parametername">type</span></td>
+        <td><p>The required type</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><p>The converted <code data-dev-comment-type="paramref" class="paramref">obj</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Data_Providers_SpatialDbUtility.md&amp;value=---%0Auid%3A%20SharpMap.Data.Providers.SpatialDbUtility%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Data/Providers/Database/SpatialDbUtility.cs/#L13" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

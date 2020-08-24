@@ -1,0 +1,592 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PolygonSymbolizer
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PolygonSymbolizer
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer">
+  
+  
+  <h1 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer" class="text-break">Class PolygonSymbolizer
+  </h1>
+  <div class="markdown level0 summary"><p>Base class for all geometry symbolizers</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html">BaseSymbolizer</a></div>
+    <div class="level3"><span class="xref">PolygonSymbolizer</span></div>
+      <div class="level4"><a class="xref" href="SharpMap.Rendering.Symbolizer.BasicPolygonSymbolizer.html">BasicPolygonSymbolizer</a></div>
+      <div class="level4"><a class="xref" href="SharpMap.Rendering.Symbolizer.PolygonSymbolizerUsingLineSymbolizer.html">PolygonSymbolizerUsingLineSymbolizer</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.IPolygonSymbolizer.html">IPolygonSymbolizer</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer-1.html">ISymbolizer</a>&lt;<span class="xref">GeoAPI.Geometries.IPolygonal</span>&gt;</div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer.html">ISymbolizer</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_SmoothingMode">BaseSymbolizer.SmoothingMode</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_PixelOffsetMode">BaseSymbolizer.PixelOffsetMode</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_Clone">BaseSymbolizer.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_Symbolize_System_Drawing_Graphics_SharpMap_MapViewport_">BaseSymbolizer.Symbolize(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Symbolizer.html">SharpMap.Rendering.Symbolizer</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class PolygonSymbolizer : BaseSymbolizer, IDisposableEx, IDisposable, IPolygonSymbolizer, ISymbolizer&lt;IPolygonal&gt;, ISymbolizer, ICloneable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L22">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer__ctor_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer__ctor" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.#ctor">PolygonSymbolizer()</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of his class. <a class="xref" href="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.html#SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Fill">Fill</a> is set to a <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.solidbrush">SolidBrush</a> with a random <span class="xref">SharpMap.Drawing.KnownColor</span>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected PolygonSymbolizer()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Fill.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Fill%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L46">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Fill_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Fill*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Fill" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Fill">Fill</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the brush to fill the polygon</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush Fill { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_RenderOrigin.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.RenderOrigin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L51">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_RenderOrigin_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.RenderOrigin*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_RenderOrigin" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.RenderOrigin">RenderOrigin</h4>
+  <div class="markdown level1 summary"><p>The render origin for brushes (Texture, Gradient, ...)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Point RenderOrigin { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_UseClipping.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.UseClipping%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L56">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_UseClipping_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.UseClipping*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_UseClipping" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.UseClipping">UseClipping</h4>
+  <div class="markdown level1 summary"><p>Gets or sets if polygons should be clipped or not.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool UseClipping { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Begin_System_Drawing_Graphics_SharpMap_MapViewport_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Begin(System.Drawing.Graphics%2CSharpMap.MapViewport%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L95">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Begin_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Begin*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Begin_System_Drawing_Graphics_SharpMap_MapViewport_System_Int32_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Begin(System.Drawing.Graphics,SharpMap.MapViewport,System.Int32)">Begin(Graphics, MapViewport, Int32)</h4>
+  <div class="markdown level1 summary"><p>Method to perform preparatory work for symbilizing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Begin(Graphics g, MapViewport map, int aproximateNumberOfGeometries)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object to symbolize upon</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">aproximateNumberOfGeometries</span></td>
+        <td><p>An approximate number of geometries to symbolize</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_Begin_System_Drawing_Graphics_SharpMap_MapViewport_System_Int32_">BaseSymbolizer.Begin(Graphics, MapViewport, Int32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_End_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.End(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L107">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_End_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.End*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_End_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.End(System.Drawing.Graphics,SharpMap.MapViewport)">End(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"><p>Method to restore the state of the graphics object and do cleanup work.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void End(Graphics g, MapViewport map)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object to symbolize upon</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_End_System_Drawing_Graphics_SharpMap_MapViewport_">BaseSymbolizer.End(Graphics, MapViewport)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_OnRenderInternal_SharpMap_MapViewport_GeoAPI_Geometries_IPolygon_System_Drawing_Graphics_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.OnRenderInternal(SharpMap.MapViewport%2CGeoAPI.Geometries.IPolygon%2CSystem.Drawing.Graphics)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L85">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_OnRenderInternal_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.OnRenderInternal*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_OnRenderInternal_SharpMap_MapViewport_GeoAPI_Geometries_IPolygon_System_Drawing_Graphics_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.OnRenderInternal(SharpMap.MapViewport,GeoAPI.Geometries.IPolygon,System.Drawing.Graphics)">OnRenderInternal(MapViewport, IPolygon, Graphics)</h4>
+  <div class="markdown level1 summary"><p>Method to perform actual rendering</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon to render</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object to use</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_PolygonToGraphicsPath_SharpMap_Map_GeoAPI_Geometries_IPolygon_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.PolygonToGraphicsPath(SharpMap.Map%2CGeoAPI.Geometries.IPolygon)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L119">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_PolygonToGraphicsPath_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.PolygonToGraphicsPath*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_PolygonToGraphicsPath_SharpMap_Map_GeoAPI_Geometries_IPolygon_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.PolygonToGraphicsPath(SharpMap.Map,GeoAPI.Geometries.IPolygon)">PolygonToGraphicsPath(Map, IPolygon)</h4>
+  <div class="markdown level1 summary"><p>Conversion function for a polygon to a graphics path</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected static GraphicsPath PolygonToGraphicsPath(Map map, IPolygon polygon)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Map.html">Map</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygon</span></td>
+        <td><span class="parametername">polygon</span></td>
+        <td><p>The polygon</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td><p>A graphics path</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_ReleaseManagedResources.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.ReleaseManagedResources%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L30">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_ReleaseManagedResources_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.ReleaseManagedResources*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_ReleaseManagedResources" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.ReleaseManagedResources">ReleaseManagedResources()</h4>
+  <div class="markdown level1 summary"><p>Releases managed resources</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void ReleaseManagedResources()</code></pre>
+  </div>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseManagedResources">DisposableObject.ReleaseManagedResources()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Render_SharpMap_MapViewport_GeoAPI_Geometries_IPolygonal_System_Drawing_Graphics_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Render(SharpMap.MapViewport%2CGeoAPI.Geometries.IPolygonal%2CSystem.Drawing.Graphics)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L64">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Render_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Render*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PolygonSymbolizer_Render_SharpMap_MapViewport_GeoAPI_Geometries_IPolygonal_System_Drawing_Graphics_" data-uid="SharpMap.Rendering.Symbolizer.PolygonSymbolizer.Render(SharpMap.MapViewport,GeoAPI.Geometries.IPolygonal,System.Drawing.Graphics)">Render(MapViewport, IPolygonal, Graphics)</h4>
+  <div class="markdown level1 summary"><p>Function to render the geometry</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Render(MapViewport map, IPolygonal geometry, Graphics graphics)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map object, mainly needed for transformation purposes.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPolygonal</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td><p>The geometry to symbolize.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The graphics object to use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.IPolygonSymbolizer.html">IPolygonSymbolizer</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer-1.html">ISymbolizer&lt;TGeometry&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer.html">ISymbolizer</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">System.ICloneable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PolygonSymbolizer.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PolygonSymbolizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PolygonSymbolizer.cs/#L11" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

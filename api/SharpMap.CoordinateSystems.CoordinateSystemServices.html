@@ -1,0 +1,954 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class CoordinateSystemServices
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class CoordinateSystemServices
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices">
+  
+  
+  <h1 id="SharpMap_CoordinateSystems_CoordinateSystemServices" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices" class="text-break">Class CoordinateSystemServices
+  </h1>
+  <div class="markdown level0 summary"><p>A coordinate system services class</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">CoordinateSystemServices</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">GeoAPI.ICoordinateSystemServices</span></div>
+    <div><a class="xref" href="GeoAPI.ICoordinateSystemRepository.html">ICoordinateSystemRepository</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>, <span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span>&gt;&gt;</div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">IEnumerable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.CoordinateSystems.html">SharpMap.CoordinateSystems</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_CoordinateSystems_CoordinateSystemServices_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class CoordinateSystemServices : ICoordinateSystemServices, ICoordinateSystemRepository, IEnumerable&lt;KeyValuePair&lt;int, ICoordinateSystem&gt;&gt;, IEnumerable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices__ctor_GeoAPI_CoordinateSystems_ICoordinateSystemFactory_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformationFactory_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.%23ctor(GeoAPI.CoordinateSystems.ICoordinateSystemFactory%2CGeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L78">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices__ctor_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.#ctor*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices__ctor_GeoAPI_CoordinateSystems_ICoordinateSystemFactory_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformationFactory_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.#ctor(GeoAPI.CoordinateSystems.ICoordinateSystemFactory,GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory)">CoordinateSystemServices(ICoordinateSystemFactory, ICoordinateTransformationFactory)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided <code data-dev-comment-type="paramref" class="paramref">coordinateSystemFactory</code>,
+<code data-dev-comment-type="paramref" class="paramref">coordinateTransformationFactory</code> and enumeration of</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CoordinateSystemServices(ICoordinateSystemFactory coordinateSystemFactory, ICoordinateTransformationFactory coordinateTransformationFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystemFactory</span></td>
+        <td><span class="parametername">coordinateSystemFactory</span></td>
+        <td><p>The factory to use for creating a coordinate system.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory</span></td>
+        <td><span class="parametername">coordinateTransformationFactory</span></td>
+        <td><p>The factory to use for creating a coordinate transformation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices__ctor_GeoAPI_CoordinateSystems_ICoordinateSystemFactory_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformationFactory_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_Int32_System_String___.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.%23ctor(GeoAPI.CoordinateSystems.ICoordinateSystemFactory%2CGeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory%2CSystem.Collections.Generic.IEnumerable%7BSystem.Collections.Generic.KeyValuePair%7BSystem.Int32%2CSystem.String%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L101">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices__ctor_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.#ctor*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices__ctor_GeoAPI_CoordinateSystems_ICoordinateSystemFactory_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformationFactory_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_Int32_System_String___" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.#ctor(GeoAPI.CoordinateSystems.ICoordinateSystemFactory,GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory,System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.Int32,System.String}})">CoordinateSystemServices(ICoordinateSystemFactory, ICoordinateTransformationFactory, IEnumerable&lt;KeyValuePair&lt;Int32, String&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class using the provided <code data-dev-comment-type="paramref" class="paramref">coordinateSystemFactory</code>,
+<code data-dev-comment-type="paramref" class="paramref">coordinateTransformationFactory</code> and enumeration of</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CoordinateSystemServices(ICoordinateSystemFactory coordinateSystemFactory, ICoordinateTransformationFactory coordinateTransformationFactory, IEnumerable&lt;KeyValuePair&lt;int, string&gt;&gt; enumerable)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystemFactory</span></td>
+        <td><span class="parametername">coordinateSystemFactory</span></td>
+        <td><p>The factory to use for creating a coordinate system.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory</span></td>
+        <td><span class="parametername">coordinateTransformationFactory</span></td>
+        <td><p>The factory to use for creating a coordinate transformation.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;&gt;</td>
+        <td><span class="parametername">enumerable</span></td>
+        <td><p>An enumeration if spatial reference ids and coordinate system definition strings pairs</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_Count.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.Count%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L303">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_Count_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.Count*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_Count" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.Count">Count</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating the number of unique coordinate systems in the repository</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int Count { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_IsReadOnly.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.IsReadOnly%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L150">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_IsReadOnly_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.IsReadOnly*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_IsReadOnly" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.IsReadOnly">IsReadOnly</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating that this coordinate system repository is readonly</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool IsReadOnly { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_AddCoordinateSystem_System_Int32_GeoAPI_CoordinateSystems_ICoordinateSystem_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.AddCoordinateSystem(System.Int32%2CGeoAPI.CoordinateSystems.ICoordinateSystem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L325">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_AddCoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.AddCoordinateSystem*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_AddCoordinateSystem_System_Int32_GeoAPI_CoordinateSystems_ICoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.AddCoordinateSystem(System.Int32,GeoAPI.CoordinateSystems.ICoordinateSystem)">AddCoordinateSystem(Int32, ICoordinateSystem)</h4>
+  <div class="markdown level1 summary"><p>Method to add <code data-dev-comment-type="paramref" class="paramref">coordinateSystem</code> to the service and register it with the <code data-dev-comment-type="paramref" class="paramref">srid</code> value.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void AddCoordinateSystem(int srid, ICoordinateSystem coordinateSystem)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The identifier for the <code data-dev-comment-type="paramref" class="paramref">coordinateSystem</code> in the store.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td><span class="parametername">coordinateSystem</span></td>
+        <td><p>The coordinate system.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_AddCoordinateSystems_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_Int32_System_String___.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.AddCoordinateSystems(System.Collections.Generic.IEnumerable%7BSystem.Collections.Generic.KeyValuePair%7BSystem.Int32%2CSystem.String%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L312">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_AddCoordinateSystems_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.AddCoordinateSystems*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_AddCoordinateSystems_System_Collections_Generic_IEnumerable_System_Collections_Generic_KeyValuePair_System_Int32_System_String___" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.AddCoordinateSystems(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{System.Int32,System.String}})">AddCoordinateSystems(IEnumerable&lt;KeyValuePair&lt;Int32, String&gt;&gt;)</h4>
+  <div class="markdown level1 summary"><p>Method to add an enumeration of spatial reference id and coordinate system definition pairs to the repository.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void AddCoordinateSystems(IEnumerable&lt;KeyValuePair&lt;int, string&gt;&gt; coordinateSystems)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;&gt;</td>
+        <td><span class="parametername">coordinateSystems</span></td>
+        <td><p>An enumeration of spatial reference id and coordinate system definition pairs.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_Clear.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.Clear%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L291">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_Clear_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.Clear*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_Clear" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.Clear">Clear()</h4>
+  <div class="markdown level1 summary"><p>Method to remove all coordinate systems from the service</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual void Clear()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_CreateCoordinateSystem_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.CreateCoordinateSystem(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L160">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateCoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.CreateCoordinateSystem*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateCoordinateSystem_System_String_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.CreateCoordinateSystem(System.String)">CreateCoordinateSystem(String)</h4>
+  <div class="markdown level1 summary"><p>Method to create a coordinate system based on the <code data-dev-comment-type="paramref" class="paramref">wellKnownText</code> coordinate system definition.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICoordinateSystem CreateCoordinateSystem(string wellKnownText)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">wellKnownText</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td><p>A coordinate system, <returns>null</returns> if no coordinate system could be created.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_GeoAPI_CoordinateSystems_ICoordinateSystem_GeoAPI_CoordinateSystems_ICoordinateSystem_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.CreateTransformation(GeoAPI.CoordinateSystems.ICoordinateSystem%2CGeoAPI.CoordinateSystems.ICoordinateSystem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L271">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.CreateTransformation*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_GeoAPI_CoordinateSystems_ICoordinateSystem_GeoAPI_CoordinateSystems_ICoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.CreateTransformation(GeoAPI.CoordinateSystems.ICoordinateSystem,GeoAPI.CoordinateSystems.ICoordinateSystem)">CreateTransformation(ICoordinateSystem, ICoordinateSystem)</h4>
+  <div class="markdown level1 summary"><p>Method to create a coordinate tranformation between two spatial reference systems</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICoordinateTransformation CreateTransformation(ICoordinateSystem source, ICoordinateSystem target)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td><span class="parametername">source</span></td>
+        <td><p>The source spatial reference system.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The target spatial reference system.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation</span></td>
+        <td><p>A coordinate transformation,
+<returns>
+null
+</returns>
+if no transformation could be created.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_System_Int32_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.CreateTransformation(System.Int32%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L253">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.CreateTransformation*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_System_Int32_System_Int32_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.CreateTransformation(System.Int32,System.Int32)">CreateTransformation(Int32, Int32)</h4>
+  <div class="markdown level1 summary"><p>Method to create a coordinate tranformation between two spatial reference systems, defined by their identifiers</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICoordinateTransformation CreateTransformation(int sourceSrid, int targetSrid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">sourceSrid</span></td>
+        <td><p>The identifier for the source spatial reference system.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">targetSrid</span></td>
+        <td><p>The identifier for the target spatial reference system.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation</span></td>
+        <td><p>A coordinate transformation,
+<returns>
+null
+</returns>
+if no transformation could be created.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_CoordinateSystems_CoordinateSystemServices_CreateTransformation_System_Int32_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>This is a convenience function for <span class="xref">GeoAPI.ICoordinateSystemServices.CreateTransformation(GeoAPI.CoordinateSystems.ICoordinateSystem, GeoAPI.CoordinateSystems.ICoordinateSystem)</span>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_FromSpatialRefSys_GeoAPI_CoordinateSystems_ICoordinateSystemFactory_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformationFactory_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.FromSpatialRefSys(GeoAPI.CoordinateSystems.ICoordinateSystemFactory%2CGeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L353">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_FromSpatialRefSys_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.FromSpatialRefSys*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_FromSpatialRefSys_GeoAPI_CoordinateSystems_ICoordinateSystemFactory_GeoAPI_CoordinateSystems_Transformations_ICoordinateTransformationFactory_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.FromSpatialRefSys(GeoAPI.CoordinateSystems.ICoordinateSystemFactory,GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory)">FromSpatialRefSys(ICoordinateSystemFactory, ICoordinateTransformationFactory)</h4>
+  <div class="markdown level1 summary"><p>Creates a CoordinateSystemServices built with all the values coming from the SpatialRefSys.xml</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static ICoordinateSystemServices FromSpatialRefSys(ICoordinateSystemFactory coordinateSystemFactory, ICoordinateTransformationFactory coordinateTransformationFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystemFactory</span></td>
+        <td><span class="parametername">coordinateSystemFactory</span></td>
+        <td><p>A coordinate system factory</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory</span></td>
+        <td><span class="parametername">coordinateTransformationFactory</span></td>
+        <td><p>A coordinate transformation factory</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.ICoordinateSystemServices</span></td>
+        <td><p>A coordinate system services instance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="exceptions">Exceptions</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Condition</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.argumentnullexception">ArgumentNullException</a></td>
+        <td><p>Thrown, if either <code data-dev-comment-type="paramref" class="paramref">coordinateSystemFactory</code> or <code data-dev-comment-type="paramref" class="paramref">coordinateTransformationFactory</code> is null.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_GetCoordinateSystem_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.GetCoordinateSystem(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L200">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetCoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetCoordinateSystem*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetCoordinateSystem_System_Int32_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetCoordinateSystem(System.Int32)">GetCoordinateSystem(Int32)</h4>
+  <div class="markdown level1 summary"><p>Returns the coordinate system by <code data-dev-comment-type="paramref" class="paramref">srid</code> identifier</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual ICoordinateSystem GetCoordinateSystem(int srid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The initialization for the coordinate system</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td><p>The coordinate system.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_GetCoordinateSystem_System_String_System_Int64_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.GetCoordinateSystem(System.String%2CSystem.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L213">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetCoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetCoordinateSystem*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetCoordinateSystem_System_String_System_Int64_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetCoordinateSystem(System.String,System.Int64)">GetCoordinateSystem(String, Int64)</h4>
+  <div class="markdown level1 summary"><p>Returns the coordinate system by <code data-dev-comment-type="paramref" class="paramref">authority</code> and <code data-dev-comment-type="paramref" class="paramref">code</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual ICoordinateSystem GetCoordinateSystem(string authority, long code)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">authority</span></td>
+        <td><p>The authority for the coordinate system</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">code</span></td>
+        <td><p>The code assigned to the coordinate system by <code data-dev-comment-type="paramref" class="paramref">authority</code>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span></td>
+        <td><p>The coordinate system.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_GetEnumerator.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L283">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetEnumerator_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetEnumerator*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetEnumerator" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetEnumerator">GetEnumerator()</h4>
+  <div class="markdown level1 summary"><p>Returns an enumerator that iterates through the collection.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IEnumerator&lt;KeyValuePair&lt;int, ICoordinateSystem&gt;&gt; GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1">IEnumerator</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.keyvaluepair-2">KeyValuePair</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>, <span class="xref">GeoAPI.CoordinateSystems.ICoordinateSystem</span>&gt;&gt;</td>
+        <td><p>A <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerator-1">IEnumerator&lt;T&gt;</a> that can be used to iterate through the collection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_GetSRID_System_String_System_Int64_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.GetSRID(System.String%2CSystem.Int64)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L229">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetSRID_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetSRID*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_GetSRID_System_String_System_Int64_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.GetSRID(System.String,System.Int64)">GetSRID(String, Int64)</h4>
+  <div class="markdown level1 summary"><p>Method to get the identifier, by which this coordinate system can be accessed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual int? GetSRID(string authority, long authorityCode)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">authority</span></td>
+        <td><p>The authority name</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td><span class="parametername">authorityCode</span></td>
+        <td><p>The code assigned by <code data-dev-comment-type="paramref" class="paramref">authority</code></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a>&gt;</td>
+        <td><p>The identifier or
+<returns>
+null
+</returns></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_RemoveCoordinateSystem_System_Int32_.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.RemoveCoordinateSystem(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L178">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_RemoveCoordinateSystem_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.RemoveCoordinateSystem*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_RemoveCoordinateSystem_System_Int32_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.RemoveCoordinateSystem(System.Int32)">RemoveCoordinateSystem(Int32)</h4>
+  <div class="markdown level1 summary"><p>Method to remove a coordinate system form the service by its <code data-dev-comment-type="paramref" class="paramref">srid</code> identifier</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual bool RemoveCoordinateSystem(int srid)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><span class="parametername">srid</span></td>
+        <td><p>The identifier of the coordinate system to remove</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p><returns>true</returns> if the coordinate system was removed successfully, otherwise <returns>false</returns></p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices_System_Collections_IEnumerable_GetEnumerator.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices.System%23Collections%23IEnumerable%23GetEnumerator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L112">View Source</a>
+  </span>
+  <a id="SharpMap_CoordinateSystems_CoordinateSystemServices_System_Collections_IEnumerable_GetEnumerator_" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.System#Collections#IEnumerable#GetEnumerator*"></a>
+  <h4 id="SharpMap_CoordinateSystems_CoordinateSystemServices_System_Collections_IEnumerable_GetEnumerator" data-uid="SharpMap.CoordinateSystems.CoordinateSystemServices.System#Collections#IEnumerable#GetEnumerator">IEnumerable.GetEnumerator()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerator IEnumerable.GetEnumerator()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerator">IEnumerator</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">GeoAPI.ICoordinateSystemServices</span>
+  </div>
+  <div>
+      <a class="xref" href="GeoAPI.ICoordinateSystemRepository.html">ICoordinateSystemRepository</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">System.Collections.Generic.IEnumerable&lt;T&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.ienumerable">System.Collections.IEnumerable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_CoordinateSystems_CoordinateSystemServices.md&amp;value=---%0Auid%3A%20SharpMap.CoordinateSystems.CoordinateSystemServices%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/CoordinateSystems/CoordinateSystemServices.cs/#L15" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

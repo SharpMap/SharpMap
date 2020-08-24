@@ -1,0 +1,538 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class XPathQueryManager_CompiledExpressionsDecorator
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class XPathQueryManager_CompiledExpressionsDecorator
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator">
+  
+  
+  <h1 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator" class="text-break">Class XPathQueryManager_CompiledExpressionsDecorator
+  </h1>
+  <div class="markdown level0 summary"><p>This class is a decorator for classes implementing <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a>.
+It stores compiled XPath expressions for re-use.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html">XPathQueryManager_Decorator</a></div>
+    <div class="level2"><span class="xref">XPathQueryManager_CompiledExpressionsDecorator</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator__XPathQueryManager">XPathQueryManager_Decorator._XPathQueryManager</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_AddNamespace_System_String_System_String_">XPathQueryManager_Decorator.AddNamespace(String, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetIterator_System_Xml_XPath_XPathExpression_">XPathQueryManager_Decorator.GetIterator(XPathExpression)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetIterator_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___">XPathQueryManager_Decorator.GetIterator(XPathExpression, DictionaryEntry[])</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetValueFromNode_System_Xml_XPath_XPathExpression_">XPathQueryManager_Decorator.GetValueFromNode(XPathExpression)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetValueFromNode_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___">XPathQueryManager_Decorator.GetValueFromNode(XPathExpression, DictionaryEntry[])</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetValuesFromNodes_System_Xml_XPath_XPathExpression_">XPathQueryManager_Decorator.GetValuesFromNodes(XPathExpression)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetValuesFromNodes_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___">XPathQueryManager_Decorator.GetValuesFromNodes(XPathExpression, DictionaryEntry[])</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_ResetNamespaces">XPathQueryManager_Decorator.ResetNamespaces()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_ResetNavigator">XPathQueryManager_Decorator.ResetNavigator()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_SetDocumentToParse_System_IO_Stream_">XPathQueryManager_Decorator.SetDocumentToParse(Stream)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_SetDocumentToParse_System_Byte___">XPathQueryManager_Decorator.SetDocumentToParse(Byte[])</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_SetDocumentToParse_SharpMap_Utilities_Wfs_HttpClientUtil_">XPathQueryManager_Decorator.SetDocumentToParse(HttpClientUtil)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_SetDocumentToParse_System_String_">XPathQueryManager_Decorator.SetDocumentToParse(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Utilities.Wfs.html">SharpMap.Utilities.Wfs</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class XPathQueryManager_CompiledExpressionsDecorator : XPathQueryManager_Decorator, IXPathQueryManager</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator__ctor_SharpMap_Utilities_Wfs_IXPathQueryManager_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.%23ctor(SharpMap.Utilities.Wfs.IXPathQueryManager)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L33">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator__ctor_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.#ctor*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator__ctor_SharpMap_Utilities_Wfs_IXPathQueryManager_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.#ctor(SharpMap.Utilities.Wfs.IXPathQueryManager)">XPathQueryManager_CompiledExpressionsDecorator(IXPathQueryManager)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.html">XPathQueryManager_CompiledExpressionsDecorator</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public XPathQueryManager_CompiledExpressionsDecorator(IXPathQueryManager xPathQueryManager)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td><span class="parametername">xPathQueryManager</span></td>
+        <td><p>An instance implementing <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a> to operate on</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L66">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_Clone_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.Clone*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_Clone" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.Clone">Clone()</h4>
+  <div class="markdown level1 summary"><p>This method returns a clone of the current instance.
+The cloned instance operates on the same (read-only) XPathDocument instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IXPathQueryManager Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_Clone">XPathQueryManager_Decorator.Clone()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_Compile_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.Compile(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L48">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_Compile_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.Compile*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_Compile_System_String_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.Compile(System.String)">Compile(String)</h4>
+  <div class="markdown level1 summary"><p>This method compiles an XPath string, if not already saved.<br>
+Otherwise it returns the available XPath compilation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override XPathExpression Compile(string xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The XPath string</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><p>A compiled XPath expression</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_Compile_System_String_">XPathQueryManager_Decorator.Compile(String)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetContextOfNextNode.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetContextOfNextNode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L102">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetContextOfNextNode_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetContextOfNextNode*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetContextOfNextNode" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetContextOfNextNode">GetContextOfNextNode()</h4>
+  <div class="markdown level1 summary"><p>This method moves the current instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.html">XPathQueryManager_CompiledExpressionsDecorator</a>
+to the context of the next node a previously handed over XPath expression addresses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool GetContextOfNextNode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetContextOfNextNode">XPathQueryManager_Decorator.GetContextOfNextNode()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetContextOfNode_System_UInt32_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetContextOfNode(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L112">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetContextOfNode_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetContextOfNode*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetContextOfNode_System_UInt32_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetContextOfNode(System.UInt32)">GetContextOfNode(UInt32)</h4>
+  <div class="markdown level1 summary"><p>This method moves the current instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.html">XPathQueryManager_CompiledExpressionsDecorator</a>
+to the context of node[index] of current position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool GetContextOfNode(uint index)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.uint32">UInt32</a></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>The index of the node to search</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetContextOfNode_System_UInt32_">XPathQueryManager_Decorator.GetContextOfNode(UInt32)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L76">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetXPathQueryManagerInContext_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetXPathQueryManagerInContext*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression)">GetXPathQueryManagerInContext(XPathExpression)</h4>
+  <div class="markdown level1 summary"><p>This method returns an instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.html">XPathQueryManager_CompiledExpressionsDecorator</a>
+in the context of the first node the XPath expression addresses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The compiled XPath expression</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_">XPathQueryManager_Decorator.GetXPathQueryManagerInContext(XPathExpression)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression%2CSystem.Collections.DictionaryEntry%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L89">View Source</a>
+  </span>
+  <a id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetXPathQueryManagerInContext_" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetXPathQueryManagerInContext*"></a>
+  <h4 id="SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___" data-uid="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.GetXPathQueryManagerInContext(System.Xml.XPath.XPathExpression,System.Collections.DictionaryEntry[])">GetXPathQueryManagerInContext(XPathExpression, DictionaryEntry[])</h4>
+  <div class="markdown level1 summary"><p>This method returns an instance of <a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator.html">XPathQueryManager_CompiledExpressionsDecorator</a>
+in the context of the first node the XPath expression addresses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override IXPathQueryManager GetXPathQueryManagerInContext(XPathExpression xPath, DictionaryEntry[] queryParameters)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.xml.xpath.xpathexpression">XPathExpression</a></td>
+        <td><span class="parametername">xPath</span></td>
+        <td><p>The compiled XPath expression</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.dictionaryentry">DictionaryEntry</a>[]</td>
+        <td><span class="parametername">queryParameters</span></td>
+        <td><p>Parameters for the compiled XPath expression</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Utilities.Wfs.XPathQueryManager_Decorator.html#SharpMap_Utilities_Wfs_XPathQueryManager_Decorator_GetXPathQueryManagerInContext_System_Xml_XPath_XPathExpression_System_Collections_DictionaryEntry___">XPathQueryManager_Decorator.GetXPathQueryManagerInContext(XPathExpression, DictionaryEntry[])</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Utilities.Wfs.IXPathQueryManager.html">IXPathQueryManager</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Utilities_Wfs_XPathQueryManager_CompiledExpressionsDecorator.md&amp;value=---%0Auid%3A%20SharpMap.Utilities.Wfs.XPathQueryManager_CompiledExpressionsDecorator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Utilities/Wfs/XPathQueryManager_CompiledExpressionsDecorator.cs/#L15" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

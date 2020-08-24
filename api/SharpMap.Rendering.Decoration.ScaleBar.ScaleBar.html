@@ -1,0 +1,989 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ScaleBar
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ScaleBar
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar">
+  
+  
+  <h1 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar" class="text-break">Class ScaleBar
+  </h1>
+  <div class="markdown level0 summary"><p>Scale Bar map decoration.</p>
+<p>Ensure that appropriate <a class="xref" href="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.html#SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MapUnit">MapUnit</a> is set</p>
+Also ensure Map.SRID is set appropriately to enable Web Mercator latitude adjustment.
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html">MapDecoration</a></div>
+    <div class="level2"><span class="xref">ScaleBar</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Rendering.Decoration.IMapDecoration.html">IMapDecoration</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration__cachedSize">MapDecoration._cachedSize</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration__boundingRectangle">MapDecoration._boundingRectangle</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Enabled">MapDecoration.Enabled</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Anchor">MapDecoration.Anchor</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Location">MapDecoration.Location</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Padding">MapDecoration.Padding</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OpacityColor_System_Drawing_Color_">MapDecoration.OpacityColor(Color)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_BackgroundColor">MapDecoration.BackgroundColor</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Opacity">MapDecoration.Opacity</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_BorderMargin">MapDecoration.BorderMargin</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_BorderColor">MapDecoration.BorderColor</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_BorderWidth">MapDecoration.BorderWidth</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_RoundedEdges">MapDecoration.RoundedEdges</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_InternalSize_System_Drawing_Graphics_SharpMap_Map_">MapDecoration.InternalSize(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_MapViewport_">MapDecoration.Render(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_Render_System_Drawing_Graphics_SharpMap_Map_">MapDecoration.Render(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OnRender_System_Drawing_Graphics_SharpMap_Map_">MapDecoration.OnRender(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OnRendering_System_Drawing_Graphics_SharpMap_MapViewport_">MapDecoration.OnRendering(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OnRendering_System_Drawing_Graphics_SharpMap_Map_">MapDecoration.OnRendering(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OnRendered_System_Drawing_Graphics_SharpMap_MapViewport_">MapDecoration.OnRendered(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OnRendered_System_Drawing_Graphics_SharpMap_Map_">MapDecoration.OnRendered(Graphics, Map)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Decoration.ScaleBar.html">SharpMap.Rendering.Decoration.ScaleBar</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class ScaleBar : MapDecoration, IMapDecoration</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L73">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar__ctor_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar__ctor" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.#ctor">ScaleBar()</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class. Special handling applies when Map.SRID=3857 (WebMercator)
+to adjust ScaleBar interval and text according to mid-latitude of current view.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ScaleBar()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarColor1.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarColor1%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L753">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarColor1_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarColor1*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarColor1" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarColor1">BarColor1</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the first bar color</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color BarColor1 { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarColor2.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarColor2%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L766">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarColor2_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarColor2*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarColor2" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarColor2">BarColor2</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the second bar color</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color BarColor2 { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarOutline.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarOutline%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L948">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarOutline_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarOutline*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarOutline" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarOutline">BarOutline</h4>
+  <div class="markdown level1 summary"><p>Bar outline</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool BarOutline { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarOutlineColor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarOutlineColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L961">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarOutlineColor_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarOutlineColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarOutlineColor" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarOutlineColor">BarOutlineColor</h4>
+  <div class="markdown level1 summary"><p>Bar outline color</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color BarOutlineColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1080">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarStyle_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarStyle*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarStyle" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarStyle">BarStyle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the bar style</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ScaleBarStyle BarStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.ScaleBar.ScaleBarStyle.html">ScaleBarStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnit.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L824">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnit_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnit*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnit" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnit">BarUnit</h4>
+  <div class="markdown level1 summary"><p>Bar unit</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use BarUnitLargeScale and BarUnitSmallScale&quot;)]
+public int BarUnit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnitLargeScale.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnitLargeScale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L894">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnitLargeScale_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnitLargeScale*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnitLargeScale" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnitLargeScale">BarUnitLargeScale</h4>
+  <div class="markdown level1 summary"><p>Bar Unit for use at large scales (small area) such as ft, m, or yd.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int BarUnitLargeScale { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnitSmallScale.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnitSmallScale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L912">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnitSmallScale_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnitSmallScale*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarUnitSmallScale" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarUnitSmallScale">BarUnitSmallScale</h4>
+  <div class="markdown level1 summary"><p>Bar Unit for use at small scales (large area) such as km, mile, NM, Deg.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int BarUnitSmallScale { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarWidth.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarWidth%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L779">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarWidth_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarWidth*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_BarWidth" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.BarWidth">BarWidth</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the bar width</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int BarWidth { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Dirty.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Dirty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1129">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Dirty_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Dirty*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Dirty" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Dirty">Dirty</h4>
+  <div class="markdown level1 summary"><p>Gets or (private) sets whether the display settings for the scale bar have been changed</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Dirty { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Font.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Font%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L738">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Font_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Font*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Font" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Font">Font</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the font to label the bar</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Font Font { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_ForeColor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.ForeColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L725">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_ForeColor_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.ForeColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_ForeColor" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.ForeColor">ForeColor</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the foreground color, used to render the labeling</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Color ForeColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.color">Color</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MapUnit.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MapUnit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L809">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MapUnit_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MapUnit*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MapUnit" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MapUnit">MapUnit</h4>
+  <div class="markdown level1 summary"><p>World coordinate system unit. You must set this appropriately as it is NOT deduced from Map.SRID.</p>
+<p>Typically meters (1) for projected coordinate systems, or degrees (7) for geographic coordinate systems.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MapUnit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MarginLeft.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MarginLeft%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1093">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MarginLeft_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MarginLeft*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MarginLeft" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MarginLeft">MarginLeft</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the minimum margin on the left of the bar</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MarginLeft { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MarginRight.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MarginRight%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1106">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MarginRight_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MarginRight*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_MarginRight" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.MarginRight">MarginRight</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the minimum margin on the right of the bar</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int MarginRight { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_NumTicks.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.NumTicks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1038">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_NumTicks_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.NumTicks*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_NumTicks" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.NumTicks">NumTicks</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the number of ticks</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int NumTicks { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Scale.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Scale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L974">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Scale_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Scale*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Scale" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Scale">Scale</h4>
+  <div class="markdown level1 summary"><p>Scale</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Scale { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_ScaleText.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.ScaleText%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1052">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_ScaleText_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.ScaleText*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_ScaleText" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.ScaleText">ScaleText</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the labeling for the bar</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ScaleBarLabelText ScaleText { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.ScaleBar.ScaleBarLabelText.html">ScaleBarLabelText</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Width.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Width%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L1065">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Width_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Width*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_Width" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.Width">Width</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the width of the scale bar</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int Width { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_InternalSize_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.InternalSize(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L125">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_InternalSize_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.InternalSize*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_InternalSize_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.InternalSize(System.Drawing.Graphics,SharpMap.MapViewport)">InternalSize(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override Size InternalSize(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_InternalSize_System_Drawing_Graphics_SharpMap_MapViewport_">MapDecoration.InternalSize(Graphics, MapViewport)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_OnRender_System_Drawing_Graphics_SharpMap_MapViewport_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.OnRender(System.Drawing.Graphics%2CSharpMap.MapViewport)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L134">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_OnRender_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.OnRender*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_OnRender_System_Drawing_Graphics_SharpMap_MapViewport_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.OnRender(System.Drawing.Graphics,SharpMap.MapViewport)">OnRender(Graphics, MapViewport)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void OnRender(Graphics g, MapViewport mvp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mvp</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="SharpMap.Rendering.Decoration.MapDecoration.html#SharpMap_Rendering_Decoration_MapDecoration_OnRender_System_Drawing_Graphics_SharpMap_MapViewport_">MapDecoration.OnRender(Graphics, MapViewport)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_SetCustomUnit_System_Double_System_String_System_String_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.SetCustomUnit(System.Double%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L992">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_SetCustomUnit_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.SetCustomUnit*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_ScaleBar_ScaleBar_SetCustomUnit_System_Double_System_String_System_String_" data-uid="SharpMap.Rendering.Decoration.ScaleBar.ScaleBar.SetCustomUnit(System.Double,System.String,System.String)">SetCustomUnit(Double, String, String)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetCustomUnit(double factor, string name, string shortName)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td><span class="parametername">factor</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">name</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">shortName</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Decoration.IMapDecoration.html">IMapDecoration</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_ScaleBar_ScaleBar.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.ScaleBar.ScaleBar%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/ScaleBar/ScaleBar.cs/#L25" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

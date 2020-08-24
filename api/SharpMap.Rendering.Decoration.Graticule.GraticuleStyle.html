@@ -1,0 +1,1123 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class GraticuleStyle
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class GraticuleStyle
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle">
+  
+  
+  <h1 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle" class="text-break">Class GraticuleStyle
+  </h1>
+  <div class="markdown level0 summary"><p>Graticule rendering properties, with Primary (major) and Secondary (minor) intervals.
+Use <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLineStyle">PrimaryLineStyle</a>, <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLineStyle">SecondaryLineStyle</a>, and <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_NumSubdivisions">NumSubdivisions</a>
+to define how a graticule will render, and configure other properties to tune layout and formatting.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">GraticuleStyle</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.html">SharpMap.Rendering.Decoration.Graticule</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class GraticuleStyle</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle__ctor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L273">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle__ctor_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle__ctor" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.#ctor">GraticuleStyle()</h4>
+  <div class="markdown level1 summary"><p>Creates an instance of this class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraticuleStyle()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle__ctor_SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_GraticuleTheme_SharpMap_Rendering_Decoration_Graticule_GraticuleLineStyle_System_Boolean_SharpMap_Rendering_Decoration_Graticule_GraticuleBorders_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.%23ctor(SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GraticuleTheme%2CSharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle%2CSystem.Boolean%2CSharpMap.Rendering.Decoration.Graticule.GraticuleBorders)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L198">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle__ctor_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle__ctor_SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_GraticuleTheme_SharpMap_Rendering_Decoration_Graticule_GraticuleLineStyle_System_Boolean_SharpMap_Rendering_Decoration_Graticule_GraticuleBorders_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.#ctor(SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GraticuleTheme,SharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle,System.Boolean,SharpMap.Rendering.Decoration.Graticule.GraticuleBorders)">GraticuleStyle(GraticuleStyle.GraticuleTheme, GraticuleLineStyle, Boolean, GraticuleBorders)</h4>
+  <div class="markdown level1 summary"><p>Quickly style a graticule without configuring each individual property</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraticuleStyle(GraticuleStyle.GraticuleTheme theme, GraticuleLineStyle lineStyle, bool withSecondaryIntervals, GraticuleBorders labelBorders)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GraticuleTheme.html">GraticuleStyle.GraticuleTheme</a></td>
+        <td><span class="parametername">theme</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle.html">GraticuleLineStyle</a></td>
+        <td><span class="parametername">lineStyle</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">withSecondaryIntervals</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleBorders.html">GraticuleBorders</a></td>
+        <td><span class="parametername">labelBorders</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_Division.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.Division%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L164">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_Division_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.Division*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_Division" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.Division">Division</h4>
+  <div class="markdown level1 summary"><p>Interval between Primary graticule lines (calculated to provide at least 2 cuts along shortest border)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Division { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelBorders.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelBorders%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L111">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelBorders_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelBorders*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelBorders" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelBorders">LabelBorders</h4>
+  <div class="markdown level1 summary"><p>Edges to be labelled, taking into account any map rotation</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraticuleBorders LabelBorders { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleBorders.html">GraticuleBorders</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelHalo.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelHalo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L159">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelHalo_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelHalo*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelHalo" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelHalo">LabelHalo</h4>
+  <div class="markdown level1 summary"><p>Background color to assist reading labels, or null for no halo</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush LabelHalo { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelSubdivisions.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelSubdivisions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L154">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelSubdivisions_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelSubdivisions*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_LabelSubdivisions" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.LabelSubdivisions">LabelSubdivisions</h4>
+  <div class="markdown level1 summary"><p>True if secondary edge cuts (ie subdivisions) should be labelled in addition to primary labels (ie division)/&gt;</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool LabelSubdivisions { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_MaxVisible.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.MaxVisible%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L184">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_MaxVisible_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.MaxVisible*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_MaxVisible" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.MaxVisible">MaxVisible</h4>
+  <div class="markdown level1 summary"><p>Maximum visible zoom level for rendering, or double.MaxValue for not applicable</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double MaxVisible { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_MinVisible.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.MinVisible%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L179">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_MinVisible_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.MinVisible*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_MinVisible" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.MinVisible">MinVisible</h4>
+  <div class="markdown level1 summary"><p>Minimum visible zoom level for rendering, or zero for not applicable</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double MinVisible { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_NumSubdivisions.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.NumSubdivisions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L174">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_NumSubdivisions_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.NumSubdivisions*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_NumSubdivisions" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.NumSubdivisions">NumSubdivisions</h4>
+  <div class="markdown level1 summary"><p>Number of intervals to appear between Primary graticule lines (or zero to disable Secondary graticule)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int NumSubdivisions { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryCustomTick.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryCustomTick%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L67">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryCustomTick_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryCustomTick*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryCustomTick" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryCustomTick">PrimaryCustomTick</h4>
+  <div class="markdown level1 summary"><p>Custom cross-hair style tick (design your own), null to use <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLineStyle">PrimaryLineStyle</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraphicsPath PrimaryCustomTick { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelColor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L121">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelColor_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelColor" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelColor">PrimaryLabelColor</h4>
+  <div class="markdown level1 summary"><p>Primary label color</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush PrimaryLabelColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelFont.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelFont%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L116">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelFont_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelFont*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelFont" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelFont">PrimaryLabelFont</h4>
+  <div class="markdown level1 summary"><p>Font for labelling primary graticule lines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Font PrimaryLabelFont { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelOffset.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelOffset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L130">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelOffset_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelOffset*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelOffset" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLabelOffset">PrimaryLabelOffset</h4>
+  <div class="markdown level1 summary"><p>Offset to lower-left corner of label position relative to graticule intersection with border.
+Positive X offset is applied along the graticule line.
+Positive Y offset is applied perpendicular to graticule line.
+An offset of (2,2) will draw the label just inside the border, sitting just above the graticule.
+To position label on extension of edge cut, set X = <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryMargin">PrimaryMargin</a> and Y = negative half <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLabelFont">PrimaryLabelFont</a> height</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Point PrimaryLabelOffset { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLineStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLineStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L49">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLineStyle_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLineStyle*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryLineStyle" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryLineStyle">PrimaryLineStyle</h4>
+  <div class="markdown level1 summary"><p>Line / tick style for primary graticule, or GraticuleLineStyle.None to disable this GraticuleStyle</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraticuleLineStyle PrimaryLineStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle.html">GraticuleLineStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryMargin.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryMargin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L72">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryMargin_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryMargin*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryMargin" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryMargin">PrimaryMargin</h4>
+  <div class="markdown level1 summary"><p>Length (pixels) of edge cuts (ie where graticule intersects border) or zero for none</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int PrimaryMargin { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryPen.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryPen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L44">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryPen_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryPen*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryPen" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryPen">PrimaryPen</h4>
+  <div class="markdown level1 summary"><p>Primary line style<br>
+Dashed and dotted line styles can be defined using Pen.DashPattern and Pen.DashStyle</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Pen PrimaryPen { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryTickSize.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryTickSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L54">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryTickSize_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryTickSize*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_PrimaryTickSize" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.PrimaryTickSize">PrimaryTickSize</h4>
+  <div class="markdown level1 summary"><p>Size of tick (pixels) at intersection of primary graticule lines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int PrimaryTickSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryCustomTick.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryCustomTick%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L101">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryCustomTick_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryCustomTick*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryCustomTick" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryCustomTick">SecondaryCustomTick</h4>
+  <div class="markdown level1 summary"><p>Custom cross-hair style tick (design your own), or null to use <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLineStyle">SecondaryLineStyle</a></p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraphicsPath SecondaryCustomTick { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelColor.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L140">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelColor_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelColor*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelColor" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelColor">SecondaryLabelColor</h4>
+  <div class="markdown level1 summary"><p>Secondary label color</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Brush SecondaryLabelColor { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.brush">Brush</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelFont.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelFont%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L135">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelFont_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelFont*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelFont" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelFont">SecondaryLabelFont</h4>
+  <div class="markdown level1 summary"><p>Font for labelling secondary graticule lines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Font SecondaryLabelFont { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.font">Font</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelOffset.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelOffset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L149">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelOffset_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelOffset*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelOffset" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLabelOffset">SecondaryLabelOffset</h4>
+  <div class="markdown level1 summary"><p>Offset to lower-left corner of label position relative to graticule intersection with border.
+Positive X offset is applied along the graticule line.
+Positive Y offset is applied perpendicular to graticule line.
+An offset of (2,2) will draw the label just inside the border, sitting just above the graticule.
+To position label on extension of edge cut, set X = <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryMargin">SecondaryMargin</a> and Y = negative half <a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.html#SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLabelFont">SecondaryLabelFont</a> height</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Point SecondaryLabelOffset { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.point">Point</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLineStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLineStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L83">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLineStyle_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLineStyle*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryLineStyle" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryLineStyle">SecondaryLineStyle</h4>
+  <div class="markdown level1 summary"><p>Line / tick style for secondary graticule, or GraticuleLineStyle.None to disable Secondary units</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraticuleLineStyle SecondaryLineStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Decoration.Graticule.GraticuleLineStyle.html">GraticuleLineStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryMargin.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryMargin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L106">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryMargin_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryMargin*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryMargin" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryMargin">SecondaryMargin</h4>
+  <div class="markdown level1 summary"><p>Length (pixels) of edge cuts (ie where graticule intersects border) or zero for none</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int SecondaryMargin { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryPen.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryPen%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L78">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryPen_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryPen*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryPen" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryPen">SecondaryPen</h4>
+  <div class="markdown level1 summary"><p>Secondary line style.
+Dashed and dotted line styles can be defined using Pen.DashPattern and Pen.DashStyle</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Pen SecondaryPen { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pen">Pen</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryTickSize.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryTickSize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L88">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryTickSize_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryTickSize*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_SecondaryTickSize" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.SecondaryTickSize">SecondaryTickSize</h4>
+  <div class="markdown level1 summary"><p>Size of tick (pixels) at intersection of secondary graticule lines</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int SecondaryTickSize { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_Subdivision.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.Subdivision%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L169">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_Subdivision_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.Subdivision*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_Subdivision" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.Subdivision">Subdivision</h4>
+  <div class="markdown level1 summary"><p>Interval between Secondary graticule lines, derived from Division and NumSubdivisions</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public double Subdivision { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.double">Double</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_VisibilityUnits.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.VisibilityUnits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L189">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_VisibilityUnits_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.VisibilityUnits*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_VisibilityUnits" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.VisibilityUnits">VisibilityUnits</h4>
+  <div class="markdown level1 summary"><p>Gets or Sets what level-reference the Min/Max values are defined in</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public VisibilityUnits VisibilityUnits { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.VisibilityUnits.html">VisibilityUnits</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_GetTick_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GetTick(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L291">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_GetTick_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GetTick*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_GetTick_System_Boolean_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.GetTick(System.Boolean)">GetTick(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Returns the appropriate tick</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public GraphicsPath GetTick(bool isPrimaryTick)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">isPrimaryTick</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.drawing2d.graphicspath">GraphicsPath</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_IsTickRequired_System_Boolean_System_Boolean_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.IsTickRequired(System.Boolean%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L278">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_IsTickRequired_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.IsTickRequired*"></a>
+  <h4 id="SharpMap_Rendering_Decoration_Graticule_GraticuleStyle_IsTickRequired_System_Boolean_System_Boolean_" data-uid="SharpMap.Rendering.Decoration.Graticule.GraticuleStyle.IsTickRequired(System.Boolean,System.Boolean)">IsTickRequired(Boolean, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Returns true if a primary or secondary tick is required for given combination of primary and secondary meridians and parallels</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsTickRequired(bool isPrimaryMeridian, bool isPrimaryParallel)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">isPrimaryMeridian</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">isPrimaryParallel</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Decoration_Graticule_GraticuleStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Decoration.Graticule.GraticuleStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Decoration/Graticule/GraticuleStyle.cs/#L12" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

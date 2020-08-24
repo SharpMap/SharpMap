@@ -1,0 +1,528 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class CustomTheme
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class CustomTheme
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Thematics.CustomTheme">
+  
+  
+  <h1 id="SharpMap_Rendering_Thematics_CustomTheme" data-uid="SharpMap.Rendering.Thematics.CustomTheme" class="text-break">Class CustomTheme
+  </h1>
+  <div class="markdown level0 summary"><p>The CustomTheme class is used for defining your own thematic rendering by using a custom get-style-delegate.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">CustomTheme</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Rendering.Thematics.IThemeEx.html">IThemeEx</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.iserializable">ISerializable</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Thematics.html">SharpMap.Rendering.Thematics</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Thematics_CustomTheme_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public class CustomTheme : IThemeEx, ITheme, ISerializable, ICloneable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme__ctor_SharpMap_Rendering_Thematics_CustomTheme_GetStyleMethod_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.%23ctor(SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L83">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme__ctor_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.#ctor*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme__ctor_SharpMap_Rendering_Thematics_CustomTheme_GetStyleMethod_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.#ctor(SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod)">CustomTheme(CustomTheme.GetStyleMethod)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="SharpMap.Rendering.Thematics.CustomTheme.html">CustomTheme</a> class</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CustomTheme(CustomTheme.GetStyleMethod getStyleMethod)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod.html">CustomTheme.GetStyleMethod</a></td>
+        <td><span class="parametername">getStyleMethod</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_DefaultStyle.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.DefaultStyle%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L91">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_DefaultStyle_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.DefaultStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_DefaultStyle" data-uid="SharpMap.Rendering.Thematics.CustomTheme.DefaultStyle">DefaultStyle</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the default style when an attribute isn't found in any bucket</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStyle DefaultStyle { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_GetStyleDelegateEx.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.GetStyleDelegateEx%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L180">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_GetStyleDelegateEx_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.GetStyleDelegateEx*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_GetStyleDelegateEx" data-uid="SharpMap.Rendering.Thematics.CustomTheme.GetStyleDelegateEx">GetStyleDelegateEx</h4>
+  <div class="markdown level1 summary"><p>Custom Style Delegate method providing access to current zoom/scale via MapViewport. GetStyleDelegateEx takes priority over GetStyle</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;MapViewport, FeatureDataRow, IStyle&gt; GetStyleDelegateEx { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.func-3">Func</a>&lt;<a class="xref" href="SharpMap.MapViewport.html">MapViewport</a>, <a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a>, <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a>&gt;</td>
+        <td><p>Style to be applied to feature</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Rendering_Thematics_CustomTheme_GetStyleDelegateEx_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>GetStyleDelegateEx is used for determining the style of a feature.
+Provide a lambda-style reference to public function in your implementation of CustomTheme</p>
+<p>
+<example>
+<pre><code>Func &lt; MapViewport, FeatureDataRow, IStyle> f = (mvp, fdr) => MyPublicFunction(mvp, fdr);
+GetStyleDelegateEx = f;</code></pre>
+in which signature of MyPublicFunction is:
+<pre><code>public SharpMap.Styles.VectorStyle MyPublicFunction(MapViewport mapViewport, FeatureDataRow feature)</code></pre>
+</example>
+</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_StyleDelegate.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.StyleDelegate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L121">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_StyleDelegate_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.StyleDelegate*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_StyleDelegate" data-uid="SharpMap.Rendering.Thematics.CustomTheme.StyleDelegate">StyleDelegate</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the style delegate used for determining the style of a feature
+If map zoom/scale are also required by delegate then refer to <a class="xref" href="SharpMap.Rendering.Thematics.IThemeEx.html">IThemeEx</a> and <a class="xref" href="SharpMap.Rendering.Thematics.CustomTheme.html#SharpMap_Rendering_Thematics_CustomTheme_GetStyleDelegateEx">GetStyleDelegateEx</a> property</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CustomTheme.GetStyleMethod StyleDelegate { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod.html">CustomTheme.GetStyleMethod</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="SharpMap_Rendering_Thematics_CustomTheme_StyleDelegate_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The delegate must take a <a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a> and return an <a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a>.
+If the method returns null, the default style will be used for rendering (note - default style may be set to null if required).
+<example>
+The example below creates a delegate that can be used for assigning the rendering of a road theme. If the road-class
+is larger than '3', it will be rendered using a thick red line.<p>
+<pre><code>private static SharpMap.Styles.VectorStyle GetRoadStyle(SharpMap.Data.FeatureDataRow row)
+{
+	SharpMap.Styles.VectorStyle style = new SharpMap.Styles.VectorStyle();
+	if(((int)row[&quot;RoadClass&quot;])>3)
+		style.Line = new Pen(Color.Red,5f);
+	else
+		style.Line = new Pen(Color.Black,1f);
+	return style;
+}</code></pre>
+</example>
+</div>
+  <h5 id="SharpMap_Rendering_Thematics_CustomTheme_StyleDelegate_seealso">See Also</h5>
+  <div class="seealso">
+      <div><a class="xref" href="SharpMap.Rendering.Thematics.CustomTheme.GetStyleMethod.html">CustomTheme.GetStyleMethod</a></div>
+  </div>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_Clone.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L191">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_Clone_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.Clone*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_Clone" data-uid="SharpMap.Rendering.Thematics.CustomTheme.Clone">Clone()</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public object Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_GetStyle_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.GetStyle(SharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L134">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_GetStyle_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.GetStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_GetStyle_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.GetStyle(SharpMap.Data.FeatureDataRow)">GetStyle(FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Returns the <a class="xref" href="SharpMap.Styles.Style.html">Style</a> based on an attribute value</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStyle GetStyle(FeatureDataRow feature)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">feature</span></td>
+        <td><p>DataRow</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><p>Style generated by GetStyle-Delegate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_GetStyle_SharpMap_MapViewport_SharpMap_Data_FeatureDataRow_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.GetStyle(SharpMap.MapViewport%2CSharpMap.Data.FeatureDataRow)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L149">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_GetStyle_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.GetStyle*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_GetStyle_SharpMap_MapViewport_SharpMap_Data_FeatureDataRow_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.GetStyle(SharpMap.MapViewport,SharpMap.Data.FeatureDataRow)">GetStyle(MapViewport, FeatureDataRow)</h4>
+  <div class="markdown level1 summary"><p>Returns the <a class="xref" href="SharpMap.Styles.Style.html">Style</a> based on an mapViewPort scale or zoom and/or attribute value(s)</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IStyle GetStyle(MapViewport mapViewPort, FeatureDataRow feature)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">mapViewPort</span></td>
+        <td><p>MapViewport</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="SharpMap.Data.FeatureDataRow.html">FeatureDataRow</a></td>
+        <td><span class="parametername">feature</span></td>
+        <td><p>DataRow</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Styles.IStyle.html">IStyle</a></td>
+        <td><p>Style generated by GetStyle-Delegate</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme_System_Runtime_Serialization_ISerializable_GetObjectData_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme.System%23Runtime%23Serialization%23ISerializable%23GetObjectData(System.Runtime.Serialization.SerializationInfo%2CSystem.Runtime.Serialization.StreamingContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L183">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Thematics_CustomTheme_System_Runtime_Serialization_ISerializable_GetObjectData_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.System#Runtime#Serialization#ISerializable#GetObjectData*"></a>
+  <h4 id="SharpMap_Rendering_Thematics_CustomTheme_System_Runtime_Serialization_ISerializable_GetObjectData_System_Runtime_Serialization_SerializationInfo_System_Runtime_Serialization_StreamingContext_" data-uid="SharpMap.Rendering.Thematics.CustomTheme.System#Runtime#Serialization#ISerializable#GetObjectData(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">ISerializable.GetObjectData(SerializationInfo, StreamingContext)</h4>
+  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.serializationinfo">SerializationInfo</a></td>
+        <td><span class="parametername">info</span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.streamingcontext">StreamingContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Thematics.IThemeEx.html">IThemeEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Thematics.ITheme.html">ITheme</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.runtime.serialization.iserializable">System.Runtime.Serialization.ISerializable</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">System.ICloneable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Thematics_CustomTheme.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Thematics.CustomTheme%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Thematics/CustomTheme.cs/#L28" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

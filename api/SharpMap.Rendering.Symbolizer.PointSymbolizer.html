@@ -1,0 +1,521 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class PointSymbolizer
+   | SharpMap </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class PointSymbolizer
+   | SharpMap ">
+    <meta name="generator" content="docfx 2.56.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer">
+  
+  
+  <h1 id="SharpMap_Rendering_Symbolizer_PointSymbolizer" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer" class="text-break">Class PointSymbolizer
+  </h1>
+  <div class="markdown level0 summary"><p>Base class for all possible Point symbolizers</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><a class="xref" href="SharpMap.Base.DisposableObject.html">DisposableObject</a></div>
+    <div class="level2"><a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html">BaseSymbolizer</a></div>
+    <div class="level3"><span class="xref">PointSymbolizer</span></div>
+      <div class="level4"><a class="xref" href="SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer.html">CharacterPointSymbolizer</a></div>
+      <div class="level4"><a class="xref" href="SharpMap.Rendering.Symbolizer.PathPointSymbolizer.html">PathPointSymbolizer</a></div>
+      <div class="level4"><a class="xref" href="SharpMap.Rendering.Symbolizer.RasterPointSymbolizer.html">RasterPointSymbolizer</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizerEx.html">IPointSymbolizerEx</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer-1.html">ISymbolizer</a>&lt;<span class="xref">GeoAPI.Geometries.IPuntal</span>&gt;</div>
+    <div><a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer.html">ISymbolizer</a></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">ICloneable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_SmoothingMode">BaseSymbolizer.SmoothingMode</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_PixelOffsetMode">BaseSymbolizer.PixelOffsetMode</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_Clone">BaseSymbolizer.Clone()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_Begin_System_Drawing_Graphics_SharpMap_MapViewport_System_Int32_">BaseSymbolizer.Begin(Graphics, MapViewport, Int32)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_Symbolize_System_Drawing_Graphics_SharpMap_MapViewport_">BaseSymbolizer.Symbolize(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.BaseSymbolizer.html#SharpMap_Rendering_Symbolizer_BaseSymbolizer_End_System_Drawing_Graphics_SharpMap_MapViewport_">BaseSymbolizer.End(Graphics, MapViewport)</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_Dispose">DisposableObject.Dispose()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseUnmanagedResources">DisposableObject.ReleaseUnmanagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_ReleaseManagedResources">DisposableObject.ReleaseManagedResources()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_CheckDisposed">DisposableObject.CheckDisposed()</a>
+    </div>
+    <div>
+      <a class="xref" href="SharpMap.Base.DisposableObject.html#SharpMap_Base_DisposableObject_IsDisposed">DisposableObject.IsDisposed</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="SharpMap.Rendering.Symbolizer.html">SharpMap.Rendering.Symbolizer</a></h6>
+  <h6><strong>Assembly</strong>: SharpMap.dll</h6>
+  <h5 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[Serializable]
+public abstract class PointSymbolizer : BaseSymbolizer, IDisposableEx, IDisposable, IPointSymbolizerEx, IPointSymbolizer, ISymbolizer&lt;IPuntal&gt;, ISymbolizer, ICloneable</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_CanvasArea.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.CanvasArea%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L36">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_CanvasArea_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.CanvasArea*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_CanvasArea" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.CanvasArea">CanvasArea</h4>
+  <div class="markdown level1 summary"><p>The calculated rectangle enclosing the extent of this symbol</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public RectangleF CanvasArea { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.rectanglef">RectangleF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_Offset.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.Offset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L41">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Offset_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Offset*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Offset" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Offset">Offset</h4>
+  <div class="markdown level1 summary"><p>Offset of the point from the point</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public PointF Offset { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.pointf">PointF</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_Rotation.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.Rotation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L46">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Rotation_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Rotation*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Rotation" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Rotation">Rotation</h4>
+  <div class="markdown level1 summary"><p>Rotation of the symbol</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public float Rotation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_Scale.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.Scale%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L63">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Scale_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Scale*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Scale" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Scale">Scale</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the scale</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual float Scale { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.single">Single</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_Size.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.Size%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L54">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Size_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Size*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Size" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Size">Size</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the Size of the symbol</p>
+<p>
+Implementations may ignore the setter, the getter must return a <a class="xref" href="SharpMap.Rendering.Symbolizer.PointSymbolizer.html#SharpMap_Rendering_Symbolizer_PointSymbolizer_Size">Size</a> with positive width and height values.
+</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract Size Size { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.size">Size</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_Render_SharpMap_MapViewport_GeoAPI_Geometries_IPuntal_System_Drawing_Graphics_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.Render(SharpMap.MapViewport%2CGeoAPI.Geometries.IPuntal%2CSystem.Drawing.Graphics)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L166">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Render_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Render*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_Render_SharpMap_MapViewport_GeoAPI_Geometries_IPuntal_System_Drawing_Graphics_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.Render(SharpMap.MapViewport,GeoAPI.Geometries.IPuntal,System.Drawing.Graphics)">Render(MapViewport, IPuntal, Graphics)</h4>
+  <div class="markdown level1 summary"><p>Function to render the geometry</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Render(MapViewport map, IPuntal geometry, Graphics graphics)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map object, mainly needed for transformation purposes.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.IPuntal</span></td>
+        <td><span class="parametername">geometry</span></td>
+        <td><p>The geometry to symbolize.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">graphics</span></td>
+        <td><p>The graphics object to use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_RenderPoint_SharpMap_MapViewport_GeoAPI_Geometries_Coordinate_System_Drawing_Graphics_.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.RenderPoint(SharpMap.MapViewport%2CGeoAPI.Geometries.Coordinate%2CSystem.Drawing.Graphics)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L90">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_RenderPoint_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.RenderPoint*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_RenderPoint_SharpMap_MapViewport_GeoAPI_Geometries_Coordinate_System_Drawing_Graphics_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.RenderPoint(SharpMap.MapViewport,GeoAPI.Geometries.Coordinate,System.Drawing.Graphics)">RenderPoint(MapViewport, Coordinate, Graphics)</h4>
+  <div class="markdown level1 summary"><p>Function to render the symbol</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RenderPoint(MapViewport map, Coordinate point, Graphics g)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.MapViewport.html">MapViewport</a></td>
+        <td><span class="parametername">map</span></td>
+        <td><p>The map</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">GeoAPI.Geometries.Coordinate</span></td>
+        <td><span class="parametername">point</span></td>
+        <td><p>The point to symbolize</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.drawing.graphics">Graphics</a></td>
+        <td><span class="parametername">g</span></td>
+        <td><p>The graphics object</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer_ToRasterPointSymbolizer.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer.ToRasterPointSymbolizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L141">View Source</a>
+  </span>
+  <a id="SharpMap_Rendering_Symbolizer_PointSymbolizer_ToRasterPointSymbolizer_" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.ToRasterPointSymbolizer*"></a>
+  <h4 id="SharpMap_Rendering_Symbolizer_PointSymbolizer_ToRasterPointSymbolizer" data-uid="SharpMap.Rendering.Symbolizer.PointSymbolizer.ToRasterPointSymbolizer">ToRasterPointSymbolizer()</h4>
+  <div class="markdown level1 summary"><p>Utility function to transform any <a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a> into an unscaled <a class="xref" href="SharpMap.Rendering.Symbolizer.RasterPointSymbolizer.html">RasterPointSymbolizer</a>. This may bring performance benefits.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public virtual IPointSymbolizer ToRasterPointSymbolizer()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="SharpMap.Base.IDisposableEx.html">IDisposableEx</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizerEx.html">IPointSymbolizerEx</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.IPointSymbolizer.html">IPointSymbolizer</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer-1.html">ISymbolizer&lt;TGeometry&gt;</a>
+  </div>
+  <div>
+      <a class="xref" href="SharpMap.Rendering.Symbolizer.ISymbolizer.html">ISymbolizer</a>
+  </div>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.icloneable">System.ICloneable</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/new/develop/doc/overwrite/new?filename=SharpMap_Rendering_Symbolizer_PointSymbolizer.md&amp;value=---%0Auid%3A%20SharpMap.Rendering.Symbolizer.PointSymbolizer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/SharpMap/SharpMap/blob/develop/SharpMap/Rendering/Symbolizer/PointSymbolizer.cs/#L28" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            
+            <span>Generated by <strong>DocFX</strong></span>
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
