@@ -51,11 +51,12 @@ namespace SharpMap.Utilities
             ts.Format = info.GetString("format");
             
             var type = (Type) info.GetValue("resolutionsType", typeof (Type));
-            var list = (IDictionary<string, Resolution>) Activator.CreateInstance(type);
+            var tmp = Activator.CreateInstance(type);
+            IDictionary<int, Resolution> list = (IDictionary<int, Resolution>) Activator.CreateInstance(type);
             var count = info.GetInt32("resolutionsCount");
             for (var i = 0; i < count; i++)
             {
-                var key = info.GetString(string.Format("rk{0}", i));
+                int key = i;//info.GetString(string.Format("rk{0}", i));
                 var valueRef = (IObjectReference)
                         info.GetValue(string.Format("rv{0}", i), typeof(ResolutionSurrogate.ResolutionRef));
                 var value = (Resolution) valueRef.GetRealObject(context);

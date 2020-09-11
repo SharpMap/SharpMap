@@ -24,7 +24,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BruTile.MbTiles" Version="2.1.2" />
+        <PackageReference Include="BruTile.MbTiles" Version="3.0.0" />
         <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
         <PackageReference Include="Npgsql" Version="4.0.10" />
         <PackageReference Include="NUnit" Version="3.12.0" />

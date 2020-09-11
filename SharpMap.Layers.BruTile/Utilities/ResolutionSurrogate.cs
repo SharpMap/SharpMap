@@ -46,7 +46,7 @@ namespace SharpMap.Utilities
         {
             var res = (Resolution)obj;
             info.SetType(typeof(ResolutionRef));
-            info.AddValue("id", res.Level);
+            info.AddValue("level", res.Level);
             info.AddValue("upp", res.UnitsPerPixel);
             info.AddValue("th", res.TileHeight);
             info.AddValue("tw", res.TileWidth);
