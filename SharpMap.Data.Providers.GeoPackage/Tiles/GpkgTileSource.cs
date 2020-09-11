@@ -27,7 +27,7 @@ namespace SharpMap.Data.Providers.Tiles
             using (var cn = new SQLiteConnection(_content.ConnectionString).OpenAndReturn())
             {
                 var cmd = new SQLiteCommand(_selectSql, cn);
-                cmd.Parameters.AddRange(new object[] { int.Parse(tileInfo.Index.Level), tileInfo.Index.Col, tileInfo.Index.Row });
+                cmd.Parameters.AddRange(new object[] { tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row });
                 return (byte[]) cmd.ExecuteScalar();
             }
         }
