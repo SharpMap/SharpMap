@@ -15,7 +15,7 @@ namespace SharpMap.Data.Providers.Tiles
         private const string SelectTileMatrix =
             "SELECT * FROM \"gpkg_tile_matrix\" WHERE \"table_name\"=? ORDER by \"zoom_level\";";
 
-        private readonly Dictionary<string, Resolution> _resolutions;
+        private readonly Dictionary<int, Resolution> _resolutions;
 
         private readonly string _name;
 
@@ -32,37 +32,37 @@ namespace SharpMap.Data.Providers.Tiles
             _resolutions = tms.ToResolutions();
         }
 
-        public int GetTileWidth(string levelId)
+        public int GetTileWidth(int levelId)
         {
             return _resolutions[levelId].TileWidth;
         }
 
-        public int GetTileHeight(string levelId)
+        public int GetTileHeight(int levelId)
         {
             return _resolutions[levelId].TileHeight;
         }
 
-        public double GetOriginX(string levelId)
+        public double GetOriginX(int levelId)
         {
             return _resolutions[levelId].Left;
         }
 
-        public double GetOriginY(string levelId)
+        public double GetOriginY(int levelId)
         {
             return _resolutions[levelId].Top; 
         }
 
-        public long GetMatrixWidth(string levelId)
+        public long GetMatrixWidth(int levelId)
         {
             return _resolutions[levelId].MatrixWidth;
         }
 
-        public long GetMatrixHeight(string levelId)
+        public long GetMatrixHeight(int levelId)
         {
             return _resolutions[levelId].MatrixHeight;
         }
 
-        public IEnumerable<TileInfo> GetTileInfos(Extent extent, string levelId)
+        public IEnumerable<TileInfo> GetTileInfos(Extent extent, int levelId)
         {
             // todo: move this method elsewhere.
             var range = TileTransform.WorldToTile(extent, levelId, this);
@@ -92,17 +92,17 @@ namespace SharpMap.Data.Providers.Tiles
             return GetTileInfos(extent, level);
         }
 
-        public Extent GetExtentOfTilesInView(Extent extent, string levelId)
+        public Extent GetExtentOfTilesInView(Extent extent, int levelId)
         {
             return TileSchema.GetExtentOfTilesInView(this, extent, levelId);
         }
 
-        public int GetMatrixFirstCol(string levelId)
+        public int GetMatrixFirstCol(int levelId)
         {
             return 0;
         }
 
-        public int GetMatrixFirstRow(string levelId)
+        public int GetMatrixFirstRow(int levelId)
         {
             return 0;
         }
@@ -116,7 +116,7 @@ namespace SharpMap.Data.Providers.Tiles
 
         public Extent Extent { get; private set; }
 
-        public IDictionary<string, Resolution> Resolutions
+        public IDictionary<int, Resolution> Resolutions
         {
             get { return _resolutions; }
         }
@@ -181,17 +181,17 @@ namespace SharpMap.Data.Providers.Tiles
 
             public List<GpkgTileMatrix> TileMatrices { get; private set; }
 
-            public Dictionary<string, Resolution> ToResolutions()
+            public Dictionary<int, Resolution> ToResolutions()
             {
-                var res = new Dictionary<string, Resolution>(TileMatrices.Count);
+                var res = new Dictionary<int, Resolution>(TileMatrices.Count);
                 foreach (var tileMatrix in TileMatrices)
                 {
                     var tmp = new Resolution(
-                        tileMatrix.ZoomLevel.ToString(), tileMatrix.PixelXSize,
+                        tileMatrix.ZoomLevel, tileMatrix.PixelXSize,
                         tileMatrix.TileWidth, tileMatrix.TileHeight,
                         MinX, MaxY,
                         tileMatrix.MatrixWidth, tileMatrix.MatrixHeight);
-                    res.Add(tmp.Id, tmp);
+                    res.Add(tmp.Level, tmp);
                 }
                 return res;
             }

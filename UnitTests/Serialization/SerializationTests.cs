@@ -35,9 +35,9 @@ namespace UnitTests.Serialization
         [Test]
         public void TestResolution()
         {
-            var r1 = new Resolution("XXX", 1245, 999,999, 5, 5, 4, 4, 0.1);
+            var r1 = new Resolution(0, 1245, 999,999, 5, 5, 4, 4, 0.1);
             var r2 = SandD(r1);
-            Assert.AreEqual(r1.Id, r2.Id);
+            Assert.AreEqual(r1.Level, r2.Level);
             Assert.AreEqual(r1.UnitsPerPixel, r2.UnitsPerPixel);
             Assert.AreEqual(r1.TileWidth, r2.TileWidth);
             Assert.AreEqual(r1.TileHeight, r2.TileHeight);
@@ -52,7 +52,7 @@ namespace UnitTests.Serialization
         public void TestGlobalMercatorSchema()
         {
             string message;
-            var s1 = new GlobalMercator("png", 2, 11);
+            var s1 = new GlobalMercator("png", 0, 11);
             var s2 = SandD(s1);
             var equal = EqualTileSchemas(s1, s2, out message);
             Assert.IsTrue(equal, message);
@@ -62,7 +62,7 @@ namespace UnitTests.Serialization
         public void TestGlobalSphericalMercatorSchema()
         {
             string message;
-            var s1 = new GlobalSphericalMercator("png", YAxis.OSM, 2, 11);
+            var s1 = new GlobalSphericalMercator("png", YAxis.OSM, 0, 11);
             var s2 = SandD(s1);
             var equal = EqualTileSchemas(s1, s2, out message);
             Assert.IsTrue(equal, message);
@@ -301,7 +301,7 @@ namespace UnitTests.Serialization
                 var keys = schema.Resolutions.Keys.ToArray();
                 var minkey = GetIndex(keys[0]);
                 var maxKey = GetIndex(keys[keys.Length - 1]);
-                var prefix = GetPrefix(keys[0]);
+                var prefix = keys[0];
                 for (var i = 0; i < 3; i++)
                 {
                     TileInfo ti = null;
@@ -352,23 +352,24 @@ namespace UnitTests.Serialization
             return true;
         }
 
-        private static int GetIndex(string s)
+        private static int GetIndex(int level)
         {
-            var pos = s.LastIndexOf(":", StringComparison.Ordinal);
-            if (pos == 0)
-                return int.Parse(s, NumberFormatInfo.InvariantInfo);
-            return int.Parse(s.Substring(pos + 1), NumberFormatInfo.InvariantInfo);
+            return level;
+            //var pos = s.LastIndexOf(":", StringComparison.Ordinal);
+            //if (pos == 0)
+            //    return int.Parse(s, NumberFormatInfo.InvariantInfo);
+            //return int.Parse(s.Substring(pos + 1), NumberFormatInfo.InvariantInfo);
         }
 
-        private static string GetPrefix(string s)
-        {
-            var pos = s.LastIndexOf(":", StringComparison.Ordinal);
-            if (pos == -1)
-                return string.Empty;
+        //private static string GetPrefix(string s)
+        //{
+        //    var pos = s.LastIndexOf(":", StringComparison.Ordinal);
+        //    if (pos == -1)
+        //        return string.Empty;
 
-            return s.Substring(0, pos+1);
+        //    return s.Substring(0, pos+1);
 
-        }
+        //}
 
         private static bool TilesEqual(IEnumerable<byte> t1, IList<byte> t2)
         {
@@ -427,7 +428,7 @@ namespace UnitTests.Serialization
             return new TileInfo
             {
                 Extent = new Extent(),
-                Index = new TileIndex(Rnd.Next(0, max), Rnd.Next(0, max), string.Format(CultureInfo.InvariantCulture, format, level))
+                Index = new TileIndex(Rnd.Next(0, max), Rnd.Next(0, max), level)
             };
         }
 
@@ -481,14 +482,14 @@ namespace UnitTests.Serialization
 
                 foreach(var res1 in tts1.Resolutions.Values)
                 {
-                    var res2 = tts2.Resolutions[res1.Id];
-                    if (tts1.GetTileHeight(res1.Id)  != tts2.GetTileHeight(res2.Id))
+                    var res2 = tts2.Resolutions[res1.Level];
+                    if (tts1.GetTileHeight(res1.Level)  != tts2.GetTileHeight(res2.Level))
                     {
                         message = "Heights don't match";
                         return false;
                     }
 
-                    if (tts1.GetTileWidth(res1.Id) != tts2.GetTileWidth(res2.Id))
+                    if (tts1.GetTileWidth(res1.Level) != tts2.GetTileWidth(res2.Level))
                     {
                         message = "Widths don't match";
                         return false;
@@ -536,7 +537,7 @@ namespace UnitTests.Serialization
 
                 //!!! compare other resultion parameters.
                 
-                if (r1.Id != r2.Id || r1.UnitsPerPixel != r2.UnitsPerPixel)
+                if (r1.Level != r2.Level || r1.UnitsPerPixel != r2.UnitsPerPixel)
                 {
                     message = string.Format("Resolution doesn't match at index {0}", key);
                     return false;
