@@ -40,9 +40,10 @@ namespace SharpMap.Demo.Wms.Helpers
                 throw new ArgumentNullException("name");
 
             
-            SqlServer2008 source = new SqlServer2008(connstr, name, "geom", "ID") { ValidateGeometries = true };
-            ICoordinateTransformation transformation = ProjHelper.LatLonToGoogle();
-            VectorLayer item = new VectorLayer(name, source)
+            var source = new SqlServer2008(connstr, name, "geom", "ID", 
+                SqlServerSpatialObjectType.Geometry, 0, SqlServer2008ExtentsMode.QueryIndividualFeatures) { ValidateGeometries = true };
+            var transformation = ProjHelper.LatLonToGoogle();
+            var item = new VectorLayer(name, source)
             {
                 SRID = 4326,
                 TargetSRID = 900913,
