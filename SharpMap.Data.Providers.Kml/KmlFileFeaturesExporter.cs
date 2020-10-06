@@ -38,6 +38,9 @@ using Point = SharpKml.Dom.Point;
 
 namespace SharpMap.Data.Providers
 {
+    /// <summary>
+    /// A feature-exporter to export to a KML/KMZ file
+    /// </summary>
     public partial class KmlFileFeaturesExporter
     {
         #region NotCloseableMemoryStream
@@ -60,8 +63,18 @@ namespace SharpMap.Data.Providers
         #endregion
 
         #region ExportContext
+        
+        /// <summary>
+        /// An export context
+        /// </summary>
         public class ExportContext
         {
+            /// <summary>
+            /// Creates an instance of this class
+            /// </summary>
+            /// <param name="exporter">The exporter</param>
+            /// <param name="additionalFiles">A list of additional files</param>
+            /// <param name="feature">A feature</param>
             public ExportContext(KmlFileFeaturesExporter exporter, IList<string> additionalFiles, FeatureDataRow feature)
             {
                 if (exporter == null)
@@ -78,12 +91,24 @@ namespace SharpMap.Data.Providers
                 Feature = feature;
             }
 
-            public KmlFileFeaturesExporter Exporter { get; private set; }
+            /// <summary>
+            /// Gets a value indicating the feature exporter
+            /// </summary>
+            public KmlFileFeaturesExporter Exporter { get; }
 
-            public IList<string> AdditionalFiles { get; private set; }
+            /// <summary>
+            /// Gets a value indicating a list of additional files
+            /// </summary>
+            public IList<string> AdditionalFiles { get; }
 
-            public FeatureDataRow Feature { get; private set; }
+            /// <summary>
+            /// Gets a value indicating the feature to export
+            /// </summary>
+            public FeatureDataRow Feature { get; }
 
+            /// <summary>
+            /// Gets a value indicating if <see cref="Feature"/> is to be exported to a KMZ file.
+            /// </summary>
             public bool IsKmz { get { return Exporter.IsKmz; } }
         }
         #endregion
@@ -91,8 +116,8 @@ namespace SharpMap.Data.Providers
         #region fields
         private readonly FeatureDataTable _featureDataTable;
         private int _sequence;
-        private ICoordinateTransformationFactory _coordinateTransformationFactory;
-        private ICoordinateSystemFactory _coordinateSystemFactory;
+        //private ICoordinateTransformationFactory _coordinateTransformationFactory;
+        //private ICoordinateSystemFactory _coordinateSystemFactory;
         private IGeometryFactory _earthGeometryFactory;
         private int _earthSrid;
         private ICoordinateSystem _earthCs;
@@ -100,11 +125,24 @@ namespace SharpMap.Data.Providers
         #endregion
 
         #region events
+
+        /// <summary>
+        /// Event raised when export has started.
+        /// </summary>
         public event EventHandler Started;
+
+        /// <summary>
+        /// Event raised when export has finished.
+        /// </summary>
         public event EventHandler Ended;
         #endregion
 
         #region ctor
+
+        /// <summary>
+        /// Creates an instance of this class using the provided <see cref="FeatureDataTable"/>.
+        /// </summary>
+        /// <param name="featureDataTable">A table of features</param>
         public KmlFileFeaturesExporter(FeatureDataTable featureDataTable)
         {
             if (featureDataTable == null)
@@ -131,14 +169,32 @@ namespace SharpMap.Data.Providers
         /// </summary>
         public string NameColumn { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating a snippet
+        /// </summary>
+        /// <returns>A snippet</returns>
         public string Snippet { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating a delegate function to get <see cref="StyleSelector"/> for an <see cref="ExportContext"/>.
+        /// </summary>
         public Func<ExportContext, StyleSelector> GetStyle { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating a delegate function to get a snippet string for an <see cref="ExportContext"/>
+        /// </summary>
         public Func<ExportContext, string> GetFeatureSnippet { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating a coordinate transformation.
+        /// </summary>
         public ICoordinateTransformation CoordinateTransformation { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating the SRID value for the earth.<br/>
+        /// This is usually <c>4326</c>.
+        /// </summary>
         public int EarthSrid
         {
             get { return _earthSrid; }
@@ -155,12 +211,19 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Gets or sets a flag value indicating if the features are to be exported to a KMZ file.
+        /// </summary>
         private bool IsKmz { get; set; }
 
         #endregion
 
         #region public methods
 
+        /// <summary>
+        /// Export data to a KMZ file
+        /// </summary>
+        /// <returns>A KMZ file</returns>
         public KmzFile ExportToKmz()
         {
             IsKmz = true;
@@ -186,6 +249,10 @@ namespace SharpMap.Data.Providers
             return kmz;
         }
 
+        /// <summary>
+        /// Export data to a KML file
+        /// </summary>
+        /// <returns>A KML file</returns>
         public KmlFile ExportToKml()
         {
             IsKmz = false;
@@ -193,6 +260,12 @@ namespace SharpMap.Data.Providers
             return InternalExport();
         }
 
+        /// <summary>
+        /// Creates a delegate function that creates <see cref="SharpKml.Dom.Style"/>s for provided
+        /// <see cref="ExportContext"/>s using the given <see cref="IStyle"/>.
+        /// </summary>
+        /// <param name="sharpmapStyle">A style</param>
+        /// <returns>A delegate function</returns>
         public static Func<ExportContext, SharpKml.Dom.Style> CreateFromSharpmapStyle(IStyle sharpmapStyle)
         {
             if (sharpmapStyle == null)
@@ -282,6 +355,13 @@ namespace SharpMap.Data.Providers
             };
         }
 
+        /// <summary>
+        /// Creates a delegate function that creates <see cref="SharpKml.Dom.Style"/>s for provided
+        /// <see cref="ExportContext"/>s using the given <see cref="ITheme"/>.
+        /// </summary>
+        /// <param name="theme">A theme</param>
+        /// <returns>A delegate function</returns>
+
         public static Func<ExportContext, SharpKml.Dom.Style> CreateFromSharpmapTheme(ITheme theme)
         {
             if (theme == null)
@@ -298,6 +378,9 @@ namespace SharpMap.Data.Providers
 
         #region protected members
 
+        /// <summary>
+        /// Event invoker for <see cref="Started"/> event.
+        /// </summary>
         protected virtual void OnStarted()
         {
             var handler = Started;
@@ -305,6 +388,9 @@ namespace SharpMap.Data.Providers
                 handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Event invoker for <see cref="Ended"/> event.
+        /// </summary>
         protected virtual void OnEnded()
         {
             var handler = Ended;
@@ -312,11 +398,20 @@ namespace SharpMap.Data.Providers
                 handler(this, EventArgs.Empty);
         }
 
+        /// <summary>
+        /// Gets a new sequence number.
+        /// </summary>
+        /// <returns>A new sequence number.</returns>
         protected int GetNextSequence()
         {
             return ++_sequence;
         }
 
+        /// <summary>
+        /// Transforms <paramref name="geometry"/> to WGS84 spatial reference system.
+        /// </summary>
+        /// <param name="geometry">A geometry</param>
+        /// <returns>A geometry in WGS84</returns>
         protected virtual IGeometry ToTarget(IGeometry geometry)
         {
             if (geometry.SRID == EarthSrid || (geometry.SRID <= 0 && CoordinateTransformation == null))
@@ -334,11 +429,21 @@ namespace SharpMap.Data.Providers
             return GeometryTransform.TransformGeometry(geometry, CoordinateTransformation.MathTransform, _earthGeometryFactory);
         }
 
+        /// <summary>
+        /// Adds an additional file
+        /// </summary>
+        /// <param name="file">A path to a specific file</param>
         protected void AddAdditionalFile(string file)
         {
             _additionalFiles.Add(file);
         }
 
+        /// <summary>
+        /// Creates a KML feature for <paramref name="feature"/>.
+        /// </summary>
+        /// <param name="feature">The feature</param>
+        /// <param name="style">A style selector</param>
+        /// <returns>A KML feature</returns>
         protected virtual Feature CreateKmlFeature(FeatureDataRow feature, StyleSelector style)
         {
             var geometry = feature.Geometry;
@@ -414,6 +519,11 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Creates a description for a <paramref name="feature"/>.
+        /// </summary>
+        /// <param name="feature">A feature</param>
+        /// <returns>A description.</returns>
         protected virtual string CreateDescription(FeatureDataRow feature)
         {
             var values = feature.Table.Columns
@@ -426,6 +536,10 @@ namespace SharpMap.Data.Providers
             return string.Join("\r\n", s);
         }
 
+        /// <summary>
+        /// Creates a KML specific root document
+        /// </summary>
+        /// <returns>A KML root document</returns>
         protected virtual Document CreateRootDocument()
         {
             var document = new Document { Name = _featureDataTable.TableName, Open = true, Visibility = true };

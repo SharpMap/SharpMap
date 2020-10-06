@@ -359,9 +359,9 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Attempt to append all styles from an external kml/kmz resource  <param name="url"></param> to this KmlProvider's styles
+        /// Attempt to append all styles from an external kml/kmz resource <paramref name="url"/> to this KmlProvider's styles
         /// </summary>
-        /// <param name="url"></param>
+        /// <param name="url">A uniform resource identifier</param>
         private void LoadExternalStyles(Uri url)
         {
             try
@@ -408,7 +408,7 @@ namespace SharpMap.Data.Providers
                 if (f.StyleUrl != null && !string.IsNullOrWhiteSpace(f.StyleUrl.OriginalString))
                 {
                     // StyleUrl
-                    if (!f.StyleUrl.OriginalString.StartsWith("#"));
+                    if (!f.StyleUrl.OriginalString.StartsWith("#"))
                         LoadExternalStyle(f.StyleUrl.OriginalString);
                 }
                 else
