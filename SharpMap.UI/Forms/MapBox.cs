@@ -86,16 +86,22 @@ namespace SharpMap.Forms
 
 
         /// <summary>
-        /// 
+        /// Creates a <see cref="IMapBoxImageGenerator"/> that mimics legacy image generation for <see cref="MapBox"/> control.
         /// </summary>
-        /// <param name="mapBox"></param>
-        /// <param name="progressBar"></param>
-        /// <returns></returns>
+        /// <param name="mapBox">The map control</param>
+        /// <param name="progressBar">The progress bar</param>
+        /// <returns>An image generator for <see cref="MapBox"/> control</returns>
         public static IMapBoxImageGenerator LegacyMapImageGenerator(MapBox mapBox, ProgressBar progressBar)
         {
             return new LegacyMapBoxImageGenerator(mapBox, progressBar);
         }
 
+        /// <summary>
+        /// Creates a <see cref="IMapBoxImageGenerator"/> for <see cref="MapBox"/> control that works on a list of layers.
+        /// </summary>
+        /// <param name="mapBox">The map control</param>
+        /// <param name="progressBar">The progress bar</param>
+        /// <returns>An image generator for <see cref="MapBox"/> control</returns>
         public static IMapBoxImageGenerator LayerListImageGenerator(MapBox mapBox, ProgressBar progressBar)
         {
             return new LayerListImageGenerator(mapBox, progressBar);
@@ -447,6 +453,7 @@ namespace SharpMap.Forms
         private readonly object _mapLocker = new object();
 
         private int _needToRefreshAfterWheel;
+        [Obsolete]
         private PreviewModes _previewMode;
         //private bool _isRefreshing;
         private List<Coordinate> _pointArray = new List<Coordinate>();
@@ -633,7 +640,9 @@ namespace SharpMap.Forms
         /// Gets or sets the mode used to create preview image while panning or zooming.
         /// </summary>
         [Description("Mode used to create preview image while panning or zooming.")]
+#pragma warning disable
         [DefaultValue(PreviewModes.Best)]
+#pragma warning restore
         [Category("Behavior")]
         [Obsolete("Not used anywhere")]
         public PreviewModes PreviewMode
@@ -840,6 +849,7 @@ namespace SharpMap.Forms
             Application.AddMessageFilter(_mousePreviewFilter);
         }
 
+        /// <inheritdoc/>
         protected override void OnSizeChanged(EventArgs e)
         {
             if (Map != null)
@@ -856,7 +866,7 @@ namespace SharpMap.Forms
         /// <summary>
         /// Dispose method
         /// </summary>
-        /// <param name="disposing">A parameter indicating that this method is called from either a call to <see cref="Control.Dispose()"/> (<c>true</c>)
+        /// <param name="disposing">A parameter indicating that this method is called from either a call to <see cref="IDisposable.Dispose()"/> (<c>true</c>)
         /// or the finalizer (<c>false</c>)</param>
         protected override void Dispose(bool disposing)
         {
@@ -1364,7 +1374,7 @@ namespace SharpMap.Forms
         }
 
 
-        private static Boolean IsControlPressed
+        private static bool IsControlPressed
         {
             get { return (ModifierKeys & Keys.ControlKey) == Keys.ControlKey; }
         }
@@ -1816,11 +1826,17 @@ namespace SharpMap.Forms
 
         private bool UseCurrentTool { get { return _currentTool != null && _currentTool.Enabled; }}
 
+        /// <summary>
+        /// Gets a value indicating that the map is currently being dragged.
+        /// </summary>
         internal bool Dragging
         {
             get => _dragging;
         }
 
+        /// <summary>
+        /// A sync object for the <see cref="Map"/>.
+        /// </summary>
         public object MapLocker => _mapLocker;
 
         /// <summary>
@@ -1862,7 +1878,11 @@ namespace SharpMap.Forms
             if (handler != null) handler(this, e);
         }
 
-        internal protected virtual void OnMapRefreshed(EventArgs e)
+        /// <summary>
+        /// Event invoker for the <see cref="MapRefreshed"/> event
+        /// </summary>
+        /// <param name="e">The event's arguments</param>
+        protected internal virtual void OnMapRefreshed(EventArgs e)
         {
             MapRefreshed?.Invoke(this, e);
         }
@@ -1994,6 +2014,7 @@ namespace SharpMap.Forms
             return new Rectangle(x, y, width, height);
         }
 
+        /// <inheritdoc/>
         protected override void OnInvalidated(InvalidateEventArgs e)
         {
             base.OnInvalidated(e);

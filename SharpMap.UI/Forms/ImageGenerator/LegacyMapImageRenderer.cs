@@ -15,7 +15,7 @@ namespace SharpMap.Forms.ImageGenerator
     /// <summary>
     /// 
     /// </summary>
-    public class LegacyMapBoxImageGenerator : IMapBoxImageGenerator
+    public sealed class LegacyMapBoxImageGenerator : IMapBoxImageGenerator
     {
         private static readonly ILog _logger = LogManager.GetLogger<LegacyMapBoxImageGenerator>();
 
@@ -59,7 +59,7 @@ namespace SharpMap.Forms.ImageGenerator
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing && !_isDisposed)
             {
@@ -449,7 +449,7 @@ namespace SharpMap.Forms.ImageGenerator
 
                     break;
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     _logger.Warn($"{counter}. merge at {rectangle} failed.");
                     if (counter == 3)

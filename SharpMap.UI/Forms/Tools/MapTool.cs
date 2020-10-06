@@ -21,6 +21,9 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Forms.Tools
 {
+    /// <summary>
+    /// Abstract base class for <see cref="IMapTool"/> implementations
+    /// </summary>
     public abstract class MapTool : IMapTool
     {
         //private Map _mapView;
@@ -38,12 +41,18 @@ namespace SharpMap.Forms.Tools
             Description = description;
         }
 
+        /// <inheritdoc />
         public Map Map { get; set; }
 
+        /// <inheritdoc />
         public string Name { get; protected set; }
 
+        /// <inheritdoc />
         public string Description { get; protected set; }
 
+        /// <summary>
+        /// Method stub to cancel this tool
+        /// </summary>
         public virtual void Cancel()
         {
             
@@ -109,56 +118,67 @@ namespace SharpMap.Forms.Tools
             if (handler != null)
                 handler(this, e);
         }
-        
+
+        /// <inheritdoc />
         public virtual bool DoMouseHover(Coordinate mapPosition)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseEnter()
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseLeave()
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseDoubleClick(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseDown(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseMove(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseUp(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoMouseWheel(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual void DoPaint(PaintEventArgs e)
         {
         }
 
+        /// <inheritdoc />
         public virtual bool DoKeyDown(Coordinate mapPosition, KeyEventArgs keyEventArgs)
         {
             return Enabled;
         }
 
+        /// <inheritdoc />
         public virtual bool DoKeyUp(Coordinate mapPosition, KeyEventArgs keyEventArgs)
         {
             return Enabled;

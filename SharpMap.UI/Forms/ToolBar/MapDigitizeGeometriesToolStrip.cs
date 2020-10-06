@@ -16,12 +16,19 @@ namespace SharpMap.Forms.ToolBar
     {
         private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetLogger(typeof(MapDigitizeGeometriesToolStrip));
 
+        /// <summary>
+        /// Creates an instance of this control
+        /// </summary>
         public MapDigitizeGeometriesToolStrip()
             :base()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Creates an instance of this control
+        /// </summary>
+        /// <param name="container">A container</param>
         public MapDigitizeGeometriesToolStrip(IContainer container)
             : base(container)
         {
@@ -43,6 +50,9 @@ namespace SharpMap.Forms.ToolBar
         private SharpMap.Data.Providers.GeometryProvider _geometryProvider;
         private SharpMap.Layers.VectorLayer _layer;
 
+        /// <summary>
+        /// Initialize this component
+        /// </summary>
         public void InitializeComponent()
         {
             this.SuspendLayout();
@@ -92,6 +102,11 @@ namespace SharpMap.Forms.ToolBar
             this.GeometryDefinedHandler = DefaultGeometryDefinedMethod;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected virtual void OnMouseDown(object sender, MouseEventArgs e)
         {
             Debug.WriteLine(string.Format("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name));
@@ -99,6 +114,7 @@ namespace SharpMap.Forms.ToolBar
                 Logger.DebugFormat("\nButtonClicked '{0}'",((ToolStripButton)sender).Name);
         }
 
+        /// <inheritdoc/>
         protected override void OnMapControlChangingInternal(System.ComponentModel.CancelEventArgs e)
         {
             base.OnMapControlChangingInternal(e);
@@ -109,6 +125,7 @@ namespace SharpMap.Forms.ToolBar
             MapControl.GeometryDefined -= OnGeometryDefined;
         }
 
+        /// <inheritdoc/>
         protected override void OnMapControlChangedInternal(EventArgs e)
         {
             base.OnMapControlChangedInternal(e);
@@ -203,6 +220,9 @@ namespace SharpMap.Forms.ToolBar
 
         }
 
+        /// <summary>
+        /// A handler that is invoked when a new geometry was defined.
+        /// </summary>
         [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public SharpMap.Forms.MapBox.GeometryDefinedHandler GeometryDefinedHandler{ get; set; }
 

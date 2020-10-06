@@ -12,12 +12,17 @@ using System.Windows.Forms;
 using Common.Logging;
 using GeoAPI.Geometries;
 using SharpMap.Layers;
-using SharpMap.Rendering.Symbolizer;
 using SharpMap.Styles;
 
 namespace SharpMap.Forms.ImageGenerator
 {
-    public class LayerListImageGenerator : IMapBoxImageGenerator
+    /// <summary>
+    /// A <see cref="IMapBoxImageGenerator"/> implementation that works on a list
+    /// of layers that are rendered separately.<br/>
+    /// Using this technique, <see cref="SharpMap.Map.BackgroundLayer"/> and <see cref="SharpMap.Map.VariableLayers"/>
+    /// are no longer needed and the layers in them can go into <see cref="SharpMap.Map.Layers"/>.
+    /// </summary>
+    public sealed class LayerListImageGenerator : IMapBoxImageGenerator
     {
         private class LockedBitmap
         {
@@ -93,7 +98,7 @@ namespace SharpMap.Forms.ImageGenerator
 
         private static readonly ILog _logger = LogManager.GetLogger<LayerListImageGenerator>();
 
-        private ProgressBar _progressBar;
+        private readonly ProgressBar _progressBar;
         private readonly ConcurrentDictionary<ILayerEx, LockedBitmap> _imageLayers;
         //private readonly List<LayerInfo> _layerInfos;
 
@@ -328,13 +333,14 @@ namespace SharpMap.Forms.ImageGenerator
             }), _progressBar);
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void Dispose(bool disposing)
         {
             if (disposing && !_isDisposed)
             {
@@ -344,12 +350,13 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
-
+        /// <see cref="IMapBoxImageGenerator.Image"/>
         public Image Image
         {
             get { return ImageValue; }
         }
 
+        /// <see cref="IMapBoxImageGenerator.ImageValue"/>
         public Image ImageValue {
             get
             {
@@ -398,8 +405,10 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
+        /// <see cref="IMapBoxImageGenerator.ImageEnvelope"/>
         public Envelope ImageEnvelope { get; private set; }
 
+        /// <see cref="IMapBoxImageGenerator.IsDisposed"/>
         public bool IsDisposed
         {
             get => _isDisposed || MapBox.IsDisposed || !MapBox.IsHandleCreated;
@@ -408,7 +417,11 @@ namespace SharpMap.Forms.ImageGenerator
 
         private bool SetDisposed() => _isDisposed = true;
 
-        public Map Map { get; private set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the map that is currently rendered.
+        /// </summary>
+        private Map Map { get; set; }
 
         /// <summary>
         /// Method to generate a new set of images

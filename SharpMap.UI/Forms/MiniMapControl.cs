@@ -48,9 +48,21 @@ namespace SharpMap.Forms
             /// </summary>
             InsideFrame,
 
+            /// <summary>
+            /// Hit resize north-west corner
+            /// </summary>
             SizeNW,
+            /// <summary>
+            /// Hit resize north-east corner
+            /// </summary>
             SizeNE,
+            /// <summary>
+            /// Hit resize south-west corner
+            /// </summary>
             SizeSW,
+            /// <summary>
+            /// Hit resize south-east corner
+            /// </summary>
             SizeSE
         }
 

@@ -36,6 +36,9 @@ using ColorBlend = SharpMap.Rendering.Thematics.ColorBlend;
 
 namespace SharpMap.Layers
 {
+    /// <summary>
+    /// Heat layer implementation for SharpMap
+    /// </summary>
     [Serializable]
     public class HeatLayer : Layer, ICanQueryLayer
     {
