@@ -26,6 +26,8 @@ using System.IO;
 using NUnit.Framework;
 using SharpMap.Layers;
 
+#pragma warning disable 1591
+
 namespace SharpMap.Data.Providers
 {
 

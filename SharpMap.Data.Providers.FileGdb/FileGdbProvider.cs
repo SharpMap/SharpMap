@@ -29,6 +29,9 @@ using EsriTable = Esri.FileGDB.Table;
 
 namespace SharpMap.Data.Providers
 {
+    /// <summary>
+    /// Provider implementation for ESRI File Gdb database
+    /// </summary>
     [Serializable]
     public class FileGdbProvider : IProvider
     {
@@ -73,10 +76,17 @@ namespace SharpMap.Data.Providers
         [NonSerialized]
         private EsriTable _esriTable;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         public FileGdbProvider()
         {
         }
 
+        /// <summary>
+        /// Creates an instance of this class, assigning the location of the database
+        /// </summary>
+        /// <param name="path">A path to the directory containing the database files.</param>
         public FileGdbProvider(string path)
         {
             _esriGdbLocation = new DirectoryInfo(path);
@@ -93,6 +103,10 @@ namespace SharpMap.Data.Providers
             Dispose(true);
         }
 
+        /// <summary>
+        /// Actual implementation for disposing the provider.
+        /// </summary>
+        /// <param name="disposing">A flag indicating if this function is called from <see cref="IDisposable.Dispose()"/> or the finalizer.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (IsDisposed)
@@ -110,6 +124,9 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating if this provider has been disposed.
+        /// </summary>
         public bool IsDisposed { get; private set; }
 
         #endregion
@@ -136,6 +153,10 @@ namespace SharpMap.Data.Providers
         }
 
         private string _table;
+
+        /// <summary>
+        /// Gets or sets a value indicating the name of the data table.
+        /// </summary>
         public string Table
         {
             get { return _table; }
@@ -191,11 +212,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns all objects whose <see cref="SharpMap.Geometries.BoundingBox"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplifed by their <see cref="SharpMap.Geometries.BoundingBox"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
@@ -400,18 +421,33 @@ namespace SharpMap.Data.Providers
             //Nothing to do
         }
 
+        /// <summary>
+        /// Gets an array of feature dataset names
+        /// </summary>
+        /// <param name="path">The root path (default = "\")</param>
+        /// <returns>An array of feature dataset names.</returns>
         public string[] GetFeatureDatasets(string path = "\\")
         {
             var e = EsriGdbInstance;
             return e.GetChildDatasets(path, "Feature Dataset");
         }
 
+        /// <summary>
+        /// Gets an array of feature class names
+        /// </summary>
+        /// <param name="path">The root path (default = "\")</param>
+        /// <returns>An array of feature class names.</returns>
         public string[] GetFeatureClasses(string path = "\\")
         {
             var e = EsriGdbInstance;
             return e.GetChildDatasets(path, "Feature Class");
         }
 
+        /// <summary>
+        /// Gets an array of table names
+        /// </summary>
+        /// <param name="path">The root path (default = "\")</param>
+        /// <returns>An array of table names.</returns>
         public string[] GetTables(string path = "\\")
         {
             var e = EsriGdbInstance;
@@ -420,6 +456,7 @@ namespace SharpMap.Data.Providers
 
         #endregion
 #if DEBUG
+#pragma warning disable 1591
         public IEnumerable<string> EnumerateTables(string path = "\\")
         {
             var e = EsriGdbInstance;
@@ -437,11 +474,9 @@ namespace SharpMap.Data.Providers
                 }
             }
         }
+#pragma warning restore 1591
 #endif
     }
 
-#if DEBUG
-
-#endif
 
 }
