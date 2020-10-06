@@ -99,7 +99,7 @@
         <PackageIconUrl>https://avatars1.githubusercontent.com/u/8349804??v=3&amp;amp;s=120</PackageIconUrl>
         -->
         <PackageIcon>SharpMap.Logo.png</PackageIcon>
-        <PackageLicense>LGPL-2.1-or-later</PackageLicense>
+        <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <!--
         <AssemblyVersion>$(SmMajor).$(SmMinor).0.0</AssemblyVersion>
