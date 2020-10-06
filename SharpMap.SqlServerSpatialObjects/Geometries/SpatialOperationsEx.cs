@@ -35,13 +35,26 @@ namespace SharpMap.Geometries
         {
             SqlServer2008Ex.LoadSqlServerTypes();
         }
-        
+
+        /// <summary>
+        /// Computes a buffer around <paramref name="g"/> with a given <paramref name="distance"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry</param>
+        /// <param name="distance">A distance</param>
+        /// <returns>The buffered geometry</returns>        [Obsolete]
         [Obsolete]
         public static Geometry Buffer(Geometry g, Double distance)
         {
             return Buffer(g, distance, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Computes a buffer around <paramref name="g"/> with a given <paramref name="distance"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry/geography</param>
+        /// <param name="distance">A distance</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g"/> is a geometry or geography objects</param>
+        /// <returns>The buffered geometry</returns>
         public static Geometry Buffer(Geometry g, Double distance, SqlServerSpatialObjectType spatialMode)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -58,12 +71,25 @@ namespace SharpMap.Geometries
             }
         }
 
+        /// <summary>
+        /// Computes the union of <paramref name="g"/> and <paramref name="geometries"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry</param>
+        /// <param name="geometries">A (series of) geometry objects</param>
+        /// <returns>The union</returns>
         [Obsolete]
         public static Geometry Union(Geometry g, params Geometry[] geometries)
         {
             return Union(g, SqlServerSpatialObjectType.Geometry, geometries);
         }
 
+        /// <summary>
+        /// Computes the union of <paramref name="g"/> and <paramref name="geometries"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry/geography</param>
+        /// <param name="geometries">A (series of) geometry/geography objects</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g"/> and <paramref name="geometries"/> are geometry or geography objects</param>
+        /// <returns>The union</returns>
         public static Geometry Union(Geometry g, SqlServerSpatialObjectType spatialMode, params Geometry[] geometries)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -87,12 +113,25 @@ namespace SharpMap.Geometries
 
         }
 
+        /// <summary>
+        /// Computes the difference of <paramref name="g1"/> and <paramref name="g2"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g1">A geometry</param>
+        /// <param name="g2">A geometry</param>
+        /// <returns>The difference</returns>
         [Obsolete]
         public static Geometry Difference(Geometry g1, Geometry g2)
         {
             return Difference(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Computes the difference of <paramref name="g1"/> and <paramref name="g2"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g1">A geometry/geography</param>
+        /// <param name="g2">A geometry/geography</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g1"/> and <paramref name="g2"/> are geometry or geography objects</param>
+        /// <returns>The difference</returns>
         public static Geometry Difference(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -111,12 +150,25 @@ namespace SharpMap.Geometries
             }
         }
 
+        /// <summary>
+        /// Computes the symmetric-difference of <paramref name="g1"/> and <paramref name="g2"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g1">A geometry</param>
+        /// <param name="g2">A geometry</param>
+        /// <returns>The symmetric difference</returns>
         [Obsolete]
         public static Geometry SymDifference(Geometry g1, Geometry g2)
         {
             return SymDifference(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Computes the symmetric-difference of <paramref name="g1"/> and <paramref name="g2"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g1">A geometry/geography</param>
+        /// <param name="g2">A geometry/geography</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g1"/> and <paramref name="g2"/> are geometry or geography objects</param>
+        /// <returns>The symmetric difference</returns>
         public static Geometry SymDifference(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -135,12 +187,25 @@ namespace SharpMap.Geometries
             }
         }
 
+        /// <summary>
+        /// Computes the intersection of <paramref name="g1"/> and <paramref name="g2"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g1">A geometry</param>
+        /// <param name="g2">A geometry</param>
+        /// <returns>The intersection</returns>
         [Obsolete]
         public static Geometry Intersection(Geometry g1, Geometry g2)
         {
             return Intersection(g1, g2, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Computes the intersection of <paramref name="g1"/> and <paramref name="g2"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g1">A geometry/geography</param>
+        /// <param name="g2">A geometry/geography</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g1"/> and <paramref name="g2"/> are geometry or geography objects</param>
+        /// <returns>The intersection</returns>
         public static Geometry Intersection(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -159,12 +224,23 @@ namespace SharpMap.Geometries
             }
         }
 
+        /// <summary>
+        /// Computes the convex-hull of <paramref name="g"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry</param>
+        /// <returns>The convex-hull</returns>
         [Obsolete]
         public static Geometry ConvexHull(Geometry g)
         {
             return ConvexHull(g, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Computes the convex-hull of <paramref name="g"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry/geography</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g"/> is geometry or geography</param>
+        /// <returns>The convex-hull</returns>
         public static Geometry ConvexHull(Geometry g, SqlServerSpatialObjectType spatialMode)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -181,12 +257,23 @@ namespace SharpMap.Geometries
             }
         }
 
+        /// <summary>
+        /// Computes the boundary of <paramref name="g"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry</param>
+        /// <returns>The boundary</returns>
         [Obsolete]
         public static Geometry Boundary(Geometry g)
         {
             return Boundary(g, SqlServerSpatialObjectType.Geometry);
         }
 
+        /// <summary>
+        /// Computes the boundary of <paramref name="g"/> using SqlServer spatial object algorithms
+        /// </summary>
+        /// <param name="g">A geometry/geography</param>
+        /// <param name="spatialMode">Flag indicating if <paramref name="g"/> is geometry or geography</param>
+        /// <returns>The boundary</returns>
         public static Geometry Boundary(Geometry g, SqlServerSpatialObjectType spatialMode)
         {
             if (spatialMode == SqlServerSpatialObjectType.Geometry)
@@ -195,10 +282,8 @@ namespace SharpMap.Geometries
                 SqlGeometry sgBoundary = sg.STBoundary();
                 return SqlGeometryConverter.ToSharpMapGeometry(sgBoundary);
             }
-            else
-            {
-                throw new ArgumentOutOfRangeException ("Geography does not support STBoundary");
-            }
+
+            throw new ArgumentOutOfRangeException ("Geography does not support STBoundary");
         }
 
     }

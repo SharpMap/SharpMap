@@ -19,6 +19,9 @@ using Factory = GeoAPI.Geometries.IGeometryFactory;
 
 namespace SharpMap.Converters.SqlServer2008SpatialObjects
 {
+    /// <summary>
+    /// Exception for failing conversions of SqlServer geographies
+    /// </summary>
     [Serializable]
     public class SqlGeographyConverterException : Exception
     {
@@ -27,32 +30,62 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         /// </summary>
         public readonly SMGeometry Geometry;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         public SqlGeographyConverterException()
         { }
 
+        /// <summary>
+        /// Creates an instance of this class providing the failing <paramref name="geometry"/>.
+        /// </summary>
+        /// <param name="geometry">A geometry</param>
         public SqlGeographyConverterException(SMGeometry geometry)
             : this("Failed to convert SharpMapGeometry", geometry)
         {
             Geometry = geometry;
         }
 
+        /// <summary>
+        /// Creates an instance of this class providing an <paramref name="inner"/> exception
+        /// and the failing <paramref name="geometry"/>.
+        /// </summary>
+        /// <param name="inner">An inner exception</param>
+        /// <param name="geometry">A geometry</param>
         public SqlGeographyConverterException(Exception inner, SMGeometry geometry)
             : this("Failed to convert SharpMapGeometry", inner, geometry)
         {
         }
 
+        /// <summary>
+        /// Creates an instance of this class providing a <paramref name="message"/> and the failing <paramref name="geometry"/>.
+        /// </summary>
+        /// <param name="message">A message</param>
+        /// <param name="geometry">A geometry</param>
         public SqlGeographyConverterException(string message, SMGeometry geometry)
             : base(message)
         {
             Geometry = geometry;
         }
 
+        /// <summary>
+        /// Creates an instance of this class providing a <paramref name="message"/>, an
+        /// <paramref name="inner"/> exception and the failing <paramref name="geometry"/>.
+        /// </summary>
+        /// <param name="message">A message</param>
+        /// <param name="inner">An inner exception</param>
+        /// <param name="geometry">A geometry</param>
         public SqlGeographyConverterException(string message, Exception inner, SMGeometry geometry)
             : base(message, inner)
         {
             Geometry = geometry;
         }
 
+        /// <summary>
+        /// Creates an instance of this class using the provided <paramref name="info"/> and <paramref name="context"/>.
+        /// </summary>
+        /// <param name="info">A serialization info</param>
+        /// <param name="context">A streaming context.</param>
         protected SqlGeographyConverterException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -60,12 +93,19 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
         }
 
     }
+
+    /// <summary>
+    /// Utility class to convert from and to SqlServer geography objects
+    /// </summary>
     public static class SqlGeographyConverter
     {
         private static readonly GeoAPI.IGeometryServices Services = GeoAPI.GeometryServiceProvider.Instance;
 
-        // For GEOGRAPHY: tolerance is measured in the units defined by the unit_of_measure column of the  
-        // sys.spatial_reference_systems table corresponding to the SRID in which the instance is defined
+        /// <summary>
+        /// A reduction tolerance<br/>
+        /// For SqlSever geography the tolerance is measured in the units defined by the unit_of_measure column of the  
+        /// sys.spatial_reference_systems table corresponding to the SRID in which the instance is defined
+        /// </summary>
         public static double ReduceTolerance = 1d;
 
         static SqlGeographyConverter()
@@ -73,6 +113,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             SqlServer2008Ex.LoadSqlServerTypes();
         }
         
+        /// <summary>
+        /// Converts a geometry to a SqlServer geography
+        /// </summary>
+        /// <param name="smGeometry">A geometry</param>
+        /// <returns>A geography</returns>
         public static SqlGeography ToSqlGeography(SMGeometry smGeometry)
         {
             SqlGeographyBuilder builder = new SqlGeographyBuilder();
@@ -101,6 +146,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
 
         }
 
+        /// <summary>
+        /// Converts a series of geometries to SqlServer geographies.
+        /// </summary>
+        /// <param name="smGeometries">A series of geometries</param>
+        /// <returns>A series of geographies</returns>
         public static IEnumerable<SqlGeography> ToSqlGeographies(IEnumerable<SMGeometry> smGeometries)
         {
             foreach (SMGeometry smGeometry in smGeometries)
@@ -135,7 +185,7 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
                     break;
                 default:
                     throw new ArgumentException(
-                        String.Format("Cannot convert '{0}' geography type", smGeometry.GeometryType), "smGeometry");
+                        string.Format("Cannot convert '{0}' geography type", smGeometry.GeometryType), "smGeometry");
             }
         }
 
@@ -221,10 +271,23 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             builder.EndFigure();
         }
 
+        /// <summary>
+        /// Converts a SqlServer geography to a geometry as used in SharpMap
+        /// </summary>
+        /// <param name="geography">A geography</param>
+        /// <returns>A geometry</returns>
         public static SMGeometry ToSharpMapGeometry(SqlGeography geography)
         {
             return ToSharpMapGeometry(geography, null);
         }
+
+        /// <summary>
+        /// Converts a SqlServer geography to a geometry as used in SharpMap. <br/>
+        /// The <paramref name="factory"/> to use can be specified.
+        /// </summary>
+        /// <param name="geography">A geography</param>
+        /// <param name="factory">The factory to use to create the result geometry.</param>
+        /// <returns>A geometry</returns>
         public static SMGeometry ToSharpMapGeometry(SqlGeography geography, Factory factory)
         {
             if (geography == null) return null;
@@ -258,11 +321,23 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             throw new ArgumentException(string.Format("Cannot convert SqlServer '{0}' to Sharpmap.Geometry", geography.STGeometryType()), "geography");
         }
 
+        /// <summary>
+        /// Converts a series of SqlServer geographies to geometries as used in SharpMap.
+        /// </summary>
+        /// <param name="sqlGeographies">A series of geographies</param>
+        /// <returns>A series of geometries</returns>
         public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeography> sqlGeographies)
         {
             return ToSharpMapGeometries(sqlGeographies, null);
         }
 
+        /// <summary>
+        /// Converts a series of SqlServer geographies to geometries as used in SharpMap. <br/>
+        /// The <paramref name="factory"/> to use can be specified.
+        /// </summary>
+        /// <param name="sqlGeographies">A series of geographies</param>
+        /// <param name="factory">The factory to use to create the result geometries.</param>
+        /// <returns>A series of geometries</returns>
         public static IEnumerable<SMGeometry> ToSharpMapGeometries(IEnumerable<SqlGeography> sqlGeographies, Factory factory)
         {
             var fact = factory ?? Services.CreateGeometryFactory((int)sqlGeographies.First().STSrid);
