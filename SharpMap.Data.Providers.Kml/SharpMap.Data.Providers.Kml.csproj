@@ -8,6 +8,7 @@
         <Copyright>Copyright © CNL-Software 2014</Copyright>
         <PackageTags>sharpmap kml kmz</PackageTags>
         <Description>The package contains a base map layer solution based on BruTile.</Description>
+        <NoWarn>1063</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

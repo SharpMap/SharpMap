@@ -9,6 +9,7 @@
         <PackageTags>SharpMap GIS Map GeoSpatial</PackageTags>
         <Description>This package contains the core components of SharpMap.</Description>
         <!--<EnableApiCompat>true</EnableApiCompat>-->
+        <NoWarn>1701;1702;2100;2235</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

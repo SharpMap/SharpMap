@@ -144,7 +144,7 @@ namespace SharpMap.Web.Wfs
             set { _version = value; }
         }
 
-        private string[] _exceptionFormats;
+        //private string[] _exceptionFormats;
         /// <summary>
         /// Gets a list of available exception mime type formats
         /// </summary>
@@ -152,7 +152,7 @@ namespace SharpMap.Web.Wfs
         {
             get
             {
-                return _exceptionFormats;
+                return null;//_exceptionFormats;
             }
         }
 

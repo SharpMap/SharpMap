@@ -42,13 +42,13 @@ namespace SharpMap.Layers
     {
         private readonly LayerCollection _variableLayers;
         
-        [NonSerialized]
-        private Timer _timer = null;
+        //[NonSerialized]
+        //private Timer _timer;
 
         private volatile bool _isQuerying;
 
-        [NonSerialized]
-        private EventHandler<ElapsedEventArgs> _handler;
+        //[NonSerialized]
+        //private EventHandler<ElapsedEventArgs> _handler;
 
         private bool _pause;
 
@@ -87,12 +87,12 @@ namespace SharpMap.Layers
         public VariableLayerCollection(LayerCollection variableLayers)
         {
             _variableLayers = variableLayers;
-            if (_handler == null)
-            {
-                //_timer = new Timer();
-                //_timer.Interval = 500;
-                //_timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
-            }
+            //if (_handler == null)
+            //{
+            //    //_timer = new Timer();
+            //    //_timer.Interval = 500;
+            //    //_timer.Elapsed += new ElapsedEventHandler(TimerElapsed);
+            //}
         }
 
         private void TimerElapsed(object sender, ElapsedEventArgs e)

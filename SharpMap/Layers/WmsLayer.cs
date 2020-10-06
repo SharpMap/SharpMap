@@ -369,6 +369,7 @@ namespace SharpMap.Layers
             get { return _envelope ?? (_envelope = GetEnvelope()); }
         }
 
+        /// <inheritdoc cref="ILayer.SRID"/>
         public override int SRID
         {
             get { return base.SRID; }

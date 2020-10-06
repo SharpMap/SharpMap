@@ -23,7 +23,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// <returns>A coordinate transformation object</returns>
         /// <remarks>
         /// For this method to work properly, the input coordinate systems must either be 
-        /// <see cref="DotSpatialCoordinateSystem"/>s or return valid <see cref="ICoordinateSystem.WKT"/> values.
+        /// <see cref="DotSpatialCoordinateSystem"/>s or return valid <see cref="IInfo.WKT"/> values.
         /// </remarks>
         public ICoordinateTransformation CreateFromCoordinateSystems(ICoordinateSystem sourceCS, ICoordinateSystem targetCS)
         {
