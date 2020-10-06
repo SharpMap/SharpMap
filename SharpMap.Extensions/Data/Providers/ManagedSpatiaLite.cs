@@ -260,6 +260,10 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating if the index of the SpatiaLite database should be used.
+        /// </summary>
+        /// <returns><c>true</c> if the SpatiaLite index should be used.</returns>
         public bool UseSpatiaLiteIndex
         {
             get { return _useSpatialIndex && _spatiaLiteIndex != SpatiaLiteIndex.None; }
@@ -273,6 +277,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Name of the spatial index
         /// </summary>
+        /// <returns>The name of the spatial index table.</returns>
         [Obsolete("SpatialIndex is obsolete, use UseSpatiaLiteIndex property")]
         public string SpatialIndex
         {
@@ -289,6 +294,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Definition query used for limiting dataset
         /// </summary>
+        /// <returns>A SQL query text</returns>
         public string DefinitionQuery
         {
             get { return _definitionQuery; }
@@ -298,6 +304,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <inheritdoc cref="IBaseProvider.GetGeometriesInView"/>
         public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             var features = new Collection<IGeometry>();
@@ -346,6 +353,7 @@ namespace SharpMap.Data.Providers
             return cn;
         }
 
+        /// <inheritdoc cref="IProvider{T}.GetObjectIDsInView"/>
         public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var objectlist = new Collection<uint>();
@@ -399,6 +407,7 @@ namespace SharpMap.Data.Providers
             return objectlist;
         }
 
+        /// <inheritdoc cref="IProvider{T}.GetGeometryByID"/>
         public override IGeometry GetGeometryByID(uint oid)
         {
             IGeometry geom = null;
@@ -426,6 +435,7 @@ namespace SharpMap.Data.Providers
             return geom;
         }
 
+        /// <inheritdoc cref="BaseProvider.OnExecuteIntersectionQuery"/>
         protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
@@ -508,6 +518,7 @@ namespace SharpMap.Data.Providers
             return item;
         }
 
+        /// <inheritdoc cref="BaseProvider.ExecuteIntersectionQuery(Envelope, FeatureDataSet)"/>
         public override void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             GetNonSpatialColumns();
@@ -563,6 +574,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <inheritdoc cref="BaseProvider.GetFeatureCount"/>
         public override int GetFeatureCount()
         {
             var count = 0;
@@ -597,6 +609,7 @@ namespace SharpMap.Data.Providers
             return count;
         }
 
+        /// <inheritdoc cref="BaseProvider{T}.GetFeature"/>
         public override FeatureDataRow GetFeature(uint rowId)
         {
             GetNonSpatialColumns();
@@ -716,6 +729,8 @@ namespace SharpMap.Data.Providers
                 }
             }
         }
+
+        /// <inheritdoc cref="BaseProvider.GetExtents"/>
         public override Envelope GetExtents()
         {
             if (_cachedExtents != null)

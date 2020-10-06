@@ -762,7 +762,7 @@ namespace SharpMap.Data.Providers
                             }
                         }
                     }
-                    catch (Exception ee)
+                    catch (Exception)
                     {
 
                     }

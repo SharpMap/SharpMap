@@ -27,6 +27,7 @@ using GeoAPI.Geometries;
 using OSGeo.GDAL;
 using GeoAPI.CoordinateSystems;
 using GeoAPI.CoordinateSystems.Transformations;
+using SharpMap.Base;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
@@ -45,10 +46,10 @@ namespace SharpMap.Layers
     /// <remarks>
     /// <example>
     /// <code lang="C#">
-    /// myMap = new SharpMap.Map(new System.Drawing.Size(500,250);
-    /// SharpMap.Layers.GdalRasterLayer layGdal = new SharpMap.Layers.GdalRasterLayer("Blue Marble", @"C:\data\bluemarble.ecw");
-    /// myMap.Layers.Add(layGdal);
-    /// myMap.ZoomToExtents();
+    /// myMap = new SharpMap.Map(new System.Drawing.Size(500,250);<br/>
+    /// SharpMap.Layers.GdalRasterLayer layGdal = new SharpMap.Layers.GdalRasterLayer("Blue Marble", @"C:\data\bluemarble.ecw");<br/>
+    /// myMap.Layers.Add(layGdal);<br/>
+    /// myMap.ZoomToExtents();<br/>
     /// </code>
     /// </example>
     /// </remarks>
@@ -63,6 +64,11 @@ namespace SharpMap.Layers
         }
 
         private IGeometryFactory _factory;
+        
+        /// <summary>
+        /// Gets or sets a value indicating the geometry factory to use when creating geometries.
+        /// </summary>
+        /// <returns>A geometry factory</returns>
         protected IGeometryFactory Factory
         {
             get
@@ -72,12 +78,19 @@ namespace SharpMap.Layers
             set { _factory = value; }
         }
 
+        /// <summary>
+        /// The extent of the layer
+        /// </summary>
         protected Envelope _envelope;
-        protected Dataset _gdalDataset;
-        //internal GeoTransform _geoTransform;
         
-        //private double _histoBrightness, _histoContrast;
-        //private double[] _histoMean;
+        /// <summary>
+        /// The inner dataset object
+        /// </summary>
+        protected Dataset _gdalDataset;
+
+        /// <summary>
+        /// The size of the raster image
+        /// </summary>
         protected Size _imageSize;
 
         // outer radius is feather between inner radius and rest of image
@@ -85,7 +98,11 @@ namespace SharpMap.Layers
         // outer radius is feather between inner radius and rest of image
 
         private Point _stretchPoint;
-        protected bool _useRotation = true; // use geographic information
+        
+        /// <summary>
+        /// Flag indicating of geographic rotation is to be used.
+        /// </summary>
+        protected bool _useRotation = true;
 
         #region accessors
 
@@ -252,28 +269,45 @@ namespace SharpMap.Layers
             get { return new GeoTransform(_gdalDataset).HorizontalPixelResolution; }
         }
 
-        ///<summary>
-        /// Use rotation information
+        /// <summary>
+        /// Gets a value indicating if rotation information is to be used
         /// </summary>
+        /// <returns><c>true</c> if rotation information is to be used.</returns>
         public bool UseRotation
         {
             get { return _useRotation; }
             set
             {
+                if (value == _useRotation)
+                    return;
+
                 _useRotation = value;
                 _envelope = GetExtent();
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the size of the raster data set.
+        /// </summary>
+        /// <returns>The size of the raster data set.</returns>
         public Size Size
         {
             get { return _imageSize; }
         }
 
+
+        /// <summary>
+        /// Gets or sets a value indicating if color correction is to be applied.
+        /// </summary>
         public bool ColorCorrect { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating the portion of the image for which the <see cref="Histogram"/> is evaluated
+        /// </summary>
+        /// <returns>The portion of the image for which the <see cref="Histogram"/> is evaluated</returns>
         public Rectangle HistoBounds { get; set; }
 
+#pragma warning disable 1591
         [Obsolete("Use CoordinateTransformation instead")]
         public ICoordinateTransformation Transform
         {
@@ -283,7 +317,12 @@ namespace SharpMap.Layers
                 CoordinateTransformation = value;
             }
         }
+#pragma warning restore 1591
 
+        /// <summary>
+        /// Gets or sets a value indicating a color that is used as transparent color.
+        /// </summary>
+        /// <returns>A color that is interpreted as transparent.</returns>
         public Color TransparentColor { get; set; }
 
         /// <summary>
@@ -492,6 +531,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="DisposableObject.ReleaseManagedResources"/>
         protected override void ReleaseManagedResources()
         {
             _factory = null;
@@ -559,7 +599,10 @@ namespace SharpMap.Layers
             }
         }
 
-        // get raster projection
+        /// <summary>
+        /// Gets the spatial reference system of this layer
+        /// </summary>
+        /// <returns>A spatial reference system.</returns>
         public ICoordinateSystem GetProjection()
         {
 
@@ -618,7 +661,12 @@ namespace SharpMap.Layers
                 return map.Zoom * (dblImginMapH / dsWidth);
         }
 
-        // zooms to nearest tiff internal resolution set
+        /// <summary>
+        /// Calculates the Zoom value to nearest tiff internal resolution set
+        /// </summary>
+        /// <param name="map">A map</param>
+        /// <param name="bZoomIn">A flag indicating if zooming direction is magnify</param>
+        /// <returns>A zoom value</returns>
         public double GetZoomNearestRSet(Map map, bool bZoomIn)
         {
             double dsWidth = _imageSize.Width;
@@ -686,13 +734,20 @@ namespace SharpMap.Layers
             return map.Zoom;
         }
 
+        /// <summary>
+        /// Resets the <see cref="Histogram"/> bounds.
+        /// </summary>
         public void ResetHistoRectangle()
         {
             HistoBounds = new Rectangle((int)_envelope.MinX, (int)_envelope.MinY, 
                                          (int)_envelope.Width, (int)_envelope.Height);
         }
 
-        // gets transform between raster's native projection and the map projection
+
+        /// <summary>
+        /// Gets transform between raster's native projection and the map projection and sets it to <see cref="Layer.CoordinateTransformation"/>
+        /// </summary>
+        /// <param name="mapProjection">A map projection</param>
         private void GetTransform(ICoordinateSystem mapProjection)
         {
             if (mapProjection == null || Projection == "")
@@ -748,7 +803,10 @@ namespace SharpMap.Layers
             return null;
         }
 
-        // get 4 corners of image
+        /// <summary>
+        /// Gets the four corner coordinates of the raster data set.
+        /// </summary>
+        /// <returns>An array four corner coordinates of the raster data set</returns>
         public Coordinate[] GetFourCorners()
         {
             var points = new Coordinate[4];
@@ -784,6 +842,10 @@ namespace SharpMap.Layers
             return points;
         }
 
+        /// <summary>
+        /// Gets a polygon outline of the raster data set boundary
+        /// </summary>
+        /// <returns>A polygon outline of the raster data set boundary</returns>
         public Polygon GetFootprint()
         {
             var myRing = Factory.CreateLinearRing(GetFourCorners());
@@ -827,7 +889,10 @@ namespace SharpMap.Layers
             HistoBounds = new Rectangle((int)left, (int)bottom, (int)right, (int)top);
         }
 
-        // public method to set envelope and transform to new projection
+        /// <summary>
+        /// Reprojects current raster to the given spatial reference system.
+        /// </summary>
+        /// <param name="cs">A spatial reference system.</param>
         public void ReprojectToCoordinateSystem(ICoordinateSystem cs)
         {
             GetTransform(cs);
@@ -855,8 +920,15 @@ namespace SharpMap.Layers
             ReprojectToCoordinateSystem(cs);
         }
 
-        // add image pixels to the map
-        
+        /// <summary>
+        /// Renders the preview of the raster
+        /// </summary>
+        /// <param name="dataset">The raster data set</param>
+        /// <param name="size">Teh size</param>
+        /// <param name="g">A graphics object</param>
+        /// <param name="displayBbox">The bounding box of the display</param>
+        /// <param name="mapProjection">The spatial reference system of the map</param>
+        /// <param name="map">The map viewport</param>
         protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
                                           Envelope displayBbox, ICoordinateSystem mapProjection, MapViewport map)
         {
@@ -1661,6 +1733,14 @@ namespace SharpMap.Layers
             }
             return 1d;
         }
+        /// <summary>
+        /// Method to write a pixel
+        /// </summary>
+        /// <param name="x">the x ordinate</param>
+        /// <param name="intVal">An array of values to set</param>
+        /// <param name="iPixelSize">The size of a pixel</param>
+        /// <param name="ch">An array of channel interpretation</param>
+        /// <param name="row">A pointer to the beginning of the row</param>
         protected unsafe void WritePixel(double x, double[] intVal, int iPixelSize, int[] ch, byte* row)
         {
             // write out pixels
@@ -2102,6 +2182,7 @@ namespace SharpMap.Layers
             ExecuteIntersectionQuery(pt, ds);
         }
 
+        
         private void ExecuteIntersectionQuery(Coordinate pt, FeatureDataSet ds)
         {
 
@@ -2181,6 +2262,8 @@ namespace SharpMap.Layers
         }
 
         private bool _isQueryEnabled = true;
+
+        /// <inheritdoc />
         public bool IsQueryEnabled
         {
             get
@@ -2196,6 +2279,10 @@ namespace SharpMap.Layers
         #endregion
 
         private Color _noDataInitColor = Color.Magenta;
+
+        /// <summary>
+        /// Gets pr sets a value indicating the color to assign for NO_DATA values
+        /// </summary>
         public Color NoDataInitColor
         {
             get { return _noDataInitColor; }
@@ -2203,6 +2290,10 @@ namespace SharpMap.Layers
         }
 
         private ColorBlend _colorBlend;
+        
+        /// <summary>
+        /// Gets pr sets a value indicating a color blend
+        /// </summary>
         public ColorBlend ColorBlend
         {
             get { return _colorBlend; }

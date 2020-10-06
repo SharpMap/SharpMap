@@ -37,6 +37,7 @@ using Ogr = OSGeo.OGR.Ogr;
 
 namespace SharpMap
 {
+#pragma warning disable 1591
     public static partial class GdalConfiguration
     {
         private static volatile bool _configuredOgr;
@@ -212,4 +213,5 @@ namespace SharpMap
 #endif
         }
     }
+#pragma warning restore 1591
 }

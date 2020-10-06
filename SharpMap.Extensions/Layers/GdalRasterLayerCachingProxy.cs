@@ -30,9 +30,14 @@ using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers
 {
+    
+    /// <summary>
+    /// A cache for <see cref="GdalRasterLayer"/>.
+    /// </summary>
     [Serializable]
     public class GdalRasterLayerCachingProxy : Layer, ICanQueryLayer
     {
+        [Serializable]
         private class ViewPort
         {
             public Envelope BoundingBox { get; set; }
@@ -49,12 +54,22 @@ namespace SharpMap.Layers
         private ViewPort _viewPort = new ViewPort();
 
         #region ctor
+
+        /// <summary>
+        /// Creates an instance of this class caching the provided <paramref name="innerLayer"/>
+        /// </summary>
+        /// <param name="innerLayer">The layer to cache</param>
         public GdalRasterLayerCachingProxy(GdalRasterLayer innerLayer)
         {
             _innerLayer = innerLayer;
             LayerName = innerLayer.LayerName;
         }
 
+        /// <summary>
+        /// Creates an instance of this class by creating a new <see cref="GdalRasterLayer"/>, which is then cached.
+        /// </summary>
+        /// <param name="strLayerName">The name of the layer</param>
+        /// <param name="imageFilename">The GDAL Raster layer connection string</param>
         public GdalRasterLayerCachingProxy(string strLayerName, string imageFilename)
         {
             LayerName = strLayerName;
@@ -62,6 +77,9 @@ namespace SharpMap.Layers
         } 
         #endregion
 
+        /// <summary>
+        /// Gets or sets the filename of the raster file
+        /// </summary>
         public string Filename
         {
             get { return _innerLayer.Filename; }
@@ -367,11 +385,18 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the size of the raster data set.
+        /// </summary>
+        /// <returns>The size of the raster data set.</returns>
         public Size Size
         {
             get { return _innerLayer.Size; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating if color correction is to be applied.
+        /// </summary>
         public bool ColorCorrect
         {
             get { return _innerLayer.ColorCorrect; }
@@ -382,6 +407,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the portion of the image for which the <see cref="Histogram"/> is evaluated
+        /// </summary>
+        /// <returns>The portion of the image for which the <see cref="Histogram"/> is evaluated</returns>
         public Rectangle HistoBounds
         {
             get { return _innerLayer.HistoBounds; }
@@ -391,13 +420,15 @@ namespace SharpMap.Layers
                 _innerLayer.HistoBounds = value;
             }
         }
-
+#pragma warning disable 1591
         [Obsolete("Use CoordinateTransformation instead")]
         public ICoordinateTransformation Transform
         {
             get { return _innerLayer.Transform; }
         }
+#pragma warning restore 1591
 
+        /// <inheritdoc cref="Layer.CoordinateTransformation"/>
         public override ICoordinateTransformation CoordinateTransformation
         {
             get { return _innerLayer.CoordinateTransformation; }
@@ -408,6 +439,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="Layer.ReverseCoordinateTransformation"/>
         public override ICoordinateTransformation ReverseCoordinateTransformation
         {
             get { return _innerLayer.ReverseCoordinateTransformation; }
@@ -418,6 +450,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating a color that is used as transparent color.
+        /// </summary>
+        /// <returns>A color that is interpreted as transparent.</returns>
         public Color TransparentColor
         {
             get { return _innerLayer.TransparentColor; }
@@ -428,6 +464,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets or sets the minimum- and maximum pixel byte values of all raster bands.
+        /// <para/>Knowing these, you can scale the color range
+        /// </summary>
         public Point StretchPoint
         {
             get { return _innerLayer.StretchPoint; }
@@ -438,27 +478,35 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="Layer.Envelope"/>
         public override BoundingBox Envelope
         {
             get { return _innerLayer.Envelope; }
         }
 
+        /// <inheritdoc cref="ICanQueryLayer.ExecuteIntersectionQuery(Envelope, FeatureDataSet)"/>
         public void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             ((ICanQueryLayer)_innerLayer).ExecuteIntersectionQuery(box, ds);
         }
 
+        /// <inheritdoc cref="ICanQueryLayer.ExecuteIntersectionQuery(Geometry, FeatureDataSet)"/>
         public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             ((ICanQueryLayer)_innerLayer).ExecuteIntersectionQuery(geometry, ds);
         }
 
+        /// <inheritdoc cref="ICanQueryLayer.IsQueryEnabled"/>
         public bool IsQueryEnabled
         {
             get { return _innerLayer.IsQueryEnabled; }
             set { _innerLayer.IsQueryEnabled = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating if redrawing is required
+        /// </summary>
+        /// <returns><c>true</c> if inner layer needs to be redrawn.</returns>
         protected internal bool RequiresRedraw
         {
             get
@@ -471,6 +519,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the size of the last rendered viewport
+        /// </summary>
+        /// <returns>The size of the last rendered viewport.</returns>
         protected Size? LastRenderedSize
         {
             get { return _viewPort.Size; }
@@ -481,6 +533,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the extent of the last rendered viewport
+        /// </summary>
+        /// <returns>The extent of the last rendered viewport.</returns>
         protected BoundingBox LastRenderedExtents
         {
             get { return _viewPort.BoundingBox; }
@@ -491,6 +547,10 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the last cached bitmap
+        /// </summary>
+        /// <returns>The last cached bitmap.</returns>
         protected Bitmap CachedBitmap
         {
             get { return _viewPort.CachedBitmap; }
@@ -503,6 +563,7 @@ namespace SharpMap.Layers
                 RequiresRedraw = true;
         }
 
+        /// <inheritdoc cref="Layer.Render(Graphics, MapViewport)"/>
         [MethodImpl(MethodImplOptions.Synchronized)]
         public override void Render(Graphics g, MapViewport map)
         {

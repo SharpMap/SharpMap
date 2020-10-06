@@ -22,6 +22,7 @@ using System.IO;
 using Common.Logging;
 using GeoAPI.Geometries;
 using OSGeo.GDAL;
+using SharpMap.Base;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 
@@ -29,15 +30,13 @@ namespace SharpMap.Layers
 {
     /// <summary>
     /// Implementation of TILEINDEX of GDAL raster-layers
-    /// 
+    /// <para/>
     /// A tileindex is a shapefile that ties together several datasets into a single layer. Therefore, you don’t need to create separate layers for each piece of imagery or each county’s road data; make a tileindex and let MapServer piece the mosaic together on the fly.
     /// Making a tileindex is easy using gdaltindex for GDAL data sources (rasters) and ogrtindex for OGR data sources (vectors). You just run them, specifying the index file to create and the list of data sources to add to the index.
-    ///
-    /// For example, to make a mosaic of several TIFFs:
-    ///
-    /// gdaltindex imagery.shp imagery/*.tif
-    
-    /// See: http://mapserver.org/optimization/tileindex.html
+    /// <para/>
+    /// For example, to make a mosaic of several TIFFs: <br/>
+    /// <code>gdaltindex imagery.shp imagery/*.tif</code>
+    /// See: <a href="http://mapserver.org/optimization/tileindex.html"/>
     /// </summary>
     public class GdalTileIndexRasterLayer : GdalRasterLayer
     {
@@ -64,15 +63,15 @@ namespace SharpMap.Layers
 
         /// <summary>
         /// Open a TileIndex shapefile
-        /// 
+        /// <para/>
         /// A tileindex is a shapefile that ties together several datasets into a single layer. Therefore, you don’t need to create separate layers for each piece of imagery or each county’s road data; make a tileindex and let SharpMap piece the mosaic together on the fly.
         /// Making a tileindex is easy using gdaltindex for GDAL data sources (rasters). You just run the tool, specifying the index file to create and the list of data sources to add to the index.
-        ///
+        /// <para/>
         /// For example, to make a mosaic of several TIFFs:
-        ///
+        /// <code>
         /// gdaltindex imagery.shp imagery/*.tif
-
-        /// See: http://mapserver.org/optimization/tileindex.html
+        /// </code>
+        /// See: <a href="http://mapserver.org/optimization/tileindex.html"/>
         /// </summary>
         /// <param name="layerName">Name of the layer</param>
         /// <param name="fileName">Path to the ShapeFile containing tile-indexes</param>
@@ -88,8 +87,10 @@ namespace SharpMap.Layers
             _openDatasets = new Dictionary<string, CacheHolder>();
         }
 
-        
-
+        /// <summary>
+        /// Gets a value indicating the extent of the cached <see cref="GdalRasterLayer"/>.
+        /// </summary>
+        /// <returns>The extent of the cached raster layer</returns>
         public override Envelope Envelope
         {
             get
@@ -98,6 +99,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="Layer.Render(Graphics, MapViewport)"/>
         public override void Render(Graphics g, MapViewport map)
         {
             try
@@ -158,6 +160,7 @@ namespace SharpMap.Layers
             }
         }
 
+        /// <inheritdoc cref="DisposableObject.ReleaseManagedResources"/>
         protected override void ReleaseManagedResources()
         {
             _shapeFile.Dispose();

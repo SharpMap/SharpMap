@@ -84,20 +84,29 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// return the file name of the datasource
+        /// Gets or sets a value indicating the filename of the data source
         /// </summary>
+        /// <returns>The filename of the data source</returns>
         public string Filename
         {
             get { return _filename; }
             set { _filename = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating a SQL WHERE clause.
+        /// </summary>
+        /// <returns>A SQL WHERE clause</returns>
         public String DefinitionQuery
         {
             get { return _definitionQuery; }
             set { _definitionQuery = value; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the number of layers inside the data source.
+        /// </summary>
+        /// <returns>The number of layers in the data source</returns>
         public Int32 NumberOfLayers
         {
             get
@@ -155,6 +164,10 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating the geometry type as used in OGR
+        /// </summary>
+        /// <returns>The geometry type as used in OGR</returns>
         public String OgrGeometryTypeString
         {
             get
@@ -432,8 +445,6 @@ namespace SharpMap.Data.Providers
             {
                 using (var gr = ogrFeature.GetGeometryRef())
                 {
-                    var reader = new WKBReader(Factory);
-                    //var g = ParseOgrGeometry(gr, Factory);
                     var g = new OgrGeometryReader(Factory).Read(gr) ;
                     return g;
                 }
@@ -541,6 +552,7 @@ namespace SharpMap.Data.Providers
 
         #region Disposers and finalizers
 
+        ///<inheritdoc cref="SharpMap.Base.DisposableObject.ReleaseManagedResources"/>
         protected override void ReleaseManagedResources()
         {
             if (_ogrDataSource != null)
@@ -720,11 +732,23 @@ namespace SharpMap.Data.Providers
 
         #endregion
 
+        /// <summary>
+        /// Method to execute a query of feature data against this provider using the limiting <paramref name="query"/> sql snippet.
+        /// </summary>
+        /// <param name="query">An SQL WHERE query snippet</param>
+        /// <returns>A feature data set.</returns>
         public FeatureDataSet ExecuteQuery(string query)
         {
             return ExecuteQuery(query, null);
         }
 
+        /// <summary>
+        /// Method to execute a query of feature data against this provider using the limiting <paramref name="query"/> sql snippet
+        /// and a geometry <paramref name="filter"/>.
+        /// </summary>
+        /// <param name="query">An SQL WHERE query snippet</param>
+        /// <param name="filter">A geometry filter.</param>
+        /// <returns>A feature data set.</returns>
         public FeatureDataSet ExecuteQuery(string query, OgrGeometry filter)
         {
             try
@@ -800,6 +824,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="table">The name of the table</param>
         /// <param name="geometryType">The geometry type</param>
+        /// <param name="srid">The spatial reference identifier.</param>
         /// <param name="driver">The driver</param>
         /// <param name="connection">The connection string</param>
         /// <param name="driverOptions">The options for the driver</param>
@@ -976,8 +1001,8 @@ namespace SharpMap.Data.Providers
 
                 case "System.DateTime":
                     return OgrFieldType.OFTDateTime;
-                    return OgrFieldType.OFTDate;
-                    return OgrFieldType.OFTTime;
+                    //return OgrFieldType.OFTDate;
+                    //return OgrFieldType.OFTTime;
 
                 case "System.Byte[]":
                     return OgrFieldType.OFTBinary;
@@ -1005,7 +1030,7 @@ namespace SharpMap.Data.Providers
                 //don't know when this is supposed to happen
                 case "xxx":
                     return OgrFieldType.OFTWideString;
-                    return OgrFieldType.OFTWideStringList;
+                    //return OgrFieldType.OFTWideStringList;
             }
             throw new NotSupportedException();
         }
@@ -1026,11 +1051,12 @@ namespace SharpMap.Data.Providers
             {
                 _factory = factory;
             }
-
+#pragma warning disable 612
             /// <summary>
             /// A WKB reader
             /// </summary>
             private WKBReader Reader { get { return _reader ?? (_reader = new WKBReader(_factory)); } }
+#pragma warning restore 612
 
             /// <summary>
             /// Method to read the geometry

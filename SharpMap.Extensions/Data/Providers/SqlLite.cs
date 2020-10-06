@@ -27,6 +27,9 @@ using Common.Logging;
 
 namespace SharpMap.Data.Providers
 {
+    /// <summary>
+    /// Provider implementation for plain SqLite databases.
+    /// </summary>
     public class SqlLite : PreparedGeometryProvider
     {
         static ILog logger = LogManager.GetLogger(typeof(SqlLite));
@@ -37,6 +40,13 @@ namespace SharpMap.Data.Providers
         private string _objectIdColumn;
         private string _table;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="connectionStr">A connection string to the SQLite database</param>
+        /// <param name="tablename">The name of the spatial table</param>
+        /// <param name="geometryColumnName">The name of the geometry column</param>
+        /// <param name="oidColumnName">The name of the identifier column</param>
         public SqlLite(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
         {
             ConnectionString = connectionStr;
@@ -46,7 +56,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Connectionstring
+        /// Gets or sets a value indicating the connection to the SQLite database
         /// </summary>
         public string ConnectionString
         {
@@ -92,6 +102,7 @@ namespace SharpMap.Data.Providers
 
         #region IProvider Members
 
+        /// <inheritdoc cref="IBaseProvider.GetGeometriesInView"/>
         public override Collection<Geometry> GetGeometriesInView(BoundingBox bbox)
         {
             var features = new Collection<Geometry>();
@@ -126,6 +137,7 @@ namespace SharpMap.Data.Providers
             return features;
         }
 
+        /// <inheritdoc cref="IProvider{T}.GetObjectIDsInView"/>
         public override Collection<uint> GetObjectIDsInView(BoundingBox bbox)
         {
             var objectlist = new Collection<uint>();
@@ -159,6 +171,7 @@ namespace SharpMap.Data.Providers
             return objectlist;
         }
 
+        /// <inheritdoc cref="IProvider{T}.GetGeometryByID"/>
         public override Geometry GetGeometryByID(uint oid)
         {
             Geometry geom = null;
@@ -183,6 +196,7 @@ namespace SharpMap.Data.Providers
             return geom;
         }
 
+        /// <inheritdoc cref="PreparedGeometryProvider.OnExecuteIntersectionQuery"/>
         protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
@@ -210,6 +224,7 @@ namespace SharpMap.Data.Providers
             ds.Tables.Add(res);
         }
 
+        /// <inheritdoc cref="BaseProvider.ExecuteIntersectionQuery(BoundingBox, FeatureDataSet)"/>
         public override void ExecuteIntersectionQuery(BoundingBox box, FeatureDataSet ds)
         {
             using (var conn = new SQLiteConnection(ConnectionID))
@@ -251,6 +266,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <inheritdoc cref="BaseProvider.GetFeatureCount"/>
         public override int GetFeatureCount()
         {
             var count = 0;
@@ -269,6 +285,7 @@ namespace SharpMap.Data.Providers
             return count;
         }
 
+        /// <inheritdoc cref="BaseProvider{T}.GetFeature"/>
         public override FeatureDataRow GetFeature(uint rowId)
         {
             using (var conn = new SQLiteConnection(ConnectionString))
@@ -307,6 +324,8 @@ namespace SharpMap.Data.Providers
             }
         }
 
+
+        /// <inheritdoc cref="BaseProvider.GetExtents"/>
         public override BoundingBox GetExtents()
         {
             BoundingBox box = null;
@@ -562,15 +581,23 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        [Obsolete]
+        private static readonly char[] _hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
+        [Obsolete]
         public static string ToHexString(byte[] bytes)
         {
-            char[] hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
             char[] chars = new char[bytes.Length*2];
             for (int i = 0; i < bytes.Length; i++)
             {
                 int b = bytes[i];
-                chars[i*2] = hexDigits[b >> 4];
-                chars[i*2 + 1] = hexDigits[b & 0xF];
+                chars[i*2] = _hexDigits[b >> 4];
+                chars[i*2 + 1] = _hexDigits[b & 0xF];
             }
             return new string(chars);
         }

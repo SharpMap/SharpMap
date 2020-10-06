@@ -55,11 +55,11 @@ namespace SharpMap.Data.Providers
         private readonly SpatiaLiteIndex _spatiaLiteIndex;
         private string _table;
 
-        private int _numOrdinateDimensions = 2;
+        //private int _numOrdinateDimensions;
 
         private Boolean _useSpatialIndex;
 
-        private static readonly string SpatiaLitePath;
+        //private static readonly string SpatiaLitePath;
         private static readonly string SpatiaLiteNativeDll = "libspatialite-2.dll";
 
         ///// <summary>
@@ -171,16 +171,16 @@ namespace SharpMap.Data.Providers
                         {
                             case "2":
                             case "XY":
-                                _numOrdinateDimensions = 2;
+                                //_numOrdinateDimensions = 2;
                                 break;
                             case "3":
                             case "XYZ":
                             case "XYM":
-                                _numOrdinateDimensions = 3;
+                                //_numOrdinateDimensions = 3;
                                 break;
                             case "4":
                             case "XYZM":
-                                _numOrdinateDimensions = 4;
+                                //_numOrdinateDimensions = 4;
                                 break;
                             default:
                                 throw new Exception("Cannot evaluate number of ordinate dimensions");
@@ -269,6 +269,10 @@ namespace SharpMap.Data.Providers
             set { _objectIdColumn = value; }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating if the index of the SpatiaLite database should be used.
+        /// </summary>
+        /// <returns><c>true</c> if the SpatiaLite index should be used.</returns>
         public bool UseSpatiaLiteIndex
         {
             get { return _useSpatialIndex && _spatiaLiteIndex != SpatiaLiteIndex.None; }
@@ -307,6 +311,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <inheritdoc cref="BaseProvider.GetGeometriesInView"/>
         public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
         {
             var features = new Collection<IGeometry>();
@@ -340,6 +345,7 @@ namespace SharpMap.Data.Providers
             return features;
         }
 
+        /// <inheritdoc cref="BaseProvider{T}.GetObjectIDsInView"/>
         public override Collection<uint> GetObjectIDsInView(Envelope bbox)
         {
             var objectlist = new Collection<uint>();
@@ -371,6 +377,7 @@ namespace SharpMap.Data.Providers
             return objectlist;
         }
 
+        /// <inheritdoc cref="BaseProvider{T}.GetGeometryByID"/>
         public override IGeometry GetGeometryByID(uint oid)
         {
             IGeometry geom = null;
@@ -396,6 +403,7 @@ namespace SharpMap.Data.Providers
             return geom;
         }
 
+        /// <inheritdoc cref="BaseProvider.OnExecuteIntersectionQuery"/>
         protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
@@ -407,7 +415,9 @@ namespace SharpMap.Data.Providers
 
                 string strSql = "SELECT " + cols + ", AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry ";
                 strSql += "FROM " + Table + " WHERE ";
+#pragma warning disable 618
                 strSql += GetOverlapsClause(geom);
+#pragma warning restore 618
 
                 if (!String.IsNullOrEmpty(_definitionQuery))
                     strSql += " AND " + DefinitionQuery;
@@ -441,6 +451,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <inheritdoc cref="BaseProvider.ExecuteIntersectionQuery(Envelope, FeatureDataSet)"/>
         public override void ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
@@ -486,6 +497,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
+        /// <inheritdoc cref="BaseProvider.GetFeatureCount"/>
         public override int GetFeatureCount()
         {
             int count;
@@ -512,6 +524,7 @@ namespace SharpMap.Data.Providers
             return count;
         }
 
+        /// <inheritdoc cref="BaseProvider{T}.GetFeature"/>
         public override FeatureDataRow GetFeature(uint rowId)
         {
             using (SQLiteConnection conn = SpatiaLiteConnection(ConnectionString))
@@ -631,6 +644,8 @@ namespace SharpMap.Data.Providers
                 }
             }
         }
+
+        /// <inheritdoc cref="BaseProvider.GetExtents"/>
         public override Envelope GetExtents()
         {
             if (_cachedExtents != null)
@@ -749,12 +764,15 @@ namespace SharpMap.Data.Providers
             return Factory.CreateLineString(pointColl);
         }
 
+#pragma warning disable 1591
+        [Obsolete("Will be made private!")]
         public string GetOverlapsClause(IGeometry geom)
         {
             string wkt = GeometryToWKT.Write(geom);
             string retval = "Intersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
             return retval;
         }
+#pragma warning restore 1591
 
         /// <summary>
         /// Function to return an <see cref="IEnumerable{Spatialite}"/> for a given sqlite database.

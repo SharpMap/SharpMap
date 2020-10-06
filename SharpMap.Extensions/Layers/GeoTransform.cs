@@ -133,9 +133,9 @@ namespace SharpMap.Layers
             get { return _transform[3]; }
         }
 
-        /// <summary>
-        /// bottom value of the image
-        /// </summary>
+        ///// <summary>
+        ///// bottom value of the image
+        ///// </summary>
         // public double Bottom
         // {
         //   get { return this.Top + (this.VerticalPixelResolution * _gdalDataset.YSize); }
