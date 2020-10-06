@@ -101,6 +101,7 @@
         <PackageIcon>SharpMap.Logo.png</PackageIcon>
         <PackageLicenseExpression>LGPL-2.1-or-later</PackageLicenseExpression>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <MinClientVersion>4.0</MinClientVersion>
         <!--
         <AssemblyVersion>$(SmMajor).$(SmMinor).0.0</AssemblyVersion>
         <FileVersion>$(VersionPrefix).$(SmBuildNo)</FileVersion>
