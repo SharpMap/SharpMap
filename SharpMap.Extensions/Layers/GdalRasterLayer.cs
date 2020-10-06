@@ -2156,18 +2156,6 @@ namespace SharpMap.Layers
             _stretchPoint = new Point((int)min, (int)max);
         }
 
-        #region Disposers and finalizers
-
-        /// <summary>
-        /// Finalizer
-        /// </summary>
-        ~GdalRasterLayer()
-        {
-            ReleaseUnmanagedResources();
-        }
-
-        #endregion
-
         #region Implementation of ICanQueryLayer
 
         /// <summary>
