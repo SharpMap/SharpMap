@@ -7,11 +7,26 @@ using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
+    /// <summary>
+    /// Enumeration of possible ordinate requirements
+    /// </summary>
     public enum GpkgOrdinateOption : byte
     {
+        /// <summary>
+        /// Undefined
+        /// </summary>
         Undefined = 0,
+        /// <summary>
+        /// Geometry's coordinates <b>must not</b> carry the ordinate
+        /// </summary>
         Prohibited,
+        /// <summary>
+        /// Geometry's coordinates <b>must</b> carry the ordinate
+        /// </summary>
         Mandatory,
+        /// <summary>
+        /// Geometry's coordinates <b>may</b> carry the ordinate
+        /// </summary>
         Optional,
     }
     
@@ -66,26 +81,41 @@ namespace SharpMap.Data.Providers
             get { return _dataType; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the identifier of this content.
+        /// </summary>
         public string Identifier
         {
             get { return _identifier; }
         }
 
+        /// <summary>
+        /// Gets a value describing the content
+        /// </summary>
         public string Description
         {
             get { return _description; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the extent of the content
+        /// </summary>
         public Envelope Extent
         {
             get { return _extent; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the last time this content has been changed
+        /// </summary>
         public DateTime LastChange
         {
             get { return _lastChange; }
         }
 
+        /// <summary>
+        /// Gets a value indicating the spatial reference identifier of this content
+        /// </summary>
         public int SRID
         {
             get { return _srid; }

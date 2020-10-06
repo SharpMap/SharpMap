@@ -67,7 +67,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Method to read the content from the 'gpkg_contents' table, filtered by <see cref="kind"/>
+        /// Method to read the content from the 'gpkg_contents' table, filtered by <paramref name="kind"/>
         /// </summary>
         /// <param name="kind">The kind of content to filter for</param>
         /// <returns>A list of content</returns>
@@ -115,6 +115,11 @@ namespace SharpMap.Data.Providers
             return new TileAsyncLayer(new GpkgTileSource(content, schema), content.TableName);
         }
 
+        /// <summary>
+        /// Creates a <see cref="IProvider"/> for the <paramref name="content"/>.
+        /// </summary>
+        /// <param name="content">A content of the package</param>
+        /// <returns>A provider.</returns>
         public IProvider GetFeatureProvider(GpkgContent content)
         {
             if (content == null)
