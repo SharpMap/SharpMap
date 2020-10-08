@@ -973,6 +973,25 @@ namespace SharpMap.Rendering
                 (int)Math.Ceiling(self.Bottom));
         }
 
+
+        /// <summary>
+        /// Utility method to return Rectangle enclosing given RectangleF.
+        /// Top-left coordinate is rounded towards origin, while bottom-right coordinate is rounded away from origin.   
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        internal static Rectangle ToRectangle(this System.Drawing.Point[] self)
+        {
+            if (self.Length < 4) return Rectangle.Empty;
+
+            int minX = self.Min(p => p.X);
+            int maxX = self.Max(p => p.X);
+            int minY = self.Min(p => p.Y);
+            int maxY = self.Max(p => p.Y);
+
+            return new Rectangle(minX, minY, maxX - minX, maxY - minY);
+        }
+
         /// <summary>
         /// Utility method to return enclosing rectangle. Source array must have 4 or more points. 
         /// </summary>
@@ -1003,6 +1022,22 @@ namespace SharpMap.Rendering
                 new PointF(self.X + self.Width, self.Y),
                 new PointF(self.X + self.Width, self.Y +self.Height),
                 new PointF(self.X, self.Y + self.Height),
+            };
+        }
+
+        /// <summary>
+        /// Utility method to return points defining rectangle, ordered clockwise from top left
+        /// </summary>
+        /// <param name="self"></param>
+        /// <returns></returns>
+        internal static System.Drawing.Point[] ToPointArray(this Rectangle self)
+        {
+            return new[]
+            {
+                new System.Drawing.Point(self.X, self.Y),
+                new System.Drawing.Point(self.X + self.Width, self.Y),
+                new System.Drawing.Point(self.X + self.Width, self.Y +self.Height),
+                new System.Drawing.Point(self.X, self.Y + self.Height)
             };
         }
 
