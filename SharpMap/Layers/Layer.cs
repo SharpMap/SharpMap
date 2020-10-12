@@ -393,7 +393,7 @@ namespace SharpMap.Layers
             }
             else
             {
-                affectedArea = ToGraphicsCanvas(g.Transform);
+                affectedArea = ToGraphicsCanvas(CanvasArea, g.Transform);
 
                 // clip to graphics canvas
                 affectedArea.Intersect(mapRect);
@@ -404,18 +404,24 @@ namespace SharpMap.Layers
             OnLayerRendered(g);
         }
 
-        protected Rectangle ToGraphicsCanvas(System.Drawing.Drawing2D.Matrix matrix)
+        /// <summary>
+        /// Transforms cavas area to untransformed graphics canvas
+        /// </summary>
+        /// <param name="area"></param>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
+        protected static Rectangle ToGraphicsCanvas(RectangleF area, System.Drawing.Drawing2D.Matrix matrix)
         {
             if (!matrix.IsIdentity)
             {
-                var pts = CanvasArea.ToPointArray();
+                var pts = area.ToPointArray();
                 matrix.TransformPoints(pts);
                 // Enclosing rectangle aligned with graphics canvas and inflated to nearest integer values.
-                CanvasArea = pts.ToRectangleF();
+                area = pts.ToRectangleF();
             }
 
             // This is the area of the graphics canvas that needs to be refreshed when invalidating the image. 
-            var affectedArea = CanvasArea.ToRectangle();
+            var affectedArea = area.ToRectangle();
 
 //                // proof of concept: draw affected area to screen aligned with graphics canvas
 //                using (var orig = g.Transform.Clone())

@@ -8,7 +8,7 @@
         <PackageTags>SharpMap GIS Map GeoSpatial SqlServer</PackageTags>
         <Description>SharpMap components for interaction with SqlServer spatial objects</Description>
         <!--<EnableApiCompat>true</EnableApiCompat>-->
-        <NoWarn>1701;1702;2100;2235</NoWarn>
+        <NoWarn>1701;1702;2100;2235;5100</NoWarn>
         <RootNamespace>SharpMap</RootNamespace>
     </PropertyGroup>
 
@@ -20,9 +20,6 @@
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-        <Compile Include="SqlServerTypes\Loader.cs"/>
-    </ItemGroup>
     <ItemGroup>
         <Content Include="SqlServerTypes\readme.htm" />
         <Content Include="SqlServerTypes\x64\msvcr120.dll">
