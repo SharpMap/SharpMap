@@ -10,22 +10,11 @@
         <!--<EnableApiCompat>true</EnableApiCompat>-->
         <NoWarn>1701;1702;2100;2235</NoWarn>
         <RootNamespace>SharpMap</RootNamespace>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseLinux|AnyCPU'">
-        <OutputPath>bin\ReleaseLinux\</OutputPath>
-        <DefineConstants>TRACE;LINUX</DefineConstants>
-    </PropertyGroup>
-
-    <ItemGroup Condition="'$(Configuration)' != 'ReleaseLinux'">
-        <PackageReference Include="GDAL.Native" Version="2.4.2" />
-    </ItemGroup>
-
-    <PropertyGroup Condition="'$(Configuration)' != 'ReleaseLinux'">
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="GDAL" Version="2.4.2" />
       <PackageReference Include="NetTopologySuite.Core" Version="1.15.3" />
       <PackageReference Include="NetTopologySuite.Features" Version="1.15.1" />
       <PackageReference Include="NetTopologySuite.IO.PostGis" Version="1.15.1" />
@@ -40,9 +29,5 @@
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
         
     </ItemGroup>
-    
-    
-    <ItemGroup>
-      <Folder Include="Properties\" />
-    </ItemGroup>
+
 </Project>
