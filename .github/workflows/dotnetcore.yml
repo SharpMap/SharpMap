@@ -18,10 +18,10 @@ jobs:
     #- name: Setup MSBuild.exe
     #  uses: warrenbuckley/Setup-MSBuild@v1
 
-    - name: Install packages into packages folder 1/2
-      run: nuget restore SharpMap.Extensions/packages.config -OutputDirectory packages
-    - name: Install packages into packages folder 2/2
-      run: nuget restore SharpMap.SqlServerSpatialObjects/packages.config -OutputDirectory packages
+    #- name: Install packages into packages folder 1/2
+    #  run: nuget restore SharpMap.Extensions/packages.config -OutputDirectory packages
+    #- name: Install packages into packages folder 2/2
+    #  run: nuget restore SharpMap.SqlServerSpatialObjects/packages.config -OutputDirectory packages
     #- name: MSBuild SharedAssemblyVersion
     #  run: msbuild SharpMap.targets /t:Version
 

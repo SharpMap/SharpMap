@@ -64,12 +64,6 @@
         <ProjectReference Include="..\SharpMap.Web\SharpMap.Web.csproj" />
     </ItemGroup>
 
-    <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
-        <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
-            <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
-        </Reference>
-    </ItemGroup>
-
     <ItemGroup>
         <Reference Include="System.Design" />
         <Reference Include="System.Web" />

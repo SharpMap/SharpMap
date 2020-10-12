@@ -13,7 +13,7 @@ git:
 install:
 - nuget install NUnit.Console -Version 3.10.0 -OutputDirectory testrunner
 script:
-- nuget restore SharpMap.Extensions/packages.config -o packages
+#- nuget restore SharpMap.Extensions/packages.config -o packages
 #- dotnet msbuild SharpMap.targets /t:Version /p:UseTools35=false /v:minimal
 - dotnet msbuild SharpMap.sln /m "/t:Restore;Build" /p:Configuration=ReleaseLinux "/p:Platform=Any CPU" /p:UseTools35=false "/p:FrameworkPathOverride=$(dirname $(which mono))/../lib/mono/4.5/" /v:minimal /p:WarningLevel=3
 - pushd UnitTests/bin/ReleaseLinux/net472
