@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Security.AccessControl;
 using System.Windows.Forms;
 using GeoAPI.Geometries;
 using SharpMap.Properties;
@@ -12,22 +11,22 @@ namespace SharpMap.Forms.ToolBar
     [DesignTimeVisible(true)]
     public partial class MapZoomToolStrip : MapToolStrip
     {
-        System.Windows.Forms.ToolStripButton _zoomToExtents;
-        System.Windows.Forms.ToolStripButton _fixedZoomIn;
-        System.Windows.Forms.ToolStripButton _fixedZoomOut;
-        System.Windows.Forms.ToolStripButton _zoomToWindow;
-        System.Windows.Forms.ToolStripButton _pan;
-        System.Windows.Forms.ToolStripButton _zoomPrev;
-        System.Windows.Forms.ToolStripButton _zoomNext;
-        System.Windows.Forms.ToolStripComboBox _predefinedScales;
-        System.Windows.Forms.ToolStripButton _minZoom;
-        System.Windows.Forms.ToolStripButton _maxZoom;
-        System.Windows.Forms.ToolStripButton _maxZoom2;
-        System.Windows.Forms.ToolStripButton _lock;
-        private System.Windows.Forms.ToolStripSeparator _sep1;
-        private System.Windows.Forms.ToolStripSeparator _sep2;
-        private System.Windows.Forms.ToolStripSeparator _sep3;
-        private System.Windows.Forms.ToolStripSeparator _sep4;
+        private ToolStripButton _zoomToExtents;
+        private ToolStripButton _fixedZoomIn;
+        private ToolStripButton _fixedZoomOut;
+        private ToolStripButton _zoomToWindow;
+        private ToolStripButton _pan;
+        private ToolStripButton _zoomPrev;
+        private ToolStripButton _zoomNext;
+        private ToolStripComboBox _predefinedScales;
+        private ToolStripButton _minZoom;
+        private ToolStripButton _maxZoom;
+        private ToolStripButton _maxZoom2;
+        private ToolStripButton _lock;
+        private ToolStripSeparator _sep1;
+        private ToolStripSeparator _sep2;
+        private ToolStripSeparator _sep3;
+        private ToolStripSeparator _sep4;
 
         /// <summary>
         /// Creates an instance of this class
@@ -59,180 +58,183 @@ namespace SharpMap.Forms.ToolBar
             });
         }
 
+        /// <summary>
+        /// Initializes this component
+        /// </summary>
         public void InitializeComponent()
         {
-            this._zoomToExtents = new System.Windows.Forms.ToolStripButton();
-            this._fixedZoomIn = new System.Windows.Forms.ToolStripButton();
-            this._fixedZoomOut = new System.Windows.Forms.ToolStripButton();
-            this._sep1 = new System.Windows.Forms.ToolStripSeparator();
-            this._zoomToWindow = new System.Windows.Forms.ToolStripButton();
-            this._pan = new System.Windows.Forms.ToolStripButton();
-            this._sep2 = new System.Windows.Forms.ToolStripSeparator();
-            this._zoomPrev = new System.Windows.Forms.ToolStripButton();
-            this._zoomNext = new System.Windows.Forms.ToolStripButton();
-            this._sep3 = new System.Windows.Forms.ToolStripSeparator();
-            this._predefinedScales = new System.Windows.Forms.ToolStripComboBox();
-            this._sep4 = new System.Windows.Forms.ToolStripSeparator();
-            this._minZoom = new System.Windows.Forms.ToolStripButton();
-            this._maxZoom = new System.Windows.Forms.ToolStripButton();
-            this._maxZoom2 = new System.Windows.Forms.ToolStripButton();
-            this._lock = new System.Windows.Forms.ToolStripButton();
-            this.SuspendLayout();
+            _zoomToExtents = new ToolStripButton();
+            _fixedZoomIn = new ToolStripButton();
+            _fixedZoomOut = new ToolStripButton();
+            _sep1 = new ToolStripSeparator();
+            _zoomToWindow = new ToolStripButton();
+            _pan = new ToolStripButton();
+            _sep2 = new ToolStripSeparator();
+            _zoomPrev = new ToolStripButton();
+            _zoomNext = new ToolStripButton();
+            _sep3 = new ToolStripSeparator();
+            _predefinedScales = new ToolStripComboBox();
+            _sep4 = new ToolStripSeparator();
+            _minZoom = new ToolStripButton();
+            _maxZoom = new ToolStripButton();
+            _maxZoom2 = new ToolStripButton();
+            _lock = new ToolStripButton();
+            SuspendLayout();
             // 
             // _zoomToExtents
             // 
-            this._zoomToExtents.Enabled = false;
-            this._zoomToExtents.Image = global::SharpMap.Properties.Resources.zoom_extent;
-            this._zoomToExtents.Name = "_zoomToExtents";
-            this._zoomToExtents.Size = new System.Drawing.Size(23, 22);
-            this._zoomToExtents.ToolTipText = "Zoom to the map\'s extent";
-            this._zoomToExtents.Click += this.OnFixedZoom;
+            _zoomToExtents.Enabled = false;
+            _zoomToExtents.Image = Resources.zoom_extent;
+            _zoomToExtents.Name = "_zoomToExtents";
+            _zoomToExtents.Size = new System.Drawing.Size(23, 22);
+            _zoomToExtents.ToolTipText = @"Zoom to the map\'s extent";
+            _zoomToExtents.Click += OnFixedZoom;
             // 
             // _fixedZoomIn
             // 
-            this._fixedZoomIn.Enabled = false;
-            this._fixedZoomIn.Image = global::SharpMap.Properties.Resources.zoom_in;
-            this._fixedZoomIn.Name = "_fixedZoomIn";
-            this._fixedZoomIn.Size = new System.Drawing.Size(23, 22);
-            this._fixedZoomIn.ToolTipText = "Zoom into map";
-            this._fixedZoomIn.Click += this.OnFixedZoom;
+            _fixedZoomIn.Enabled = false;
+            _fixedZoomIn.Image = Resources.zoom_in;
+            _fixedZoomIn.Name = "_fixedZoomIn";
+            _fixedZoomIn.Size = new System.Drawing.Size(23, 22);
+            _fixedZoomIn.ToolTipText = @"Zoom into map";
+            _fixedZoomIn.Click += OnFixedZoom;
             // 
             // _fixedZoomOut
             // 
-            this._fixedZoomOut.Enabled = false;
-            this._fixedZoomOut.Image = global::SharpMap.Properties.Resources.zoom_out;
-            this._fixedZoomOut.Name = "_fixedZoomOut";
-            this._fixedZoomOut.Size = new System.Drawing.Size(23, 22);
-            this._fixedZoomOut.ToolTipText = "Zoom out of map";
-            this._fixedZoomOut.Click += this.OnFixedZoom;
+            _fixedZoomOut.Enabled = false;
+            _fixedZoomOut.Image = Resources.zoom_out;
+            _fixedZoomOut.Name = "_fixedZoomOut";
+            _fixedZoomOut.Size = new System.Drawing.Size(23, 22);
+            _fixedZoomOut.ToolTipText = @"Zoom out of map";
+            _fixedZoomOut.Click += OnFixedZoom;
             // 
             // _sep1
             // 
-            this._sep1.Name = "_sep1";
-            this._sep1.Size = new System.Drawing.Size(6, 6);
+            _sep1.Name = "_sep1";
+            _sep1.Size = new System.Drawing.Size(6, 6);
             // 
             // _zoomToWindow
             // 
-            this._zoomToWindow.CheckOnClick = true;
-            this._zoomToWindow.Enabled = false;
-            this._zoomToWindow.Image = global::SharpMap.Properties.Resources.zoom_region;
-            this._zoomToWindow.Name = "_zoomToWindow";
-            this._zoomToWindow.Size = new System.Drawing.Size(23, 20);
-            this._zoomToWindow.ToolTipText = "Specify viewport by mouse selection";
-            this._zoomToWindow.CheckOnClick = true;
-            this._zoomToWindow.CheckedChanged += OnCheckedChanged;
+            _zoomToWindow.CheckOnClick = true;
+            _zoomToWindow.Enabled = false;
+            _zoomToWindow.Image = Resources.zoom_region;
+            _zoomToWindow.Name = "_zoomToWindow";
+            _zoomToWindow.Size = new System.Drawing.Size(23, 20);
+            _zoomToWindow.ToolTipText = @"Specify viewport by mouse selection";
+            _zoomToWindow.CheckOnClick = true;
+            _zoomToWindow.CheckedChanged += OnCheckedChanged;
             // 
             // _pan
             // 
-            this._pan.CheckOnClick = true;
-            this._pan.Enabled = false;
-            this._pan.Image = global::SharpMap.Properties.Resources.pan;
-            this._pan.Name = "_pan";
-            this._pan.Size = new System.Drawing.Size(23, 20);
-            this._pan.ToolTipText = "Drag the map\'s content around and scoll by mouse wheel";
-            this._pan.CheckOnClick = true;
-            this._pan.CheckedChanged += OnCheckedChanged;
+            _pan.CheckOnClick = true;
+            _pan.Enabled = false;
+            _pan.Image = Resources.pan;
+            _pan.Name = "_pan";
+            _pan.Size = new System.Drawing.Size(23, 20);
+            _pan.ToolTipText = @"Drag the map\'s content around and scoll by mouse wheel";
+            _pan.CheckOnClick = true;
+            _pan.CheckedChanged += OnCheckedChanged;
             // 
             // _sep2
             // 
-            this._sep2.Name = "_sep2";
-            this._sep2.Size = new System.Drawing.Size(6, 6);
+            _sep2.Name = "_sep2";
+            _sep2.Size = new System.Drawing.Size(6, 6);
             // 
             // _zoomPrev
             // 
-            this._zoomPrev.Enabled = false;
-            this._zoomPrev.Image = global::SharpMap.Properties.Resources.zoom_last;
-            this._zoomPrev.Name = "_zoomPrev";
-            this._zoomPrev.Size = new System.Drawing.Size(23, 20);
-            this._zoomPrev.ToolTipText = "Zoom to previous viewport";
-            this._zoomPrev.Click += (sender, args) => _zoomExtentStack.ZoomPrevious();
+            _zoomPrev.Enabled = false;
+            _zoomPrev.Image = Resources.zoom_last;
+            _zoomPrev.Name = "_zoomPrev";
+            _zoomPrev.Size = new System.Drawing.Size(23, 20);
+            _zoomPrev.ToolTipText = @"Zoom to previous viewport";
+            _zoomPrev.Click += (sender, args) => _zoomExtentStack.ZoomPrevious();
             // 
             // _zoomNext
             // 
-            this._zoomNext.Enabled = false;
-            this._zoomNext.Image = global::SharpMap.Properties.Resources.zoom_next;
-            this._zoomNext.Name = "_zoomNext";
-            this._zoomNext.Size = new System.Drawing.Size(23, 20);
-            this._zoomNext.ToolTipText = "Restore last viewport";
-            this._zoomNext.Click += (sender, args) => _zoomExtentStack.ZoomNext();
+            _zoomNext.Enabled = false;
+            _zoomNext.Image = Resources.zoom_next;
+            _zoomNext.Name = "_zoomNext";
+            _zoomNext.Size = new System.Drawing.Size(23, 20);
+            _zoomNext.ToolTipText = @"Restore last viewport";
+            _zoomNext.Click += (sender, args) => _zoomExtentStack.ZoomNext();
             // 
             // _sep3
             // 
-            this._sep3.Name = "_sep3";
-            this._sep3.Size = new System.Drawing.Size(6, 6);
+            _sep3.Name = "_sep3";
+            _sep3.Size = new System.Drawing.Size(6, 6);
             // 
             // _predefinedScales
             // 
-            this._predefinedScales.Name = "_predefinedScales";
-            this._predefinedScales.Size = new System.Drawing.Size(121, 23);
-            this._predefinedScales.SelectedIndexChanged += OnScaleSelected;
+            _predefinedScales.Name = "_predefinedScales";
+            _predefinedScales.Size = new System.Drawing.Size(121, 23);
+            _predefinedScales.SelectedIndexChanged += OnScaleSelected;
             // 
             // _sep4
             // 
-            this._sep4.Name = "_sep3";
-            this._sep4.Size = new System.Drawing.Size(6, 6);
+            _sep4.Name = "_sep3";
+            _sep4.Size = new System.Drawing.Size(6, 6);
             // 
             // _minZoom
             // 
-            this._minZoom.Enabled = false;
-            this._minZoom.Text = "min";
-            this._minZoom.Name = "_minZoom";
-            this._minZoom.Size = new System.Drawing.Size(23, 20);
-            this._minZoom.ToolTipText = "Set the minimum zoom level";
-            this._minZoom.CheckOnClick = true;
-            this._minZoom.CheckedChanged += OnCheckedChanged;
+            _minZoom.Enabled = false;
+            _minZoom.Text = "min";
+            _minZoom.Name = "_minZoom";
+            _minZoom.Size = new System.Drawing.Size(23, 20);
+            _minZoom.ToolTipText = @"Set the minimum zoom level";
+            _minZoom.CheckOnClick = true;
+            _minZoom.CheckedChanged += OnCheckedChanged;
             // 
             // _maxZoom
             // 
-            this._maxZoom.Enabled = false;
-            this._maxZoom.Text = "max";
-            this._maxZoom.Name = "_maxZoom";
-            this._maxZoom.Size = new System.Drawing.Size(23, 20);
-            this._maxZoom.ToolTipText = "Set the maximum zoom level";
-            this._maxZoom.CheckOnClick = true;
-            this._maxZoom.CheckedChanged += OnCheckedChanged;
+            _maxZoom.Enabled = false;
+            _maxZoom.Text = "max";
+            _maxZoom.Name = "_maxZoom";
+            _maxZoom.Size = new System.Drawing.Size(23, 20);
+            _maxZoom.ToolTipText = @"Set the maximum zoom level";
+            _maxZoom.CheckOnClick = true;
+            _maxZoom.CheckedChanged += OnCheckedChanged;
             // 
             // _maxZoom2
             // 
-            this._maxZoom2.Enabled = false;
-            this._maxZoom2.Text = "max box";
-            this._maxZoom2.Name = "_maxZoom2";
-            this._maxZoom2.Size = new System.Drawing.Size(23, 20);
-            this._maxZoom2.ToolTipText = "Set the maximum zoom window";
-            this._maxZoom2.CheckOnClick = true;
-            this._maxZoom2.CheckedChanged += OnCheckedChanged;
+            _maxZoom2.Enabled = false;
+            _maxZoom2.Text = "max box";
+            _maxZoom2.Name = "_maxZoom2";
+            _maxZoom2.Size = new System.Drawing.Size(23, 20);
+            _maxZoom2.ToolTipText = @"Set the maximum zoom window";
+            _maxZoom2.CheckOnClick = true;
+            _maxZoom2.CheckedChanged += OnCheckedChanged;
             // 
             // _lock
             // 
-            this._lock.Enabled = false;
-            this._lock.Name = "_lock";
-            this._lock.Size = new System.Drawing.Size(23, 20);
-            this._lock.ToolTipText = "Lock the viewport";
-            this._lock.CheckOnClick = true;
-            this._lock.Image = global::SharpMap.Properties.Resources.unlocked;
-            this._lock.CheckedChanged += OnCheckedChanged;
+            _lock.Enabled = false;
+            _lock.Name = "_lock";
+            _lock.Size = new System.Drawing.Size(23, 20);
+            _lock.ToolTipText = @"Lock the viewport";
+            _lock.CheckOnClick = true;
+            _lock.Image = Resources.unlocked;
+            _lock.CheckedChanged += OnCheckedChanged;
             // 
             // MapZoomToolStrip
             // 
-            this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._zoomToExtents,
-            this._fixedZoomIn,
-            this._fixedZoomOut,
-            this._sep1,
-            this._zoomToWindow,
-            this._pan,
-            this._sep2,
-            this._zoomPrev,
-            this._zoomNext,
-            this._sep3,
-            this._predefinedScales,
-            this._sep4,
-            this._minZoom,
-            this._maxZoom,
-            this._lock,
+            Items.AddRange(new ToolStripItem[] {
+            _zoomToExtents,
+            _fixedZoomIn,
+            _fixedZoomOut,
+            _sep1,
+            _zoomToWindow,
+            _pan,
+            _sep2,
+            _zoomPrev,
+            _zoomNext,
+            _sep3,
+            _predefinedScales,
+            _sep4,
+            _minZoom,
+            _maxZoom,
+            _lock,
             });
-            this.Text = "MapZoomToolStrip";
-            this.ResumeLayout(false);
+            Text = @"MapZoomToolStrip";
+            ResumeLayout(false);
 
         }
 
@@ -255,7 +257,7 @@ namespace SharpMap.Forms.ToolBar
             }
             else
             {
-                var scale = sender == _fixedZoomIn ? 1d / 1.2d : 1.2d;
+                double scale = sender == _fixedZoomIn ? 1d / 1.2d : 1.2d;
                 MapControl.Map.Zoom *= scale;
             }
             MapControl.Refresh();
@@ -271,13 +273,12 @@ namespace SharpMap.Forms.ToolBar
         {
             private readonly MapBox _mapBox;
             private readonly List<Envelope> _zoomExtentStack = new List<Envelope>();
-            private bool _blockStoringWhenPanning;
 
             /// <summary>
             /// Value indicating if zoom changes that have been invoked by user interaction should be saved or not
             /// </summary>
-
             private bool _storeExtentsUser;
+
             /// <summary>
             /// Value indicating if zoom changes that have been invoked by this class should be stored or not
             /// </summary>
@@ -285,12 +286,13 @@ namespace SharpMap.Forms.ToolBar
 
             private int _index;
             private bool _isPanning;
-            private int _skip = 0;
+            private int _skip;
 
             /// <summary>
-            /// Initialisation; no extents will be stored until .StoreExtents = true
+            /// Creates an instance of this class. <br/>
+            /// No extents will be stored until .StoreExtents = true
             /// </summary>
-            /// <param name="mapBox">mapbox control</param>
+            /// <param name="mapBox">The MapBox control</param>
             public ZoomExtentStack(MapBox mapBox)
             {
                 _mapBox = mapBox;
@@ -320,7 +322,6 @@ namespace SharpMap.Forms.ToolBar
             {
                 if (_mapBox.ActiveTool == MapBox.Tools.Pan)
                 {
-                    //_blockStoringWhenPanning = false;
                     _isPanning = true;
                     Add(_mapBox.Map.Envelope);
                 }
@@ -330,7 +331,6 @@ namespace SharpMap.Forms.ToolBar
             {
                 if (_mapBox.ActiveTool == MapBox.Tools.Pan)
                 {
-                    //_blockStoringWhenPanning = true;
                     _isPanning = false;
                 }
             }
@@ -377,7 +377,7 @@ namespace SharpMap.Forms.ToolBar
             /// </summary>
             public bool CanZoomPrevious
             {
-                get { return (_index > 0); }
+                get { return _index > 0; }
             }
 
             /// <summary>
@@ -385,7 +385,7 @@ namespace SharpMap.Forms.ToolBar
             /// </summary>
             public bool CanZoomNext
             {
-                get { return (_index < _zoomExtentStack.Count - 1); }
+                get { return _index < _zoomExtentStack.Count - 1; }
             }
 
             /// <summary>
@@ -441,7 +441,7 @@ namespace SharpMap.Forms.ToolBar
         {
             if (MapControl == null) return;
 
-            var tsb = (System.Windows.Forms.ToolStripButton)sender;
+            var tsb = (ToolStripButton)sender;
 
             if (tsb == _pan)
                 TrySetActiveTool(tsb, MapBox.Tools.Pan);
@@ -465,19 +465,19 @@ namespace SharpMap.Forms.ToolBar
             {
                 if (_lock.Checked)
                 {
-                    mvpLock.Lock();
-                    tsb.Image = global::SharpMap.Properties.Resources.locked;
+                    _mvpLock.Lock();
+                    tsb.Image = Resources.locked;
                 }
                 else
                 {
-                    mvpLock.Unlock();
-                    tsb.Image = global::SharpMap.Properties.Resources.unlocked;
+                    _mvpLock.Unlock();
+                    tsb.Image = Resources.unlocked;
                 }
 
             }
         }
 
-        private MapViewportLock mvpLock;
+        private MapViewportLock _mvpLock;
 
         private void ResetControls()
         {
@@ -493,9 +493,10 @@ namespace SharpMap.Forms.ToolBar
             _zoomExtentStack = new ZoomExtentStack(MapControl);
             _zoomExtentStack.StoreExtents = true;
 
-            mvpLock = new MapViewportLock(MapControl.Map);
+            _mvpLock = new MapViewportLock(MapControl.Map);
         }
         
+        /// <inheritdoc cref="MapToolStrip.OnMapControlChangedInternal"/>
         protected override void OnMapControlChangedInternal(EventArgs e)
         {
             if (MapControl == null)
@@ -547,7 +548,7 @@ namespace SharpMap.Forms.ToolBar
             _zoomExtentStack.Clear();
             
             MapControl.Map.MapViewOnChange -= OnMapMapViewOnChange;
-            mvpLock = null;
+            _mvpLock = null;
 
         }
 
@@ -604,7 +605,7 @@ namespace SharpMap.Forms.ToolBar
             }
         }
 
-        private void OnScaleEntered(object sender, System.Windows.Forms.KeyPressEventArgs e)
+        private void OnScaleEntered(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
                 OnScaleSelected(sender, e);
@@ -648,15 +649,16 @@ namespace SharpMap.Forms.ToolBar
             }));
         }
 
-        private int _dpiX, _dpiY;
+        private int _dpiX;//, _dpiY;
         private ZoomExtentStack _zoomExtentStack;
 
+        /// <inheritdoc cref="Control.OnCreateControl"/>
         protected override void OnCreateControl()
         {
             using (var g = CreateGraphics())
             {
                 _dpiX = (int)g.DpiX;
-                _dpiY = (int)g.DpiY;
+                //_dpiY = (int)g.DpiY;
             }
             base.OnCreateControl();
         }

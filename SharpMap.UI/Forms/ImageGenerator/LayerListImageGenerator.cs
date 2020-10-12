@@ -738,14 +738,8 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
         
-
         /// <summary>
-        /// Event raised when this image generator has updated the rendered layer images
-        /// </summary>
-        public event EventHandler Refreshed;
-
-        /// <summary>
-        /// 
+        /// Gets or sets a value indicating the interval that the map is queried for layers that need to be rendered
         /// </summary>
         public int RefreshInterval
         {

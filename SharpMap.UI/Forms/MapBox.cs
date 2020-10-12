@@ -2157,7 +2157,7 @@ namespace SharpMap.Forms
                         else
                         {
                             if (pts.Length > 0)
-                            pe.Graphics.DrawLines(new Pen(Color.Gray, 2F), pts);
+                                pe.Graphics.DrawLines(new Pen(Color.Gray, 2F), pts);
                         }
                     }
                 }
@@ -2168,13 +2168,12 @@ namespace SharpMap.Forms
                 // Do we have a custom tool
                 if (UseCurrentTool) { _currentTool.DoPaint(pe); }
 
-                /*Draw Floating Map-Decorations*/
+                // Draw Floating Map-Decorations
                 if (_map != null && _map.Decorations != null)
                 {
-                    foreach (Rendering.Decoration.IMapDecoration md in _map.Decorations)
-                    {
-                        md.Render(pe.Graphics, _map);
-                    }
+                    var mvp = new MapViewport(_map);
+                    foreach (var md in _map.Decorations)
+                        md.Render(pe.Graphics, mvp);
                 }
             }
             catch (Exception ee)
@@ -2523,6 +2522,7 @@ namespace SharpMap.Forms
             return layersToQuery;
         }
 
+        /// <inheritdoc cref="Control.OnMouseDoubleClick"/>
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
             // call base function
@@ -2663,6 +2663,9 @@ namespace SharpMap.Forms
 
 
 #if EnableMetafileClipboardSupport
+    /// <summary>
+    /// Utility class to copy map as enhanced metafile to clipboard
+    /// </summary>
     public class ClipboardMetafileHelper
     {
         [DllImport("user32.dll")]

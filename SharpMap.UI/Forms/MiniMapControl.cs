@@ -445,11 +445,14 @@ namespace SharpMap.Forms
             return HitResult.None;
         }
 
+        /// <inheritdoc cref="Control.Refresh"/>
         public override void Refresh()
         {
             CreateMiniMap();
             base.Refresh();
         }
+
+        /// <inheritdoc cref="Control.CreateParams"/>
         protected override CreateParams CreateParams
         {
             [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
@@ -485,6 +488,7 @@ namespace SharpMap.Forms
             base.Dispose(disposing);
         }
 
+        /// <inheritdoc cref="Control.OnMouseDown"/>
         protected override void OnMouseDown(MouseEventArgs e)
         {
             base.OnMouseDown(e);
@@ -539,6 +543,7 @@ namespace SharpMap.Forms
             _mouseDown = true;
         }
 
+        /// <inheritdoc cref="Control.OnMouseMove"/>
         protected override void OnMouseMove(MouseEventArgs e)
         {
             base.OnMouseMove(e);
@@ -598,6 +603,7 @@ namespace SharpMap.Forms
             }
         }
 
+        /// <inheritdoc cref="Control.OnMouseUp"/>
         protected override void OnMouseUp(MouseEventArgs e)
         {
             base.OnMouseUp(e);
@@ -629,6 +635,7 @@ namespace SharpMap.Forms
             _mouseDown = false;
         }
 
+        /// <inheritdoc cref="Control.OnPaint"/>
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
