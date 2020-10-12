@@ -19,9 +19,11 @@ using System;
 using System.Drawing;
 using GeoAPI.CoordinateSystems.Transformations;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries.Utilities;
 using SharpMap.Base;
 using SharpMap.Rendering;
 using SharpMap.Styles;
+using SharpMap.Utilities;
 
 namespace SharpMap.Layers
 {
@@ -368,6 +370,7 @@ namespace SharpMap.Layers
             return  canvasArea;
         }
 
+        private bool _renderCalled;
         /// <summary>
         /// Renders the layer using the given graphics object and viewport. The <paramref name="affectedArea"/> is an additional result.
         /// </summary>
@@ -376,7 +379,12 @@ namespace SharpMap.Layers
         /// <param name="affectedArea">The affected area.</param>
         protected virtual void Render(Graphics g, MapViewport mvp, out Rectangle affectedArea)
         {
+            if (_renderCalled)
+                return;
+            
+            _renderCalled = true;
             Render(g, mvp);
+            _renderCalled = false;
 
             var mapRect = new Rectangle(new Point(0, 0), mvp.Size);
             if (CanvasArea.IsEmpty)
@@ -385,16 +393,29 @@ namespace SharpMap.Layers
             }
             else
             {
-                if (!g.Transform.IsIdentity)
-                {
-                    var pts = CanvasArea.ToPointArray();
-                    g.Transform.TransformPoints(pts);
-                    // Enclosing rectangle aligned with graphics canvas and inflated to nearest integer values.
-                    CanvasArea = pts.ToRectangleF();
-                }
+                affectedArea = ToGraphicsCanvas(g.Transform);
 
-                // This is the area of the graphics canvas that needs to be refreshed when invalidating the image. 
-                affectedArea = CanvasArea.ToRectangle();
+                // clip to graphics canvas
+                affectedArea.Intersect(mapRect);
+
+                CanvasArea = RectangleF.Empty;
+            }
+            
+            OnLayerRendered(g);
+        }
+
+        protected Rectangle ToGraphicsCanvas(System.Drawing.Drawing2D.Matrix matrix)
+        {
+            if (!matrix.IsIdentity)
+            {
+                var pts = CanvasArea.ToPointArray();
+                matrix.TransformPoints(pts);
+                // Enclosing rectangle aligned with graphics canvas and inflated to nearest integer values.
+                CanvasArea = pts.ToRectangleF();
+            }
+
+            // This is the area of the graphics canvas that needs to be refreshed when invalidating the image. 
+            var affectedArea = CanvasArea.ToRectangle();
 
 //                // proof of concept: draw affected area to screen aligned with graphics canvas
 //                using (var orig = g.Transform.Clone())
@@ -407,16 +428,12 @@ namespace SharpMap.Layers
 //                    g.Transform = orig;
 //                }
 
-                // allow for bleed and/or minor labelling misdemeanours
-                affectedArea.Inflate(1, 1);
-                // clip to graphics canvas
-                affectedArea.Intersect(mapRect);
+            // allow for bleed and/or minor labelling misdemeanours
+            affectedArea.Inflate(1, 1);
 
-                CanvasArea = RectangleF.Empty;
-            }
-
-            OnLayerRendered(g);
+            return affectedArea;
         }
+
         /// <summary>
         /// Event invoker for the <see cref="LayerRendered"/> event.
         /// </summary>
@@ -505,8 +522,11 @@ namespace SharpMap.Layers
             }
             set
             {
-                //_Enabled = value;
+                if (value == _style.Enabled)
+                    return;
+
                 _style.Enabled = value;
+                RaiseRenderRequired();
             }
         }
 
@@ -522,6 +542,7 @@ namespace SharpMap.Layers
                 {
                     _style = value;
                     OnStyleChanged(EventArgs.Empty);
+                    RaiseRenderRequired();
                 }
             }
         }
@@ -536,6 +557,19 @@ namespace SharpMap.Layers
         {
             return LayerName;
         }
+
+        /// <summary>
+        /// Invokes <see cref="RenderRequired"/> event on this layer
+        /// </summary>
+        public void RaiseRenderRequired()
+        {
+            RenderRequired?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Event raised when the layer needs to be rendered.
+        /// </summary>
+        public event EventHandler RenderRequired;
 
         #region Reprojection utility functions
 

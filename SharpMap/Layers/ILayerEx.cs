@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 
 namespace SharpMap.Layers
@@ -14,5 +15,15 @@ namespace SharpMap.Layers
         /// <param name="mvp">Map which is rendered</param>
         /// <returns>Rectangle enclosing the actual area rendered on the graphics canvas</returns>
         new Rectangle Render(Graphics g, MapViewport mvp);
+
+        /// <summary>
+        /// Method to invoke <see cref="RenderRequired"/> event.
+        /// </summary>
+        void RaiseRenderRequired();
+
+        /// <summary>
+        /// Event raised when a layer needs to be rendered
+        /// </summary>
+        event EventHandler RenderRequired;
    }
 }

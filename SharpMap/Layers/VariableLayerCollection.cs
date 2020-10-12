@@ -40,7 +40,7 @@ namespace SharpMap.Layers
     [Serializable]
     public class VariableLayerCollection : LayerCollection
     {
-        private readonly LayerCollection _variableLayers;
+        //private readonly LayerCollection _variableLayers;
         
         //[NonSerialized]
         //private Timer _timer;
@@ -62,6 +62,12 @@ namespace SharpMap.Layers
             if (_isQuerying) return;
 
             //_timer.Start();
+            foreach (var lyr in this)
+            {
+                if (lyr is ILayerEx lyrEx)
+                    lyrEx.RaiseRenderRequired();
+            }
+
             System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(OnRequery));
         }
 
@@ -86,7 +92,8 @@ namespace SharpMap.Layers
         /// <param name="variableLayers">Layer collection that holds layers with data sources updating frequently</param>
         public VariableLayerCollection(LayerCollection variableLayers)
         {
-            _variableLayers = variableLayers;
+            AddCollection(variableLayers);
+            //_variableLayers = variableLayers;
             //if (_handler == null)
             //{
             //    //_timer = new Timer();
@@ -106,9 +113,9 @@ namespace SharpMap.Layers
             if (layer == null)
                 throw new ArgumentNullException("layer", "The passed argument is null or not an ILayer");
 
-            lock (((ICollection)_variableLayers).SyncRoot)
+            lock (((ICollection)this).SyncRoot)
             {
-                TestLayerPresent(_variableLayers, layer);
+                TestLayerPresent(this, layer);
                 base.InsertItem(index, layer);
             }
         }
