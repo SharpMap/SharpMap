@@ -72,7 +72,7 @@ namespace SharpMap
                 _worldToMapElements = Transform.WorldToMapMatrix(
                     Center, PixelWidth, PixelHeight, MapTransformRotation, Size, false).MatrixEntries;
 
-                _worldToMapElementsCareAboutTransform =Transform.WorldToMapMatrix(
+                _worldToMapElementsCareAboutTransform = Transform.WorldToMapMatrix(
                     Center, PixelWidth, PixelHeight, MapTransformRotation, Size, true).MatrixEntries;
             }
         }

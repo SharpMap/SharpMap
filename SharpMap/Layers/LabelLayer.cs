@@ -484,12 +484,11 @@ namespace SharpMap.Layers
             }
 
             CanvasArea = combinedArea; 
-            
             // Obsolete (and will cause infinite loop)
             //base.Render(g, map);
         }
 
-       private List<BaseLabel> CreateLabelDefinitions(Graphics g, MapViewport map, FeatureDataTable features)
+        private List<BaseLabel> CreateLabelDefinitions(Graphics g, MapViewport map, FeatureDataTable features)
         {
             var labels = new List<BaseLabel>();
             var factory = new GeometryFactory();

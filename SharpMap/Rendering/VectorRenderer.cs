@@ -933,8 +933,8 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Equivalent of Envelope.ExpandToInclude, allowing for RectangleF.Empty
         /// </summary>
-        /// <param name="self"></param>
-        /// <param name="other"></param>
+        /// <param name="self">The base rectangle</param>
+        /// <param name="other">The rectangle to include</param>
         /// <returns></returns>
         /// <remarks>
         /// RectangleF.Union does not take into account RectangleF.Empty. For example, 
@@ -955,6 +955,31 @@ namespace SharpMap.Rendering
             );
         }
 
+
+        /// <summary>
+        /// Equivalent of Envelope.ExpandToInclude, allowing for Rectangle.Empty
+        /// </summary>
+        /// <param name="self">The base rectangle</param>
+        /// <param name="other">The rectangle to include</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Rectangle.Union does not take into account Rectangle.Empty. For example, 
+        /// when A = (0, 0; 0, 0) and B = (1, 1; 2, 2) then A.Union(B) = (0, 0; 2, 2)
+        /// </remarks>
+        public static Rectangle ExpandToInclude(this Rectangle self, Rectangle other)
+        {
+            if (other.IsEmpty)
+                return self;
+            if (self.IsEmpty)
+                return other;
+
+            return Rectangle.FromLTRB(
+                Math.Min(self.X, other.X),
+                Math.Min(self.Y, other.Y),
+                Math.Max(self.Right, other.Right),
+                Math.Max(self.Bottom, other.Bottom)
+            );
+        }
         /// <summary>
         /// Utility method to return Rectangle enclosing given RectangleF.
         /// Top-left coordinate is rounded towards origin, while bottom-right coordinate is rounded away from origin.   
@@ -972,7 +997,6 @@ namespace SharpMap.Rendering
                 (int)Math.Ceiling(self.Right),
                 (int)Math.Ceiling(self.Bottom));
         }
-
 
         /// <summary>
         /// Utility method to return Rectangle enclosing given RectangleF.

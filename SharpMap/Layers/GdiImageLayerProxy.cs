@@ -28,12 +28,11 @@ namespace SharpMap.Layers
     /// <summary>
     /// Image manipulation proxy layer
     /// </summary>
-    /// <remarks>This layer is not for layers implementing <see cref="ITileAsyncLayer"/>. Every </remarks>
+    /// <remarks>Note: This layer is not for layers implementing <see cref="ITileAsyncLayer"/>.</remarks>
     /// <typeparam name="T">The type of the proxy layer. <see cref="ITileAsyncLayer"/> are not excluded, but are not handled in any way.</typeparam>
     // ToDo: think of a better name:
     // - ImageManipulationProxyLayer
     // - What to do with large images
-    // - 
     [Serializable]
     public class GdiImageLayerProxy<T> : ICanQueryLayer, IDisposable
         where T: class, ILayer
@@ -69,7 +68,7 @@ namespace SharpMap.Layers
         /// <param name="layer">The layer to be proxied</param>
         /// <param name="opacity">An opacity value in the range of [0f, 1f]. Values outside of that range will be clipped.</param>
         public GdiImageLayerProxy(T layer, float opacity)
-            :this(layer, new ColorMatrix {Matrix33 = Math.Max(Math.Min(1f, opacity), 0f)})
+            : this(layer, new ColorMatrix {Matrix33 = Math.Max(Math.Min(1f, opacity), 0f)})
         {
         }
 
@@ -222,25 +221,23 @@ namespace SharpMap.Layers
         /// <inheritdoc cref="IDisposable.Dispose"/>
         public void Dispose()
         {
-            if (_baseLayer is IDisposable)
-            {
-                ((IDisposable)_baseLayer).Dispose();
-            }
+            if (_baseLayer is IDisposable disposable)
+                disposable.Dispose();
         }
 
         void ICanQueryLayer.ExecuteIntersectionQuery(Envelope box, FeatureDataSet ds)
         {
-            if (_baseLayer is ICanQueryLayer)
+            if (_baseLayer is ICanQueryLayer cqLayer)
             {
-                ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(box, ds);
+                cqLayer.ExecuteIntersectionQuery(box, ds);
             }
         }
 
         void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
         {
-            if (_baseLayer is ICanQueryLayer)
+            if (_baseLayer is ICanQueryLayer cqLayer)
             {
-                ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(geometry, ds);
+                cqLayer.ExecuteIntersectionQuery(geometry, ds);
             }
         }
 
@@ -248,14 +245,14 @@ namespace SharpMap.Layers
         {
             get
             {
-                if (_baseLayer is ICanQueryLayer)
-                    return ((ICanQueryLayer) _baseLayer).IsQueryEnabled;
+                if (_baseLayer is ICanQueryLayer cqLayer)
+                    return cqLayer.IsQueryEnabled;
                 return false;
             }
             set
             {
-                if (_baseLayer is ICanQueryLayer)
-                    ((ICanQueryLayer)_baseLayer).IsQueryEnabled = value;
+                if (_baseLayer is ICanQueryLayer cqLayer)
+                    cqLayer.IsQueryEnabled = value;
             }
         }
     }

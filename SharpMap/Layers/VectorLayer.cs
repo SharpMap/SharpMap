@@ -211,26 +211,28 @@ namespace SharpMap.Layers
         /// Renders the layer to a graphics object, using the given map viewport
         /// </summary>
         /// <param name="g">Graphics object reference</param>
-        /// <param name="map">Map which is rendered</param>
-        public override void Render(Graphics g, MapViewport map)
+        /// <param name="mvp">Map view port</param>
+        public override void Render(Graphics g, MapViewport mvp)
         {
-            if (map.Center == null)
+            if (mvp.Center == null)
                 throw (new ApplicationException("Cannot render map. View center not specified"));
 
             g.SmoothingMode = SmoothingMode;
-            var envelope = ToSource(map.Envelope); //View to render
+            var envelope = ToSource(mvp.Envelope); //View to render
 
             if (DataSource == null)
                 throw (new ApplicationException("DataSource property not set on layer '" + LayerName + "'"));
 
             //If thematics is enabled, we use a slighty different rendering approach
             if (Theme != null)
-                RenderInternal(g, map, envelope, Theme);
+                RenderInternal(g, mvp, envelope, Theme);
             else
-                RenderInternal(g, map, envelope);
-            
+                RenderInternal(g, mvp, envelope);
+
+
+            //OnLayerRendered(g);
             // Obsolete (and will cause infinite loop)
-            //base.Render(g, map);
+            base.Render(g, mvp);
         }
 
         /// <summary>
@@ -261,6 +263,7 @@ namespace SharpMap.Layers
             double zoom = map.Zoom;
 
             Func<MapViewport, FeatureDataRow, IStyle> evalStyle;
+
 
             if (theme is IThemeEx)
                 evalStyle = new ThemeExEvaluator((IThemeEx)theme).GetStyle;

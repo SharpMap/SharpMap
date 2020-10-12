@@ -485,7 +485,7 @@ namespace SharpMap
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
 
         /// <summary>
-        /// Event that is called when a layer have changed and the map need to redraw
+        /// Event that is called when a layer has changed and the map need to redraw
         /// </summary>
         public event EventHandler RefreshNeeded;
 
