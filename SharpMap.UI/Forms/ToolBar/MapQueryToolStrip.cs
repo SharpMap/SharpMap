@@ -1,27 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
 {
-    using System.ComponentModel;
 
+    /// <summary>
+    /// A tool strip for enabling querying on the map
+    /// </summary>
     [DesignTimeVisible(true)]
     public class MapQueryToolStrip : MapToolStrip
     {
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         public MapQueryToolStrip()
-            :base()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="container">A container to add components to</param>
         public MapQueryToolStrip(IContainer container)
             :base(container)
         {
             InitializeComponent();
         }
 
-        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetLogger(typeof(MapQueryToolStrip));
+        private static readonly Common.Logging.ILog _logger = Common.Logging.LogManager.GetLogger(typeof(MapQueryToolStrip));
 
         private ToolStripButton _clear;
         private ToolStripSeparator _sep1;
@@ -36,82 +45,88 @@ namespace SharpMap.Forms.ToolBar
         private readonly Dictionary<string, int> _dictLayerNameToIndex
             = new Dictionary<string,int>();
 
+        /// <summary>
+        /// Method to initialize the tool strip
+        /// </summary>
         public void InitializeComponent()
         {
-            this._clear = new System.Windows.Forms.ToolStripButton();
-            this._sep1 = new System.Windows.Forms.ToolStripSeparator();
-            this._queryWindow = new System.Windows.Forms.ToolStripButton();
-            this._queryGeometry = new System.Windows.Forms.ToolStripButton();
-            this._sep2 = new System.Windows.Forms.ToolStripSeparator();
-            this._queryLayerPicker = new System.Windows.Forms.ToolStripComboBox();
-            this.SuspendLayout();
+            _clear = new ToolStripButton();
+            _sep1 = new ToolStripSeparator();
+            _queryWindow = new ToolStripButton();
+            _queryGeometry = new ToolStripButton();
+            _sep2 = new ToolStripSeparator();
+            _queryLayerPicker = new ToolStripComboBox();
+            SuspendLayout();
             // 
             // _clear
             // 
-            this._clear.Image = global::SharpMap.Properties.Resources.layer_delete;
-            this._clear.Name = "_clear";
-            this._clear.Size = new System.Drawing.Size(23, 22);
+            _clear.Image = Properties.Resources.layer_delete;
+            _clear.Name = "_clear";
+            _clear.Size = new System.Drawing.Size(23, 22);
             // 
             // _sep1
             // 
-            this._sep1.Name = "_sep1";
-            this._sep1.Size = new System.Drawing.Size(6, 25);
+            _sep1.Name = "_sep1";
+            _sep1.Size = new System.Drawing.Size(6, 25);
             // 
             // _queryWindow
             // 
-            this._queryWindow.CheckOnClick = true;
-            this._queryWindow.Image = global::SharpMap.Properties.Resources.rectangle_edit;
-            this._queryWindow.Name = "_queryWindow";
-            this._queryWindow.CheckedChanged += OnCheckedChanged;
-            this._queryWindow.Size = new System.Drawing.Size(23, 22);
+            _queryWindow.CheckOnClick = true;
+            _queryWindow.Image = Properties.Resources.rectangle_edit;
+            _queryWindow.Name = "_queryWindow";
+            _queryWindow.CheckedChanged += OnCheckedChanged;
+            _queryWindow.Size = new System.Drawing.Size(23, 22);
             // 
             // _queryGeometry
             // 
-            this._queryGeometry.CheckOnClick = true;
-            this._queryGeometry.Image = global::SharpMap.Properties.Resources.query_spatial_vector;
-            this._queryGeometry.Name = "_queryGeometry";
-            this._queryGeometry.Size = new System.Drawing.Size(23, 20);
-            this._queryGeometry.CheckedChanged += OnCheckedChanged;
+            _queryGeometry.CheckOnClick = true;
+            _queryGeometry.Image = Properties.Resources.query_spatial_vector;
+            _queryGeometry.Name = "_queryGeometry";
+            _queryGeometry.Size = new System.Drawing.Size(23, 20);
+            _queryGeometry.CheckedChanged += OnCheckedChanged;
             // 
             // _sep2
             // 
-            this._sep2.Name = "_sep2";
-            this._sep2.Size = new System.Drawing.Size(6, 6);
+            _sep2.Name = "_sep2";
+            _sep2.Size = new System.Drawing.Size(6, 6);
             // 
             // _queryLayerPicker
             // 
-            this._queryLayerPicker.Name = "_queryLayerPicker";
-            this._queryLayerPicker.Size = new System.Drawing.Size(121, 21);
-            this._queryLayerPicker.DropDownStyle = ComboBoxStyle.DropDownList;
-            this._queryLayerPicker.SelectedIndexChanged += OnSelectedIndexChanged;
+            _queryLayerPicker.Name = "_queryLayerPicker";
+            _queryLayerPicker.Size = new System.Drawing.Size(121, 21);
+            _queryLayerPicker.DropDownStyle = ComboBoxStyle.DropDownList;
+            _queryLayerPicker.SelectedIndexChanged += OnSelectedIndexChanged;
 
             // 
             // MapQueryToolStrip
             // 
-            this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this._clear,
-            this._sep1,
-            this._queryWindow,
-            this._queryGeometry,
-            this._sep2,
-            this._queryLayerPicker});
-            this.ResumeLayout(false);
+            Items.AddRange(new ToolStripItem[] {
+            _clear,
+            _sep1,
+            _queryWindow,
+            _queryGeometry,
+            _sep2,
+            _queryLayerPicker});
+            ResumeLayout(false);
 
         }
 
-        protected override void  OnMapControlChangingInternal(System.ComponentModel.CancelEventArgs e)
+        /// <inheritdoc cref="MapToolStrip.OnMapControlChangingInternal"/>
+        protected override void  OnMapControlChangingInternal(CancelEventArgs e)
         {
  	        base.OnMapControlChangingInternal(e);
             if (MapControl == null) return;
 
-            OnClear(this, EventArgs.Empty);
-            this.MapControl.ActiveToolChanged -= OnMapControlActiveToolChanged;
-            this.MapControl.MapQueried -= OnMapQueried;
-            this.MapControl.MapChanging -= OnMapChanging;
-            this.MapControl.MapChanged -= OnMapChanged;
+            OnClear();
+
+            MapControl.ActiveToolChanged -= OnMapControlActiveToolChanged;
+            MapControl.MapQueried -= OnMapQueried;
+            MapControl.MapChanging -= OnMapChanging;
+            MapControl.MapChanged -= OnMapChanged;
             MapControl.Map.Layers.ListChanged -= OnListChanged;
         }
 
+        /// <inheritdoc cref="MapToolStrip.OnMapControlChangedInternal"/>
         protected override void  OnMapControlChangedInternal(EventArgs e)
         {
  	        base.OnMapControlChangedInternal(e);
@@ -121,10 +136,10 @@ namespace SharpMap.Forms.ToolBar
                 Enabled =false;
                 return;
             }
-            this.MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
-            this.MapControl.MapQueried += OnMapQueried;
-            this.MapControl.MapChanging += OnMapChanging;
-            this.MapControl.MapChanged += OnMapChanged;
+            MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
+            MapControl.MapQueried += OnMapQueried;
+            MapControl.MapChanging += OnMapChanging;
+            MapControl.MapChanged += OnMapChanged;
             MapControl.Map.Layers.ListChanged += OnListChanged;
         }
 
@@ -145,18 +160,15 @@ namespace SharpMap.Forms.ToolBar
         {
             if (MapControl == null) return;
 
-            var index = _queryLayerPicker.SelectedIndex;
+            int index = _queryLayerPicker.SelectedIndex;
             if (index >= 0)
             {
-                var lyrName = (string)_queryLayerPicker.Items[index];
-                int lyrIndex;
-                if (_dictLayerNameToIndex.TryGetValue(lyrName, out lyrIndex))
+                string lyrName = (string)_queryLayerPicker.Items[index];
+                if (_dictLayerNameToIndex.TryGetValue(lyrName, out int lyrIndex))
                 {
                     MapControl.QueryLayerIndex = lyrIndex;
                 }
             }
-            else
-            { }
         }
 
         private void OnMapControlActiveToolChanged(MapBox.Tools tool)
@@ -179,7 +191,7 @@ namespace SharpMap.Forms.ToolBar
             }
         }
 
-        private void OnListChanged(object sender, System.ComponentModel.ListChangedEventArgs e)
+        private void OnListChanged(object sender, ListChangedEventArgs e)
         {
             _queryLayerPicker.Items.Clear();
             if (MapControl == null)
@@ -188,19 +200,19 @@ namespace SharpMap.Forms.ToolBar
             }
 
             _dictLayerNameToIndex.Clear();
-            var queryLayerIndex = MapControl.QueryLayerIndex;
-            var i = 0;
-            var j = 0;
-            var k = -1;
+            int queryLayerIndex = MapControl.QueryLayerIndex;
+            int i = 0;
+            int j = 0;
+            int k = -1;
             foreach(var lyr in MapControl.Map.Layers)
             {
                 if (lyr.LayerName == "QueriedFeatures") continue;
 
-                if (lyr is SharpMap.Layers.ICanQueryLayer)
+                if (lyr is Layers.ICanQueryLayer)
                 {
                     if (i == queryLayerIndex) k = j;
 
-                    j = j + 1;
+                    j += 1;
                     _dictLayerNameToIndex.Add(lyr.LayerName, i);
                     _queryLayerPicker.Items.Add(lyr.LayerName);
                 }
@@ -208,12 +220,12 @@ namespace SharpMap.Forms.ToolBar
 
             }
             if (k > -1)
-            _queryLayerPicker.SelectedIndex = k;
+                _queryLayerPicker.SelectedIndex = k;
         }
 
 
 
-        private void OnClear(object sender, EventArgs e)
+        private void OnClear()
         {
             if (MapControl == null) return;
 
@@ -226,14 +238,14 @@ namespace SharpMap.Forms.ToolBar
             }
         }
 
-        private void OnMapQueried(SharpMap.Data.FeatureDataTable features)
+        private void OnMapQueried(Data.FeatureDataTable features)
         {
-            OnClear(this, EventArgs.Empty);
+            OnClear();
 
             if (MapControl == null) return;
 
-            _geometryProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(features);
-            _layer = new SharpMap.Layers.VectorLayer("QueriedFeatures", _geometryProvider);
+            _geometryProvider = new Data.Providers.GeometryFeatureProvider(features);
+            _layer = new Layers.VectorLayer("QueriedFeatures", _geometryProvider);
             _layer.IsQueryEnabled = false;
             
             var map = MapControl.Map;
@@ -249,11 +261,11 @@ namespace SharpMap.Forms.ToolBar
             
             if (_queryLayerPicker.SelectedItem == null)
             {
-                System.Windows.Forms.MessageBox.Show("No layer to query selected");
+                MessageBox.Show(@"No layer to query selected");
                 return;
             }
 
-            var checkedButton = (System.Windows.Forms.ToolStripButton)sender;
+            var checkedButton = (ToolStripButton)sender;
 
             MapBox.Tools newTool;
             if (sender == _queryWindow)
@@ -262,8 +274,8 @@ namespace SharpMap.Forms.ToolBar
                 newTool = MapBox.Tools.QueryPoint;
             else
             {
-                if (Logger.IsWarnEnabled)
-                    Logger.Warn("Unknown object invoking OnCheckedChanged()");
+                if (_logger.IsWarnEnabled)
+                    _logger.Warn("Unknown object invoking OnCheckedChanged()");
                 return;
             }
             TrySetActiveTool(checkedButton, newTool);

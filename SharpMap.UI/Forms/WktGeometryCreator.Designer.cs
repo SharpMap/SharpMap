@@ -98,7 +98,6 @@ namespace SharpMap.Forms
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "WktGeometryCreator";
-            this.Load += new System.EventHandler(this.WktGeometryCreator_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -73,12 +73,12 @@ namespace SharpMap.Forms
         /// <summary>
         /// The map image generation function to use when creating new <see cref="MapBox"/> instances
         /// </summary>
-        private static Func<MapBox, ProgressBar, IMapBoxImageGenerator> _mapImageGeneratorFunction;
+        private static Func<MapBox, ProgressBar, IMapBoxImageRenderer> _mapImageGeneratorFunction;
         
         /// <summary>
         /// Gets or sets the map image generation function to assign when creating new MapBox instances.
         /// </summary>
-        public static Func<MapBox, ProgressBar, IMapBoxImageGenerator> MapImageGeneratorFunction
+        public static Func<MapBox, ProgressBar, IMapBoxImageRenderer> MapImageGeneratorFunction
         {
             get => _mapImageGeneratorFunction ?? LegacyMapImageGenerator;
             set => _mapImageGeneratorFunction = value;
@@ -86,25 +86,25 @@ namespace SharpMap.Forms
 
 
         /// <summary>
-        /// Creates a <see cref="IMapBoxImageGenerator"/> that mimics legacy image generation for <see cref="MapBox"/> control.
+        /// Creates a <see cref="IMapBoxImageRenderer"/> that mimics legacy image generation for <see cref="MapBox"/> control.
         /// </summary>
         /// <param name="mapBox">The map control</param>
         /// <param name="progressBar">The progress bar</param>
         /// <returns>An image generator for <see cref="MapBox"/> control</returns>
-        public static IMapBoxImageGenerator LegacyMapImageGenerator(MapBox mapBox, ProgressBar progressBar)
+        public static IMapBoxImageRenderer LegacyMapImageGenerator(MapBox mapBox, ProgressBar progressBar)
         {
             return new LegacyMapBoxImageGenerator(mapBox, progressBar);
         }
 
         /// <summary>
-        /// Creates a <see cref="IMapBoxImageGenerator"/> for <see cref="MapBox"/> control that works on a list of layers.
+        /// Creates a <see cref="IMapBoxImageRenderer"/> for <see cref="MapBox"/> control that works on a list of layers.
         /// </summary>
         /// <param name="mapBox">The map control</param>
         /// <param name="progressBar">The progress bar</param>
         /// <returns>An image generator for <see cref="MapBox"/> control</returns>
-        public static IMapBoxImageGenerator LayerListImageGenerator(MapBox mapBox, ProgressBar progressBar)
+        public static IMapBoxImageRenderer LayerListImageGenerator(MapBox mapBox, ProgressBar progressBar)
         {
-            return new LayerListImageGenerator(mapBox, progressBar);
+            return new LayerListImageRenderer(mapBox, progressBar);
         }
 
         private static readonly ILog _logger = LogManager.GetLogger(typeof (MapBox));
@@ -400,7 +400,7 @@ namespace SharpMap.Forms
 
         #endregion
 
-        private readonly IMapBoxImageGenerator _miRenderer;
+        private readonly IMapBoxImageRenderer _miRenderer;
 
         private static int m_defaultColorIndex;
 
@@ -484,6 +484,23 @@ namespace SharpMap.Forms
                     1f);
             m_defaultColorIndex++;
         }
+
+        /// <summary>
+        /// Gets a value indicating the name of the Image generator
+        /// </summary>
+        [Description("The name of the image renderer used")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public string ImageRendererName
+        {
+            get => _mapImageGeneratorFunction.GetType().Name;
+        }
+
+        /// <summary>
+        /// Gets a value indicating the image renderer for this MapBox
+        /// </summary>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public IMapBoxImageRenderer ImageRenderer { get => _miRenderer; }
+
 
         /// <summary>
         /// Gets or sets a value on whether to report progress of map generation

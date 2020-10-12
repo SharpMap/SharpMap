@@ -13,6 +13,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
@@ -62,29 +63,37 @@ namespace WinFormSamples
         private void FormLayerListImageGenerator_Load(object sender, System.EventArgs e)
         {
             this.SizeChanged += Form_SizeChanged;
-            
-            _boat = Resources.vessel_01;
-            
-            InitMap();
-            InitBackground();
-            InitLayers();
-            InitVariableLayers();
-            InitTreeView();
-            InitRotations();
 
             using (var renderer = SharpMap.Forms.MapBox.MapImageGeneratorFunction(new SharpMap.Forms.MapBox(), null))
             {
                 if (renderer is SharpMap.Forms.ImageGenerator.LegacyMapBoxImageGenerator)
+                {
                     this.txtImgGeneration.Text = (this.txtImgGeneration.Text + "\n.    LegacyMapImageRenderer");
+                    CallTouchTimer = true;
+                }
                 else
+                {
                     this.txtImgGeneration.Text = (this.txtImgGeneration.Text + "\n.    LayerListImageGenerator");
-            };
+                    CallTouchTimer = false;
+                }
+            }
+
+            _boat = Resources.vessel_01;
+            
+            var map = InitMap();
+            InitBackground(map);
+            InitLayers(map);
+            InitVariableLayers(map);
+            InitTreeView(map);
+
+            this.mb.Map = map;
+
+            InitRotations();
 
             this.mb.Refresh();
 
-            //_slowBoats?.Start();
-            _mediumBoats?.Start();
-            //_fastBoats?.Start();
+            _timer.Tick += TimerTick;
+            _timer.Start();
         }
 
 
@@ -95,6 +104,11 @@ namespace WinFormSamples
             _fastBoats?.Dispose();
             _mediumBoats?.Dispose();
             _slowBoats?.Dispose();
+
+            _timer.Stop();
+            _timer.Tick -= TimerTick;
+            _timer.Dispose();
+            
         }
 
         private void Form_SizeChanged(object sender, EventArgs e)
@@ -222,7 +236,7 @@ namespace WinFormSamples
                 case enumMenuItem.StartMoving:
                     if (_contextLayer.LayerName.StartsWith("Fast"))
                         _fastBoats?.Start();
-                     else if (_contextLayer.LayerName.StartsWith("Slow"))
+                    else if (_contextLayer.LayerName.StartsWith("Slow"))
                         _slowBoats?.Start();
                     else
                         _mediumBoats?.Start();
@@ -272,21 +286,21 @@ namespace WinFormSamples
                     break;
                 case enumMenuItem.AlignHz:
                     if (vectorLyr.Theme == null)
-                        PopulateGeomFeatureLayer(vectorLyr, 0);
+                        PopulateGeomFeatureLayer(mb.Map, vectorLyr, 0);
                     else
-                        PopulateCharacterPointSymbolizerLayer((GeometryFeatureProvider)vectorLyr.DataSource, 0);
+                        PopulateCharacterPointSymbolizerLayer(mb.Map, (GeometryFeatureProvider)vectorLyr.DataSource, 0);
                     break;
                 case enumMenuItem.AlignVt:
                     if (vectorLyr.Theme == null)
-                        PopulateGeomFeatureLayer(vectorLyr, 1);
+                        PopulateGeomFeatureLayer(mb.Map, vectorLyr, 1);
                     else
-                        PopulateCharacterPointSymbolizerLayer((GeometryFeatureProvider)vectorLyr.DataSource, 1); 
+                        PopulateCharacterPointSymbolizerLayer(mb.Map, (GeometryFeatureProvider)vectorLyr.DataSource, 1); 
                     break;
                 case enumMenuItem.AlignDiagonal:
                     if (vectorLyr.Theme == null)
-                        PopulateGeomFeatureLayer(vectorLyr, 2);
+                        PopulateGeomFeatureLayer(mb.Map, vectorLyr, 2);
                     else
-                        PopulateCharacterPointSymbolizerLayer((GeometryFeatureProvider)vectorLyr.DataSource, 2); 
+                        PopulateCharacterPointSymbolizerLayer(mb.Map, (GeometryFeatureProvider)vectorLyr.DataSource, 2); 
                     break;
                 case enumMenuItem.IncrementLineWidth:
                     vectorLyr.Style.Line.Width += 1;
@@ -304,7 +318,7 @@ namespace WinFormSamples
         }
         #endregion
 
-        private void InitTreeView()
+        private void InitTreeView(Map map)
         {
             var font = new System.Drawing.Font(tv.Font.FontFamily, tv.Font.Size, System.Drawing.FontStyle.Bold);
 
@@ -313,9 +327,9 @@ namespace WinFormSamples
             tv.Nodes.Add(new TreeNode("Background Layers") { NodeFont = font });
 
             // Populate Tree View
-            TreeViewAddLayerNode(tv.Nodes[0], this.mb.Map.VariableLayers);
-            TreeViewAddLayerNode(tv.Nodes[1], this.mb.Map.Layers);
-            TreeViewAddLayerNode(tv.Nodes[2], this.mb.Map.BackgroundLayer);
+            TreeViewAddLayerNode(tv.Nodes[0], map.VariableLayers);
+            TreeViewAddLayerNode(tv.Nodes[1], map.Layers);
+            TreeViewAddLayerNode(tv.Nodes[2], map.BackgroundLayer);
 
             this.tv.CheckBoxes = true;
             this.tv.ShowRootLines = false;
@@ -371,9 +385,9 @@ namespace WinFormSamples
             this.mb.Refresh();
         }
 
-        private void InitMap()
+        private Map InitMap()
         {
-            this.mb.Map = new SharpMap.Map()
+            var res = new SharpMap.Map()
             {
                 SRID = 3857,
                 BackColor = System.Drawing.Color.AliceBlue,
@@ -385,13 +399,28 @@ namespace WinFormSamples
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
             //geom.ExpandBy(2500);
-            this.mb.Map.ZoomToBox(geom);
+            res.ZoomToBox(geom);
 
-            this.mb.Map.Decorations.Add(new NorthArrow() {ForeColor = Color.DarkSlateBlue});
+            res.Decorations.Add(new NorthArrow {ForeColor = Color.DarkSlateBlue});
+            return res;
         }
 
-        private void InitVariableLayers()
+        private const int Interval = 50; // = 1000 / 25;
+        private readonly Timer _timer = new Timer {Interval = Interval, Enabled = true};
+
+        private void TimerTick(object sender, EventArgs e)
         {
+            if (!CallTouchTimer) return;
+
+            if (_slowBoats.IsRunning || _fastBoats.IsRunning || _mediumBoats.IsRunning)
+                mb.Map.VariableLayers.TouchTimer();
+        }
+
+        public bool CallTouchTimer { get; set; }
+
+        private void InitVariableLayers(Map map)
+        {
+            var rnd = new Random(13);
             LayerGroup lyrGrp = null;
             VectorLayer lyr = null;
 
@@ -404,12 +433,13 @@ namespace WinFormSamples
                     new System.Data.DataColumn("ARGB",typeof(int))
                 });
             lyr.Style.PointColor = new SolidBrush(Color.Green);
-            _fastBoats = new MovingObjects(50, 50, lyr, this.mb.Map, 0.8f, Color.Green);
-            _fastBoats.AddObject("Fast 1", GetRectangleCenter(MapDecorationAnchor.LeftTop));
+            var llyr = CreateLabelLayer(lyr, "Name", false);
+            _fastBoats = new MovingObjects(_timer, 7, lyr, llyr, map, 0.8f, Color.Green);
+            _fastBoats.AddObject("Fast 1", GetRectangleCenter(map, MapDecorationAnchor.LeftTop));
             InitRasterPointSymbolizer(lyr, 0);
             lyrGrp.Layers.Add(lyr);
-            lyrGrp.Layers.Add(CreateLabelLayer(lyr, "Name", false));
-            this.mb.Map.VariableLayers.Add(lyrGrp);
+            lyrGrp.Layers.Add(llyr);
+            map.VariableLayers.Add(lyrGrp);
             
             // group layer with multiple targets + labels
             lyrGrp = new LayerGroup("Medium Boats Group");
@@ -420,13 +450,14 @@ namespace WinFormSamples
                 new System.Data.DataColumn("ARGB",typeof(int))
             });
             lyr.Style.PointColor = new SolidBrush(Color.Yellow);
-            _mediumBoats = new MovingObjects(500, 100, lyr, this.mb.Map, 1, Color.Yellow);
-            _mediumBoats.AddObject("Boat 1", GetRectangleCenter(MapDecorationAnchor.RightTop));
-            _mediumBoats.AddObject("Boat 2", GetRectangleCenter(MapDecorationAnchor.RightCenter));
+            llyr = CreateLabelLayer(lyr, "Name", false);
+            _mediumBoats = new MovingObjects(_timer, 3, lyr, llyr, map, 1, Color.Yellow);
+            _mediumBoats.AddObject("Boat 1", GetRectangleCenter(map, MapDecorationAnchor.RightTop));
+            _mediumBoats.AddObject("Boat 2", GetRectangleCenter(map, MapDecorationAnchor.RightCenter));
             InitRasterPointSymbolizer(lyr, 1);
             lyrGrp.Layers.Add(lyr);
-            lyrGrp.Layers.Add(CreateLabelLayer(lyr, "Name", false));
-            this.mb.Map.VariableLayers.Add(lyrGrp);
+            lyrGrp.Layers.Add(llyr);
+            map.VariableLayers.Add(lyrGrp);
             
             // group layer with multiple targets + labels
             lyrGrp = new LayerGroup("Slow Boats Group");
@@ -438,17 +469,18 @@ namespace WinFormSamples
             });
             // raster point symbolizer
             lyr.Style.PointColor = new SolidBrush(Color.Red);
-            _slowBoats = new MovingObjects(2000, 100, lyr, this.mb.Map, 1.2f, Color.Red);
-            _slowBoats.AddObject("Slow 1", GetRectangleCenter(MapDecorationAnchor.LeftBottom));
-            _slowBoats.AddObject("Slow 2", GetRectangleCenter(MapDecorationAnchor.CenterBottom));
-            _slowBoats.AddObject("Slow 3", GetRectangleCenter(MapDecorationAnchor.RightBottom));
+            llyr = CreateLabelLayer(lyr, "Name", false);
+            _slowBoats = new MovingObjects(_timer, 1, lyr, llyr, map, 1.2f, Color.Red);
+            _slowBoats.AddObject("Slow 1", GetRectangleCenter(map, MapDecorationAnchor.LeftBottom));
+            _slowBoats.AddObject("Slow 2", GetRectangleCenter(map, MapDecorationAnchor.CenterBottom));
+            _slowBoats.AddObject("Slow 3", GetRectangleCenter(map, MapDecorationAnchor.RightBottom));
             InitRasterPointSymbolizer(lyr, 1);
             lyrGrp.Layers.Add(lyr);
-            lyrGrp.Layers.Add(CreateLabelLayer(lyr, "Name", true));
-            this.mb.Map.VariableLayers.Add(lyrGrp);
+            lyrGrp.Layers.Add(llyr);
+            map.VariableLayers.Add(lyrGrp);
         }
 
-        private ILayer CreateLabelLayer(VectorLayer lyr, string column, bool enabled)
+        private LabelLayer CreateLabelLayer(VectorLayer lyr, string column, bool enabled)
         {
             var lblLayer = new LabelLayer( lyr.LayerName + " Labels");
             lblLayer.DataSource = lyr.DataSource;
@@ -459,7 +491,7 @@ namespace WinFormSamples
             return lblLayer;
         }
 
-        private void InitLayers()
+        private void InitLayers(Map map)
         {
             LayerGroup lyrGrp = null;
             VectorLayer lyr = null;
@@ -468,28 +500,28 @@ namespace WinFormSamples
             // group layer with 2 child layers (Blue Rect, Red Rect)
             lyrGrp = new LayerGroup("Layer Group 1");
 
-            geoms = new Geometry[] { new LineString(GetRectanglePoints(MapDecorationAnchor.LeftTop)) };
+            geoms = new Geometry[] { new LineString(GetRectanglePoints(map, MapDecorationAnchor.LeftTop)) };
             lyrGrp.Layers.Add(CreateGeomLayer("Blue Rectangle", geoms, System.Drawing.Color.DodgerBlue));
 
-            geoms = new Geometry[] { new LineString(GetRectanglePoints(MapDecorationAnchor.CenterTop)) };
+            geoms = new Geometry[] { new LineString(GetRectanglePoints(map, MapDecorationAnchor.CenterTop)) };
             lyrGrp.Layers.Add(CreateGeomLayer("Red Rectangle", geoms, System.Drawing.Color.Red));
-            this.mb.Map.Layers.Add(lyrGrp);
+            map.Layers.Add(lyrGrp);
 
             // layer with Green Rect
-            geoms = new Geometry[] { new LineString(GetRectanglePoints(MapDecorationAnchor.RightTop)) };
+            geoms = new Geometry[] { new LineString(GetRectanglePoints(map, MapDecorationAnchor.RightTop)) };
             lyr = CreateGeomLayer("Green Rectangle", geoms, System.Drawing.Color.Green);
-            this.mb.Map.Layers.Add(lyr);
+            map.Layers.Add(lyr);
 
             // Point layer with basic Vector Style
             geoms = new Geometry[] {
-                GetRectangleCenter(MapDecorationAnchor.LeftTop),
-                GetRectangleCenter(MapDecorationAnchor.Center),
-                GetRectangleCenter(MapDecorationAnchor.CenterBottom),
+                GetRectangleCenter(map, MapDecorationAnchor.LeftTop),
+                GetRectangleCenter(map, MapDecorationAnchor.Center),
+                GetRectangleCenter(map, MapDecorationAnchor.CenterBottom),
             };
             lyr = CreateGeomLayer("Points with Vector Style", geoms, System.Drawing.Color.Transparent);
             //lyr.Style.SymbolOffset =  new System.Drawing.PointF(20,20);
             lyr.Enabled = false;
-            this.mb.Map.Layers.Add(lyr);
+            map.Layers.Add(lyr);
 
             // Char Symbol Layer with Thematic rendering
             lyr = CreateGeometryFeatureProviderLayer("Points with thematic CPS", new [] {
@@ -498,17 +530,18 @@ namespace WinFormSamples
                 new System.Data.DataColumn("OffsetX",typeof(float)),
                 new System.Data.DataColumn("OffsetY", typeof(float))
             });
-            PopulateCharacterPointSymbolizerLayer((GeometryFeatureProvider)lyr.DataSource, 0);
+            PopulateCharacterPointSymbolizerLayer(map, (GeometryFeatureProvider)lyr.DataSource, 0);
             lyr.Theme = new SharpMap.Rendering.Thematics.CustomTheme(GetCharacterPointStyle);
             lyr.Enabled = false;
-            this.mb.Map.Layers.Add(lyr);
+
+            map.Layers.Add(lyr);
         }
 
-        private void InitBackground()
+        private void InitBackground(Map map)
         {
             var lyr = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoads), "Async TileLayer [Bing]");
             lyr.SRID = 3857;
-            this.mb.Map.BackgroundLayer.Add(lyr);
+            map.BackgroundLayer.Add(lyr);
         }
 
         private void InitRasterPointSymbolizer(VectorLayer lyr, int style)
@@ -519,26 +552,32 @@ namespace WinFormSamples
                 lyr.Theme = null;
         }
 
-        public static VectorStyle GetRasterPointSymbolizerStyle(FeatureDataRow row)
+        private static readonly object _boatKey = new object();
+        private static VectorStyle GetRasterPointSymbolizerStyle(FeatureDataRow row)
         {
             // NB - this is for testing only.
-            var rps = new RasterPointSymbolizer()
+            RasterPointSymbolizer rps;
+            lock (_boatKey)
             {
-                Symbol = (Image)_boat.Clone(),
-                Rotation = (float)row[2],
-                RemapColor = Color.White,
-                Scale = (float) row[3],
-                SymbolColor = Color.FromArgb((int) row[4])
-            };
+                rps = new RasterPointSymbolizer()
+                {
+                    Symbol = (Image) _boat.Clone(),
+                    Rotation = (float) row[2],
+                    RemapColor = Color.White,
+                    Scale = (float) row[3],
+                    SymbolColor = Color.FromArgb((int) row[4])
+                };
+            }
+
             return new VectorStyle() {PointSymbolizer = rps};
         }
 
-        private void PopulateGeomFeatureLayer(VectorLayer lyr, int direction)
+        private void PopulateGeomFeatureLayer(Map map, VectorLayer lyr, int direction)
         {
             var geoms = new Geometry[] {
-                GetRectangleCenter(MapDecorationAnchor.LeftTop),
-                GetRectangleCenter(direction == 0 ? MapDecorationAnchor.CenterTop : direction == 1 ? MapDecorationAnchor.LeftCenter  : MapDecorationAnchor.Center),
-                GetRectangleCenter(direction == 0 ? MapDecorationAnchor.RightTop : direction == 1 ? MapDecorationAnchor.LeftBottom  : MapDecorationAnchor.RightBottom)
+                GetRectangleCenter(map, MapDecorationAnchor.LeftTop),
+                GetRectangleCenter(map, direction == 0 ? MapDecorationAnchor.CenterTop : direction == 1 ? MapDecorationAnchor.LeftCenter  : MapDecorationAnchor.Center),
+                GetRectangleCenter(map, direction == 0 ? MapDecorationAnchor.RightTop : direction == 1 ? MapDecorationAnchor.LeftBottom  : MapDecorationAnchor.RightBottom)
             };
 
             var gp = (GeometryProvider)lyr.DataSource;
@@ -547,7 +586,7 @@ namespace WinFormSamples
                 gp.Geometries.Add(geom);
             
         }
-        private void PopulateCharacterPointSymbolizerLayer(GeometryFeatureProvider fp, int direction)
+        private void PopulateCharacterPointSymbolizerLayer(Map map, GeometryFeatureProvider fp, int direction)
         {
             FeatureDataRow fdr = null;
 
@@ -558,7 +597,7 @@ namespace WinFormSamples
             fdr["CharSize"] = 15f;
             fdr["OffsetX"] = -10f;
             fdr["OffsetY"] = 5f;
-            fdr.Geometry = GetRectangleCenter(direction == 0 ? MapDecorationAnchor.LeftBottom : direction == 1 ? MapDecorationAnchor.RightBottom  : MapDecorationAnchor.LeftBottom);
+            fdr.Geometry = GetRectangleCenter(map, direction == 0 ? MapDecorationAnchor.LeftBottom : direction == 1 ? MapDecorationAnchor.RightBottom  : MapDecorationAnchor.LeftBottom);
             fp.Features.AddRow(fdr);
 
             fdr = fp.Features.NewRow();
@@ -566,7 +605,7 @@ namespace WinFormSamples
             fdr["CharSize"] = 20f;
             fdr["OffsetX"] = -10f;
             fdr["OffsetY"] = 5f;
-            fdr.Geometry = GetRectangleCenter(direction == 0 ? MapDecorationAnchor.CenterBottom : direction == 1 ? MapDecorationAnchor.RightCenter  : MapDecorationAnchor.Center);
+            fdr.Geometry = GetRectangleCenter(map, direction == 0 ? MapDecorationAnchor.CenterBottom : direction == 1 ? MapDecorationAnchor.RightCenter  : MapDecorationAnchor.Center);
             fp.Features.AddRow(fdr);
 
             fdr = fp.Features.NewRow();
@@ -574,12 +613,12 @@ namespace WinFormSamples
             fdr["CharSize"] = 25f;
             fdr["OffsetX"] = -15f;
             fdr["OffsetY"] = -10f;
-            fdr.Geometry = GetRectangleCenter(direction == 0 ? MapDecorationAnchor.RightBottom : MapDecorationAnchor.RightTop);
+            fdr.Geometry = GetRectangleCenter(map, direction == 0 ? MapDecorationAnchor.RightBottom : MapDecorationAnchor.RightTop);
             fp.Features.AddRow(fdr);
 
             fp.Features.AcceptChanges();
         }
-        private VectorLayer CreateGeometryFeatureProviderLayer(string name, System.Data.DataColumn[] columns)
+        private static VectorLayer CreateGeometryFeatureProviderLayer(string name, System.Data.DataColumn[] columns)
         {
             var fdt = new FeatureDataTable();
             fdt.Columns.Add("Oid", typeof(uint));
@@ -594,7 +633,7 @@ namespace WinFormSamples
             return new VectorLayer(name, new GeometryFeatureProvider(fdt));
         }
                
-        private VectorLayer CreateGeomLayer(string name, IGeometry[] geometries, System.Drawing.Color lineColor)
+        private static VectorLayer CreateGeomLayer(string name, IGeometry[] geometries, System.Drawing.Color lineColor)
         {
             var lyr = new VectorLayer(name)
             {
@@ -607,9 +646,9 @@ namespace WinFormSamples
             return lyr;
         }
         
-        private Coordinate[] GetRectanglePoints(MapDecorationAnchor anchor)
+        private static Coordinate[] GetRectanglePoints(Map map, MapDecorationAnchor anchor)
         {
-            var env = this.mb.Map.Envelope;
+            var env = map.Envelope;
             env.ExpandBy(-env.Width * 0.05);
 
             var coords = new Coordinate[5];
@@ -655,9 +694,9 @@ namespace WinFormSamples
             return coords;
         }
 
-        private Point GetRectangleCenter(MapDecorationAnchor anchor)
+        private Point GetRectangleCenter(Map map, MapDecorationAnchor anchor)
         {
-            var coords = GetRectanglePoints(anchor);
+            var coords = GetRectanglePoints(map, anchor);
             return new Point((coords[0].X + coords[1].X) / 2.0,
                              (coords[0].Y + coords[2].Y) / 2.0);
         }
@@ -675,31 +714,37 @@ namespace WinFormSamples
 
     public class MovingObjects : IDisposable
     {
-        private List<MovingObject> _movingObjects = new List<MovingObject>();
+        private static readonly Random Rnd = new Random(17);
+
+        private readonly List<MovingObject> _movingObjects = new List<MovingObject>();
         
-        private readonly Timer _timer;
         private readonly VectorLayer _lyr;
+        private readonly LabelLayer _llyr;
         private readonly Map _map;
-        public int StepSize { get; set; }
+
+        public double StepSize { get; set; }
         private float _scale;
         private Color _color;
-
-        public MovingObjects(int interval, int stepSize, VectorLayer lyr, Map map, float scale, Color color)
+        private readonly Timer _timer;
+        
+        public MovingObjects(Timer timer, double stepSize, VectorLayer lyr, LabelLayer llyr, Map map, float scale, Color color)
         {
-            _timer = new Timer();
-            _timer.Tick += new EventHandler(Timer_Tick);
-            _timer.Interval = interval;
+            _timer = timer;
+            _timer.Tick += Timer_Tick;
 
             StepSize = stepSize;
             _lyr = lyr;
+            _llyr = llyr;
             _map = map;
             _scale = scale;
             _color = color;
         }
 
-        public void Start() => _timer.Enabled = true;
-        public void Stop() => _timer.Enabled = false;
-        public bool IsRunning => _timer.Enabled;
+        public void Start() => IsRunning = true;
+        
+        public void Stop() => IsRunning = false;
+        
+        public bool IsRunning { get; private set; }
 
         public void AddObject(string name, Point startAt)
         {
@@ -707,15 +752,16 @@ namespace WinFormSamples
             {
                 var fp = (GeometryFeatureProvider) _lyr.DataSource;
                 var fdr = fp.Features.NewRow();
+                float heading = (float) Rnd.Next(0, 359);
                 fdr[1] = name;
-                fdr[2] = 0;
+                fdr[2] = MovingObject.NormalizePositive(90f - heading);
                 fdr[3] = _scale;
                 fdr[4] = _color.ToArgb();
                 fdr.Geometry = startAt;
                 fp.Features.AddRow(fdr);
                 fp.Features.AcceptChanges();
 
-                var obj = new MovingObject(Convert.ToUInt32(fdr[0]), startAt);
+                var obj = new MovingObject(Convert.ToUInt32(fdr[0]), startAt, heading);
                 _movingObjects.Add(obj);
             }
         }
@@ -739,64 +785,92 @@ namespace WinFormSamples
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            lock (((ICollection)_movingObjects).SyncRoot)
+            if (IsRunning)
             {
-                foreach (var obj in _movingObjects)
+                lock (((ICollection) _movingObjects).SyncRoot)
                 {
-                    obj.Step(_map.Envelope, StepSize);
                     var fp = (GeometryFeatureProvider) _lyr.DataSource;
-                    var fdr = (FeatureDataRow) fp.Features.Rows.Find(obj.Oid);
-//                    //fdr.Geometry = obj.Position;
-                    fdr[2] = obj.Heading;
-                    fdr.AcceptChanges();
+                    foreach (var obj in _movingObjects)
+                    {
+                        obj.Step(_map.Envelope, StepSize);
+                        var fdr = (FeatureDataRow) fp.Features.Rows.Find(obj.Oid);
+                        fdr[2] = 90f - obj.Heading;
+                        fdr.AcceptChanges();
+                    }
                 }
+                if (_lyr.Enabled) _lyr.RaiseRenderRequired();
+                if (_llyr.Enabled) _llyr.RaiseRenderRequired();
             }
-            if (_lyr.Enabled) _map.VariableLayers.TouchTimer();
         }
 
         public void Dispose()
         {
-            _timer.Tick -= new EventHandler(Timer_Tick);
-            _timer?.Dispose();
+            _timer.Tick -= Timer_Tick;
         }
     }
     
     public class MovingObject
     {
         public uint Oid { get; }
-        private bool _movingLeft;
-        private bool _movingUp;
+        
         public Point Position { get; private set; }
-        public float Heading { get; private set; }
+        
+        public float Heading { get; set; }
 
-        public MovingObject(uint oid, Point startAt)
+        public MovingObject(uint oid, Point startAt, float initialHeading)
         {
             Oid = oid;
             Position = startAt;
-            _movingUp = true;
+            Heading = initialHeading;
         }
-        
+
+        private const double DegToRad = Math.PI / 180d;
+
         public void Step(Envelope currentExtent, double stepSize)
         {
-            var dx = _movingLeft ? -stepSize : stepSize;
-            var dy = _movingUp ? stepSize : -stepSize;
+            double heading = DegToRad * Heading;
+            double dx = Math.Cos(heading) * stepSize;
+            double dy = Math.Sin(heading) * stepSize;
 
-            Position.X += dx;
-            Position.Y += dy;
+            var cs = Position.CoordinateSequence;
+            cs.SetOrdinate(0, Ordinate.X, cs.GetOrdinate(0, Ordinate.X) + dx);
+            cs.SetOrdinate(0, Ordinate.Y, cs.GetOrdinate(0, Ordinate.Y) + dy);
             Position.GeometryChanged();
 
-            if (Position.X < currentExtent.MinX)
-                _movingLeft = false;
-            else if (Position.X > currentExtent.MaxX)
-                _movingLeft = true;
 
-            if (Position.Y < currentExtent.MinY)
-                _movingUp = true;
-            else if (Position.Y >  currentExtent.MaxY)
-                _movingUp = false;
+            if (currentExtent.Contains(Position.Coordinate))
+                return;
 
-            var deg = 90 - Math.Atan2(dy, dx) * 180 / Math.PI;
-            Heading = (float)(deg + 360) % 360;
+            if (Position.X < currentExtent.MinX || currentExtent.MaxX < Position.X)
+            {
+                dx = -dx;
+            }
+            else if (Position.Y < currentExtent.MinY || currentExtent.MinY < Position.Y)
+            {
+                dy = -dy;
+            }
+
+            Heading = NormalizePositive(90f - (float) Math.Atan2(dx, dy) * 180f / (float) Math.PI);
+            //Step(currentExtent, stepSize);
+        }
+
+        internal static float NormalizePositive(float angle)
+        {
+            if (angle < 0.0)
+            {
+                while (angle < 0.0)
+                    angle += 360f;
+                if (angle >= 360f)
+                    angle = 0.0f;
+            }
+            else
+            {
+                while (angle >= 360f)
+                    angle -= 360f;
+                if (angle < 0.0f)
+                    angle = 0.0f;
+            }
+            return angle;
         }
     }
 }

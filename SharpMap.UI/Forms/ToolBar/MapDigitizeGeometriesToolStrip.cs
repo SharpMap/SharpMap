@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace SharpMap.Forms.ToolBar
@@ -11,16 +8,15 @@ namespace SharpMap.Forms.ToolBar
     /// <summary>
     /// Map tool strip that contains geometry edit controls
     /// </summary>
-    [System.ComponentModel.DesignTimeVisible(true)]
+    [DesignTimeVisible(true)]
     public class MapDigitizeGeometriesToolStrip : MapToolStrip
     {
-        private static readonly Common.Logging.ILog Logger = Common.Logging.LogManager.GetLogger(typeof(MapDigitizeGeometriesToolStrip));
+        private static readonly Common.Logging.ILog _logger = Common.Logging.LogManager.GetLogger(typeof(MapDigitizeGeometriesToolStrip));
 
         /// <summary>
         /// Creates an instance of this control
         /// </summary>
         public MapDigitizeGeometriesToolStrip()
-            :base()
         {
             InitializeComponent();
         }
@@ -35,71 +31,71 @@ namespace SharpMap.Forms.ToolBar
             InitializeComponent();
         }
 
-        private System.Windows.Forms.ToolStripButton _clear;
-        private System.Windows.Forms.ToolStripSeparator _sep1;
-        private System.Windows.Forms.ToolStripButton _addPoint;
-        private System.Windows.Forms.ToolStripButton _addLineString;
-        private System.Windows.Forms.ToolStripButton _addPolygon;
+        private ToolStripButton _clear;
+        private ToolStripSeparator _sep1;
+        private ToolStripButton _addPoint;
+        private ToolStripButton _addLineString;
+        private ToolStripButton _addPolygon;
         /*
-                private System.Windows.Forms.ToolStripButton _addPolygonRing;
-                private System.Windows.Forms.ToolStripSeparator _sep2;
-                private System.Windows.Forms.ToolStripButton _moveFeature;
-                private System.Windows.Forms.ToolStripButton _moveVertex;
+        private System.Windows.Forms.ToolStripButton _addPolygonRing;
+        private System.Windows.Forms.ToolStripSeparator _sep2;
+        private System.Windows.Forms.ToolStripButton _moveFeature;
+        private System.Windows.Forms.ToolStripButton _moveVertex;
         */
 
-        private SharpMap.Data.Providers.GeometryProvider _geometryProvider;
-        private SharpMap.Layers.VectorLayer _layer;
+        private Data.Providers.GeometryProvider _geometryProvider;
+        private Layers.VectorLayer _layer;
 
         /// <summary>
         /// Initialize this component
         /// </summary>
         public void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
 
-            _clear = new System.Windows.Forms.ToolStripButton();
+            _clear = new ToolStripButton();
             _clear.Name = "_clear";
             _clear.Image = Properties.Resources.layer_delete;
             _clear.Click += OnRemoveFeatures;
-            _clear.ToolTipText += "Removes all geometries from the geometry layer";
+            _clear.ToolTipText += @"Removes all geometries from the geometry layer";
 
-            _sep1 = new System.Windows.Forms.ToolStripSeparator();
+            _sep1 = new ToolStripSeparator();
             _sep1.Size = new System.Drawing.Size(6,6);
 
-            _addPoint = new System.Windows.Forms.ToolStripButton();
+            _addPoint = new ToolStripButton();
             _addPoint.Name = "_addPoint";
             _addPoint.Image = Properties.Resources.point_create;
             _addPoint.CheckOnClick = true;
             _addPoint.CheckedChanged += OnCheckedChanged;
             _addPoint.MouseDown += new MouseEventHandler(OnMouseDown);
-            _addPoint.ToolTipText += "Adds a point to the geometry layer";
+            _addPoint.ToolTipText += @"Adds a point to the geometry layer";
 
-            _addLineString = new System.Windows.Forms.ToolStripButton();
+            _addLineString = new ToolStripButton();
             _addLineString.Name = "_addLineString";
             _addLineString.Image = Properties.Resources.line_create;
             _addLineString.MouseDown += OnMouseDown;
             _addLineString.CheckOnClick = true;
             _addLineString.CheckedChanged += OnCheckedChanged;
-            _addLineString.ToolTipText += "Adds a linestring to the geometry layer";
+            _addLineString.ToolTipText += @"Adds a linestring to the geometry layer";
 
-            _addPolygon = new System.Windows.Forms.ToolStripButton();
+            _addPolygon = new ToolStripButton();
             _addPolygon.Name = "_addPolygon";
             _addPolygon.Image = Properties.Resources.polygon_create;
             _addPolygon.CheckOnClick = true;
             _addPolygon.MouseDown += OnMouseDown;
             _addPolygon.CheckedChanged += OnCheckedChanged;
-            _addPolygon.ToolTipText += "Adds a linestring to the geometry layer";
+            _addPolygon.ToolTipText += @"Adds a linestring to the geometry layer";
 
-            this.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { _clear, _sep1, _addPoint, _addLineString, _addPolygon,
+            Items.AddRange(new ToolStripItem[] { _clear, _sep1, _addPoint, _addLineString, _addPolygon,
                 /* _addPolygonRing, _sep2, _moveFeature, _moveVertex */
                 });
 
-            this.ResumeLayout();
-            this.PerformLayout();
+            ResumeLayout();
+            PerformLayout();
 
-            this.Visible = true;
+            Visible = true;
 
-            this.GeometryDefinedHandler = DefaultGeometryDefinedMethod;
+            GeometryDefinedHandler = DefaultGeometryDefinedMethod;
         }
 
         /// <summary>
@@ -110,12 +106,12 @@ namespace SharpMap.Forms.ToolBar
         protected virtual void OnMouseDown(object sender, MouseEventArgs e)
         {
             Debug.WriteLine(string.Format("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name));
-            if (Logger.IsDebugEnabled)
-                Logger.DebugFormat("\nButtonClicked '{0}'",((ToolStripButton)sender).Name);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("\nButtonClicked '{0}'",((ToolStripButton)sender).Name);
         }
 
         /// <inheritdoc/>
-        protected override void OnMapControlChangingInternal(System.ComponentModel.CancelEventArgs e)
+        protected override void OnMapControlChangingInternal(CancelEventArgs e)
         {
             base.OnMapControlChangingInternal(e);
 
@@ -138,8 +134,8 @@ namespace SharpMap.Forms.ToolBar
                 return;
             }
 
-            _geometryProvider = new SharpMap.Data.Providers.GeometryProvider((GeoAPI.Geometries.IGeometry)null);
-            _layer = new SharpMap.Layers.VectorLayer("_tmp_Geometries", _geometryProvider);
+            _geometryProvider = new Data.Providers.GeometryProvider((GeoAPI.Geometries.IGeometry)null);
+            _layer = new Layers.VectorLayer("_tmp_Geometries", _geometryProvider);
 
             MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
             MapControl.GeometryDefined += OnGeometryDefined;
@@ -150,17 +146,15 @@ namespace SharpMap.Forms.ToolBar
 
         private void OnRemoveFeatures(object sender, EventArgs e)
         {
-            if (_geometryProvider != null)
-                _geometryProvider.Geometries.Clear();
-            if (MapControl != null)
-                MapControl.Refresh();
+            _geometryProvider?.Geometries.Clear();
+            MapControl?.Refresh();
         }
 
         private void OnCheckedChanged(object sender, EventArgs e)
         {
             if (MapControl == null) return;
 
-            var checkedButton = (System.Windows.Forms.ToolStripButton)sender;
+            var checkedButton = (ToolStripButton)sender;
             
             MapBox.Tools newTool;
             if (sender == _addPoint)
@@ -171,8 +165,8 @@ namespace SharpMap.Forms.ToolBar
                 newTool = MapBox.Tools.DrawPolygon;
             else
             {
-                if (Logger.IsWarnEnabled)
-                    Logger.Warn("Unknown object invoking OnCheckedChanged()");
+                if (_logger.IsWarnEnabled)
+                    _logger.Warn("Unknown object invoking OnCheckedChanged()");
                 return;
             }
             TrySetActiveTool(checkedButton, newTool);
@@ -212,26 +206,22 @@ namespace SharpMap.Forms.ToolBar
             if (geometry == null)
                 return;
 
-            if (GeometryDefinedHandler != null)
-            {
-                GeometryDefinedHandler(geometry);
-                return;
-            }
+            GeometryDefinedHandler?.Invoke(geometry);
 
         }
 
         /// <summary>
         /// A handler that is invoked when a new geometry was defined.
         /// </summary>
-        [System.ComponentModel.DesignerSerializationVisibility(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public SharpMap.Forms.MapBox.GeometryDefinedHandler GeometryDefinedHandler{ get; set; }
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+        public MapBox.GeometryDefinedHandler GeometryDefinedHandler{ get; set; }
 
         private void DefaultGeometryDefinedMethod(GeoAPI.Geometries.IGeometry geom)
         {
             using (var frm = new WktGeometryCreator())
             {
                 frm.Geometry = geom;
-                if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                if (frm.ShowDialog() == DialogResult.OK)
                 {
                     _geometryProvider.Geometries.Add(frm.Geometry);
                     if (MapControl != null)

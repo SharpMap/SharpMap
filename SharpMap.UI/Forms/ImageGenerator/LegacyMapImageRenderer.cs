@@ -15,7 +15,7 @@ namespace SharpMap.Forms.ImageGenerator
     /// <summary>
     /// 
     /// </summary>
-    public sealed class LegacyMapBoxImageGenerator : IMapBoxImageGenerator
+    public sealed class LegacyMapBoxImageGenerator : IMapBoxImageRenderer
     {
         private static readonly ILog _logger = LogManager.GetLogger<LegacyMapBoxImageGenerator>();
 
@@ -88,7 +88,7 @@ namespace SharpMap.Forms.ImageGenerator
             get { return _mapBox; }
         }
 
-        /// <inheritdoc cref="IMapBoxImageGenerator.Image"/>
+        /// <inheritdoc cref="IMapBoxImageRenderer.Image"/>
         public Image Image
         {
             get
@@ -98,7 +98,7 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
-        /// <inheritdoc cref="IMapBoxImageGenerator.ImageValue"/>
+        /// <inheritdoc cref="IMapBoxImageRenderer.ImageValue"/>
         public Image ImageValue
         {
             get
@@ -110,10 +110,10 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
-        /// <inheritdoc cref="IMapBoxImageGenerator.IsDisposed"/>
+        /// <inheritdoc cref="IMapBoxImageRenderer.IsDisposed"/>
         public bool IsDisposed { get => _isDisposed; }
 
-        /// <inheritdoc cref="IMapBoxImageGenerator.ImageEnvelope"/>
+        /// <inheritdoc cref="IMapBoxImageRenderer.ImageEnvelope"/>
         public Envelope ImageEnvelope { get => new Envelope(_imageEnvelope); }
 
         #region Necessary event handlers

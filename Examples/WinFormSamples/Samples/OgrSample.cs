@@ -47,10 +47,12 @@ namespace WinFormSamples.Samples
             {
                 if (ex.Message == "The type initializer for 'OSGeo.OGR.Ogr' threw an exception.")
                 {
-                    throw new Exception(
-                        String.Format(
-                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
-                            GdalRasterLayer.FWToolsVersion));
+                    var asm = System.Reflection.Assembly.GetAssembly(typeof(OSGeo.GDAL.Gdal)).GetName();
+                    throw new System.Exception(
+                        string.Format(
+                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. " +
+                            "They are a part of the GDAL NuGet package v{0}.",
+                            asm.Version.ToString(3)));
                 }
                 throw;
             }
@@ -81,10 +83,12 @@ namespace WinFormSamples.Samples
             {
                 if (ex.Message == "The type initializer for 'OSGeo.OGR.Ogr' threw an exception.")
                 {
-                    throw new Exception(
-                        String.Format(
-                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
-                            GdalRasterLayer.FWToolsVersion));
+                    var asm = System.Reflection.Assembly.GetAssembly(typeof(OSGeo.GDAL.Gdal)).GetName();
+                    throw new System.Exception(
+                        string.Format(
+                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. " +
+                            "They are a part of the GDAL NuGet package v{0}.",
+                            asm.Version.ToString(3)));
                 }
                 throw;
             }
@@ -149,10 +153,12 @@ namespace WinFormSamples.Samples
             {
                 if (ex.Message == "The type initializer for 'OSGeo.OGR.Ogr' threw an exception.")
                 {
-                    throw new Exception(
-                        String.Format(
-                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. They are a part of fwtools {0}. You can download it from: http://home.gdal.org/fwtools/",
-                            GdalRasterLayer.FWToolsVersion));
+                    var asm = System.Reflection.Assembly.GetAssembly(typeof(OSGeo.GDAL.Gdal)).GetName();
+                    throw new System.Exception(
+                        string.Format(
+                            "The application threw a PINVOKE exception. You probably need to copy the unmanaged dll's to your bin directory. " +
+                            "They are a part of the GDAL NuGet package v{0}.",
+                            asm.Version.ToString(3)));
                 }
                 throw;
             }

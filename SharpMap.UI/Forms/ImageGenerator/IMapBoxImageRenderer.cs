@@ -27,7 +27,7 @@ namespace SharpMap.Forms.ImageGenerator
     /// <summary>
     /// Interface for map image generators that can be used with <see cref="MapBox"/>
     /// </summary>
-    public interface IMapBoxImageGenerator : IDisposable
+    public interface IMapBoxImageRenderer : IDisposable
     {
         /// <summary>
         /// Gets a value representing the complete rendered map image

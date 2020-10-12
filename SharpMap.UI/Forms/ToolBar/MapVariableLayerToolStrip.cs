@@ -1,34 +1,46 @@
 ﻿using System;
 using System.ComponentModel;
 using Common.Logging;
+using SharpMap.Forms.ImageGenerator;
 
 namespace SharpMap.Forms.ToolBar
 {
-    [System.ComponentModel.DesignTimeVisible(true)]
+    /// <summary>
+    /// A pre-configured tool strip for the handling of Map's VariableLayers collection
+    /// </summary>
+    [DesignTimeVisible(true)]
     public class MapVariableLayerToolStrip : MapToolStrip
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(MapVariableLayerToolStrip));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(MapVariableLayerToolStrip));
 
         private System.Windows.Forms.ToolStripButton _enableVariableLayers;
         private System.Windows.Forms.ToolStripTextBox _interval;
         private System.Timers.Timer _timer;
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
         public MapVariableLayerToolStrip()
-            : base()
         {
             InitializeComponent();
         }
 
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        /// <param name="container">A container for components</param>
         public MapVariableLayerToolStrip(IContainer container)
             : base(container)
         {
             InitializeComponent();
         }
 
-
+        /// <summary>
+        /// Initializes this tool strip
+        /// </summary>
         public void InitializeComponent()
         {
-            this.SuspendLayout();
+            SuspendLayout();
 
             _enableVariableLayers = new System.Windows.Forms.ToolStripButton();
             _enableVariableLayers.Name = "_enableVariableLayers";
@@ -37,7 +49,7 @@ namespace SharpMap.Forms.ToolBar
             _enableVariableLayers.CheckedChanged += OnCheckedChanged;
 
             _interval = new System.Windows.Forms.ToolStripTextBox();
-            _interval.Text = "500";
+            _interval.Text = @"500";
             _interval.Enabled = false;
             _interval.TextChanged += OnTextChanged;
 
@@ -45,25 +57,28 @@ namespace SharpMap.Forms.ToolBar
             _timer.Interval = 500;
             _timer.Elapsed += OnTouchTimer;
 
-            this.Items.AddRange(new System.Windows.Forms.ToolStripItem[]
+            Items.AddRange(new System.Windows.Forms.ToolStripItem[]
             { _enableVariableLayers, _interval });
 
-            this.ResumeLayout();
-            this.PerformLayout();
-            this.Visible = true;
+            ResumeLayout();
+            PerformLayout();
+            Visible = true;
         }
 
+        /// <inheritdoc cref="IDisposable.Dispose"/>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
                 _timer.Stop();
+                _timer.Enabled = false;
                 _timer = null;
             }
             base.Dispose(disposing);
         }
 
-        protected override void OnMapControlChangingInternal(System.ComponentModel.CancelEventArgs e)
+        /// <inheritdoc cref="OnMapControlChangingInternal"/>
+        protected override void OnMapControlChangingInternal(CancelEventArgs e)
         {
             base.OnMapControlChangingInternal(e);
 
@@ -71,15 +86,27 @@ namespace SharpMap.Forms.ToolBar
             _timer.Enabled = MapControl != null && _enableVariableLayers.Enabled;
         }
 
+        /// <inheritdoc cref="OnMapControlChangedInternal"/>
+        protected override void OnMapControlChangedInternal(EventArgs e)
+        {
+            base.OnMapControlChangedInternal(e);
+
+            if (MapControl?.ImageRenderer is LayerListImageRenderer llig)
+                _interval.Text = llig.RefreshInterval.ToString("D");
+        }
+
         private void OnTextChanged(object sender, EventArgs e)
         {
-            int val;
-            if (int.TryParse(_interval.Text, System.Globalization.NumberStyles.Integer,
-                System.Globalization.NumberFormatInfo.InvariantInfo, out val))
-            {
-                if (val < 500) val = 500;
-                _timer.Interval = val;
-            }
+            if (!int.TryParse(_interval.Text, System.Globalization.NumberStyles.Integer,
+                System.Globalization.NumberFormatInfo.InvariantInfo, out int val)) return;
+
+            if (val < 50) val = 50;
+            if (val == _timer.Interval)
+                return;
+
+            _timer.Interval = val;
+            if (MapControl.ImageRenderer is LayerListImageRenderer llig)
+                llig.RefreshInterval = val;
         }
 
         private void OnCheckedChanged(object sender, EventArgs e)
@@ -101,10 +128,11 @@ namespace SharpMap.Forms.ToolBar
 
         private void OnTouchTimer(object sender, System.Timers.ElapsedEventArgs e)
         {
-            if (Logger.IsDebugEnabled)
-                Logger.DebugFormat("Touching timer at {0}", e.SignalTime);
+            if (_logger.IsDebugEnabled)
+                _logger.DebugFormat("Touching timer at {0}", e.SignalTime);
 
-            base.MapControl.Map.VariableLayers.TouchTimer();
+            MapControl.Map.VariableLayers.TouchTimer();
+
         }
     }
 }
