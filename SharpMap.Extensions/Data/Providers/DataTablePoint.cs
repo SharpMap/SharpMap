@@ -18,7 +18,6 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using System.Runtime.InteropServices;
 using GeoAPI.Geometries;
 using Geometry = GeoAPI.Geometries.IGeometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;

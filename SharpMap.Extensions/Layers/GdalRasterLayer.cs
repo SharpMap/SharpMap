@@ -17,6 +17,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -36,7 +37,6 @@ using SharpMap.Rendering.Thematics;
 using Point = System.Drawing.Point;
 
 using Polygon = GeoAPI.Geometries.IPolygon;
-using SharpMap.Utilities;
 
 namespace SharpMap.Layers
 {
@@ -109,6 +109,7 @@ namespace SharpMap.Layers
         /// <summary>
         ///  Gets the version of fwTools that was used to compile and test this GdalRasterLayer
         /// </summary>
+        [Obsolete("FWTools no longer used", true)]
         public static string FWToolsVersion
         {
 #pragma warning disable 612,618
@@ -930,9 +931,9 @@ namespace SharpMap.Layers
         /// <param name="mapProjection">The spatial reference system of the map</param>
         /// <param name="map">The map viewport</param>
         protected virtual void GetPreview(Dataset dataset, Size size, Graphics g,
-                                          Envelope displayBbox, ICoordinateSystem mapProjection, MapViewport map)
+            Envelope displayBbox, ICoordinateSystem mapProjection, MapViewport map)
         {
-            DateTime drawStart = DateTime.Now;
+            var drawStart = DateTime.Now;
             double totalReadDataTime = 0;
             double totalTimeSetPixel = 0;
 
@@ -943,384 +944,383 @@ namespace SharpMap.Layers
             }
 
             var geoTransform = new GeoTransform(dataset);
-            
+
             Bitmap bitmap = null;
-            var bitmapTl = new Point();
-            var bitmapSize = new Size();
-            Rectangle rect = new Rectangle();
+            var bitmapTl = Point.Empty;
+            var bitmapSize = Size.Empty;
+            var rect = Rectangle.Empty;
+
             const int pixelSize = 3; //Format24bppRgb = byte[b,g,r] 
 
-            if (dataset != null)
+            //check if image is in bounding box
+            if ((displayBbox.MinX > _envelope.MaxX) || (displayBbox.MaxX < _envelope.MinX)
+             || (displayBbox.MaxY < _envelope.MinY) || (displayBbox.MinY > _envelope.MaxY))
+                return;
+
+            // init histo
+            var histogram = new List<int[]>();
+            for (int i = 0; i < Bands + 1; i++)
+                histogram.Add(new int[256]);
+
+            var trueImageBbox = /*displayBbox.Intersection*/(_envelope);
+
+            // put display bounds into current projection
+            var shownImageBbox = trueImageBbox.Copy();
+            if (ReverseCoordinateTransformation != null)
             {
-                //check if image is in bounding box
-                if ((displayBbox.MinX > _envelope.MaxX) || (displayBbox.MaxX < _envelope.MinX)
-                    || (displayBbox.MaxY < _envelope.MinY) || (displayBbox.MinY > _envelope.MaxY))
-                    return;
-
-                // init histo
-                var histogram = new List<int[]>();
-                for (int i = 0; i < Bands + 1; i++)
-                    histogram.Add(new int[256]);
-
-                var trueImageBbox = displayBbox.Intersection(_envelope);
-
-                // put display bounds into current projection
-                Envelope shownImageBbox = trueImageBbox.Copy();
-                if (ReverseCoordinateTransformation != null)
-                {
-                    shownImageBbox = GeometryTransform.TransformBox(trueImageBbox, ReverseCoordinateTransformation.MathTransform);
-                }
-
-                // find min/max x and y pixels needed from image
-                var g2I = geoTransform.GroundToImage(shownImageBbox).Intersection(new Envelope(0, _imageSize.Width, 0, _imageSize.Height));
-                var gdalImageRect = ToRectangle(g2I);
-                var displayImageSize = gdalImageRect.Size;
-
-                // convert ground coordinates to map coordinates to figure out where to place the bitmap
-                var pos1 = Point.Truncate(map.WorldToImage(trueImageBbox.TopLeft()));
-                var pos2 = Point.Truncate(map.WorldToImage(trueImageBbox.BottomRight()));
-                rect = Rectangle.FromLTRB(pos1.X, pos1.Y, pos2.X, pos2.Y);
-
-                bitmapTl = rect.Location;
-                bitmapSize = Size.Add(rect.Size, new Size(1,1));
-
-                double disRatio = (double) displayImageSize.Width / displayImageSize.Height;
-                double bmsRatio = (double) bitmapSize.Width / bitmapSize.Height;
-
-                // check to see if image is on its side
-                if (bitmapSize.Width > bitmapSize.Height && displayImageSize.Width < displayImageSize.Height)
-                {
-                    displayImageSize.Width = bitmapSize.Height;
-                    displayImageSize.Height = bitmapSize.Width;
-                }
-                else
-                {
-                    displayImageSize.Width = bitmapSize.Width;
-                    displayImageSize.Height = bitmapSize.Height;
-                    if (Math.Abs(disRatio - bmsRatio) > 1e-5)
-                        displayImageSize.Height = (int) (bmsRatio * displayImageSize.Height);
-                }
-
-                /*
-                // scale
-                var bitScalar = GetBitScalar();
-                */
-
-                // 0 pixels in length or height, nothing to display
-                if (bitmapSize.Width < 1 || bitmapSize.Height < 1)
-                    return;
-
-                //initialize bitmap
-                BitmapData bitmapData;
-                bitmap = InitializeBitmap(bitmapSize, PixelFormat.Format24bppRgb, out bitmapData);
-                
-                try
-                {
-                    unsafe
-                    {
-                        byte cr = _noDataInitColor.R;
-                        byte cg = _noDataInitColor.G;
-                        byte cb = _noDataInitColor.B;
-
-                        // create 3 dimensional buffer [band][x pixel][y pixel]
-                        var buffer = new double[Bands][][];
-                        for (int i = 0; i < Bands; i++)
-                        {
-                            buffer[i] = new double[displayImageSize.Width][];
-                            for (int j = 0; j < displayImageSize.Width; j++)
-                                buffer[i][j] = new double[displayImageSize.Height];
-                        }
-
-                        var ch = new int[Bands];
-                        var bitScales = new double[Bands];
-
-                        var noDataValues = new Double[Bands];
-                        var scales = new Double[Bands];
-                        ColorTable colorTable = null;
-                        short[][] colorTableCache = null;
-
-                        var imageRect = gdalImageRect;
-
-                        ColorBlend colorBlend = null;
-                        var intermediateValue = new double[Bands];
-
-                        // get data from image
-                        for (int i = 0; i < Bands; i++)
-                        {
-                            using (var band = dataset.GetRasterBand(i + 1))
-                            {
-                                //get nodata value if present
-                                band.GetNoDataValue(out noDataValues[i], out int hasVal);
-                                if (hasVal == 0) noDataValues[i] = double.NaN;
-                                
-                                //Get the scale value if present
-                                band.GetScale(out scales[i], out hasVal);
-                                if (hasVal == 0) scales[i] = 1.0;
-
-                                //
-                                bitScales[i] = GetBitScale(band.DataType);
-                                switch (band.GetRasterColorInterpretation())
-                                {
-                                    case ColorInterp.GCI_BlueBand:
-                                        ch[i] = 0;
-                                        break;
-                                    case ColorInterp.GCI_GreenBand:
-                                        ch[i] = 1;
-                                        break;
-                                    case ColorInterp.GCI_RedBand:
-                                        ch[i] = 2;
-                                        break;
-                                    case ColorInterp.GCI_Undefined:
-                                        if (Bands > 1)
-                                            ch[i] = 3; // infrared
-                                        else
-                                        {
-                                            ch[i] = 4;
-                                            colorBlend = GetColorBlend(band);
-                                            intermediateValue = new Double[3];
-                                        }
-                                        break;
-                                    case ColorInterp.GCI_GrayIndex:
-                                        ch[i] = 0;
-                                        break;
-                                    case ColorInterp.GCI_PaletteIndex:
-                                        if (colorTable != null)
-                                        {
-                                            //this should not happen
-                                            colorTable.Dispose();
-                                        }
-                                        colorTable = band.GetRasterColorTable();
-
-                                        int numColors = colorTable.GetCount();
-                                        colorTableCache = new short[numColors][];
-                                        for (int col = 0; col < numColors; col++)
-                                        {
-                                            using (var colEntry = colorTable.GetColorEntry(col))
-                                            {
-                                                colorTableCache[col] = new [] {
-                                                    colEntry.c1, colEntry.c2, colEntry.c3
-                                                };
-                                            }
-                                        }
-
-                                        ch[i] = 5;
-                                        intermediateValue = new Double[3];
-                                        break;
-                                    default:
-                                        ch[i] = -1;
-                                        break;
-                                }
-                            }
-                        }
-
-                        // store these values to keep from having to make slow method calls
-                        double imageTop = g2I.MinY;
-                        double imageLeft = g2I.MinX;
-
-
-                        // get inverse values
-                        var geoTop = geoTransform.Inverse[3];
-                        var geoLeft = geoTransform.Inverse[0];
-                        var geoHorzPixRes = geoTransform.Inverse[1];
-                        var geoVertPixRes = geoTransform.Inverse[5];
-                        var geoXRot = geoTransform.Inverse[2];
-                        var geoYRot = geoTransform.Inverse[4];
-
-                        double dblXScale = (displayImageSize.Width - 1) / (g2I.Width);
-                        double dblYScale = (displayImageSize.Height - 1) / (g2I.Height);
-
-                        // get inverse transform  
-                        // NOTE: calling transform.MathTransform.Inverse() once and storing it
-                        // is much faster than having to call every time it is needed
-                        IMathTransform inverseTransform = null;
-                        if (ReverseCoordinateTransformation != null)
-                            inverseTransform = ReverseCoordinateTransformation.MathTransform;
-
-                        int rowsRead = 0;
-                        int displayImageStep = displayImageSize.Height;
-                        while (rowsRead < displayImageStep)
-                        {
-                            int rowsToRead = displayImageStep;
-                            if (rowsRead + rowsToRead > displayImageStep)
-                                rowsToRead = displayImageStep - rowsRead;
-
-                            var tempBuffer = new double[displayImageSize.Width * rowsToRead];
-                            for (int i = 0; i < Bands; i++)
-                            {
-                                // read the buffer
-                                using (var band = dataset.GetRasterBand(i + 1))
-                                {
-                                    DateTime start = DateTime.Now;
-                                    band.ReadRaster(imageRect.Left, imageRect.Top,
-                                                    imageRect.Width, imageRect.Height,
-                                                    tempBuffer, displayImageSize.Width, rowsToRead, 0, 0);
-
-                                    if (_logger.IsDebugEnabled)
-                                    {
-                                        TimeSpan took = DateTime.Now - start;
-                                        totalReadDataTime += took.TotalMilliseconds;
-                                    }
-                                }
-
-                                // parse temp buffer into the image x y value buffer
-                                long pos = 0;
-                                int newRowsRead = rowsRead + rowsToRead;
-                                for (int y = rowsRead; y < newRowsRead; y++)
-                                {
-                                    for (int x = 0; x < displayImageSize.Width; x++)
-                                    {
-                                        buffer[i][x][y] = tempBuffer[pos++];
-                                    }
-                                }
-                            }
-                            rowsRead += rowsToRead;
-
-                            double mapPixelWidth = map.PixelWidth;
-                            double mapPixelHeight = map.PixelHeight;
-
-                            for (int pixY = 0; pixY < bitmapData.Height; pixY++)
-                            {
-                                var rowPtr =  bitmapData.Scan0 + pixY * bitmapData.Stride;
-                                var row = (byte*) rowPtr;
-
-                                double gndY = Envelope.MaxY - pixY * mapPixelHeight;
-                                //if (gndY > map.Envelope.MaxY) continue;
-                                double gndX = Envelope.MinX;
-
-                                for (int pixX = 0; pixX < bitmap.Width; pixX++)
-                                {
-
-                                    // transform ground point if needed
-                                    if (inverseTransform != null)
-                                    {
-                                        var dblPoint = inverseTransform.Transform(new[] {gndX, gndY});
-                                        gndX = dblPoint[0];
-                                        gndY = dblPoint[1];
-                                    }
-
-                                    // same as GeoTransform.GroundToImage(), but much faster using stored values...
-                                    var imageCoord = new Coordinate(
-                                        geoLeft + geoHorzPixRes*gndX + geoXRot*gndY,
-                                        geoTop + geoYRot*gndX + geoVertPixRes*gndY);
-
-                                    if (!g2I.Contains(imageCoord)) 
-                                        goto Incrementation;
-
-                                    var imagePt = new Point((int)((imageCoord.X - imageLeft) * dblXScale),
-                                                            (int)((imageCoord.Y - imageTop) * dblYScale));
-
-                                    // Apply color correction
-                                    for (var i = 0; i < Bands; i++)
-                                    {
-                                        intermediateValue[i] = buffer[i][imagePt.X][imagePt.Y];
-
-                                        // apply scale
-                                        intermediateValue[i] *= scales[i];
-
-                                        double spotVal;
-                                        var imageVal = spotVal = intermediateValue[i] = intermediateValue[i] * bitScales[i];
-
-                                        if (ch[i] == 4)
-                                        {
-                                            if (!DoublesAreEqual(imageVal,noDataValues[i]))
-                                            {
-                                                var color = colorBlend.GetColor(Convert.ToSingle(imageVal));
-                                                intermediateValue[0] = color.B;
-                                                intermediateValue[1] = color.G;
-                                                intermediateValue[2] = color.R;
-                                                //intVal[3] = ce.c4;
-                                            }
-                                            else
-                                            {
-                                                intermediateValue[0] = cb;
-                                                intermediateValue[1] = cg;
-                                                intermediateValue[2] = cr;
-                                            }
-                                        }
-
-                                        else if (ch[i] == 5 && colorTable != null)
-                                        {
-                                            if (double.IsNaN(noDataValues[i]) || !DoublesAreEqual(imageVal, noDataValues[i]))
-                                            {
-                                                var ce = colorTableCache[Convert.ToInt32(imageVal)];
-
-                                                intermediateValue[0] = ce[2];
-                                                intermediateValue[1] = ce[1];
-                                                intermediateValue[2] = ce[0];
-                                            }
-                                            else
-                                            {
-                                                intermediateValue[0] = cb;
-                                                intermediateValue[1] = cg;
-                                                intermediateValue[2] = cr;
-                                            }
-                                        }
-
-                                        else
-                                        {
-                                            if (ColorCorrect)
-                                            {
-                                                intermediateValue[i] = ApplyColorCorrection(imageVal, spotVal, ch[i],
-                                                                                            gndX,
-                                                                                            gndY);
-
-                                                // if pixel is within ground boundary, add its value to the histogram
-                                                if (ch[i] != -1 && intermediateValue[i] > 0 &&
-                                                    (HistoBounds.Bottom >= (int) gndY) &&
-                                                    HistoBounds.Top <= (int) gndY &&
-                                                    HistoBounds.Left <= (int) gndX && HistoBounds.Right >= (int) gndX)
-                                                {
-                                                    histogram[ch[i]][(int) intermediateValue[i]]++;
-                                                }
-                                            }
-
-                                            if (intermediateValue[i] > 255)
-                                                intermediateValue[i] = 255;
-                                        }
-                                    }
-
-                                    // luminosity
-                                    if (Bands >= 3)
-                                        histogram[Bands][
-                                            (int)
-                                            (intermediateValue[2]*0.2126 + intermediateValue[1]*0.7152 +
-                                             intermediateValue[0]*0.0722)]
-                                            ++;
-
-                                    DateTime writeStart = DateTime.MinValue;
-                                    if (_logger.IsDebugEnabled)
-                                        writeStart = DateTime.Now;
-                                    WritePixel(pixX, intermediateValue, pixelSize, ch, row);
-                                    if (_logger.IsDebugEnabled)
-                                    {
-                                        TimeSpan took = DateTime.Now - writeStart;
-                                        totalTimeSetPixel += took.TotalMilliseconds;
-                                    }
-
-                                    Incrementation:
-                                    gndX += mapPixelWidth;
-                                }
-                            }
-                        }
-
-                        if (colorTable != null)
-                        {
-                            colorTable.Dispose();
-                        }
-                    }
-                }
-
-                finally
-                {
-                    bitmap.UnlockBits(bitmapData);
-                }
-
-                // Update the histogram
-                Histogram = histogram;
+                shownImageBbox =
+                    GeometryTransform.TransformBox(trueImageBbox, ReverseCoordinateTransformation.MathTransform);
             }
 
+            // find min/max x and y pixels needed from image
+            var g2I = geoTransform.GroundToImage(shownImageBbox)
+                .Intersection(new Envelope(0, _imageSize.Width, 0, _imageSize.Height));
+            var gdalImageRect = ToRectangle(g2I);
+            var displayImageSize = gdalImageRect.Size;
 
-            DateTime drawGdiStart = DateTime.Now;
+            // convert ground coordinates to map coordinates to figure out where to place the bitmap
+            var pos1 = Point.Truncate(map.WorldToImage(trueImageBbox.TopLeft()));
+            var pos2 = Point.Truncate(map.WorldToImage(trueImageBbox.BottomRight()));
+            rect = Rectangle.FromLTRB(pos1.X, pos1.Y, pos2.X, pos2.Y);
+
+            bitmapTl = rect.Location;
+            bitmapSize = Size.Add(rect.Size, new Size(1, 1));
+
+            double disRatio = (double) displayImageSize.Width / displayImageSize.Height;
+            double bmsRatio = (double) bitmapSize.Width / bitmapSize.Height;
+
+            // check to see if image is on its side
+            if (bitmapSize.Width > bitmapSize.Height && displayImageSize.Width < displayImageSize.Height)
+            {
+                displayImageSize.Width = bitmapSize.Height;
+                displayImageSize.Height = bitmapSize.Width;
+            }
+            else
+            {
+                displayImageSize.Width = bitmapSize.Width;
+                displayImageSize.Height = bitmapSize.Height;
+                if (Math.Abs(disRatio - bmsRatio) > 1e-5)
+                    displayImageSize.Height = (int) (bmsRatio * displayImageSize.Height);
+            }
+
+            /*
+            // scale
+            var bitScalar = GetBitScalar();
+            */
+
+            // 0 pixels in length or height, nothing to display
+            if (bitmapSize.Width < 1 || bitmapSize.Height < 1)
+                return;
+
+            //initialize bitmap
+            BitmapData bitmapData;
+            bitmap = InitializeBitmap(bitmapSize, PixelFormat.Format24bppRgb, out bitmapData);
+
+            try
+            {
+                unsafe
+                {
+                    byte cr = _noDataInitColor.R;
+                    byte cg = _noDataInitColor.G;
+                    byte cb = _noDataInitColor.B;
+
+                    // create 2 dimensional buffer [band][x pixel, y-pixel]//[y pixel]
+                    var buffer = new double[Bands][];
+                    for (int i = 0; i < Bands; i++)
+                        buffer[i] = ArrayPool<double>.Shared.Rent(displayImageSize.Height * displayImageSize.Width);
+
+                    var ch = new int[Bands];
+                    var bitScales = new double[Bands];
+
+                    var noDataValues = new double[Bands];
+                    var scales = new double[Bands];
+                    ColorTable colorTable = null;
+                    short[][] colorTableCache = null;
+
+                    var imageRect = gdalImageRect;
+
+                    ColorBlend colorBlend = null;
+                    var intermediateValue = new double[Bands];
+
+                    // get data from image
+                    for (int i = 0; i < Bands; i++)
+                    {
+                        using (var band = dataset.GetRasterBand(i + 1))
+                        {
+                            //get nodata value if present
+                            band.GetNoDataValue(out noDataValues[i], out int hasVal);
+                            if (hasVal == 0) noDataValues[i] = double.NaN;
+
+                            //Get the scale value if present
+                            band.GetScale(out scales[i], out hasVal);
+                            if (hasVal == 0) scales[i] = 1.0;
+
+                            //
+                            bitScales[i] = GetBitScale(band.DataType);
+                            switch (band.GetRasterColorInterpretation())
+                            {
+                                case ColorInterp.GCI_BlueBand:
+                                    ch[i] = 0;
+                                    break;
+                                case ColorInterp.GCI_GreenBand:
+                                    ch[i] = 1;
+                                    break;
+                                case ColorInterp.GCI_RedBand:
+                                    ch[i] = 2;
+                                    break;
+                                case ColorInterp.GCI_Undefined:
+                                    if (Bands > 1)
+                                        ch[i] = 3; // infrared
+                                    else
+                                    {
+                                        ch[i] = 4;
+                                        colorBlend = GetColorBlend(band);
+                                        intermediateValue = new Double[3];
+                                    }
+
+                                    break;
+                                case ColorInterp.GCI_GrayIndex:
+                                    ch[i] = 0;
+                                    break;
+                                case ColorInterp.GCI_PaletteIndex:
+                                    if (colorTable != null)
+                                    {
+                                        //this should not happen
+                                        colorTable.Dispose();
+                                    }
+
+                                    colorTable = band.GetRasterColorTable();
+
+                                    int numColors = colorTable.GetCount();
+                                    colorTableCache = new short[numColors][];
+                                    for (int col = 0; col < numColors; col++)
+                                    {
+                                        using (var colEntry = colorTable.GetColorEntry(col))
+                                        {
+                                            colorTableCache[col] = new[]
+                                            {
+                                                colEntry.c1, colEntry.c2, colEntry.c3
+                                            };
+                                        }
+                                    }
+
+                                    ch[i] = 5;
+                                    intermediateValue = new double[3];
+                                    break;
+                                default:
+                                    ch[i] = -1;
+                                    break;
+                            }
+                        }
+                    }
+
+                    // store these values to keep from having to make slow method calls
+                    double imageTop = g2I.MinY;
+                    double imageLeft = g2I.MinX;
+
+
+                    // get inverse values
+                    var geoTop = geoTransform.Inverse[3];
+                    var geoLeft = geoTransform.Inverse[0];
+                    var geoHorzPixRes = geoTransform.Inverse[1];
+                    var geoVertPixRes = geoTransform.Inverse[5];
+                    var geoXRot = geoTransform.Inverse[2];
+                    var geoYRot = geoTransform.Inverse[4];
+
+                    double dblXScale = (displayImageSize.Width - 1) / (g2I.Width);
+                    double dblYScale = (displayImageSize.Height - 1) / (g2I.Height);
+
+                    // get inverse transform  
+                    // NOTE: calling transform.MathTransform.Inverse() once and storing it
+                    // is much faster than having to call every time it is needed
+                    IMathTransform inverseTransform = null;
+                    if (ReverseCoordinateTransformation != null)
+                        inverseTransform = ReverseCoordinateTransformation.MathTransform;
+
+                    int rowsRead = 0;
+                    int displayImageStep = displayImageSize.Height;
+                    while (rowsRead < displayImageStep)
+                    {
+                        int rowsToRead = displayImageStep;
+                        if (rowsRead + rowsToRead > displayImageStep)
+                            rowsToRead = displayImageStep - rowsRead;
+
+                        double[] tempBuffer = ArrayPool<double>.Shared.Rent(displayImageSize.Width * rowsToRead);
+                        for (int i = 0; i < Bands; i++)
+                        {
+                            // read the buffer
+                            using (var band = dataset.GetRasterBand(i + 1))
+                            {
+                                var start = DateTime.Now;
+                                band.ReadRaster(imageRect.Left, imageRect.Top,
+                                    imageRect.Width, imageRect.Height,
+                                    tempBuffer, displayImageSize.Width, rowsToRead, 0, 0);
+
+                                if (_logger.IsDebugEnabled)
+                                {
+                                    var took = DateTime.Now - start;
+                                    totalReadDataTime += took.TotalMilliseconds;
+                                }
+                            }
+
+                            Buffer.BlockCopy(tempBuffer, 0, buffer[i],
+                                8 * rowsRead * displayImageSize.Width, 8 * rowsToRead * displayImageSize.Width);
+                        }
+
+                        ArrayPool<double>.Shared.Return(tempBuffer);
+                        rowsRead += rowsToRead;
+
+                        double mapPixelWidth = map.PixelWidth;
+                        double mapPixelHeight = map.PixelHeight;
+
+                        for (int pixY = 0; pixY < bitmapData.Height; pixY++)
+                        {
+                            var rowPtr = bitmapData.Scan0 + pixY * bitmapData.Stride;
+                            var row = (byte*) rowPtr;
+
+                            double gndY = Envelope.MaxY - pixY * mapPixelHeight;
+                            //if (gndY > map.Envelope.MaxY) continue;
+                            double gndX = Envelope.MinX;
+
+                            for (int pixX = 0; pixX < bitmap.Width; pixX++)
+                            {
+
+                                // transform ground point if needed
+                                if (inverseTransform != null)
+                                {
+                                    double[] dblPoint = inverseTransform.Transform(new[] {gndX, gndY});
+                                    gndX = dblPoint[0];
+                                    gndY = dblPoint[1];
+                                }
+
+                                // same as GeoTransform.GroundToImage(), but much faster using stored values...
+                                var imageCoord = new Coordinate(
+                                    geoLeft + geoHorzPixRes * gndX + geoXRot * gndY,
+                                    geoTop + geoYRot * gndX + geoVertPixRes * gndY);
+
+                                if (!g2I.Contains(imageCoord))
+                                    goto Incrementation;
+
+                                var imagePt = new Point((int) ((imageCoord.X - imageLeft) * dblXScale),
+                                    (int) ((imageCoord.Y - imageTop) * dblYScale));
+
+                                int bufferOffset = imagePt.Y * displayImageSize.Width;
+                                // Apply color correction
+                                for (int i = 0; i < Bands; i++)
+                                {
+                                    intermediateValue[i] = buffer[i][bufferOffset + imagePt.X];
+
+                                    // apply scale
+                                    intermediateValue[i] *= scales[i];
+
+                                    double spotVal;
+                                    double imageVal =
+                                        spotVal = intermediateValue[i] = intermediateValue[i] * bitScales[i];
+
+                                    if (ch[i] == 4)
+                                    {
+                                        if (!DoublesAreEqual(imageVal, noDataValues[i]))
+                                        {
+                                            var color = colorBlend.GetColor(Convert.ToSingle(imageVal));
+                                            intermediateValue[0] = color.B;
+                                            intermediateValue[1] = color.G;
+                                            intermediateValue[2] = color.R;
+                                            //intVal[3] = ce.c4;
+                                        }
+                                        else
+                                        {
+                                            intermediateValue[0] = cb;
+                                            intermediateValue[1] = cg;
+                                            intermediateValue[2] = cr;
+                                        }
+                                    }
+
+                                    else if (ch[i] == 5 && colorTable != null)
+                                    {
+                                        if (double.IsNaN(noDataValues[i]) ||
+                                            !DoublesAreEqual(imageVal, noDataValues[i]))
+                                        {
+                                            short[] ce = colorTableCache[Convert.ToInt32(imageVal)];
+
+                                            intermediateValue[0] = ce[2];
+                                            intermediateValue[1] = ce[1];
+                                            intermediateValue[2] = ce[0];
+                                        }
+                                        else
+                                        {
+                                            intermediateValue[0] = cb;
+                                            intermediateValue[1] = cg;
+                                            intermediateValue[2] = cr;
+                                        }
+                                    }
+
+                                    else
+                                    {
+                                        if (ColorCorrect)
+                                        {
+                                            intermediateValue[i] = ApplyColorCorrection(imageVal, spotVal, ch[i],
+                                                gndX,
+                                                gndY);
+
+                                            // if pixel is within ground boundary, add its value to the histogram
+                                            if (ch[i] != -1 && intermediateValue[i] > 0 &&
+                                                (HistoBounds.Bottom >= (int) gndY) &&
+                                                HistoBounds.Top <= (int) gndY &&
+                                                HistoBounds.Left <= (int) gndX && HistoBounds.Right >= (int) gndX)
+                                            {
+                                                histogram[ch[i]][(int) intermediateValue[i]]++;
+                                            }
+                                        }
+
+                                        if (intermediateValue[i] > 255)
+                                            intermediateValue[i] = 255;
+                                    }
+                                }
+
+                                // luminosity
+                                if (Bands >= 3)
+                                    histogram[Bands][(int) (intermediateValue[2] * 0.2126 
+                                                          + intermediateValue[1] * 0.7152 
+                                                          + intermediateValue[0] * 0.0722)]++;
+
+                                DateTime writeStart = DateTime.MinValue;
+                                if (_logger.IsDebugEnabled)
+                                    writeStart = DateTime.Now;
+                                WritePixel(pixX, intermediateValue, pixelSize, ch, row);
+                                if (_logger.IsDebugEnabled)
+                                {
+                                    TimeSpan took = DateTime.Now - writeStart;
+                                    totalTimeSetPixel += took.TotalMilliseconds;
+                                }
+
+                                Incrementation:
+                                gndX += mapPixelWidth;
+                            }
+                        }
+                    }
+
+                    if (colorTable != null)
+                    {
+                        colorTable.Dispose();
+                    }
+
+                    // Return buffer!
+                    for (int i = 0; i < Bands; i++)
+                        ArrayPool<double>.Shared.Return(buffer[i]);
+
+                }
+            }
+
+            finally
+            {
+                bitmap.UnlockBits(bitmapData);
+            }
+
+            // Update the histogram
+            Histogram = histogram;
+
+
+            var drawGdiStart = DateTime.Now;
             bitmap.MakeTransparent(_noDataInitColor);
             if (TransparentColor != Color.Empty)
                 bitmap.MakeTransparent(TransparentColor);
@@ -1333,12 +1333,12 @@ namespace SharpMap.Layers
             {
                 TimeSpan took = DateTime.Now - drawStart;
                 TimeSpan drawGdiTook = DateTime.Now - drawGdiStart;
-                _logger.DebugFormat("Draw GdalImage in {0}ms, readTime: {1}, setPixelTime: {2}, drawTime: {3}", took.TotalMilliseconds, totalReadDataTime,
+                _logger.DebugFormat("Draw GdalImage in {0}ms, readTime: {1}, setPixelTime: {2}, drawTime: {3}",
+                    took.TotalMilliseconds, totalReadDataTime,
                     totalTimeSetPixel, drawGdiTook.TotalMilliseconds);
             }
         }
 
- 
         #region private helper methods
         private Rectangle ToRectangle(Envelope g2I)
         {
