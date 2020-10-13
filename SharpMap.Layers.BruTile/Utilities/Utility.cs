@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Reflection;
 using System.Runtime.Serialization;
 using BruTile;
@@ -19,6 +20,9 @@ using SharpMap.Utilities.Wmts.Generated;
 
 namespace SharpMap.Utilities
 {
+    /// <summary>
+    /// Utility class for reflection on BruTile classes
+    /// </summary>
     public static class Utility
     {
         internal const BindingFlags PrivateInstance = BindingFlags.NonPublic | BindingFlags.Instance;
@@ -51,7 +55,9 @@ namespace SharpMap.Utilities
 
         internal static FieldInfo SearchField(Type type, string name, BindingFlags bindingFlags)
         {
-            CheckBindingFlags(bindingFlags);
+            var ex = CheckBindingFlags(bindingFlags);
+            if (ex != null) throw ex;
+
             while (type != null)
             {
                 var fi = type.GetField(name, bindingFlags);
@@ -64,7 +70,9 @@ namespace SharpMap.Utilities
 
         internal static PropertyInfo SearchProperty(Type type, string name, BindingFlags bindingFlags, bool set = false)
         {
-            CheckBindingFlags(bindingFlags);
+            var ex = CheckBindingFlags(bindingFlags);
+            if (ex != null) throw ex;
+
             while (type != null)
             {
                 var fi = type.GetProperty(name, bindingFlags);
@@ -78,14 +86,13 @@ namespace SharpMap.Utilities
             return null;
         }
 
-// ReSharper disable UnusedParameter.Local
-        private static void CheckBindingFlags(BindingFlags bindingFlags)
-// ReSharper restore UnusedParameter.Local
+        private static Exception CheckBindingFlags(BindingFlags bindingFlags)
         {
             if ((bindingFlags & (BindingFlags.Public | BindingFlags.NonPublic)) == BindingFlags.Default)
-                throw new ArgumentException("Binding flags need to specify Public or NonPublic");
+                return new ArgumentException("Binding flags need to specify Public or NonPublic");
             if ((bindingFlags & (BindingFlags.Static | BindingFlags.Instance)) == BindingFlags.Default)
-                throw new ArgumentException("Binding flags need to specify Static or Instance");
+                return new ArgumentException("Binding flags need to specify Static or Instance");
+            return null;
         }
 
         internal static void SetPropertyValue<T>(ref object obj, string propertyName,
@@ -117,6 +124,10 @@ namespace SharpMap.Utilities
             return newValue;
         }
 
+        /// <summary>
+        /// Adds required surrogates to <paramref name="formatter"/> to (de-) serialize BruTile objects.
+        /// </summary>
+        /// <param name="formatter">A formatter</param>
         public static void AddBruTileSurrogates(this IFormatter formatter)
         {
             var ss = new SurrogateSelector();
@@ -186,6 +197,14 @@ namespace SharpMap.Utilities
                 formatter.SurrogateSelector = ss;
         }
 
+        /// <summary>
+        /// Serializes a <see cref="IList{T}"/> to <paramref name="info"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the list</typeparam>
+        /// <param name="obj">The list</param>
+        /// <param name="info">A streaming info</param>
+        /// <param name="context">A serialization context</param>
+        /// <param name="baseFieldName">A base field name</param>
         public static void GetList<T>(IList<T> obj, SerializationInfo info, StreamingContext context,
                                       string baseFieldName)
         {
@@ -194,12 +213,19 @@ namespace SharpMap.Utilities
 
             info.AddValue(baseFieldName + "Type", obj.GetType());
             info.AddValue(baseFieldName + "Count", obj.Count);
-            for (var i = 0; i < obj.Count; i++)
+            for (int i = 0; i < obj.Count; i++)
             {
                 info.AddValue(baseFieldName + i, obj[i]);
             }
         }
 
+        /// <summary>
+        /// Deserializes a <see cref="IList{T}"/> from <paramref name="info"/>
+        /// </summary>
+        /// <typeparam name="T">The type of the items in the list</typeparam>
+        /// <param name="info">A streaming info</param>
+        /// <param name="context">A serialization context</param>
+        /// <param name="baseFieldName">A base field name</param>
         public static IList<T> SetList<T>(SerializationInfo info, StreamingContext context, string baseFieldName)
         {
             if (info.GetBoolean(baseFieldName + "IsNull"))
@@ -209,11 +235,20 @@ namespace SharpMap.Utilities
             var instance = (IList<T>)Activator.CreateInstance(type);
 
             var count = info.GetInt32(baseFieldName + "Count");
-            for (var i = 0; i < count; i++)
+            for (int i = 0; i < count; i++)
                 instance.Add((T)info.GetValue(baseFieldName + i, typeof(T)));
             return instance;
         }
 
+        /// <summary>
+        /// Serializes a <see cref="IDictionary{TKey,TValue}"/> to <paramref name="info"/>
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key items in the dictionary</typeparam>
+        /// <typeparam name="TValue">The type of the value items in the dictionary</typeparam>
+        /// <param name="obj">The list</param>
+        /// <param name="info">A streaming info</param>
+        /// <param name="context">A serialization context</param>
+        /// <param name="baseFieldName">A base field name</param>
         public static void GetDictionary<TKey, TValue>(IDictionary<TKey, TValue> obj, SerializationInfo info, StreamingContext context,
                                             string baseFieldName)
         {
@@ -230,6 +265,14 @@ namespace SharpMap.Utilities
             }
         }
 
+        /// <summary>
+        /// Deserializes a <see cref="IDictionary{TKey,TValue}"/> from <paramref name="info"/>
+        /// </summary>
+        /// <typeparam name="TKey">The type of the key items in the dictionary</typeparam>
+        /// <typeparam name="TValue">The type of the value items in the dictionary</typeparam>
+        /// <param name="info">A streaming info</param>
+        /// <param name="context">A serialization context</param>
+        /// <param name="baseFieldName">A base field name</param>
         public static IDictionary<TKey, TValue> SetDictionary<TKey, TValue>(SerializationInfo info, StreamingContext context, string baseFieldName)
         {
             if (info.GetBoolean(baseFieldName + "IsNull"))

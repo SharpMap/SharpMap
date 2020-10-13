@@ -6,12 +6,14 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
+using System.Runtime.Serialization;
 using System.Threading;
 using BruTile;
 using BruTile.Cache;
 using BruTile.Web;
 using Common.Logging;
 using GeoAPI.Geometries;
+using SharpMap.Base;
 
 namespace SharpMap.Layers
 {
@@ -20,7 +22,7 @@ namespace SharpMap.Layers
     /// Tile layer class
     ///</summary>
     [Serializable]
-    public class TileLayer : Layer, System.Runtime.Serialization.IDeserializationCallback
+    public class TileLayer : Layer, IDeserializationCallback
     {
         private static readonly ILog Logger = LogManager.GetLogger<TileLayer>();
 
@@ -46,20 +48,25 @@ namespace SharpMap.Layers
         /// <summary>
         /// A file cache
         /// </summary>
-        protected FileCache _fileCache = null;
+        protected FileCache _fileCache;
         
         /// <summary>
         /// The format of the images
         /// </summary>
-        protected ImageFormat _ImageFormat = null;
+        protected ImageFormat _ImageFormat;
         
         /// <summary>
         /// Value indicating if "error" tiles should be generated or not.
         /// </summary>
-        protected readonly bool _showErrorInTile = true;
+        protected readonly bool _showErrorInTile;
 
         InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
+        
+        /// <summary>
+        /// Color that is treated as a placeholder for transparency
+        /// </summary>
         protected Color _transparentColor;
+
         //System.Collections.Hashtable _cacheTiles = new System.Collections.Hashtable();
 
         #endregion
@@ -385,21 +392,21 @@ namespace SharpMap.Layers
         }
         #endregion
 
+        /// <inheritdoc cref="IDeserializationCallback.OnDeserialization"/>
         public void OnDeserialization(object sender)
         {
             if (_bitmaps == null)
                 _bitmaps = new MemoryCache<Bitmap>(100, 200);
         }
 
+        /// <inheritdoc cref="DisposableObject.ReleaseManagedResources"/>
         protected override void ReleaseManagedResources()
         {
             base.ReleaseManagedResources();
 
-            if (_source is IDisposable)
-            {
-                ((IDisposable)_source).Dispose();
-            }
-
+            if (_source is IDisposable disposable)
+                disposable.Dispose();
+            _bitmaps.Dispose();
         }
     }
 }

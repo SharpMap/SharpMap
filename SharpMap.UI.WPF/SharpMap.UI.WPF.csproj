@@ -17,10 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Reference Include="PresentationCore" />
       <Reference Include="PresentationFramework" />
       <Reference Include="System.Windows" />
