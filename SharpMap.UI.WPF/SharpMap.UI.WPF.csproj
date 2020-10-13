@@ -8,6 +8,7 @@
         <Copyright>Copyright © 2014 Triona AB</Copyright>
         <PackageTags>sharpmap wpf</PackageTags>
         <Description>This package contains UI Compontents for Windows Presentation Foundation (WPF).</Description>
+        <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

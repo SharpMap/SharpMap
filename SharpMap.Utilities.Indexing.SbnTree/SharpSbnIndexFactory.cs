@@ -8,6 +8,9 @@ using SbnEnvelope = GeoAPI.Geometries.Envelope;
 
 namespace SharpMap.Utilities.Indexing
 {
+    /// <summary>
+    /// A spatial index factory base on ESRI's spatial index for Shapefiles
+    /// </summary>
     public class SharpSbnIndexFactory : ISpatialIndexFactory<uint>
     {
         ISpatialIndexItem<uint> ISpatialIndexFactory<uint>.Create(uint oid, Envelope box)

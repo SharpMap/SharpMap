@@ -7,6 +7,7 @@
         <Copyright>Copyright (c) 2014 - 2019 SharpMap - Team</Copyright>
         <PackageTags>index sbn shapefile</PackageTags>
         <Description>The package contains a shapefile spatial indexing solution base on SharpSbn</Description>
+        <RootNamespace>SharpMap.Utilities.Indexing</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
