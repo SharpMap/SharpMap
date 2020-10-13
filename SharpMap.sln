@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.UI", "SharpMap.UI\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{0C76DD99-AC5D-47C0-B76F-CE70092A9AC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.Extensions", "SharpMap.Extensions\SharpMap.Extensions.csproj", "{A4140C12-53F5-438C-8D24-9E48C504FECF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoWinForm", "Examples\DemoWinForm\DemoWinForm.csproj", "{73A45373-6307-4D39-9FE9-E8803F95FAB6}"
 EndProject
@@ -121,8 +121,8 @@ Global
 		{A4140C12-53F5-438C-8D24-9E48C504FECF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4140C12-53F5-438C-8D24-9E48C504FECF}.ReleaseDotNet|Any CPU.ActiveCfg = Release|Any CPU
 		{A4140C12-53F5-438C-8D24-9E48C504FECF}.ReleaseDotNet|Any CPU.Build.0 = Release|Any CPU
-		{A4140C12-53F5-438C-8D24-9E48C504FECF}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
-		{A4140C12-53F5-438C-8D24-9E48C504FECF}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
+		{A4140C12-53F5-438C-8D24-9E48C504FECF}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
+		{A4140C12-53F5-438C-8D24-9E48C504FECF}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
 		{73A45373-6307-4D39-9FE9-E8803F95FAB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{73A45373-6307-4D39-9FE9-E8803F95FAB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73A45373-6307-4D39-9FE9-E8803F95FAB6}.DebugDotNet|Any CPU.ActiveCfg = Debug|Any CPU

@@ -21,35 +21,31 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="SqlServerTypes\readme.htm" />
-        <Content Include="SqlServerTypes\x64\msvcr120.dll">
+        <Compile Include="$(PkgMicrosoft_SqlServer_Types)\content\SqlServerTypes\Loader.cs">
+            <Link>SqlServerTypes\Loader.cs</Link>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="$(PkgMicrosoft_SqlServer_Types)\content\SqlServerTypes\readme.htm">
+            <Link>SqlServerTypes\readme.htm</Link>
+        </Content>
+        <Content Include="$(PkgMicrosoft_SqlServer_Types)\nativeBinaries\x64\msvcr120.dll">
+            <Link>SqlServerTypes\x64\msvcr120.dll</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+        <Content Include="$(PkgMicrosoft_SqlServer_Types)\nativeBinaries\x64\SqlServerSpatial140.dll">
+            <Link>SqlServerTypes\x64\SqlServerSpatial140.dll</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="SqlServerTypes\x86\msvcr120.dll">
+        <Content Include="$(PkgMicrosoft_SqlServer_Types)\nativeBinaries\x86\msvcr120.dll">
+            <Link>SqlServerTypes\x86\msvcr120.dll</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
-        <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+        <Content Include="$(PkgMicrosoft_SqlServer_Types)\nativeBinaries\x86\SqlServerSpatial140.dll">
+            <Link>SqlServerTypes\x86\SqlServerSpatial140.dll</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
-
-    <Target Name="RestoreSqlServerTypes" Condition=" !Exists('SqlServerTypes\Loader.cs') " BeforeTargets="BeforeBuild" >
-        <Message Text="Restoring from $(PkgMicrosoft_SqlServer_Types)" Importance="high"/>
-        <ItemGroup>
-            <SqlServerFiles Include="$(PkgMicrosoft_SqlServer_Types)\content\SqlServerTypes\**" />
-        </ItemGroup>
-        <ItemGroup>
-            <SqlServerFilesX86 Include="$(PkgMicrosoft_SqlServer_Types)\nativeBinaries\x86\**" />
-        </ItemGroup>
-        <ItemGroup>
-            <SqlServerFilesX64 Include="$(PkgMicrosoft_SqlServer_Types)\nativeBinaries\x64\**" />
-        </ItemGroup>
-        <Copy SourceFiles="@(SqlServerFiles)" DestinationFolder="$(MSBuildProjectDirectory)\SqlServerTypes" />
-        <Copy SourceFiles="@(SqlServerFilesX86)" DestinationFolder="$(MSBuildProjectDirectory)\SqlServerTypes\x86" />
-        <Copy SourceFiles="@(SqlServerFilesX64)" DestinationFolder="$(MSBuildProjectDirectory)\SqlServerTypes\x64" />
-    </Target>
 
 </Project>
