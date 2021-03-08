@@ -15,7 +15,7 @@
         <StartupObject>WinFormSamples.Program</StartupObject>
         <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
         <GenerateResourceUsePreserializedResources>true</GenerateResourceUsePreserializedResources>
-        <NoWarn>1701;1702;1591;1573</NoWarn>
+        <NoWarn>618;1701;1702;1591;1573</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
