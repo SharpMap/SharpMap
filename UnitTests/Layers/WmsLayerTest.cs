@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using System.Web;
 using GeoAPI.Geometries;
 using NUnit.Framework;
@@ -23,6 +24,23 @@ namespace UnitTests.Layers
 
             Assert.That(queryString["BGCOLOR"], Is.EqualTo("FF0000"), 
                 "Layer.BgColor does not produce a valid Url");
+        }
+
+        [Test(Description = "BgColor output when set or not")]
+        public void BgColor_written_when_ne_white()
+        {
+            var client = CreateClientFromXmlResult("wms.atlantedesertificazione.xml");
+
+            var layer = new WmsLayer("wms", client) { SRID = 0, Transparent = false, BgColor = Color.White };
+            var url = layer.GetRequestUrl(new Envelope(1, 1, 1, 1), new Size(1, 1));
+            var queryString = HttpUtility.ParseQueryString(url);
+            Assert.That(queryString.AllKeys.Contains("BGCOLOR"), Is.False, "Layer.BgColor is white and shall not be in request url");
+
+            layer = new WmsLayer("wms", client) { SRID = 0, Transparent = true, BgColor = Color.Green };
+            url = layer.GetRequestUrl(new Envelope(1, 1, 1, 1), new Size(1, 1));
+            queryString = HttpUtility.ParseQueryString(url);
+            Assert.That(queryString.AllKeys.Contains("BGCOLOR"), Is.True, "Layer.BgColor set to non-white");
+            Assert.That(queryString["BGCOLOR"], Is.EqualTo("008000"), "Layer.BgColor translated correctly");
         }
 
         [Test]

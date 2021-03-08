@@ -244,7 +244,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Sets the optional transparancy. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
+        /// Sets the optional transparancy. The WMS server might ignore this when not implemented and will ignore if the image format is jpg
         /// </summary>
         [Obsolete("Use Transparent")]
         public bool Transparancy
@@ -254,7 +254,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Sets if the image should have transparent background. The WMS server might ignore this when not implemented and will ignore if the imageformat is jpg
+        /// Sets if the image should have transparent background. The WMS server might ignore this when not implemented and will ignore if the image format is jpg
         /// </summary>
         public bool Transparent
         {
@@ -273,7 +273,7 @@ namespace SharpMap.Layers
             set
             {
                 if (value < 0f) value = 0f;
-                if (value > 1f) value = 1f;
+                else if (value > 1f) value = 1f;
 
                 _opacity = value;
             }
@@ -291,12 +291,17 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Sets the optional backgroundcolor. 
+        /// Sets the optional background color. 
         /// </summary>
         public Color BgColor
         {
             get { return _bgColor; }
-            set { _bgColor = value; }
+            set
+            {
+                if (value.A != 255)
+                    value = Color.FromArgb(255, value);
+                _bgColor = value;
+            }
 
         }
 
@@ -775,10 +780,10 @@ namespace SharpMap.Layers
                 strReq.Remove(strReq.Length - 1, 1);
             }
             strReq.AppendFormat("&TRANSPARENT={0}", Transparent);
-            if (!Transparent)
+            if (BgColor != Color.White)
             {
                 //var background = Uri.EscapeDataString(ColorTranslator.ToHtml(_bgColor));
-                strReq.AppendFormat("&BGCOLOR={0}", ToHexValue(_bgColor));
+                strReq.AppendFormat("&BGCOLOR={0}", ToHexValue(BgColor));
             }
             return strReq.ToString();
         }
