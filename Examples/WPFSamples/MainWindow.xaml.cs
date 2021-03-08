@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
@@ -92,6 +93,22 @@ namespace WPFSamples
                 }
             }
             e.Handled = true;
+        }
+
+        private void Rotation_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (!(sender is MenuItem mi))
+                return;
+
+            WpfMap.MapRotation = float.Parse(mi.Name.Substring(3), NumberStyles.Integer);
+            foreach (MenuItem tmp in ((MenuItem)mi.Parent).Items)
+                tmp.IsChecked = tmp == mi;
+
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

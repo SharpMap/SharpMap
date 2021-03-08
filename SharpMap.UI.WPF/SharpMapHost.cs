@@ -16,6 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.ComponentModel;
+using System.Drawing.Drawing2D;
 using KeyEventArgs = System.Windows.Input.KeyEventArgs;
 using MouseEventArgs = System.Windows.Forms.MouseEventArgs;
 
@@ -65,6 +66,11 @@ namespace SharpMap.UI.WPF
         // Dependency Property to store MapExtent.
         public static readonly DependencyProperty MapExtentProperty =
             DependencyProperty.Register("MapExtent", typeof (Envelope), typeof (SharpMapHost), new PropertyMetadata(MapExtentCallback));
+
+        // Dependency Property to store Rotation kept in MapTransform
+        public static readonly DependencyProperty MapRotationProperty =
+            DependencyProperty.Register("MapRotation", typeof(float), typeof(SharpMapHost), new PropertyMetadata(MapRotationCallback));
+
 
         // Dependency Property used when a new geometry is defined.
         public static readonly DependencyProperty DefinedGeometryProperty =
@@ -186,6 +192,18 @@ namespace SharpMap.UI.WPF
             }
         }
 
+        public float MapRotation
+        {
+            get
+            {
+                return _mapBox.Map.MapTransformRotation;
+            }
+
+            set
+            {
+                SetValue(MapRotationProperty, value);
+            }
+        }
         public IGeometry DefinedGeometry
         {
             get
@@ -323,6 +341,26 @@ namespace SharpMap.UI.WPF
             mapBox.Refresh();
         }
 
+        /// <summary>
+        /// Gets called when changes on MapExtent
+        /// </summary>
+        /// <param name="sender">The sender object</param>
+        /// <param name="args">The event arguments</param>
+        private static void MapRotationCallback(object sender, DependencyPropertyChangedEventArgs args)
+        {
+            var host = sender as SharpMapHost;
+            if (host == null)
+            {
+                return;
+            }
+
+            var mapBox = host._mapBox;
+            float rotation = (float)args.NewValue;
+            var mapTransform = new Matrix();
+            mapTransform.RotateAt(rotation, new PointF(mapBox.Width / 2f, mapBox.Height / 2f));
+            mapBox.Map.MapTransform = mapTransform;
+            mapBox.Refresh();
+        }
 
         /// <summary>
         /// Gets called when changes on GeometryDefined

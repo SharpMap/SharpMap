@@ -20,7 +20,12 @@
                 <MenuItem Header="_OpenStreetMap" Name="BgOsm" Click="BgOSM_OnClick" IsCheckable="False"/>
                 <MenuItem Header="_StamenWaterColor" Name="BgStamenWaterColor" Click="BgStamenWaterColor_Click" IsCheckable="False"/>
             </MenuItem>
-        </Menu>
+            <MenuItem Header="_Rotation" Click="MenuItem_Click">
+                <MenuItem Header="_0" Name="rot000" Click="Rotation_OnClick" IsCheckable="True" IsChecked="True"/>
+                <MenuItem Header="_30" Name="rot030" Click="Rotation_OnClick" IsCheckable="true"/>
+                <MenuItem Header="_60" Name="rot060" Click="Rotation_OnClick" IsCheckable="true"/>
+                <MenuItem Header="_90" Name="rot090" Click="Rotation_OnClick" IsCheckable="true"/>
+            </MenuItem>        </Menu>
 
         <smh:SharpMapHost Name="WpfMap" Grid.Row="1"></smh:SharpMapHost>
         <StatusBar Grid.Row="2">
