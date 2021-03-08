@@ -10,8 +10,18 @@ namespace WinFormSamples.Samples
 
         public static SharpMap.Map InitializeMap(float angle)
         {
-            switch (_num++ % 6)
+            switch (_num++ % 7)
             {
+                case 0:
+                    _num++;
+                    return InitializeMapOsmWithXls(angle);
+
+                //Does not work anymore!
+                //return InitializeMapOsmWithVariableLayerCollection(angle);
+                case 1:
+                    return InitializeMapOsmWithXls(angle);
+                case 2:
+                    return HeatLayerSample.InitializeMap(angle);
                 case 3:
                     return InitializeMapOsm();
                 case 4:
@@ -20,8 +30,7 @@ namespace WinFormSamples.Samples
                     return InitializeMapBing(KnownTileSource.BingAerialStaging);
                 case 6:
                     return InitializeMapBing(KnownTileSource.BingHybridStaging);
-                    _num = 0;
-                    /*
+                /*
                 case 7:
                     return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
                 case 8:
@@ -33,18 +42,7 @@ namespace WinFormSamples.Samples
                 case 11:
                     _num = 0;
                     return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleLabels);
-                     */
-                case 0:
-                    _num++;
-                    return InitializeMapOsmWithXls(angle);
-                    
-                    //Does not work anymore!
-                    //return InitializeMapOsmWithVariableLayerCollection(angle);
-                case 1:
-                    return InitializeMapOsmWithXls(angle);
-                case 2:
-                    return HeatLayerSample.InitializeMap(angle);
-
+                 */
             }
             return InitializeMapOsm();
         }
