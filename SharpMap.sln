@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{48
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{A5E400B4-8360-4259-BDDD-292A134D14CC}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		.travis.yml = .travis.yml
 		.github\workflows\dotnetcore.yml = .github\workflows\dotnetcore.yml
 		SharedAssemblyVersion.cs = SharedAssemblyVersion.cs
@@ -35,7 +36,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormSamples", "Examples\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExampleCodeSnippets", "Examples\ExampleCodeSnippets\ExampleCodeSnippets.csproj", "{A4184D38-C5A6-4E01-9D1C-8C63791AF825}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.SqlServerSpatialObjects", "SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj", "{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.SqlServerSpatialObjects", "SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj", "{6D681045-8EF1-44EA-A19D-C7A63A6D0F76}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.Demo.Wms", "Examples\SharpMap.Demo.Wms\SharpMap.Demo.Wms.csproj", "{7EF67DF8-D868-4177-8817-4CC2E94ABD66}"
 EndProject
