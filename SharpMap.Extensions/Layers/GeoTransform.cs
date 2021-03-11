@@ -170,19 +170,19 @@ namespace SharpMap.Layers
             ComputeInverse();
         }
 
-        ///// <summary>
-        ///// Constructor
-        ///// </summary>
-        //public GeoTransform(double offsetX, double offsetY, double pixelSizeX, double pixelSizeY, double rotationX, double rotationY)
-        //{
-        //    _transform[0] = offsetX; /* x-offset */
-        //    _transform[1] = pixelSizeX; /* west-east pixel resolution */
-        //    _transform[2] = rotationX; /* rotation, 0 if image is "north up" */
-        //    _transform[3] = offsetY; /* y-offset */
-        //    _transform[4] = pixelSizeY; /* rotation, 0 if image is "north up" */
-        //    _transform[5] = rotationY; /* north-south pixel resolution */
-        //    ComputeInverse();
-        //}
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public GeoTransform(double offsetX, double offsetY, double pixelSizeX = 1, double pixelSizeY = - 1, double rotationX = 0, double rotationY = 0)
+        {
+            _transform[0] = offsetX; /* x-offset */
+            _transform[1] = pixelSizeX; /* west-east pixel resolution */
+            _transform[2] = rotationX; /* rotation, 0 if image is "north up" */
+            _transform[3] = offsetY; /* y-offset */
+            _transform[4] = pixelSizeY; /* rotation, 0 if image is "north up" */
+            _transform[5] = rotationY; /* north-south pixel resolution */
+            ComputeInverse();
+        }
         
         /// <summary>
         /// Creates an instance of this class
