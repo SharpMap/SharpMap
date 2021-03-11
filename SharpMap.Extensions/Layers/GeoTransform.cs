@@ -71,12 +71,12 @@ namespace SharpMap.Layers
             get
             {
                 return //East-West
-                       Math.Abs(_transform[0] - 0) < Epsilon &&
+                       Math.Abs(_transform[0]) < Epsilon &&
                        Math.Abs(_transform[1] - 1) < Epsilon && 
-                       Math.Abs(_transform[2] - 0) < Epsilon &&
+                       Math.Abs(_transform[2]) < Epsilon &&
                        //North-South
-                       Math.Abs(_transform[3] - 0) < Epsilon &&
-                       Math.Abs(_transform[4] - 0) < Epsilon &&
+                       Math.Abs(_transform[3]) < Epsilon &&
+                       Math.Abs(_transform[4]) < Epsilon &&
                        Math.Abs(_transform[5] - 1) < Epsilon;
                        
             }
@@ -114,17 +114,6 @@ namespace SharpMap.Layers
             get { return _transform[0]; }
         }
 
-
-        /*
-        /// <summary>
-        /// right value of the image
-        /// </summary>       
-        public double Right
-        {
-              get { return this.Left + (this.HorizontalPixelResolution * _gdalDataset.XSize); }
-        }
-        */
-
         /// <summary>
         /// Gets or sets the top value of the image
         /// </summary>
@@ -132,14 +121,6 @@ namespace SharpMap.Layers
         {
             get { return _transform[3]; }
         }
-
-        ///// <summary>
-        ///// bottom value of the image
-        ///// </summary>
-        // public double Bottom
-        // {
-        //   get { return this.Top + (this.VerticalPixelResolution * _gdalDataset.YSize); }
-        //}
 
         /// <summary>
         /// Gets or sets the west to east pixel resolution
@@ -180,7 +161,6 @@ namespace SharpMap.Layers
         /// </summary>
         public GeoTransform()
         {
-            _transform = new double[6];
             _transform[0] = 999.5; /* x-offset */
             _transform[1] = 1; /* west-east pixel resolution */
             _transform[2] = 0; /* rotation, 0 if image is "north up" */
@@ -190,38 +170,50 @@ namespace SharpMap.Layers
             ComputeInverse();
         }
 
+        ///// <summary>
+        ///// Constructor
+        ///// </summary>
+        //public GeoTransform(double offsetX, double offsetY, double pixelSizeX, double pixelSizeY, double rotationX, double rotationY)
+        //{
+        //    _transform[0] = offsetX; /* x-offset */
+        //    _transform[1] = pixelSizeX; /* west-east pixel resolution */
+        //    _transform[2] = rotationX; /* rotation, 0 if image is "north up" */
+        //    _transform[3] = offsetY; /* y-offset */
+        //    _transform[4] = pixelSizeY; /* rotation, 0 if image is "north up" */
+        //    _transform[5] = rotationY; /* north-south pixel resolution */
+        //    ComputeInverse();
+        //}
+        
         /// <summary>
-        /// Constructor
+        /// Creates an instance of this class
         /// </summary>
-        /// <param name="array"></param>
-        public GeoTransform(double[] array)
+        /// <param name="transform">An array of transformation parameter values</param>
+        public GeoTransform(double[] transform)
         {
-            if (array.Length != 6)
-                throw new ArgumentException("GeoTransform constructor invoked with invalid sized array", "array");
-            _transform = array;
+            if (transform.Length < 6)
+                throw new ArgumentException("GeoTransform constructor invoked with invalid sized array", nameof(transform));
+            Buffer.BlockCopy(transform, 0, _transform, 0, 8 * 6);
             ComputeInverse();
         }
 
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="gdalDataset">The gdal dataset</param>
-        public GeoTransform(OSGeo.GDAL.Dataset gdalDataset)
+        /// <param name="gdalDataSet">The gdal data set</param>
+        public GeoTransform(OSGeo.GDAL.Dataset gdalDataSet)
         {
-            if (gdalDataset == null)
-                throw new ArgumentException("GeoTransform constructor invoked with null dataset.", "gdalDataset");
+            if (gdalDataSet == null)
+                throw new ArgumentException("GeoTransform constructor invoked with null dataset.", nameof(gdalDataSet));
             
-            var array = new double[6];
-            gdalDataset.GetGeoTransform(array);
-            _transform = array;
+            gdalDataSet.GetGeoTransform(_transform);
             ComputeInverse();
         }
 
         private void ComputeInverse()
         {
             // compute determinant
-            var det = _transform[1] * _transform[5] - _transform[2] * _transform[4];
-            if (Math.Abs(det - 0.0) < Epsilon) return;
+            double det = _transform[1] * _transform[5] - _transform[2] * _transform[4];
+            if (Math.Abs(det) < Epsilon) return;
 
             // inverse rot/scale portion
             _inverseTransform[1] = _transform[5] / det;
@@ -309,7 +301,7 @@ namespace SharpMap.Layers
         // finds leftmost pixel location (handles rotation)
         public double EnvelopeLeft(double imgWidth, double imgHeight)
         {
-            var left = Math.Min(_transform[0], _transform[0] + (_transform[1] * imgWidth));
+            double left = Math.Min(_transform[0], _transform[0] + (_transform[1] * imgWidth));
             left = Math.Min(left, _transform[0] + (_transform[2] * imgHeight));
             left = Math.Min(left, _transform[0] + (_transform[1] * imgWidth) + (_transform[2] * imgHeight));
             return left;
@@ -318,7 +310,7 @@ namespace SharpMap.Layers
         // finds rightmost pixel location (handles rotation)
         public double EnvelopeRight(double imgWidth, double imgHeight)
         {
-            var right = Math.Max(_transform[0], _transform[0] + (_transform[1] * imgWidth));
+            double right = Math.Max(_transform[0], _transform[0] + (_transform[1] * imgWidth));
             right = Math.Max(right, _transform[0] + (_transform[2] * imgHeight));
             right = Math.Max(right, _transform[0] + (_transform[1] * imgWidth) + (_transform[2] * imgHeight));
             return right;
@@ -327,7 +319,7 @@ namespace SharpMap.Layers
         // finds topmost pixel location (handles rotation)
         public double EnvelopeTop(double imgWidth, double imgHeight)
         {
-            var top = Math.Max(_transform[3], _transform[3] + (_transform[4] * imgWidth));
+            double top = Math.Max(_transform[3], _transform[3] + (_transform[4] * imgWidth));
             top = Math.Max(top, _transform[3] + (_transform[5] * imgHeight));
             top = Math.Max(top, _transform[3] + (_transform[4] * imgWidth) + (_transform[5] * imgHeight));
             return top;
@@ -336,7 +328,7 @@ namespace SharpMap.Layers
         // finds bottommost pixel location (handles rotation)
         public double EnvelopeBottom(double imgWidth, double imgHeight)
         {
-            var bottom = Math.Min(_transform[3], _transform[3] + (_transform[4] * imgWidth));
+            double bottom = Math.Min(_transform[3], _transform[3] + (_transform[4] * imgWidth));
             bottom = Math.Min(bottom, _transform[3] + (_transform[5] * imgHeight));
             bottom = Math.Min(bottom, _transform[3] + (_transform[4] * imgWidth) + (_transform[5] * imgHeight));
             return bottom;
