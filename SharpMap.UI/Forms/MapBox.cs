@@ -492,7 +492,7 @@ namespace SharpMap.Forms
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string ImageRendererName
         {
-            get => _mapImageGeneratorFunction.GetType().Name;
+            get => MapImageGeneratorFunction.GetType().Name;
         }
 
         /// <summary>
