@@ -380,6 +380,7 @@ namespace WinFormSamples
             mapBox1.Refresh();
         }
 
+        private string _gdalConnection = string.Empty;
         private void radioButton2_MouseUp(object sender, MouseEventArgs e)
         {
             var rb = sender as RadioButton;
@@ -397,7 +398,23 @@ namespace WinFormSamples
                     map = Samples.OgrSample.InitializeMap(tbAngle.Value, GetOpenFileName("Ogr Datasource|*.*"));
                     break;
                 case "radioButton6": // Gdal
-                    map = Samples.GdalSample.InitializeMap(tbAngle.Value, GetOpenFileName("Gdal Datasource|*.*"));
+                    if ((Control.ModifierKeys & Keys.Control) == Keys.Control)
+                    {
+                        string cn = InputBox(
+                            "Please enter connection string.\n" +
+                            "For e.g. PostGis Rasters sth. like 'PG:host=... port=... dbname=... schema=... table=... column=...'", 
+                            @"GDAL Raster Layer Connection", _gdalConnection);
+                        if (string.IsNullOrEmpty(cn))
+                            return;
+                        
+                        map = Samples.GdalSample.InitializeMap(tbAngle.Value, new []{ cn });
+                        _gdalConnection = cn;
+                    }
+                    else
+                    {
+                        map = Samples.GdalSample.InitializeMap(tbAngle.Value, GetOpenFileName("Gdal Datasource|*.*"));
+                    }
+
                     break;
                 case "radioButton9": // spatialite
                     map = Samples.SpatiaLiteSample.InitializeMap(tbAngle.Value, GetOpenFileName("SpatiaLite 2|*.db;*.sqlite"));
@@ -486,7 +503,84 @@ namespace WinFormSamples
 
         }
 
-        
-        
+
+        private static string InputBox(string text, string caption, string defaultValue = null)
+        {
+            var prompt = new Form
+            {
+                Width = 500,
+                Height = 150,
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                Text = caption,
+                MaximizeBox = false,
+                MinimizeBox = false,
+                ShowInTaskbar = false,
+                StartPosition = FormStartPosition.CenterScreen,
+                Padding = new Padding(5),
+                Margin = new Padding(10)
+            };
+            
+            var textLabel = new TextBox
+            {
+                Left = prompt.Margin.Left, 
+                Top = prompt.Margin.Top, 
+                Width = prompt.ClientSize.Width - prompt.Margin.Left - prompt.Margin.Right,
+                BackColor = SystemColors.Control,
+                BorderStyle = BorderStyle.None,
+                Multiline = true,
+                HideSelection = true,
+                ReadOnly = true, Enabled = false
+            };
+
+            var size = SizeF.Empty;
+            using (var g = Graphics.FromHwnd(IntPtr.Zero))
+                size =  g.MeasureString(text, DefaultFont, new SizeF(textLabel.Width, 20 * textLabel.Height));
+            textLabel.Height = System.Drawing.Size.Ceiling(size).Height;
+            textLabel.Lines = text.Split('\n');
+            textLabel.SelectionStart = 0;
+            textLabel.SelectionLength = 0;
+
+            var textBox = new TextBox 
+            { 
+                Left = prompt.Margin.Left, 
+                Top = textLabel.Bottom, 
+                Width = prompt.ClientSize.Width - prompt.Margin.Left - prompt.Margin.Right,
+                Multiline = true, 
+                Text = defaultValue ?? string.Empty
+            };
+
+            var confirmation = new Button
+            {
+                Text = "&OK", 
+                Width = 100, 
+                Left = prompt.ClientSize.Width - prompt.Margin.Right - 100,
+                Top = textBox.Top + textBox.Height + prompt.Padding.Vertical, 
+                DialogResult = DialogResult.OK
+            };
+
+            prompt.ClientSize = new Size(prompt.ClientSize.Width, confirmation.Bottom + prompt.Padding.Bottom);
+            prompt.AcceptButton = confirmation;
+
+            confirmation.Click += (sender, e) => { prompt.Close(); };
+
+            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(textBox);
+            prompt.Controls.Add(confirmation);
+            prompt.AcceptButton = confirmation;
+
+            return prompt.ShowDialog() == DialogResult.OK ? textBox.Text : "";
+        }
+
+        private void FormMapBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F5)
+            {
+                mapBox1.Invalidate();
+                mapBox1.Refresh();
+                //e.SuppressKeyPress = true;
+                e.Handled = true;
+            }
+
+        }
     }
 }

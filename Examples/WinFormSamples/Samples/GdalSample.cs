@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -14,16 +15,19 @@ namespace WinFormSamples.Samples
 
         public static SharpMap.Map InitializeMap(float angle)
         {
-            switch (_num++ % 9)
+            _num %= 9;
+            int num = _num;
+            _num++;
+
+            switch (num)
             {
                 case 0:
                 case 1:
                 case 2:
                 case 3:
-                case 4:
-                    return InitializeGeoTiff(_num, angle);
+                    return InitializeGeoTiff(num, angle);
                 default:
-                    return InitializeVRT(ref _num, angle);
+                    return InitializeVRT(num, angle);
             }
         }
 
@@ -40,20 +44,17 @@ namespace WinFormSamples.Samples
 
                 switch (index)
                 {
-                    case 2:
+                    case 0:
                         layer = new SharpMap.Layers.GdalRasterLayer("GeoTiff", relativePath + "utm.tif");
-                        layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
-                    case 3:
+                    case 1:
                         layer = new SharpMap.Layers.GdalRasterLayer("GeoTiff", relativePath + "utm.jp2");
-                        layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
 
-                    case 4:
+                    case 2:
                         layer = new SharpMap.Layers.GdalRasterLayer("GeoTiff", relativePath + "world_raster_mod.tif");
-                        layer.UseRotation = true;
                         map.Layers.Add(layer);
                         break;
 
@@ -87,6 +88,9 @@ namespace WinFormSamples.Samples
                         map.Layers.Add(shapeLayer);
                         break;
                 }
+                
+                //if (layer != null)
+                //    layer.UseRotation = true;
 
                 map.ZoomToExtents();
 
@@ -94,7 +98,6 @@ namespace WinFormSamples.Samples
                 mat.RotateAt(angle, map.WorldToImage(map.Center));
                 map.MapTransform = mat;
 
-                if (_num > 5) _num = 1;
                 _gdalSampleDataset = "GeoTiff" + _num;
                 return map;
             }
@@ -114,12 +117,20 @@ namespace WinFormSamples.Samples
 
         }
 
-        private static readonly string[] Vrts = new[] { @"..\DEM\Golden_CO.dem", "contours_sample_polyline_play_polyline.asc", "contours_sample_polyline_play1_polyline.vrt", "contours_sample_polyline_play2_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt", "contours_sample_polyline_play3_polyline.vrt" };
+        private static readonly string[] Vrts =
+        {
+            @"..\DEM\Golden_CO.dem", 
+            "contours_sample_polyline_play_polyline.asc", 
+            "contours_sample_polyline_play1_polyline.vrt", 
+            "contours_sample_polyline_play2_polyline.vrt", 
+            "contours_sample_polyline_play3_polyline.vrt"
+        };
+
         private const string RelativePath = "GeoData/VRT/";
-        private static SharpMap.Map InitializeVRT(ref int index, float angle)
+        private static SharpMap.Map InitializeVRT(int index, float angle)
         {
             SharpMap.Map map = new SharpMap.Map();
-            int ind = index - 6;
+            int ind = index - 4;
             if (ind >= Vrts.Length) ind = 0;
 
             if (!System.IO.File.Exists(RelativePath + Vrts[ind]))
@@ -137,7 +148,7 @@ namespace WinFormSamples.Samples
             System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
-            //index++;
+            
             return map;
         }
 
@@ -147,7 +158,23 @@ namespace WinFormSamples.Samples
 
             var map = new SharpMap.Map();
             for (int i = 0; i < filenames.Length; i++)
-                map.Layers.Add(new SharpMap.Layers.GdalRasterLayer(System.IO.Path.GetFileName(filenames[i]), filenames[i]));
+            {
+                if (filenames[i].StartsWith("PG:"))
+                {
+                    SharpMap.Layers.ILayer lyr = null;
+                    try
+                    {
+                        lyr = new SharpMap.Layers.GdalRasterLayer($"PG_RASTER{i}", filenames[i]);
+                    }
+                    catch (Exception)
+                    {
+                        return null;
+                    }
+                    map.Layers.Add(lyr);
+                }
+                else
+                    map.Layers.Add(new SharpMap.Layers.GdalRasterLayer(System.IO.Path.GetFileName(filenames[i]), filenames[i]));
+            }
 
             var mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
