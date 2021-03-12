@@ -1501,7 +1501,14 @@ namespace SharpMap.Forms
                     _map.Zoom = oldZoom * scaleFactor;
                 else
                 {
-                    // preserve MAP cursor posn
+                    // Limit scale factor to meaningful values
+                    double newZoom = oldZoom * scaleFactor;
+                    if (newZoom > Map.MaximumZoom) 
+                        scaleFactor = Map.MaximumZoom / oldZoom;
+                    else if (newZoom < Map.MinimumZoom)
+                        scaleFactor = Map.MinimumZoom / oldZoom;
+
+                    // preserve MAP cursor position
                     var p = _map.ImageToWorld(new Point(e.X, e.Y), true);
 
                     var newCenter = new Coordinate(
@@ -1509,22 +1516,22 @@ namespace SharpMap.Forms
                         p.Y + (oldCenter.Y - p.Y) * scaleFactor
                     );
 
-                    var newWidth = oldZoom * scaleFactor;
-                    var newHeight = oldHeight * scaleFactor;
+                    double newWidth = oldZoom * scaleFactor;
+                    double newHeight = oldHeight * scaleFactor;
                     
-                    var bbox = new Envelope(
+                    var extent = new Envelope(
                         newCenter.X - newWidth * 0.5, 
                         newCenter.X + newWidth * 0.5,
                         newCenter.Y - newHeight * 0.5, 
                         newCenter.Y + newHeight * 0.5);
 
-                    if (_map.EnforceMaximumExtents && !_map.MaximumExtents.IsNull && !_map.MaximumExtents.Contains(bbox))
+                    if (_map.EnforceMaximumExtents && !_map.MaximumExtents.IsNull && !_map.MaximumExtents.Contains(extent))
                         return;
 
                     // more efficient that Center + Zoom.
                     // careAboutTransform == false: new center, width, and height will be adopted 
                     // from bbox without applying correction for map rotation.
-                    _map.ZoomToBox(bbox, false);
+                    _map.ZoomToBox(extent, false);
                 }
 
                 var exchange = false;

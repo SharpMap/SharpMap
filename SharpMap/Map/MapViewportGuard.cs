@@ -14,7 +14,7 @@ namespace SharpMap
         private double _maximumZoom;
         private Envelope _maximumExtents;
         private double _pixelAspectRatio;
-        const double MinMinZoomValue = 2d * Double.Epsilon;
+        const double MinMinZoomValue = 2d * double.Epsilon;
 
         /// <summary>
         /// Gets or sets a value indicating the minimum zoom level.
@@ -104,16 +104,16 @@ namespace SharpMap
             else if (zoom > _maximumZoom)
                 zoom = _maximumZoom;
 
-            if (EnforceMaximumExtents)
-            {
-                var arWidth = (double) Size.Width/Size.Height;
+            if (!EnforceMaximumExtents)
+                return zoom;
 
-                if (zoom > _maximumExtents.Width)
-                    zoom = _maximumExtents.Width;
-                if (zoom > arWidth * _maximumExtents.Height)
-                    zoom = arWidth * _maximumExtents.Height;
-                zoom = VerifyValidViewport(zoom, center);
-            }
+            double arWidth = (double)Size.Width/Size.Height;
+
+            if (zoom > _maximumExtents.Width)
+                zoom = _maximumExtents.Width;
+            if (zoom > arWidth * _maximumExtents.Height)
+                zoom = arWidth * _maximumExtents.Height;
+            zoom = VerifyValidViewport(zoom, center);
 
             return zoom;
         }
@@ -130,10 +130,10 @@ namespace SharpMap
             if (maxExtents.IsNull)
                 return zoom;
 
-            var halfWidth = 0.5d * zoom;
-            var halfHeight = halfWidth * PixelAspectRatio * ((double)Size.Height / Size.Width);
+            double halfWidth = 0.5d * zoom;
+            double halfHeight = halfWidth * PixelAspectRatio * ((double)Size.Height / Size.Width);
 
-            var maxZoomHeight = _maximumZoom < double.MaxValue ? _maximumZoom : double.MaxValue;
+            double maxZoomHeight = _maximumZoom < double.MaxValue ? _maximumZoom : double.MaxValue;
             if (2 * halfHeight > maxZoomHeight)
             {
                 halfHeight = 0.5d*maxZoomHeight;
@@ -147,13 +147,13 @@ namespace SharpMap
             if (maxExtents.Contains(testEnvelope))
                 return zoom;
 
-            var dx = testEnvelope.MinX < maxExtents.MinX
+            double dx = testEnvelope.MinX < maxExtents.MinX
                             ? maxExtents.MinX - testEnvelope.MinX
                             : testEnvelope.MaxX > maxExtents.MaxX 
                                 ? maxExtents.MaxX - testEnvelope.MaxX 
                                 : 0;
 
-            var dy = testEnvelope.MinY < maxExtents.MinY
+            double dy = testEnvelope.MinY < maxExtents.MinY
                             ? maxExtents.MinY - testEnvelope.MinY
                             : testEnvelope.MaxY > maxExtents.MaxY 
                                 ? maxExtents.MaxY - testEnvelope.MaxY 
