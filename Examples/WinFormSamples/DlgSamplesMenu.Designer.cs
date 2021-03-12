@@ -89,7 +89,7 @@
             this.checkBox1.Location = new System.Drawing.Point(3, 353);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(178, 47);
-            this.checkBox1.TabIndex = 8;
+            this.checkBox1.TabIndex = 7;
             this.checkBox1.Text = "MapBox rendering using LegacyMapImageRenderer";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
@@ -99,7 +99,7 @@
             this.button2.Location = new System.Drawing.Point(187, 3);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(74, 23);
-            this.button2.TabIndex = 3;
+            this.button2.TabIndex = 0;
             this.button2.Text = "Start...";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -111,6 +111,7 @@
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(178, 36);
             this.textBox2.TabIndex = 2;
+            this.textBox2.TabStop = false;
             this.textBox2.Text = "Different kind of layers supported by [MapBox]";
             // 
             // textBox1
@@ -120,6 +121,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(178, 38);
             this.textBox1.TabIndex = 1;
+            this.textBox1.TabStop = false;
             this.textBox1.Text = "Background, Static and Variable Layer [MapBox]";
             // 
             // button1
@@ -127,7 +129,7 @@
             this.button1.Location = new System.Drawing.Point(187, 203);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(74, 23);
-            this.button1.TabIndex = 0;
+            this.button1.TabIndex = 4;
             this.button1.Text = "Start...";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
@@ -139,6 +141,7 @@
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(178, 36);
             this.textBox3.TabIndex = 2;
+            this.textBox3.TabStop = false;
             this.textBox3.Text = "Shows Async Tile Layers [MapBox]";
             // 
             // textBox4
@@ -148,6 +151,7 @@
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(178, 36);
             this.textBox4.TabIndex = 2;
+            this.textBox4.TabStop = false;
             this.textBox4.Text = "Shows how to draw geometries using the mouse [MapBox]";
             // 
             // textBox5
@@ -157,6 +161,7 @@
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(178, 36);
             this.textBox5.TabIndex = 2;
+            this.textBox5.TabStop = false;
             this.textBox5.Text = "Shows how to save a set of images [MapBox]";
             // 
             // button4
@@ -164,7 +169,7 @@
             this.button4.Location = new System.Drawing.Point(187, 53);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(74, 23);
-            this.button4.TabIndex = 3;
+            this.button4.TabIndex = 1;
             this.button4.Text = "Start...";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
@@ -174,7 +179,7 @@
             this.button5.Location = new System.Drawing.Point(187, 103);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(74, 23);
-            this.button5.TabIndex = 3;
+            this.button5.TabIndex = 2;
             this.button5.Text = "Start...";
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
@@ -196,6 +201,7 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(178, 36);
             this.textBox6.TabIndex = 4;
+            this.textBox6.TabStop = false;
             this.textBox6.Text = "Different kind of layers supported by [MapBox using DotSpatial]";
             // 
             // button3
@@ -215,6 +221,7 @@
             this.textBox7.Name = "textBox7";
             this.textBox7.Size = new System.Drawing.Size(178, 36);
             this.textBox7.TabIndex = 9;
+            this.textBox7.TabStop = false;
             this.textBox7.Text = "[MapBox] with interactive layers for image generation validation";
             // 
             // button7
@@ -222,7 +229,7 @@
             this.button7.Location = new System.Drawing.Point(187, 303);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(74, 23);
-            this.button7.TabIndex = 10;
+            this.button7.TabIndex = 6;
             this.button7.Text = "Start";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.button7_Click);
