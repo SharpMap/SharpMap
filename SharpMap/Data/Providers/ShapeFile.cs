@@ -22,14 +22,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
-using GeoAPI;
-using GeoAPI.Geometries;
+using SharpMap;
+
 using SharpMap.Utilities.Indexing;
 using SharpMap.Utilities.SpatialIndexing;
 using Common.Logging;
-using GeoAPI.CoordinateSystems;
+using SharpMap.CoordinateSystems;
 using SharpMap.CoordinateSystems;
 using Exception = System.Exception;
+using ProjNet.CoordinateSystems;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
 
 namespace SharpMap.Data.Providers
 {
@@ -79,7 +82,7 @@ namespace SharpMap.Data.Providers
         private ShapeFileHeader _header;
         private ShapeFileIndex _index;
         
-		private ICoordinateSystem _coordinateSystem;
+		private CoordinateSystem _coordinateSystem;
 
         private bool _coordsysReadFromFile;
 		private bool _fileBasedIndex;
@@ -90,7 +93,7 @@ namespace SharpMap.Data.Providers
 
 	    //private readonly object _shapeFileLock = new object();
 		
-	    private IGeometryFactory _factory;
+	    private GeometryFactory _factory;
         private static int _memoryCacheLimit = 50000;
         private static readonly object _gspLock = new object();
 
@@ -274,7 +277,7 @@ namespace SharpMap.Data.Providers
 		/// If this is not the case, the coordinate system will default to null.
 		/// </summary>
 		/// <exception cref="ApplicationException">An exception is thrown if the coordinate system is read from file.</exception>
-		public ICoordinateSystem CoordinateSystem
+		public CoordinateSystem CoordinateSystem
 		{
 			get { return _coordinateSystem; }
 			set
@@ -567,12 +570,12 @@ namespace SharpMap.Data.Providers
 		/// </remarks>
 		/// <param name="bbox"></param>
 		/// <returns></returns>
-		public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+		public Collection<Geometry> GetGeometriesInView(Envelope bbox)
 		{
             //Use the spatial index to get a list of features whose boundingbox intersects bbox
 			var objectlist = GetObjectIDsInView(bbox);
 			if (objectlist.Count == 0) //no features found. Return an empty set
-				return new Collection<IGeometry>();
+				return new Collection<Geometry>();
 
             if (FilterDelegate != null)
                 return GetGeometriesInViewWithFilter(objectlist);
@@ -580,16 +583,16 @@ namespace SharpMap.Data.Providers
 		    return GetGeometriesInViewWithoutFilter(objectlist);
 		}
 
-        private Collection<IGeometry> GetGeometriesInViewWithFilter(Collection<uint> oids)
+        private Collection<Geometry> GetGeometriesInViewWithFilter(Collection<uint> oids)
         {
-            Collection<IGeometry> result = null;
+            Collection<Geometry> result = null;
             using (Stream s = OpenShapefileStream())
             {
                 using (BinaryReader br = new BinaryReader(s))
                 {
                     using (DbaseReader DbaseFile = OpenDbfStream())
                     {
-                        result = new Collection<IGeometry>();
+                        result = new Collection<Geometry>();
                         var table = DbaseFile.NewTable;
                         var tmpOids = new Collection<uint>();
                         foreach (var oid in oids)
@@ -610,9 +613,9 @@ namespace SharpMap.Data.Providers
             return result;
         }
 
-        private Collection<IGeometry> GetGeometriesInViewWithoutFilter(Collection<uint> oids)
+        private Collection<Geometry> GetGeometriesInViewWithoutFilter(Collection<uint> oids)
         {
-            var result = new Collection<IGeometry>();
+            var result = new Collection<Geometry>();
             using (var s = OpenShapefileStream())
             {
                 using (var br = new BinaryReader(s))
@@ -731,9 +734,9 @@ namespace SharpMap.Data.Providers
 		/// <remarks>FilterDelegate is no longer applied to this ge</remarks>
 		/// <param name="oid">Object ID</param>
 		/// <returns>The geometry at the Id</returns>
-        public IGeometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
-            IGeometry geom;
+            Geometry geom;
             using (Stream s = OpenShapefileStream())
             {
                 using (BinaryReader br = new BinaryReader(s))
@@ -757,7 +760,7 @@ namespace SharpMap.Data.Providers
 		/// <param name="br">The binary reader for reading</param>
 		/// <param name="dbf">The dBase reader</param>
 		/// <returns>The geometry at the Id</returns>
-        private IGeometry GetGeometryByID(uint oid, BinaryReader br, DbaseReader dbf)
+        private Geometry GetGeometryByID(uint oid, BinaryReader br, DbaseReader dbf)
         {
             if (_useMemoryCache)
             {
@@ -774,12 +777,12 @@ namespace SharpMap.Data.Providers
 
                 return fdr.Geometry;
             }
-            IGeometry geom = ReadGeometry(oid, br, dbf);
+            Geometry geom = ReadGeometry(oid, br, dbf);
             return geom;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating that for <see cref="ExecuteIntersectionQuery(GeoAPI.Geometries.Envelope,SharpMap.Data.FeatureDataSet)"/> the intersection of the geometries and the envelope should be tested.
+        /// Gets or sets a value indicating that for <see cref="ExecuteIntersectionQuery(SharpMap.Geometries.Envelope,SharpMap.Data.FeatureDataSet)"/> the intersection of the geometries and the envelope should be tested.
         /// </summary>
         public bool DoTrueIntersectionQuery { get; set; }
 
@@ -794,7 +797,7 @@ namespace SharpMap.Data.Providers
 		/// </summary>
 		/// <param name="geom">The geometry to test intersection for</param>
 		/// <param name="ds">FeatureDataSet to fill data into</param>
-        public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             var bbox = new Envelope(geom.EnvelopeInternal);
 
@@ -902,7 +905,7 @@ namespace SharpMap.Data.Providers
 			{
 			    _srid = value;
 			    lock (_gspLock)
-			        Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+			        Factory = NtsGeometryServices.Instance.CreateGeometryFactory(value);
 			}
 		}
 
@@ -1212,7 +1215,7 @@ namespace SharpMap.Data.Providers
 	    /// <summary>
         /// Gets or sets the geometry factory
         /// </summary>
-        protected IGeometryFactory Factory
+        protected GeometryFactory Factory
 	    {
 	        get
 	        {
@@ -1234,7 +1237,7 @@ namespace SharpMap.Data.Providers
         /// <param name="br">BinaryReader of the ShapeFileStream</param>
         /// <param name="dBaseReader">dBaseReader of the DBaseFile</param>
 		/// <returns>geometry</returns>
-        private IGeometry ReadGeometry(uint oid, BinaryReader br, DbaseReader dBaseReader)
+        private Geometry ReadGeometry(uint oid, BinaryReader br, DbaseReader dBaseReader)
         {
             // Do we want to receive geometries of deleted records as well?
             if (CheckIfRecordIsDeleted)
@@ -1248,7 +1251,7 @@ namespace SharpMap.Data.Providers
             return ParseGeometry(Factory, _header.ShapeType, br);
         }
 
-        private static IGeometry ParseGeometry(IGeometryFactory factory, ShapeType shapeType, BinaryReader brGeometryStream)
+        private static Geometry ParseGeometry(GeometryFactory factory, ShapeType shapeType, BinaryReader brGeometryStream)
         {
             //Skip record number and content length
             brGeometryStream.BaseStream.Seek(8, SeekOrigin.Current); 
@@ -1308,7 +1311,7 @@ namespace SharpMap.Data.Providers
 
                     if ((int)shapeType % 10 == 3)
                     {
-                        var lineStrings = new ILineString[nParts];
+                        var lineStrings = new LineString[nParts];
                         for (var lineID = 0; lineID < nParts; lineID++)
                         {
                             var line = new Coordinate[segments[lineID + 1] - segments[lineID]];
@@ -1333,7 +1336,7 @@ namespace SharpMap.Data.Providers
                     }
 
                     //First read all the rings
-                    var rings = new ILinearRing[nParts];
+                    var rings = new LinearRing[nParts];
                     for (var ringID = 0; ringID < nParts; ringID++)
                     {
                         var ring = new Coordinate[segments[ringID + 1] - segments[ringID]];
@@ -1350,7 +1353,7 @@ namespace SharpMap.Data.Providers
                         rings[ringID] = factory.CreateLinearRing(ring);
                     }
 
-                    ILinearRing exteriorRing;
+                    LinearRing exteriorRing;
                     var isCounterClockWise = new bool[rings.Length];
                     var polygonCount = 0;
                     for (var i = 0; i < rings.Length; i++)
@@ -1362,18 +1365,18 @@ namespace SharpMap.Data.Providers
                     if (polygonCount == 1) //We only have one polygon
                     {
                         exteriorRing = rings[0];
-                        ILinearRing[] interiorRings = null;
+                        LinearRing[] interiorRings = null;
                         if (rings.Length > 1)
                         {
-                            interiorRings = new ILinearRing[rings.Length - 1];
+                            interiorRings = new LinearRing[rings.Length - 1];
                             Array.Copy(rings, 1, interiorRings, 0, interiorRings.Length);
                         }
                         return factory.CreatePolygon(exteriorRing, interiorRings);
                     }
 
-                    var polygons = new List<IPolygon>();
+                    var polygons = new List<Polygon>();
                     exteriorRing = rings[0];
-                    var holes = new List<ILinearRing>();
+                    var holes = new List<LinearRing>();
 
                     for (var i = 1; i < rings.Length; i++)
                     {

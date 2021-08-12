@@ -28,17 +28,17 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using GeoAPI.Geometries;
 using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Styles;
 using SharpMap.Utilities;
-using Point = GeoAPI.Geometries.Coordinate;
+using Point = NetTopologySuite.Geometries.Point;
 using System.Drawing.Imaging;
 using Common.Logging;
 using System.Reflection;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap
 {
@@ -60,14 +60,14 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Static constructor. Needed to get <see cref="GeoAPI.GeometryServiceProvider.Instance"/> set.
+        /// Static constructor. Needed to get <see cref="NtsGeometryServices.Instance"/> set.
         /// </summary>
         static Map()
         {
             try
             {
-                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
-                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                _logger.Debug("Trying to get NtsGeometryServices.Instance");
+                var instance = NtsGeometryServices.Instance;
                 if (instance == null)
                 {
                     _logger.Debug("Returned null");
@@ -79,8 +79,8 @@ namespace SharpMap
                 _logger.Debug("Loading NetTopologySuite");
                 Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
-                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
-                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                _logger.Debug("Trying to get NtsGeometryServices.Instance");
+                var instance = NtsGeometryServices.Instance;
                 if (instance == null)
                 {
                     _logger.Debug("Returned null");
@@ -94,23 +94,23 @@ namespace SharpMap
             {
                 _logger.Debug("In design mode");
                 Trace.WriteLine("In design mode");
-                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
+                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of SharpMap and redirection 
                 // is not available at design time..
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
                 Trace.WriteLine("Loaded NetTopologySuite");
                 try
                 {
-                    _logger.Debug("Trying to access GeoAPI.GeometryServiceProvider.Instance");
-                    Trace.WriteLine("Trying to access GeoAPI.GeometryServiceProvider.Instance");
-                    if (GeoAPI.GeometryServiceProvider.Instance == null)
+                    _logger.Debug("Trying to access NtsGeometryServices.Instance");
+                    Trace.WriteLine("Trying to access NtsGeometryServices.Instance");
+                    if (NtsGeometryServices.Instance == null)
                     {
                         _logger.Debug("Returned null, setting it to default");
                         Trace.WriteLine("Returned null, setting it to default");
                         var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                        GeoAPI.GeometryServiceProvider.Instance =
+                        NtsGeometryServices.Instance =
                             ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                                GeoAPI.IGeometryServices;
+                                SharpMap.IGeometryServices;
                     }
                 }
 
@@ -119,9 +119,9 @@ namespace SharpMap
                     _logger.Debug("InvalidOperationException thrown, setting it to default");
                     Trace.WriteLine("InvalidOperationException thrown, setting it to default");
                     var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    GeoAPI.GeometryServiceProvider.Instance =
+                    NtsGeometryServices.Instance =
                         ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                            GeoAPI.IGeometryServices;
+                            SharpMap.IGeometryServices;
                 }
                 _logger.Debug("Exiting design mode handling");
                 Trace.WriteLine("Exiting design mode handling");
@@ -190,7 +190,7 @@ namespace SharpMap
 
             if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
             {
-                Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+                Factory = NtsGeometryServices.Instance.CreateGeometryFactory(_srid);
             }
             _layers = new LayerCollection();
             _layersPerGroup.Add(_layers, new List<ILayer>());
@@ -901,7 +901,7 @@ namespace SharpMap
                 if (!Size.IsEmpty)
                     clone.Size = new Size(Size.Width, Size.Height);
                 if (Center != null)
-                    clone.Center = Center.Copy();
+                    clone.Center = (Point)Center.Copy();
 
             }
 
@@ -1045,9 +1045,9 @@ namespace SharpMap
                 changed = true;
             }
 
-            if (!center.Equals2D(_center))
+            if (!center.Equals2D(_center.Coordinate))
             {
-                _center = center;
+                _center = new Point(center);
                 changed = true;
             }
 
@@ -1079,7 +1079,7 @@ namespace SharpMap
             // If careAboutMapTransform == false then the matrix must also apply a reverse rotation as the MapTransform
             // will be applied by the graphics object at completion of all drawing
             var matrix = Transform.WorldToMapMatrix(
-                Center, PixelWidth, PixelHeight, MapTransformRotation, Size, careAboutMapTransform);
+                Center.Coordinate, PixelWidth, PixelHeight, MapTransformRotation, Size, careAboutMapTransform);
             return Transform.WorldToMap(coordinates, matrix);
         }
         
@@ -1105,7 +1105,7 @@ namespace SharpMap
         /// you must clone the point array as it will be modified if a MapTransform is applied</param>
         /// <param name="careAboutMapTransform">Indicates whether <see cref="MapTransform"/> should be applied. </param>
         /// <returns>Point array in world coordinates</returns>
-        public Point[] ImageToWorld(PointF[] points, bool careAboutMapTransform = false)
+        public Coordinate[] ImageToWorld(PointF[] points, bool careAboutMapTransform = false)
         {
             if (careAboutMapTransform && !MapTransformRotation.Equals(0f))
                 using (var transformInv = MapTransformInverted)
@@ -1125,7 +1125,7 @@ namespace SharpMap
         public Point ImageToWorld(PointF p, bool careAboutMapTransform = false)
         {
             var pts = ImageToWorld(new PointF[] { p }, careAboutMapTransform);
-            return pts[0];
+            return new Point(pts[0]);
         }
 
         #endregion
@@ -1152,14 +1152,14 @@ namespace SharpMap
                 if (_srid == value)
                     return;
                 _srid = value;
-                Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+                Factory = NtsGeometryServices.Instance.CreateGeometryFactory(_srid);
             }
         }
 
         /// <summary>
         /// Factory used to create geometries
         /// </summary>
-        public IGeometryFactory Factory { get; private set; }
+        public GeometryFactory Factory { get; private set; }
 
         /// <summary>
         /// List of all map decorations
@@ -1341,7 +1341,7 @@ namespace SharpMap
         /// </remarks>
         public Coordinate CenterOfInterest
         {
-            get => _centerOfInterest?.Copy() ?? Center;
+            get => _centerOfInterest?.Copy() ?? Center.Coordinate;
             set
             {
                 if (value == _centerOfInterest)
@@ -1356,14 +1356,14 @@ namespace SharpMap
         /// </summary>
         public Point Center
         {
-            get { return _center.Copy(); }
+            get { return (Point)_center.Copy(); }
             set
             {
                 if (value == null)
                     throw new ArgumentNullException("value");
 
                 var newZoom = _zoom;
-                var newCenter = new Coordinate(value);
+                var newCenter = new Coordinate(value.Coordinate);
 
                 newZoom = _mapViewportGuard.VerifyZoom(newZoom, newCenter);
 
@@ -1374,9 +1374,9 @@ namespace SharpMap
                     changed = true;
                 }
 
-                if (!newCenter.Equals2D(_center))
+                if (!newCenter.Equals2D(_center.Coordinate))
                 {
-                    _center = newCenter;
+                    _center = new Point(newCenter);
                     changed = true;
                 }
 
@@ -1452,15 +1452,15 @@ namespace SharpMap
             get { return _zoom; }
             set
             {
-                var newCenter = new Coordinate(_center);
+                var newCenter = new Coordinate(_center.Coordinate);
                 value = _mapViewportGuard.VerifyZoom(value, newCenter);
 
                 if (value.Equals(_zoom))
                     return;
 
                 _zoom = value;
-                if (!newCenter.Equals2D(_center))
-                    _center = newCenter;
+                if (!newCenter.Equals2D(_center.Coordinate))
+                    _center = new Point(newCenter);
 
                 if (MapViewOnChange != null)
                     MapViewOnChange();

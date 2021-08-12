@@ -17,7 +17,8 @@
 
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
+
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 
 namespace SharpMap.Utilities
@@ -118,9 +119,8 @@ namespace SharpMap.Utilities
         /// <param name="map">Map defining current view properties</param>
         public static Coordinate[] MapToWorld(PointF[] points, Map map)
         {
-            return MapToWorld(points, map.Center, map.Zoom, map.MapHeight, map.PixelWidth, map.PixelHeight);
+            return MapToWorld(points, map.Center.Coordinate, map.Zoom, map.MapHeight, map.PixelWidth, map.PixelHeight);
         }
-
 
         /// <summary>
         /// Am abbreviated transform from image coordinates to world coordinate system (WCS) 

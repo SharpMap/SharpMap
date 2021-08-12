@@ -26,12 +26,13 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Text;
-using GeoAPI.Geometries;
+
 using SharpMap.Rendering.Exceptions;
 using SharpMap.Utilities;
 using SharpMap.Web.Wms;
 using SharpMap.Web.Wms.Tiling;
 using Common.Logging;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Layers
 {
@@ -51,7 +52,7 @@ namespace SharpMap.Layers
     /// TiledWmsLayer tiledWmsLayer = new TiledWmsLayer("Metacarta", url);
     /// tiledWmsLayer.TileSetsActive.Add(tiledWmsLayer.TileSets["satellite"].Name);
     /// map.Layers.Add(tiledWmsLayer);
-    /// map.ZoomToBox(new GeoAPI.Geometries.Envelope(-180.0, 180.0, -90.0, 90.0));
+    /// map.ZoomToBox(new SharpMap.Geometries.Envelope(-180.0, 180.0, -90.0, 90.0));
     /// </code>
     /// </example>
     [Obsolete("use TileLayer instead") ]

@@ -4,12 +4,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using Common.Logging;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Styles;
 using SharpMap.Utilities;
 using Matrix = System.Drawing.Drawing2D.Matrix;
@@ -61,14 +61,14 @@ namespace SharpMap.Rendering.Decoration.Graticule
         private int _srid;
         private Envelope _oldViewExtents;
         private Polygon _viewClipPolygon;
-        private ICoordinateSystem _coordinateSystem;
+        private CoordinateSystem _coordinateSystem;
         private string _pcsUnitSuffix;
         private double _mapScale;
 
         private Envelope _pcsDomain;
         private Envelope _gcsDomain;
-        private IMathTransform _unProject;
-        private IMathTransform _project;
+        private MathTransform _unProject;
+        private MathTransform _project;
         private Envelope _pcsConstrExtents;
         private Envelope _gcsConstrExtents;
         private int _oldPcsNumSubdivisions;
@@ -170,7 +170,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
                     PcsGraticuleMode != _oldPcsGraticuleMode)
                     CalculateMetrics(g, map, webMercatorScaleLinesActive);
 
-                if (_coordinateSystem is IProjectedCoordinateSystem)
+                if (_coordinateSystem is ProjectedCoordinateSystem)
                 {
                     OnRenderInternal(g, map, PcsGraticuleStyle, _pcsConstrExtents, _pcsDomain,
                         webMercatorScaleLinesActive);
@@ -377,7 +377,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
                     IsPrimary = isPrimaryParallel,
                     Label = GetFormattedLabel(isGeographicGraticule, thisY, AxisOrientationEnum.North),
                     WcsGraticule = new LineString(coordList.ToArray()),
-                    WcsTickMarks = (MultiPoint) MultiPoint.Empty // new List<IPoint>().ToArray())
+                    WcsTickMarks = (MultiPoint) MultiPoint.Empty // new List<Point>().ToArray())
                 });
             }
 
@@ -398,7 +398,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
         {
             var meridians = new List<GraticuleDef>();
             var coordList = new List<Coordinate>();
-            var tickList = new List<IPoint>();
+            var tickList = new List<Point>();
             var isGeographicGraticule = style == GcsGraticuleStyle;
             var tolerance = isGeographicGraticule ? GeographicTolerance : ProjectedTolerance;
 
@@ -640,9 +640,9 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// <param name="transform"></param>
         /// <param name="coords"></param>
         /// <returns>Transformed array with z ordinate preserved</returns>
-        private IPoint[] TransformPreserveZ(IMathTransform transform, Coordinate[] coords)
+        private Point[] TransformPreserveZ(MathTransform transform, Coordinate[] coords)
         {
-            var transformed = new IPoint[coords.Length];
+            var transformed = new Point[coords.Length];
             for (var i = 0; i < coords.Length; i++)
             {
                 var pt = transform.Transform(coords[i].ToDoubleArray());
@@ -1097,7 +1097,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
             var coords = map.ImageToWorld(pts, true);
 
             // construct world lines
-            var lines = new ILineString[4]; 
+            var lines = new LineString[4]; 
             for (var i = 0; i < sides.Length; i++)
             {
                 var side = sides[i];
@@ -1185,11 +1185,11 @@ namespace SharpMap.Rendering.Decoration.Graticule
                 case null:
                     return;
 
-                case IGeographicCoordinateSystem _:
+                case GeographicCoordinateSystem _:
                     _gcsDomain = GetCrsDomain(_coordinateSystem);
                     return;
 
-                case IProjectedCoordinateSystem pcs:
+                case ProjectedCoordinateSystem pcs:
                     _pcsDomain = GetCrsDomain(pcs);
 
                     _gcsDomain = _srid == GeoSpatialMath.WebMercatorSrid
@@ -1220,7 +1220,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// </summary>
         /// <param name="crs"></param>
         /// <returns>Crs Domain envelope, or null Envelope if not defined and cannot be derived</returns>
-        private Envelope GetCrsDomain(ICoordinateSystem crs)
+        private Envelope GetCrsDomain(CoordinateSystem crs)
         {
             if (crs.DefaultEnvelope != null && crs.DefaultEnvelope.Length == 4)
                 // supplied PCS constraints (currently not defined on any coordinate systems)
@@ -1232,7 +1232,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
             if (crs.AuthorityCode == GeoSpatialMath.WebMercatorSrid)
                 return GeoSpatialMath.WebMercatorEnv;
 
-            if (crs is IGeographicCoordinateSystem)
+            if (crs is GeographicCoordinateSystem)
                 return new Envelope(-180, 180, -90, 90);
 
             return new Envelope();
@@ -1258,7 +1258,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
 
             _mapScale = map.GetMapScale((int) g.DpiX);
 
-            if (_coordinateSystem is IProjectedCoordinateSystem)
+            if (_coordinateSystem is ProjectedCoordinateSystem)
             {
                 // pcsConstrExtents is expanded to the next multiple of division 
                 _pcsConstrExtents = CalcPcsConstrExtents(_oldViewExtents, webMercatorScaleLinesActive);
@@ -1267,21 +1267,16 @@ namespace SharpMap.Rendering.Decoration.Graticule
                 try
                 {
                     var coords = _unProject.TransformList(
-                        new List<Coordinate>()
+                        new List<double[]>()
                         {
-                            _oldViewExtents.BottomLeft(),
-                            _oldViewExtents.TopLeft(),
-                            _oldViewExtents.TopRight(),
-                            _oldViewExtents.BottomRight()
+                            new double[]{ _oldViewExtents.BottomLeft().X, _oldViewExtents.BottomLeft().Y },
+                            new double[]{ _oldViewExtents.TopLeft().X, _oldViewExtents.TopLeft().Y },
+                            new double[]{ _oldViewExtents.TopRight().X, _oldViewExtents.TopRight().Y },
+                            new double[]{ _oldViewExtents.BottomRight().X, _oldViewExtents.BottomRight().Y }
                         });
 
                     _gcsConstrExtents = CalcGcsConstrExtents(
-                        new Envelope(
-                            coords.Min(c => c.X),
-                            coords.Max(c => c.X),
-                            coords.Min(c => c.Y),
-                            coords.Max(c => c.Y)
-                        ));
+                        new Envelope(new Coordinate(coords[0][0], coords[0][1]), new Coordinate(coords[2][0], coords[2][1])));
                 }
                 catch (Exception ex)
                 {

@@ -13,7 +13,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
-        <ProjectReference Include="..\SharpMap.UI\SharpMap.UI.csproj" />
     </ItemGroup>
 
     <ItemGroup>

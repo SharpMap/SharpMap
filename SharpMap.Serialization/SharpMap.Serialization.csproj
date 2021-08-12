@@ -12,7 +12,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj" />
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 

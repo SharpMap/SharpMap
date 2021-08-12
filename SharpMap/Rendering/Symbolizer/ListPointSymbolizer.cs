@@ -19,9 +19,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Base;
-using Point = GeoAPI.Geometries.IPoint;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace SharpMap.Rendering.Symbolizer    
 {

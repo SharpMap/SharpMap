@@ -1,6 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -30,18 +30,18 @@ namespace SharpMap.Data.Providers
         int SRID { get; set; }
 
         /// <summary>
-        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the features within the specified <see cref="SharpMap.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        Collection<IGeometry> GetGeometriesInView(Envelope bbox);
+        /// <returns>Features within the specified <see cref="SharpMap.Geometries.Envelope"/></returns>
+        Collection<Geometry> GetGeometriesInView(Envelope bbox);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds);
+        void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds);
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'

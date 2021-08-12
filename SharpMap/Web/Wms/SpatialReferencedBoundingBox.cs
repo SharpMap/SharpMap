@@ -1,4 +1,6 @@
-﻿using GeoAPI.Geometries;
+﻿
+
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Web.Wms
 {

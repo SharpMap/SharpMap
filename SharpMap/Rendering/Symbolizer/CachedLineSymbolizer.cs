@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
+
 using SharpMap.Base;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -200,7 +201,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map"></param>
         /// <param name="lineString"></param>
         /// <param name="graphics"></param>
-        protected override void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics)
+        protected override void OnRenderInternal(MapViewport map, LineString lineString, Graphics graphics)
         {
             var gp = new GraphicsPath();
             gp.AddLines(VectorRenderer.LimitValues(lineString.TransformToImage(map), VectorRenderer.ExtremeValueLimit));

@@ -1,7 +1,8 @@
 using System;
 using System.IO;
-using GeoAPI.DataStructures;
-using GeoAPI.Geometries;
+using NetTopologySuite.DataStructures;
+using NetTopologySuite.Geometries;
+
 
 namespace SharpMap.Data.Providers
 {

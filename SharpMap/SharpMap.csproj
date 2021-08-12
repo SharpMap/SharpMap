@@ -1,14 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <Import Project="$(SolutionDir)SharpMap.Common.props" />
-
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>netstandard2.1</TargetFramework>
         <Product>SharpMap Engine</Product>
         <Copyright>Copyright 2006 Morten Nielsen, Copyright 2008-$([System.DateTime]::UtcNow.Year) SharpMap - Team</Copyright>
         <PackageTags>SharpMap GIS Map GeoSpatial</PackageTags>
         <Description>This package contains the core components of SharpMap.</Description>
-        <!--<EnableApiCompat>true</EnableApiCompat>-->
         <NoWarn>1701;1702;2100;2235</NoWarn>
     </PropertyGroup>
 
@@ -23,11 +19,12 @@
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
         <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
-        <PackageReference Include="GeoAPI.CoordinateSystems" Version="1.7.5" />
-        <PackageReference Include="NetTopologySuite.Core" Version="1.15.3" />
-        <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
-        <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+        <PackageReference Include="ProjNet" Version="2.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
         <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+        <PackageReference Include="NetTopologySuite" Version="2.3.0" />
+        <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="2.0.4" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(EnableApiCompat)' == 'true' ">
@@ -36,20 +33,4 @@
 
         <ResolvedMatchingContract Include="$(NugetPackageRoot)sharpmap\1.1.0\lib\net40-client\SharpMap.dll" />
     </ItemGroup>
-
-
-    <!--
-    <PropertyGroup>
-        <DriveSeperator>$(SolutionDir.SubString(1,1))</DriveSeperator>
-    </PropertyGroup>
-
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Message Importance="high" Text="$(SolutionDir)SharedAssemblyVersion.cs exists: $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) " />
-        <Message Importance="high" Text="$(SolutionDir)SharedAssemblyVersion.cs: $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) " Condition=" $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) " />
-        <Message Importance="high" Text="$(SolutionDir)SharpMap.Common.props   : $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks)" />
-        <Message Importance="high" Text="Condition: $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) &lt; $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks)" Condition=" $([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) " />
-
-        <Exec Condition=" !$([System.IO.File]::Exists('$(SolutionDir)SharedAssemblyVersion.cs')) OR &#xD;&#xA;          $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharedAssemblyVersion.cs').Ticks) &lt; $([System.IO.File]::GetLastWriteTime('$(SolutionDir)SharpMap.Common.props').Ticks) " Command="$(SolutionDir.SubString(0, 2))&#xD;&#xA;cd &quot;$(SolutionDir)&quot;&#xD;&#xA;&quot;$(MSBuildBinPath)\msbuild&quot; SharpMap.targets /t:Version&#xD;&#xA;cd &quot;$(ProjectDir)&quot;" />
-    </Target>
-    -->
 </Project>

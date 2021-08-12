@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.Serialization;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Styles;
 
@@ -194,7 +194,7 @@ namespace SharpMap.Layers
             // We don't need to regenerate the tiles
             if (map.Envelope.Equals(_lastViewport) && _numPendingDownloads == 0)
             {
-                g.DrawImage(_bitmap, Point.Empty);
+                g.DrawImage(_bitmap, System.Drawing.Point.Empty);
                 return;
             }
 
@@ -256,7 +256,7 @@ namespace SharpMap.Layers
 
                     var cancelToken = new System.Threading.CancellationTokenSource();
                     var token = cancelToken.Token;
-                    var pt = new Point(ptx, pty);
+                    var pt = new System.Drawing.Point(ptx, pty);
                     var t = new System.Threading.Tasks.Task(delegate
                     {
                         if (token.IsCancellationRequested)
@@ -322,7 +322,7 @@ namespace SharpMap.Layers
             get { return _numPendingDownloads; }
         }
 
-        private bool RenderCellOnThread(System.Threading.CancellationToken token, Point ptInsert, Map map)
+        private bool RenderCellOnThread(System.Threading.CancellationToken token, System.Drawing.Point ptInsert, Map map)
         {
             var tile = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
             var mvp = new MapViewport(map);
@@ -347,7 +347,7 @@ namespace SharpMap.Layers
         /// <param name="ptInsert"></param>
         /// <param name="env"></param>
         /// <param name="bmp"></param>
-        protected virtual void OnTileRendered(Point ptInsert, Envelope env, Bitmap bmp)
+        protected virtual void OnTileRendered(System.Drawing.Point ptInsert, Envelope env, Bitmap bmp)
         {
             if (!env.Equals(_lastViewport))
             {
@@ -388,7 +388,7 @@ namespace SharpMap.Layers
             ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(box, ds);
         }
 
-        void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        void ICanQueryLayer.ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             if (!((ICanQueryLayer)this).IsQueryEnabled)
                 return;

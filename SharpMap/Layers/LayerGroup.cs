@@ -21,9 +21,11 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 using SharpMap.Data;
-using GeoAPI.Geometries;
+
 using SharpMap.Styles;
-using GeoAPI.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
 
 namespace SharpMap.Layers
 {
@@ -141,7 +143,7 @@ namespace SharpMap.Layers
         public virtual bool SkipTransformationPropagation { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
 
@@ -163,7 +165,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
         /// If your CoordinateTransformation can be inverted you can leave this property to null
         /// </summary>
@@ -297,7 +299,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public virtual void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             var layers = GetSnapshot();
 

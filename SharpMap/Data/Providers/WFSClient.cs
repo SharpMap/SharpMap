@@ -8,11 +8,11 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Xml.XPath;
-using GeoAPI.Geometries;
 using SharpMap.CoordinateSystems;
 using SharpMap.Utilities.Indexing;
 using SharpMap.Utilities.SpatialIndexing;
 using SharpMap.Utilities.Wfs;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -148,7 +148,7 @@ namespace SharpMap.Data.Providers
     ///demoMap.Layers.Add(layer6);
     ///demoMap.Layers.Add(layLabel);
     ///
-    ///demoMap.Center = new GeoAPI.Geometries.Coordinate(-74.0, 40.7);
+    ///demoMap.Center = new SharpMap.Geometries.Coordinate(-74.0, 40.7);
     ///demoMap.Zoom = 10;
     /// // Alternatively zoom closer
     /// // demoMap.Zoom = 0.2;
@@ -533,11 +533,11 @@ namespace SharpMap.Data.Providers
         #region IProvider Member
 
         /// <summary>
-        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the features within the specified <see cref="SharpMap.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public virtual Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        /// <returns>Features within the specified <see cref="SharpMap.Geometries.Envelope"/></returns>
+        public virtual Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             if (_featureTypeInfo == null) 
                 return null;
@@ -566,7 +566,7 @@ namespace SharpMap.Data.Providers
             // we then must filter the geometries locally
             var ids = _tree.Search(bbox);
 
-            var coll = new Collection<IGeometry>();
+            var coll = new Collection<Geometry>();
             for (var i = 0; i < ids.Count; i++)
             {
                 var featureRow = (FeatureDataRow) _labelInfo.Rows[(int)ids[i]];
@@ -577,11 +577,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="SharpMap.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="SharpMap.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
@@ -597,7 +597,7 @@ namespace SharpMap.Data.Providers
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public virtual IGeometry GetGeometryByID(uint oid)
+        public virtual Geometry GetGeometryByID(uint oid)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -607,7 +607,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             if (_labelInfo == null) return;
 
@@ -828,11 +828,11 @@ namespace SharpMap.Data.Providers
 
         #region Private Member
 
-        private Collection<IGeometry> LoadGeometries(Envelope bbox)
+        private Collection<Geometry> LoadGeometries(Envelope bbox)
         {
             var geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
 
-            GeometryFactory geomFactory = null;
+            Utilities.Wfs.GeometryFactory geomFactory = null;
 
             if (UseCache)
             {
@@ -858,7 +858,7 @@ namespace SharpMap.Data.Providers
 
             try
             {
-                Collection<IGeometry> geoms;
+                Collection<Geometry> geoms;
                 switch (geometryTypeString)
                 {
                     /* Primitive geometry elements */

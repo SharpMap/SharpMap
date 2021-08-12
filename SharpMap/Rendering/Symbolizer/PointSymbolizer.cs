@@ -15,10 +15,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
+
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -165,7 +166,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="graphics">The graphics object to use.</param>
         public void Render(MapViewport map, IPuntal geometry, Graphics graphics)
         {
-            var mp = geometry as IMultiPoint;
+            var mp = geometry as MultiPoint;
             if (mp != null)
             {
                 var combinedArea = RectangleF.Empty;
@@ -177,7 +178,7 @@ namespace SharpMap.Rendering.Symbolizer
                 CanvasArea = combinedArea;
                 return;
             }
-            RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
+            RenderPoint(map, ((NetTopologySuite.Geometries.Point)geometry).Coordinate, graphics);
         }
     }
 }

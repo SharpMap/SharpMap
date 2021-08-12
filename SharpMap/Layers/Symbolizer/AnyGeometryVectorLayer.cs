@@ -1,5 +1,5 @@
 using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
 
@@ -9,7 +9,7 @@ namespace SharpMap.Layers.Symbolizer
     /// Vector layer class than can symbolize any type of geometry
     /// </summary>
     [Serializable]
-    public class AnyGeometryVectorLayer : BaseVectorLayer<IGeometry>
+    public class AnyGeometryVectorLayer : BaseVectorLayer<Geometry>
     {
         /// <summary>
         /// Creates an instance of this class

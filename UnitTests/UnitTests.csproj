@@ -43,25 +43,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SharpMap.Converters.GeoJSON\SharpMap.Converters.GeoJSON.csproj" />
-        <ProjectReference Include="..\SharpMap.CoordinateSystems.DotSpatial\SharpMap.CoordinateSystems.DotSpatial.csproj" />
-        <ProjectReference Include="..\SharpMap.Data.Providers.GeoPackage\SharpMap.Data.Providers.GeoPackage.csproj" />
-        <ProjectReference Include="..\SharpMap.Data.Providers.Kml\SharpMap.Data.Providers.Kml.csproj" />
-        <ProjectReference Include="..\SharpMap.Extensions\SharpMap.Extensions.csproj" />
-        <ProjectReference Include="..\SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj" />
-        <ProjectReference Include="..\SharpMap.Layers.HeatLayer\SharpMap.Layers.HeatLayer.csproj" />
-        <ProjectReference Include="..\SharpMap.Serialization\SharpMap.Serialization.csproj" />
-        <ProjectReference Include="..\SharpMap.Utilities.Indexing.SbnTree\SharpMap.Utilities.Indexing.SbnTree.csproj" />
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
         <PackageReference Include="GDAL.Native" Version="2.4.2" />
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
-        <ProjectReference Include="..\SharpMap.SqlServerSpatialObjects\SharpMap.SqlServerSpatialObjects.csproj" />
-        <ProjectReference Include="..\SharpMap.Web\SharpMap.Web.csproj" />
     </ItemGroup>
 
     <ItemGroup>

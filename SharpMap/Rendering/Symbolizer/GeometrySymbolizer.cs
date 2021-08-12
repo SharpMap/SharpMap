@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Drawing;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Rendering.Thematics;
 
@@ -10,7 +10,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// Multi geometry symbolizer class
     /// </summary>
     [Serializable]
-    public class GeometrySymbolizer : ISymbolizer<IGeometry>
+    public class GeometrySymbolizer : ISymbolizer<Geometry>
     {
         private IPointSymbolizer _pointSymbolizer;
         private ILineSymbolizer _lineSymbolizer;
@@ -74,7 +74,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map object, mainly needed for transformation purposes.</param>
         /// <param name="geometry">The geometry to symbolize.</param>
         /// <param name="graphics">The graphics object to use.</param>
-        public void Render(MapViewport map, IGeometry geometry, Graphics graphics)
+        public void Render(MapViewport map, Geometry geometry, Graphics graphics)
         {
             switch (geometry.OgcGeometryType)
             {
@@ -94,7 +94,7 @@ namespace SharpMap.Rendering.Symbolizer
                     return;
 
                 case OgcGeometryType.GeometryCollection:
-                    foreach (var g in ((IGeometryCollection)geometry))
+                    foreach (var g in ((GeometryCollection)geometry))
                     {
                         Render(map, g, graphics);
                     }

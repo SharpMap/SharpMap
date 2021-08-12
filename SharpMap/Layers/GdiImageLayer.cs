@@ -24,7 +24,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
-using GeoAPI.Geometries;
+
 using NetTopologySuite.Geometries;
 using Point = System.Drawing.Point;
 
@@ -511,7 +511,7 @@ namespace SharpMap.Layers
             /// <param name="width">The width pixel</param>
             /// <param name="height">The height pixel</param>
             /// <returns>The ground coordinate</returns>
-            public IPolygon ToGroundBounds(int width, int height)
+            public Polygon ToGroundBounds(int width, int height)
             {
                 var ringCoordinates = new List<Coordinate>(5);
                 var leftTop = ToGround(0, 0);

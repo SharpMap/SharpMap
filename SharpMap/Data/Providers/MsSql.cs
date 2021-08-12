@@ -19,8 +19,10 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SqlClient;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
-using GeoAPI.Geometries;
+
 
 namespace SharpMap.Data.Providers
 {
@@ -56,14 +58,14 @@ namespace SharpMap.Data.Providers
         private int _srid = -2;
 
         private string _Table;
-        private IGeometryFactory _factory;
+        private GeometryFactory _factory;
 
         /// <summary>
         /// Gets or sets the geometry factory used to create geometries
         /// </summary>
-        public IGeometryFactory Factory
+        public GeometryFactory Factory
         {
-            get { return _factory ?? (_factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid)); }
+            get { return _factory ?? (_factory = NtsGeometryServices.Instance.CreateGeometryFactory(_srid)); }
             set { _factory = value; }
         }
 
@@ -169,9 +171,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var features = new Collection<IGeometry>();
+            var features = new Collection<Geometry>();
             using (var conn = new SqlConnection(_ConnectionString))
             {
                 string BoxIntersect = GetBoxClause(bbox);
@@ -208,9 +210,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public IGeometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
-            IGeometry geom = null;
+            Geometry geom = null;
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL = "SELECT " + GeometryColumn + " AS Geom FROM " + Table + " WHERE " + ObjectIdColumn +
@@ -275,7 +277,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             throw new NotImplementedException();
         }
@@ -405,7 +407,7 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
-            //List<Geometries.Geometry> features = new List<GeoAPI.Geometries.IGeometry>();
+            //List<Geometries.Geometry> features = new List<SharpMap.Geometries.Geometry>();
             using (SqlConnection conn = new SqlConnection(_ConnectionString))
             {
                 string strSQL = "SELECT *, " + GeometryColumn + " AS sharpmap_tempgeometry ";

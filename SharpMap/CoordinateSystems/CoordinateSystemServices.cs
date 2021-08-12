@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using GeoAPI;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Converters.WellKnownText;
 
 namespace SharpMap.CoordinateSystems
@@ -12,13 +11,13 @@ namespace SharpMap.CoordinateSystems
     /// <summary>
     /// A coordinate system services class
     /// </summary>
-    public class CoordinateSystemServices : ICoordinateSystemServices, ICoordinateSystemRepository
+    public class CoordinateSystemServices : ProjNet.CoordinateSystemServices, ICoordinateSystemRepository
     {
-        private readonly Dictionary<int, ICoordinateSystem> _csBySrid;
+        private readonly Dictionary<int, CoordinateSystem> _csBySrid;
         private readonly Dictionary<IInfo, int> _sridByCs;
 
-        private readonly ICoordinateSystemFactory _coordinateSystemFactory;
-        private readonly ICoordinateTransformationFactory _ctFactory;
+        private readonly CoordinateSystemFactory _coordinateSystemFactory;
+        private readonly CoordinateTransformationFactory _ctFactory;
 
         #region CsEqualityComparer class
         private class CsEqualityComparer : EqualityComparer<IInfo>
@@ -75,8 +74,8 @@ namespace SharpMap.CoordinateSystems
         /// </summary>
         /// <param name="coordinateSystemFactory">The factory to use for creating a coordinate system.</param>
         /// <param name="coordinateTransformationFactory">The factory to use for creating a coordinate transformation.</param>
-        public CoordinateSystemServices(ICoordinateSystemFactory coordinateSystemFactory,
-            ICoordinateTransformationFactory coordinateTransformationFactory)
+        public CoordinateSystemServices(CoordinateSystemFactory coordinateSystemFactory,
+            CoordinateTransformationFactory coordinateTransformationFactory)
         {
             if (coordinateSystemFactory == null)
                 throw new ArgumentNullException("coordinateSystemFactory");
@@ -87,7 +86,7 @@ namespace SharpMap.CoordinateSystems
             _coordinateSystemFactory = coordinateSystemFactory;
             _ctFactory = coordinateTransformationFactory;
 
-            _csBySrid = new Dictionary<int, ICoordinateSystem>();
+            _csBySrid = new Dictionary<int, CoordinateSystem>();
             _sridByCs = new Dictionary<IInfo, int>(new CsEqualityComparer());
         }
 
@@ -99,8 +98,8 @@ namespace SharpMap.CoordinateSystems
         /// <param name="coordinateTransformationFactory">The factory to use for creating a coordinate transformation.</param>
         /// <param name="enumerable">An enumeration if spatial reference ids and coordinate system definition strings pairs</param>
         public CoordinateSystemServices(
-            ICoordinateSystemFactory coordinateSystemFactory,
-            ICoordinateTransformationFactory coordinateTransformationFactory,
+            CoordinateSystemFactory coordinateSystemFactory,
+            CoordinateTransformationFactory coordinateTransformationFactory,
             IEnumerable<KeyValuePair<int, string>> enumerable)
             : this(coordinateSystemFactory, coordinateTransformationFactory)
         {
@@ -157,7 +156,7 @@ namespace SharpMap.CoordinateSystems
         /// </summary>
         /// <param name="wellKnownText"></param>
         /// <returns>A coordinate system, <value>null</value> if no coordinate system could be created.</returns>
-        public ICoordinateSystem CreateCoordinateSystem(string wellKnownText)
+        public CoordinateSystem CreateCoordinateSystem(string wellKnownText)
         {
             try
             {
@@ -197,9 +196,9 @@ namespace SharpMap.CoordinateSystems
         /// <returns>
         /// The coordinate system.
         /// </returns>
-        public virtual ICoordinateSystem GetCoordinateSystem(int srid)
+        public virtual CoordinateSystem GetCoordinateSystem(int srid)
         {
-            ICoordinateSystem cs;
+            CoordinateSystem cs;
             return _csBySrid.TryGetValue(srid, out cs) ? cs : null;
         }
 
@@ -210,7 +209,7 @@ namespace SharpMap.CoordinateSystems
         /// <returns>
         /// The coordinate system.
         /// </returns>
-        public virtual ICoordinateSystem GetCoordinateSystem(string authority, long code)
+        public virtual CoordinateSystem GetCoordinateSystem(string authority, long code)
         {
             var srid = GetSRID(authority, code);
             return srid.HasValue ? GetCoordinateSystem(srid.Value) : null;
@@ -240,7 +239,7 @@ namespace SharpMap.CoordinateSystems
         /// Method to create a coordinate tranformation between two spatial reference systems, defined by their identifiers
         /// </summary>
         /// <remarks>
-        /// This is a convenience function for <see cref="M:GeoAPI.ICoordinateSystemServices.CreateTransformation(GeoAPI.CoordinateSystems.ICoordinateSystem,GeoAPI.CoordinateSystems.ICoordinateSystem)"/>.
+        /// This is a convenience function for <see cref="M:SharpMap.ICoordinateSystemServices.CreateTransformation(SharpMap.CoordinateSystems.CoordinateSystem,SharpMap.CoordinateSystems.CoordinateSystem)"/>.
         /// </remarks>
         /// <param name="sourceSrid">The identifier for the source spatial reference system.</param><param name="targetSrid">The identifier for the target spatial reference system.</param>
         /// <returns>
@@ -268,7 +267,7 @@ namespace SharpMap.CoordinateSystems
         /// </value>
         ///  if no transformation could be created.
         /// </returns>
-        public ICoordinateTransformation CreateTransformation(ICoordinateSystem source, ICoordinateSystem target)
+        public ICoordinateTransformation CreateTransformation(CoordinateSystem source, CoordinateSystem target)
         {
             return _ctFactory.CreateFromCoordinateSystems(source, target);
         }
@@ -280,7 +279,7 @@ namespace SharpMap.CoordinateSystems
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public virtual IEnumerator<KeyValuePair<int, ICoordinateSystem>> GetEnumerator()
+        public virtual IEnumerator<KeyValuePair<int, CoordinateSystem>> GetEnumerator()
         {
             return _csBySrid.GetEnumerator();
         }
@@ -322,7 +321,7 @@ namespace SharpMap.CoordinateSystems
         /// </summary>
         /// <param name="srid">The identifier for the <paramref name="coordinateSystem"/> in the store.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
-        public virtual void AddCoordinateSystem(int srid, ICoordinateSystem coordinateSystem)
+        public virtual void AddCoordinateSystem(int srid, CoordinateSystem coordinateSystem)
         {
             if (IsReadOnly)
                 throw new NotSupportedException();
@@ -350,7 +349,7 @@ namespace SharpMap.CoordinateSystems
         /// <param name="coordinateTransformationFactory">A coordinate transformation factory</param>
         /// <returns>A coordinate system services instance.</returns>
         /// <exception cref="ArgumentNullException">Thrown, if either <paramref name="coordinateSystemFactory"/> or <paramref name="coordinateTransformationFactory"/> is null.</exception>
-        public static ICoordinateSystemServices FromSpatialRefSys(ICoordinateSystemFactory coordinateSystemFactory, ICoordinateTransformationFactory coordinateTransformationFactory)
+        public static CoordinateSystemServices FromSpatialRefSys(CoordinateSystemFactory coordinateSystemFactory, CoordinateTransformationFactory coordinateTransformationFactory)
         {
             if (coordinateSystemFactory == null)
                 throw new ArgumentNullException("coordinateSystemFactory");

@@ -53,8 +53,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// Generic interface for symbolizers that render symbolize specific geometries
     /// </summary>
     /// <typeparam name="TGeometry">The allowed type of geometries to symbolize</typeparam>
-    public interface ISymbolizer<TGeometry> : ISymbolizer
-        where TGeometry : class
+    public interface ISymbolizer<TGeometry> : ISymbolizer where TGeometry : class
     {
         /// <summary>
         /// Function to render the geometry

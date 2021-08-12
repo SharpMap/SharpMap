@@ -17,7 +17,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SharpMap.Converters.GeoJSON\SharpMap.Converters.GeoJSON.csproj" />
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 

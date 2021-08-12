@@ -24,8 +24,9 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
-using GeoAPI.Geometries;
+
 
 namespace SharpMap.Data.Providers
 {
@@ -157,7 +158,7 @@ namespace SharpMap.Data.Providers
                 //                        col.DataType = typeof(bool);
                 //                        break;
                 //                    case "geometry":
-                //                        col.DataType = typeof(GeoAPI.Geometries.IGeometry);
+                //                        col.DataType = typeof(SharpMap.Geometries.Geometry);
                 //                        break;
                 //                    default:
                 //                        col.DataType = typeof(object);
@@ -199,9 +200,9 @@ namespace SharpMap.Data.Providers
         ///// </summary>
         ///// <param name="bbox"></param>
         ///// <returns></returns>
-        //protected override Collection<IGeometry> GetGeometriesInViewInternal(Envelope bbox)
+        //protected override Collection<Geometry> GetGeometriesInViewInternal(Envelope bbox)
         //{
-        //    var features = new Collection<IGeometry>();
+        //    var features = new Collection<Geometry>();
         //    using (var conn = CreateOpenDbConnection())
         //    {
         //        var strSQL = "SELECT ST.AsBinary(" + BuildGeometryExpression() + ") ";
@@ -239,7 +240,7 @@ namespace SharpMap.Data.Providers
         ///// </summary>
         ///// <param name="oid">Object ID</param>
         ///// <returns>geometry</returns>
-        //protected override IGeometry GetGeometryByIDInternal(uint oid)
+        //protected override Geometry GetGeometryByIDInternal(uint oid)
         //{
         //    using (var conn = CreateOpenDbConnection())
         //    {
@@ -263,7 +264,7 @@ namespace SharpMap.Data.Providers
 
 
         /// <summary>
-        /// Gets the object of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the object of features that lie within the specified <see cref="SharpMap.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
         /// <returns>A collection of object ids</returns>
@@ -311,9 +312,9 @@ namespace SharpMap.Data.Providers
         ///// </summary>
         ///// <param name="geom"></param>
         ///// <param name="ds">FeatureDataSet to fill data into</param>
-        //protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        //protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         //{
-        //    var features = new List<IGeometry>();
+        //    var features = new List<Geometry>();
         //    using (var conn = CreateOpenDbConnection())
         //    {
         //        string strGeom;
@@ -624,7 +625,7 @@ namespace SharpMap.Data.Providers
             return res;
         }
 
-        private string BuildGeometry(IGeometry geometry, SqlCommand command)
+        private string BuildGeometry(Geometry geometry, SqlCommand command)
         {
             var res = "ST.GeomFromWKB(@PGeom,@PTargetSrid)";
 
@@ -651,7 +652,7 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">The geometry</param>
         /// <param name="command">The command object, that is supposed to execute the query.</param>
         /// <returns>The spatial component of a SQL where clause</returns>
-        protected override string GetSpatialWhere(IGeometry bbox, DbCommand command)
+        protected override string GetSpatialWhere(Geometry bbox, DbCommand command)
         {
             var sqlCommand = (SqlCommand)command;
 

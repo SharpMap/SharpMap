@@ -1,7 +1,8 @@
 using System;
-using GeoAPI.Geometries;
+
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Layers.Symbolizer
 {

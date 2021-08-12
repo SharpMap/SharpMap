@@ -24,7 +24,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using GeoAPI.Geometries;
+
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;
@@ -264,14 +264,14 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>
         /// <para>If this method is not null, it will override the position based on the centroid of the boundingbox of the feature </para>
-        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a GeoAPI.Geometries.Coordinate.</para>
+        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a SharpMap.Geometries.Coordinate.</para>
         /// <para>If the delegate returns a null, the centroid of the feature will be used</para>
         /// <example>
         /// Creating a custom position by using X and Y values from the FeatureDataRow attributes "LabelX" and "LabelY", using
         /// an anonymous delegate:
         /// <code lang="C#">
         /// myLabelLayer.LabelPositionDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
-        ///				{ return new GeoAPI.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
+        ///				{ return new SharpMap.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
         /// </code>
         /// </example>
         /// </remarks>
@@ -546,7 +546,7 @@ namespace SharpMap.Layers
                     // or new prop bool PartialPolygonalLabel
                 }
                 
-                if (feature.Geometry is IGeometryCollection geoms)
+                if (feature.Geometry is GeometryCollection geoms)
                 {
                     if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                     {
@@ -601,22 +601,22 @@ namespace SharpMap.Layers
                             for (var j = 0; j < geoms.NumGeometries; j++)
                             {
                                 var geom = geoms.GetGeometryN(j);
-                                if (geom is ILineString lineString && lineString.Length > largestVal)
+                                if (geom is LineString lineString && lineString.Length > largestVal)
                                 {
                                     largestVal = lineString.Length;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IMultiLineString multiLineString && multiLineString.Length > largestVal)
+                                if (geom is MultiLineString multiLineString && multiLineString.Length > largestVal)
                                 {
                                     largestVal = multiLineString.Length;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IPolygon polygon && polygon.Area > largestVal)
+                                if (geom is Polygon polygon && polygon.Area > largestVal)
                                 {
                                     largestVal = polygon.Area;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IMultiPolygon multiPolygon && multiPolygon.Area > largestVal)
+                                if (geom is MultiPolygon multiPolygon && multiPolygon.Area > largestVal)
                                 {
                                     largestVal = multiPolygon.Area;
                                     idxOfLargest = j;
@@ -640,11 +640,11 @@ namespace SharpMap.Layers
 
             return labels;
         }
-        private static BaseLabel CreateLabelDefinition(FeatureDataRow fdr, IGeometry geom, string text, float rotation, 
+        private static BaseLabel CreateLabelDefinition(FeatureDataRow fdr, Geometry geom, string text, float rotation, 
             int priority, LabelStyle style, MapViewport map, Graphics g, GetLocationMethod getLocationMethod)
         {
             //ONLY atomic geometries
-            Debug.Assert(!(geom is IGeometryCollection));
+            Debug.Assert(!(geom is GeometryCollection));
 
             if (geom == null) 
                 return null;
@@ -654,7 +654,7 @@ namespace SharpMap.Layers
 
             var size = VectorRenderer.SizeOfString(g, text, font);
 
-            if (geom is ILineString ls)
+            if (geom is LineString ls)
                 return CreatePathLabel(ls, text, size, priority, style, map);
 
             var worldPosition = getLocationMethod == null
@@ -690,7 +690,7 @@ namespace SharpMap.Layers
             return lbl;
         }
 
-        private static BaseLabel CreatePathLabel(ILineString line, string text, SizeF textMeasure,
+        private static BaseLabel CreatePathLabel(LineString line, string text, SizeF textMeasure,
             int priority, LabelStyle style, MapViewport map)
         {
             if (line == null)
@@ -762,13 +762,13 @@ namespace SharpMap.Layers
                 start = end;
                 end = start - labelLength;
             }
-            line = (ILineString) lil.ExtractLine(start, end);
+            line = (LineString) lil.ExtractLine(start, end);
 
             // Build offset curve
-            ILineString offsetCurve;
+            LineString offsetCurve;
             var bufferParameters =
                 new NetTopologySuite.Operation.Buffer.BufferParameters(4,
-                    GeoAPI.Operation.Buffer.EndCapStyle.Flat);
+                    NetTopologySuite.Operation.Buffer.EndCapStyle.Flat);
 
             // determine offset curve that will run through the vertical centre of the text
             if (style.VerticalAlignment != LabelStyle.VerticalAlignmentEnum.Middle)
@@ -795,7 +795,7 @@ namespace SharpMap.Layers
             }
 
             // enclosing polygon in world coords
-            var affectedArea = (IPolygon) offsetCurve.Buffer(0.5d * labelHeight, bufferParameters);
+            var affectedArea = (Polygon) offsetCurve.Buffer(0.5d * labelHeight, bufferParameters);
 
             // fast, basic check (technically should use polygons for rotated views)
             if (!map.Envelope.Contains(affectedArea.EnvelopeInternal))
@@ -809,7 +809,7 @@ namespace SharpMap.Layers
             };
         }
 
-        private static ILineString ExtendLine(ILineString line, double startDist, double endDist)
+        private static LineString ExtendLine(LineString line, double startDist, double endDist)
         {
             var numPts = (startDist > 0 ? 1 : 0) + (endDist > 0 ? 1 : 0);
             if (numPts == 0) return line;
@@ -865,18 +865,18 @@ namespace SharpMap.Layers
                 coord.Y + dist * Math.Cos(azimuth)
             );
         }
-        private IGeometry ClipLinealGeomToViewExtents(MapViewport map, IGeometry geom)
+        private Geometry ClipLinealGeomToViewExtents(MapViewport map, Geometry geom)
         {
             if (map.MapTransform.IsIdentity)
             {
                 var lineClipping = new CohenSutherlandLineClipping(map.Envelope.MinX, map.Envelope.MinY,
                     map.Envelope.MaxX, map.Envelope.MaxY);
 
-                if (geom is ILineString)
-                    return lineClipping.ClipLineString(geom as ILineString);
+                if (geom is LineString)
+                    return lineClipping.ClipLineString(geom as LineString);
                 
-                if (geom is IMultiLineString)
-                    return lineClipping.ClipLineString(geom as IMultiLineString);
+                if (geom is MultiLineString)
+                    return lineClipping.ClipLineString(geom as MultiLineString);
             }
             else
             {
@@ -895,11 +895,11 @@ namespace SharpMap.Layers
 
                 clipPolygon = (Polygon) at.Transform(clipPolygon);
 
-                if (geom is ILineString)
-                    return clipPolygon.Intersection(geom as ILineString);
+                if (geom is LineString)
+                    return clipPolygon.Intersection(geom as LineString);
                 
-                if (geom is IMultiLineString)
-                    return clipPolygon.Intersection(geom as IMultiLineString);
+                if (geom is MultiLineString)
+                    return clipPolygon.Intersection(geom as MultiLineString);
             }
 
             return null;
@@ -942,7 +942,7 @@ namespace SharpMap.Layers
         /// <param name="map">The map</param>
         /// <!--<param name="useClipping">A value indicating whether clipping should be applied or not</param>-->
         /// <returns>A GraphicsPath</returns>
-        public static GraphicsPath LineStringToPath(ILineString lineString, MapViewport map/*, bool useClipping*/)
+        public static GraphicsPath LineStringToPath(LineString lineString, MapViewport map/*, bool useClipping*/)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
                 gp.AddLines(lineString.TransformToImage(map));

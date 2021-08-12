@@ -1,6 +1,6 @@
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Prepared;
 using System;
-using GeoAPI.Geometries;
-using GeoAPI.Geometries.Prepared;
 
 namespace SharpMap.Data.Providers
 {
@@ -27,8 +27,7 @@ namespace SharpMap.Data.Providers
         /// Creates an instance of this class. <see cref="BaseProvider.SRID"/> is set to <paramref name="srid"/>.
         /// </summary>
         /// <param name="srid">The spatial reference id</param>
-        protected PreparedGeometryProvider(int srid)
-            : base(srid)
+        protected PreparedGeometryProvider(int srid) : base(srid)
         {
         }
 
@@ -45,9 +44,9 @@ namespace SharpMap.Data.Providers
         /// Method to perform preparatory things for executing an intersection query against the data source
         /// </summary>
         /// <param name="geom">The geometry to use as filter.</param>
-        protected override void OnBeginExecuteIntersectionQuery(IGeometry geom)
+        protected override void OnBeginExecuteIntersectionQuery(Geometry geom)
         {
-            PreparedGeometry = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
+            PreparedGeometry = PreparedGeometryFactory.Prepare(geom);
             base.OnBeginExecuteIntersectionQuery(geom);
         }
 
@@ -56,7 +55,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">The geometry to use as filter</param>
         /// <param name="ds">The feature data set to store the results in</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
 

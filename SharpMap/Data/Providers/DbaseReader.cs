@@ -902,6 +902,7 @@ namespace SharpMap.Data.Providers
         private object ReadDbfValue(DbaseField dbf)
         {
             var tmpBuffer = new byte[dbf.Length];
+            
             Buffer.BlockCopy(_currentRecordBuffer, dbf.Address+1, tmpBuffer, 0, dbf.Length);
 
             string temp;
@@ -958,9 +959,8 @@ namespace SharpMap.Data.Providers
                 
                 //case "System.Boolean":
                 case TypeCode.Boolean:
-                    var tempChar = BitConverter.ToChar(tmpBuffer, 0);
-                    return ((tempChar == 'T') || (tempChar == 't') || (tempChar == 'Y') || (tempChar == 'y'));
-                
+                    return (tmpBuffer[0] == 'T' || tmpBuffer[0] == 't' || tmpBuffer[0] == 'Y' || tmpBuffer[0]== 'y');
+
                 //case "System.DateTime":
                 case TypeCode.DateTime:
                     DateTime date;

@@ -17,13 +17,14 @@
 
 using System;
 using System.Drawing;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries.Utilities;
+using SharpMap.CoordinateSystems.Transformations;
+
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Base;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using SharpMap.Utilities;
+using NetTopologySuite;
 
 namespace SharpMap.Layers
 {
@@ -101,8 +102,8 @@ namespace SharpMap.Layers
 
         private ICoordinateTransformation _coordinateTransform;
         private ICoordinateTransformation _reverseCoordinateTransform;
-        private IGeometryFactory _sourceFactory;
-        private IGeometryFactory _targetFactory;
+        private GeometryFactory _sourceFactory;
+        private GeometryFactory _targetFactory;
 
         private string _layerName;
         private string _layerTitle;
@@ -150,7 +151,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
         public virtual ICoordinateTransformation CoordinateTransformation
@@ -185,7 +186,7 @@ namespace SharpMap.Layers
                     }
                     else
                     {
-                        _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
+                        _sourceFactory = NtsGeometryServices.Instance.CreateGeometryFactory(SRID);
                         // causes targetFactory to be cleared
                         TargetSRID = 0;
                     }
@@ -230,15 +231,15 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets the geometry factory to create source geometries
         /// </summary>
-        protected internal IGeometryFactory SourceFactory { get { return _sourceFactory ?? (_sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID)); } }
+        protected internal GeometryFactory SourceFactory { get { return _sourceFactory ?? (_sourceFactory = NtsGeometryServices.Instance.CreateGeometryFactory(SRID)); } }
 
         /// <summary>
         /// Gets the geometry factory to create target geometries
         /// </summary>
-        protected internal IGeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
+        protected internal GeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
 
         /// <summary>
-        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
         /// If your CoordinateTransformation can be inverted you can leave this property to null
         /// </summary>
@@ -302,7 +303,7 @@ namespace SharpMap.Layers
                 {
                     _srid = value;
 
-                    _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    _sourceFactory = NtsGeometryServices.Instance.CreateGeometryFactory(value);
                     if (!_shouldNotResetCt)
                         _coordinateTransform = _reverseCoordinateTransform = null;
 
@@ -327,7 +328,7 @@ namespace SharpMap.Layers
                 else if (_targetSrid != value)
                 {
                     _targetSrid = value;
-                    _targetFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    _targetFactory = NtsGeometryServices.Instance.CreateGeometryFactory(value);
                 }
                 if (!_shouldNotResetCt)
                     _coordinateTransform = _reverseCoordinateTransform = null;
@@ -380,13 +381,16 @@ namespace SharpMap.Layers
         protected virtual void Render(Graphics g, MapViewport mvp, out Rectangle affectedArea)
         {
             if (_renderCalled)
+            {
+                affectedArea = default;
                 return;
+            }
             
             _renderCalled = true;
             Render(g, mvp);
             _renderCalled = false;
 
-            var mapRect = new Rectangle(new Point(0, 0), mvp.Size);
+            var mapRect = new Rectangle(new System.Drawing.Point(0, 0), mvp.Size);
             if (CanvasArea.IsEmpty)
             {
                 affectedArea = mapRect;
@@ -583,7 +587,7 @@ namespace SharpMap.Layers
         /// Utility function to transform given envelope using a specific transformation
         /// </summary>
         /// <param name="envelope">The source envelope</param>
-        /// <param name="coordinateTransformation">The <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
+        /// <param name="coordinateTransformation">The <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
         /// <returns>The target envelope</returns>
         protected virtual Envelope ToTarget(Envelope envelope, ICoordinateTransformation coordinateTransformation)
         {
@@ -633,7 +637,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>The transformed geometry</returns>
-        protected virtual IGeometry ToTarget(IGeometry geometry)
+        protected virtual Geometry ToTarget(Geometry geometry)
         {
             if (geometry.SRID == TargetSRID)
                 return geometry;
@@ -651,7 +655,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>The transformed geometry</returns>
-        protected virtual IGeometry ToSource(IGeometry geometry)
+        protected virtual Geometry ToSource(Geometry geometry)
         {
             if (geometry.SRID == SRID)
                 return geometry;

@@ -3,8 +3,9 @@
 
 using System;
 using System.Collections.Generic;
-using GeoAPI;
-using GeoAPI.Geometries;
+using NetTopologySuite;
+using SharpMap;
+
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -67,7 +68,7 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields with Properties
 
-        internal IGeometryFactory Factory { get; private set; }
+        internal NetTopologySuite.Geometries.GeometryFactory Factory { get; private set; }
 
         private BoundingBox _BoundingBox = new BoundingBox();
         private string _Cs = ",";
@@ -172,7 +173,7 @@ namespace SharpMap.Utilities.Wfs
                     value = "4326";
                 if (string.Compare(_SRID, value, StringComparison.InvariantCultureIgnoreCase) != 0)
                 {
-                    Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(int.Parse(value));
+                    Factory = NtsGeometryServices.Instance.CreateGeometryFactory(int.Parse(value));
                     _SRID = value;
                 }
             }
