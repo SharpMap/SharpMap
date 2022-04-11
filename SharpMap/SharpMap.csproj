@@ -10,6 +10,7 @@
         <Description>This package contains the core components of SharpMap.</Description>
         <!--<EnableApiCompat>true</EnableApiCompat>-->
         <NoWarn>1701;1702;2100;2235</NoWarn>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,6 +29,7 @@
         <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
         <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
         <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
+        <PackageReference Include="System.Memory" Version="4.5.3" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(EnableApiCompat)' == 'true' ">
