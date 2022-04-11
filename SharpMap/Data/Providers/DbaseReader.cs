@@ -334,18 +334,31 @@ namespace SharpMap.Data.Providers
                     _dbaseColumns[i] = new DbaseField();
                     _dbaseColumns[i].ColumnName = _fileEncoding.GetString(br.ReadBytes(11)).Replace("\0", "").Trim();
                     char fieldType = br.ReadChar();
-                    _dbaseColumns[i].DataTypeCode = fieldType switch
+                    switch (fieldType)
                     {
-                        'L' => TypeCode.Boolean,
-                        'C' => TypeCode.String,
-                        'D' => TypeCode.DateTime,
-                        'N' => TypeCode.Double,
-                        'F' => TypeCode.Single,
-                        'B' => TypeCode.Object //Hack for
-                        ,
-                        _ => throw new NotSupportedException("Invalid or unknown DBase field type '" + fieldType +
-                                                             "' in column '" + _dbaseColumns[i].ColumnName + "'")
-                    };
+                        case 'L':
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Boolean;
+                            break;
+                        case 'C':
+                            _dbaseColumns[i].DataTypeCode = TypeCode.String;
+                            break;
+                        case 'D':
+                            _dbaseColumns[i].DataTypeCode = TypeCode.DateTime;
+                            break;
+                        case 'N':
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Double;
+                            break;
+                        case 'F':
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Single;
+                            break;
+                        case 'B':
+                            _dbaseColumns[i].DataTypeCode = TypeCode.Object;
+                            break;
+                        default:
+                            throw new NotSupportedException("Invalid or unknown DBase field type '" + fieldType +
+                                                            "' in column '" + _dbaseColumns[i].ColumnName + "'");
+                    }
+
                     _dbaseColumns[i].Address = br.ReadInt32();
                     if (i == 0) //Set it to 0 for first column and calculate it for the rest
                         _dbaseColumns[i].Address = 0;
@@ -712,10 +725,16 @@ namespace SharpMap.Data.Providers
         private byte[] _currentRecordBuffer;
         private uint _currentRecordOid = 0xffffffff;
 
-        internal object GetValue(uint oid, int colid)
+        /// <summary>
+        /// Gets the attribute value for <paramref name="colId"/>-column
+        /// </summary>
+        /// <param name="oid">The feature id</param>
+        /// <param name="colId">The column id</param>
+        /// <returns>The attribute value</returns>
+        internal object GetValue(uint oid, int colId)
         {
             CurrentRecordOid = oid;
-            return ReadDbfValue(_dbaseColumns[colid]);
+            return ReadDbfValue(_dbaseColumns[colId]);
         }
 
         private Encoding _encoding;
@@ -786,68 +805,70 @@ namespace SharpMap.Data.Providers
 
         private static readonly NumberFormatInfo Nfi = NumberFormatInfo.InvariantInfo;
         
-        private object ReadDbfValue(DbaseField dbf)
+        private unsafe object ReadDbfValue(DbaseField dbf)
         {
             var tmpBuffer = new ReadOnlySpan<byte>(_currentRecordBuffer, dbf.Address + 1, dbf.Length);
-            string temp;
-
-            switch (dbf.DataTypeCode)
+            fixed (byte* tmpPointer = tmpBuffer)
             {
-                case TypeCode.String:
-                    return _encoding == null
-                        ? _fileEncoding.GetString(tmpBuffer).Replace("\0", "").Trim()
-                        : _encoding.GetString(tmpBuffer).Replace("\0", "").Trim();
-                
-                case TypeCode.Double:
-                    temp = Encoding.UTF8.GetString(tmpBuffer).Replace("\0", "");
-                    if (double.TryParse(temp, NumberStyles.Float, Nfi, out double dbl))
-                        return dbl;
-                    return DBNull.Value;
+                string temp;
 
-                case TypeCode.SByte:
-                    temp = Encoding.UTF8.GetString(tmpBuffer).Replace("\0", "");
-                    if (sbyte.TryParse(temp, NumberStyles.Integer, Nfi, out sbyte i8))
-                        return i8;
-                    return DBNull.Value;
+                switch (dbf.DataTypeCode)
+                {
+                    case TypeCode.String:
+                        return _encoding == null
+                            ? _fileEncoding.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "").Trim()
+                            : _encoding.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "").Trim();
 
-                case TypeCode.Int16:
-                    temp = Encoding.UTF8.GetString(tmpBuffer).Replace("\0", "");
-                    if (short.TryParse(temp, NumberStyles.Integer, Nfi, out short i16))
-                        return i16;
-                    return DBNull.Value;
-                
-                case TypeCode.Int32:
-                    temp = Encoding.UTF8.GetString(tmpBuffer).Replace("\0", "");
-                    if (int.TryParse(temp, NumberStyles.Integer, Nfi, out int i32))
-                        return i32;
-                    return DBNull.Value;
-                
-                case TypeCode.Int64:
-                    temp = Encoding.UTF8.GetString(tmpBuffer).Replace("\0", "");
-                    if (long.TryParse(temp, NumberStyles.Integer, Nfi, out long i64))
-                        return i64;
-                    return DBNull.Value;
-                
-                //case "System.Single":
-                case TypeCode.Single:
-                    temp = Encoding.UTF8.GetString(tmpBuffer).Replace("\0", "");
-                    if (float.TryParse(temp, NumberStyles.Float, Nfi, out float f))
-                        return f;
-                    return DBNull.Value;
-                
-                //case "System.Boolean":
-                case TypeCode.Boolean:
-                    return (tmpBuffer[0] == 'T' || tmpBuffer[0] == 't' || 
-                            tmpBuffer[0] == 'Y' || tmpBuffer[0] == 'y');
-                
-                //case "System.DateTime":
-                case TypeCode.DateTime:
-                    // Mono has not yet implemented DateTime.TryParseExact
+                    case TypeCode.Double:
+                        temp = Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "");
+                        if (double.TryParse(temp, NumberStyles.Float, Nfi, out double dbl))
+                            return dbl;
+                        return DBNull.Value;
+
+                    case TypeCode.SByte:
+                        temp = Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "");
+                        if (sbyte.TryParse(temp, NumberStyles.Integer, Nfi, out sbyte i8))
+                            return i8;
+                        return DBNull.Value;
+
+                    case TypeCode.Int16:
+                        temp = Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "");
+                        if (short.TryParse(temp, NumberStyles.Integer, Nfi, out short i16))
+                            return i16;
+                        return DBNull.Value;
+
+                    case TypeCode.Int32:
+                        temp = Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "");
+                        if (int.TryParse(temp, NumberStyles.Integer, Nfi, out int i32))
+                            return i32;
+                        return DBNull.Value;
+
+                    case TypeCode.Int64:
+                        temp = Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "");
+                        if (long.TryParse(temp, NumberStyles.Integer, Nfi, out long i64))
+                            return i64;
+                        return DBNull.Value;
+
+                    //case "System.Single":
+                    case TypeCode.Single:
+                        temp = Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length).Replace("\0", "");
+                        if (float.TryParse(temp, NumberStyles.Float, Nfi, out float f))
+                            return f;
+                        return DBNull.Value;
+
+                    //case "System.Boolean":
+                    case TypeCode.Boolean:
+                        return (tmpBuffer[0] == 'T' || tmpBuffer[0] == 't' ||
+                                tmpBuffer[0] == 'Y' || tmpBuffer[0] == 'y');
+
+                    //case "System.DateTime":
+                    case TypeCode.DateTime:
+                        // Mono has not yet implemented DateTime.TryParseExact
 #if !MONO
-                    if (DateTime.TryParseExact(Encoding.UTF8.GetString(tmpBuffer),
-                                               "yyyyMMdd", Nfi, DateTimeStyles.None, out var date))
-                        return date;
-                    return DBNull.Value;
+                        if (DateTime.TryParseExact(Encoding.UTF8.GetString(tmpPointer, tmpBuffer.Length),
+                            "yyyyMMdd", Nfi, DateTimeStyles.None, out var date))
+                            return date;
+                        return DBNull.Value;
 #else
 					try 
 					{
@@ -859,9 +880,10 @@ namespace SharpMap.Data.Providers
 						return DBNull.Value;
 					}
 #endif
-                default:
-                    throw (new NotSupportedException("Cannot parse DBase field '" + dbf.ColumnName + "' of type '" +
-                                                     TypeByTypeCode(dbf.DataTypeCode) + "'"));
+                    default:
+                        throw (new NotSupportedException("Cannot parse DBase field '" + dbf.ColumnName + "' of type '" +
+                                                         TypeByTypeCode(dbf.DataTypeCode) + "'"));
+                }
             }
         }
 
