@@ -416,7 +416,6 @@ namespace SharpMap.Forms.ImageGenerator
             }
         }
 
-        [MethodImpl(MethodImplOptions.Synchronized)]
         private Bitmap MergeImages(long generation, Rectangle rectangle)
         {
             var res = generation == _idImageGeneration
