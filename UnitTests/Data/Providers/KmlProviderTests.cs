@@ -134,16 +134,27 @@ namespace UnitTests.Data.Providers
             KmlProvider p = null;
             
             var request = WebRequest.Create(kmlWebResource);
-            using (var response = request.GetResponse())
+            try
             {
-                if (response.ContentType == "None" || response.ContentType.Contains("vnd.google-earth.kml"))
+                using (var response = request.GetResponse())
                 {
-                    var s = response.GetResponseStream();
-                    p = KmlProvider.FromKml(s);
+                    if (response.ContentType == "None" || response.ContentType.Contains("vnd.google-earth.kml"))
+                    {
+                        var s = response.GetResponseStream();
+                        p = KmlProvider.FromKml(s);
+                    }
+
+                    else if (response.ContentType.Contains("vnd.google-earth.kmz"))
+                        p = KmlProvider.FromKmz(response.GetResponseStream(), "doc.kml");
                 }
-                    
-                else if (response.ContentType.Contains("vnd.google-earth.kmz"))
-                    p = KmlProvider.FromKmz(response.GetResponseStream(), "doc.kml");
+            }
+            catch (WebException ex) 
+            {
+                Assert.Ignore(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail(ex.Message);
             }
             
             var l = new VectorLayer(p.ConnectionID, p);
