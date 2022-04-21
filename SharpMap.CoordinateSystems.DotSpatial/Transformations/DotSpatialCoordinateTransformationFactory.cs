@@ -27,6 +27,9 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </remarks>
         public ICoordinateTransformation CreateFromCoordinateSystems(ICoordinateSystem sourceCS, ICoordinateSystem targetCS)
         {
+            if (sourceCS == null || targetCS == null)
+                return null;
+
             var source = sourceCS as DotSpatialCoordinateSystem ??
                          new DotSpatialCoordinateSystem(ProjectionInfo.FromEsriString(sourceCS.WKT));
 
