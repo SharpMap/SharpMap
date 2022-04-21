@@ -22,7 +22,7 @@ using GeoAPI.Geometries;
 namespace GeoAPI.CoordinateSystems.Transformations
 {
     /// <summary>
-    /// Helper class for transforming <see cref="GeoAPI.Geometries.IGeometry"/>
+    /// Helper class for transforming <see cref="T:GeoAPI.Geometries.IGeometry"/>
     /// </summary>
     public class GeometryTransform
     {
@@ -40,16 +40,14 @@ namespace GeoAPI.CoordinateSystems.Transformations
             if (box.IsNull)
                 return new Envelope(box);
 
-            var corners = new[] {
-                transform.Transform(new Coordinate(box.MinX, box.MinY)),
-                transform.Transform(new Coordinate(box.MinX, box.MaxY)),
-                transform.Transform(new Coordinate(box.MaxX, box.MinY)),
-                transform.Transform(new Coordinate(box.MaxX, box.MaxY)) };
+            var factory = GeometryServiceProvider.Instance.CreateGeometryFactory();
+            var ring = factory.ToGeometry(box);
+            ring = NetTopologySuite.Densify.Densifier.Densify(ring, ring.Length / 100d);
+            ring = TransformGeometry(ring, transform, factory);
 
-            var result = new Envelope(corners[0]);
-            for (var i = 1; i < 4; i++)
-                result.ExpandToInclude(corners[i]);
-            return result;
+            var res = ring.EnvelopeInternal;
+            res.ExpandToInclude(transform.Transform(box.Centre));
+            return res;
         }
 
         /// <summary>
