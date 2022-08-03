@@ -74,7 +74,7 @@ namespace SharpMap.UI.WPF
 
         // Dependency Property used when a new geometry is defined.
         public static readonly DependencyProperty DefinedGeometryProperty =
-            DependencyProperty.Register("DefinedGeometry", typeof (IGeometry), typeof (SharpMapHost), new PropertyMetadata(GeometryDefinedCallback));
+            DependencyProperty.Register("DefinedGeometry", typeof (Geometry), typeof (SharpMapHost), new PropertyMetadata(GeometryDefinedCallback));
 
         // Dependency Property used when right click in a MapFeature.
         public static readonly DependencyProperty FeatureRightClickedCommandProperty =
@@ -204,11 +204,11 @@ namespace SharpMap.UI.WPF
                 SetValue(MapRotationProperty, value);
             }
         }
-        public IGeometry DefinedGeometry
+        public Geometry DefinedGeometry
         {
             get
             {
-                return (IGeometry) GetValue(DefinedGeometryProperty);
+                return (Geometry) GetValue(DefinedGeometryProperty);
             }
 
             set
@@ -378,13 +378,13 @@ namespace SharpMap.UI.WPF
             if (host._editLayer == null)
             {
                 host._editLayer = new VectorLayer("EditLayer");
-                host._editLayerGeoProvider = new GeometryProvider(new List<IGeometry>());
+                host._editLayerGeoProvider = new GeometryProvider(new List<Geometry>());
                 host._editLayer.DataSource = host._editLayerGeoProvider;
                 host.MapLayers.Add(host._editLayer);
             }
 
             host._editLayerGeoProvider.Geometries.Clear();
-            var geom = (IGeometry) args.NewValue;
+            var geom = (Geometry) args.NewValue;
             if (geom != null)
             {
                 host._editLayerGeoProvider.Geometries.Add(geom);

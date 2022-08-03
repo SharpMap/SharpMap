@@ -15,14 +15,16 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using GeoAPI.Geometries;
+using SharpMap.Data;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.Serialization;
-using GeoAPI.Geometries;
-using SharpMap.Data;
-using SharpMap.Styles;
+using Envelope = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Layers
 {
@@ -217,24 +219,24 @@ namespace SharpMap.Layers
             var mapViewport = map.Envelope;
             var mapSize = map.Size;
 
-            var mapColumnWidth = _cellSize.Width+_cellBuffer.Width;
+            var mapColumnWidth = _cellSize.Width + _cellBuffer.Width;
             var mapColumnHeight = _cellSize.Height + _cellBuffer.Width;
-            var columns = (int)Math.Ceiling((double) mapSize.Width/mapColumnWidth);
-            var rows = (int) Math.Ceiling((double) mapSize.Height/mapColumnHeight);
+            var columns = (int)Math.Ceiling((double)mapSize.Width / mapColumnWidth);
+            var rows = (int)Math.Ceiling((double)mapSize.Height / mapColumnHeight);
 
-            var renderMapSize = new Size(columns * _cellSize.Width + _cellBuffer.Width, 
+            var renderMapSize = new Size(columns * _cellSize.Width + _cellBuffer.Width,
                                          rows * _cellSize.Height + _cellBuffer.Height);
-            var horizontalFactor = (double) renderMapSize.Width/mapSize.Width;
-            var verticalFactor = (double) renderMapSize.Height/mapSize.Height;
+            var horizontalFactor = (double)renderMapSize.Width / mapSize.Width;
+            var verticalFactor = (double)renderMapSize.Height / mapSize.Height;
 
-            var diffX = 0.5d*(horizontalFactor*mapViewport.Width - mapViewport.Width);
-            var diffY = 0.5d*(verticalFactor*mapViewport.Height-mapViewport.Height);
+            var diffX = 0.5d * (horizontalFactor * mapViewport.Width - mapViewport.Width);
+            var diffY = 0.5d * (verticalFactor * mapViewport.Height - mapViewport.Height);
 
             var totalRenderMapViewport = mapViewport.Grow(diffX, diffY);
-            var columnWidth = totalRenderMapViewport.Width/columns;
-            var rowHeight = totalRenderMapViewport.Height/rows;
+            var columnWidth = totalRenderMapViewport.Width / columns;
+            var rowHeight = totalRenderMapViewport.Height / rows;
 
-            var rmdx = (int)((mapSize.Width-renderMapSize.Width) * 0.5f);
+            var rmdx = (int)((mapSize.Width - renderMapSize.Width) * 0.5f);
             var rmdy = (int)((mapSize.Height - renderMapSize.Height) * 0.5f);
 
             var tileSize = Size.Add(_cellSize, Size.Add(_cellBuffer, _cellBuffer));
@@ -242,14 +244,14 @@ namespace SharpMap.Layers
             var miny = totalRenderMapViewport.MinY;
             var pty = rmdy + renderMapSize.Height - tileSize.Height;
 
-            for (var i = 0; i < rows; i ++)
+            for (var i = 0; i < rows; i++)
             {
                 var minx = totalRenderMapViewport.MinX;
                 var ptx = rmdx;
                 for (var j = 0; j < columns; j++)
                 {
                     var tmpMap = new Map(_cellSize);
-                    
+
                     tmpMap.Layers.Add(_baseLayer);
                     tmpMap.DisposeLayersOnDispose = false;
                     tmpMap.ZoomToBox(new Envelope(minx, minx + columnWidth, miny, miny + rowHeight));
@@ -272,7 +274,7 @@ namespace SharpMap.Layers
                         }
 
                     }, token);
-                    var dt = new RenderTask {CancellationToken = cancelToken, Task = t};
+                    var dt = new RenderTask { CancellationToken = cancelToken, Task = t };
                     lock (_currentTasks)
                     {
                         _currentTasks.Add(dt);
@@ -291,7 +293,7 @@ namespace SharpMap.Layers
         /// Event raised when a new tile has been rendered an is now avalable
         /// </summary>
         public event MapNewTileAvaliabledHandler MapNewTileAvaliable;
-        
+
         /// <summary>
         /// Event raised when the rendering of tiles has made progress
         /// </summary>
@@ -388,7 +390,7 @@ namespace SharpMap.Layers
             ((ICanQueryLayer)_baseLayer).ExecuteIntersectionQuery(box, ds);
         }
 
-        void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        void ICanQueryLayer.ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             if (!((ICanQueryLayer)this).IsQueryEnabled)
                 return;
@@ -407,7 +409,7 @@ namespace SharpMap.Layers
             set
             {
                 var cql = _baseLayer as ICanQueryLayer;
-                if (cql != null )
+                if (cql != null)
                     cql.IsQueryEnabled = value;
             }
         }

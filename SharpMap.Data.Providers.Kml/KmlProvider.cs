@@ -135,8 +135,8 @@ namespace SharpMap.Data.Providers
 
         #region private fields and constants
 
-        private IGeometryFactory _geometryFactory;
-        private Dictionary<Placemark, List<IGeometry>> _geometrys;
+        private GeometryFactory _geometryFactory;
+        private Dictionary<Placemark, List<Geometry>> _geometrys;
         private Dictionary<string, VectorStyle> _kmlStyles;
         private Dictionary<string, StyleMap> _styleMaps;
         private Dictionary<string, Image> _symbolDict;
@@ -527,7 +527,7 @@ namespace SharpMap.Data.Providers
         /// <param name="kml"></param>
         public void ExtractGeometries(Element kml)
         {
-            _geometrys = new Dictionary<Placemark, List<IGeometry>>();
+            _geometrys = new Dictionary<Placemark, List<Geometry>>();
 
             //todo handle other geom types such as gxTrack and gxMutliTrack
             foreach (var f in kml.Flatten().OfType<Polygon>())
@@ -588,7 +588,7 @@ namespace SharpMap.Data.Providers
             var outerRing = _geometryFactory.CreateLinearRing(
                 f.OuterBoundary.LinearRing.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
 
-            var innerHoles = new List<ILinearRing>();
+            var innerHoles = new List<LinearRing>();
 
             foreach (var hole in f.InnerBoundary)
             {
@@ -602,7 +602,7 @@ namespace SharpMap.Data.Providers
 
         private void ProcessLineStringGeometry(LineString f)
         {
-            IGeometry pGeom;
+            Geometry pGeom;
             if (f.Coordinates.Count == 1)
             {
                 var coord = f.Coordinates.First();
@@ -632,16 +632,16 @@ namespace SharpMap.Data.Providers
             var ring = _geometryFactory.CreateLinearRing(
                     f.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
 
-            var geom = RingsArePolygons ? (IGeometry)_geometryFactory.CreatePolygon(ring) : ring;
+            var geom = RingsArePolygons ? (Geometry)_geometryFactory.CreatePolygon(ring) : ring;
             AddGeometryToCollection(f.GetParent<Placemark>(), geom);
         }
 
-        private void AddGeometryToCollection(Placemark parent, IGeometry geom)
+        private void AddGeometryToCollection(Placemark parent, Geometry geom)
         {
-            List<IGeometry> placeMarkGeoms;
+            List<Geometry> placeMarkGeoms;
             if (_geometrys.TryGetValue(parent, out placeMarkGeoms) == false)
             {
-                placeMarkGeoms = new List<IGeometry>();
+                placeMarkGeoms = new List<Geometry>();
                 _geometrys.Add(parent, placeMarkGeoms);
             }
 
@@ -658,10 +658,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             var box = _geometryFactory.ToGeometry(bbox);
-            var retCollection = new Collection<IGeometry>();
+            var retCollection = new Collection<Geometry>();
 
             foreach (var geometryList in _geometrys.Values)
             {
@@ -701,7 +701,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public IGeometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
             var sid = oid.ToString(NumberFormatInfo.InvariantInfo);
             var tmp = _geometrys.FirstOrDefault(x => x.Key.Id == sid);
@@ -715,7 +715,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             var fdt = (FeatureDataTable)_schemaTable.Copy();
 

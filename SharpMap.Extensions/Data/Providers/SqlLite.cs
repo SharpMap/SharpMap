@@ -22,7 +22,7 @@ using System.Data.SQLite;
 using System.Globalization;
 using SharpMap.Converters.WellKnownText;
 using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using Common.Logging;
 
 namespace SharpMap.Data.Providers

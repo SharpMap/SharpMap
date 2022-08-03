@@ -633,7 +633,7 @@ namespace WinFormSamples
             return new VectorLayer(name, new GeometryFeatureProvider(fdt));
         }
                
-        private static VectorLayer CreateGeomLayer(string name, IGeometry[] geometries, System.Drawing.Color lineColor)
+        private static VectorLayer CreateGeomLayer(string name, Geometry[] geometries, System.Drawing.Color lineColor)
         {
             var lyr = new VectorLayer(name)
             {

@@ -8,8 +8,8 @@
         /// <param name="factory"></param>
         /// <param name="xml">the xml string</param>
         /// <returns>Coordinates</returns>
-        public static System.Collections.Generic.IEnumerable<GeoAPI.Geometries.IGeometry> PointsFromXml(
-            GeoAPI.Geometries.IGeometryFactory factory,
+        public static System.Collections.Generic.IEnumerable<GeoAPI.Geometries.Geometry> PointsFromXml(
+            GeoAPI.Geometries.GeometryFactory factory,
             System.IO.Stream xml)
         {
             foreach (var coordinate in CoordinatesFromXml(xml))

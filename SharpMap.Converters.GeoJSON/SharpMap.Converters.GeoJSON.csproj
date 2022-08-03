@@ -12,12 +12,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
-        <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+        <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

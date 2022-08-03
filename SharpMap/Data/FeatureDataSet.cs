@@ -16,6 +16,8 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,9 +28,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using GeoAPI;
-using GeoAPI.Geometries;
-using NetTopologySuite.IO;
 
 namespace SharpMap.Data
 {
@@ -37,14 +36,14 @@ namespace SharpMap.Data
     /// </summary>
     /// <remarks>Serialization is achieved using the approach described in http://support.microsoft.com/kb/829740/en-us
     /// </remarks>
-    [Serializable] 
+    [Serializable]
     public class FeatureDataSet : DataSet, ISerializable
     {
         /// <summary>
         /// Initializes a new instance of the FeatureDataSet class.
         /// </summary>
         public FeatureDataSet()
-        {}
+        { }
 
         /// <summary>
         /// Initializes a new instance of the FeatureDataSet class.
@@ -59,8 +58,8 @@ namespace SharpMap.Data
             CaseSensitive = info.GetBoolean("case");
             Locale = new CultureInfo(info.GetInt32("locale"));
             EnforceConstraints = info.GetBoolean("enforceCons");
-            
-            var tables = (DataTable[]) info.GetValue("tables", typeof (DataTable[]));
+
+            var tables = (DataTable[])info.GetValue("tables", typeof(DataTable[]));
             base.Tables.AddRange(tables);
 
             var constraints = (ArrayList)info.GetValue("constraints", typeof(ArrayList));
@@ -69,10 +68,11 @@ namespace SharpMap.Data
             var relations = (ArrayList)info.GetValue("relations", typeof(ArrayList));
             SetRelations(relations);
 
-            var extendedProperties = (PropertyCollection)info.GetValue("extendedProperties", typeof (PropertyCollection));
+            var extendedProperties = (PropertyCollection)info.GetValue("extendedProperties", typeof(PropertyCollection));
             if (extendedProperties.Count > 0) // otherwise the next foreach throws exception... weird.
                 foreach (DictionaryEntry keyPair in extendedProperties)
-                    ExtendedProperties.Add(keyPair.Key, keyPair.Value);        }
+                    ExtendedProperties.Add(keyPair.Key, keyPair.Value);
+        }
 
         /// <summary>
         /// Gets the collection of tables contained in the FeatureDataSet
@@ -88,7 +88,7 @@ namespace SharpMap.Data
         /// <returns></returns>
         public new FeatureDataSet Clone()
         {
-            var cln = ((FeatureDataSet) (base.Clone()));
+            var cln = ((FeatureDataSet)(base.Clone()));
             return cln;
         }
 
@@ -116,7 +116,7 @@ namespace SharpMap.Data
         }
 
         private ArrayList GetForeignKeyConstraints()
-         {
+        {
             var constraintList = new ArrayList();
             var tables = base.Tables;
             for (int i = 0; i < tables.Count; i++)
@@ -165,7 +165,7 @@ namespace SharpMap.Data
                 }
             }
             return constraintList;
-         }
+        }
 
         private ArrayList GetRelations()
         {
@@ -189,7 +189,7 @@ namespace SharpMap.Data
                     childInfo[j] = rel.ChildColumns[j - 1].Ordinal;
                 }
 
-                var list = new ArrayList {relationName, parentInfo, childInfo, rel.Nested};
+                var list = new ArrayList { relationName, parentInfo, childInfo, rel.Nested };
                 var extendedProperties = new Hashtable();
                 if (rel.ExtendedProperties.Keys.Count > 0)
                 {
@@ -315,7 +315,7 @@ namespace SharpMap.Data
                 Relations.Add(rel);
             }
         }
-   }
+    }
 
     /// <summary>
     /// Represents the method that will handle the RowChanging, RowChanged, RowDeleting, and RowDeleted events of a FeatureDataTable. 
@@ -334,7 +334,7 @@ namespace SharpMap.Data
         /// <summary>
         /// Initializes a new instance of the FeatureDataTable class with no arguments.
         /// </summary>
-        public FeatureDataTable() 
+        public FeatureDataTable()
         {
             //InitClass();
         }
@@ -347,7 +347,7 @@ namespace SharpMap.Data
         public FeatureDataTable(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            using (var ms = new MemoryStream((byte[]) info.GetValue("geometries", typeof(byte[]))))
+            using (var ms = new MemoryStream((byte[])info.GetValue("geometries", typeof(byte[]))))
             {
                 using (var reader = new BinaryReader(ms))
                 {
@@ -355,7 +355,7 @@ namespace SharpMap.Data
                     while (reader.BaseStream.Position < reader.BaseStream.Length)
                     {
                         var rowIndex = reader.ReadInt32();
-                        var row = (FeatureDataRow) Rows[rowIndex];
+                        var row = (FeatureDataRow)Rows[rowIndex];
                         var srid = reader.ReadInt32();
                         var wkbSize = reader.ReadInt32();
                         var wkb = reader.ReadBytes(wkbSize);
@@ -392,7 +392,7 @@ namespace SharpMap.Data
             MinimumCapacity = table.MinimumCapacity;
             DisplayExpression = table.DisplayExpression;
         }
-        
+
         /// <summary>
         /// Gets the number of rows in the table
         /// </summary>
@@ -409,7 +409,7 @@ namespace SharpMap.Data
         /// <returns>FeatureDataRow</returns>
         public FeatureDataRow this[int index]
         {
-            get { return (FeatureDataRow) Rows[index]; }
+            get { return (FeatureDataRow)Rows[index]; }
         }
 
         #region IEnumerable Members
@@ -460,7 +460,7 @@ namespace SharpMap.Data
         /// <returns></returns>
         public new FeatureDataTable Clone()
         {
-            var cln = ((FeatureDataTable) (base.Clone()));
+            var cln = ((FeatureDataTable)(base.Clone()));
             //cln.InitVars();
             return cln;
         }
@@ -481,7 +481,7 @@ namespace SharpMap.Data
 
         //private void InitClass()
         //{
-        //    //this.columnFeatureGeometry = new DataColumn("FeatureGeometry", typeof(GeoAPI.Geometries.IGeometry), null, System.Data.MappingType.Element);
+        //    //this.columnFeatureGeometry = new DataColumn("FeatureGeometry", typeof(NetTopologySuite.Geometries.Geometry), null, System.Data.MappingType.Element);
         //    //this.Columns.Add(this.columnFeatureGeometry);
         //}
 
@@ -491,7 +491,7 @@ namespace SharpMap.Data
         /// <returns></returns>
         public new FeatureDataRow NewRow()
         {
-            return (FeatureDataRow) base.NewRow();
+            return (FeatureDataRow)base.NewRow();
         }
 
         /// <summary>
@@ -510,7 +510,7 @@ namespace SharpMap.Data
         /// <returns></returns>
         protected override Type GetRowType()
         {
-            return typeof (FeatureDataRow);
+            return typeof(FeatureDataRow);
         }
 
         /// <summary>
@@ -522,7 +522,7 @@ namespace SharpMap.Data
             base.OnRowChanged(e);
             if ((FeatureDataRowChanged != null))
             {
-                FeatureDataRowChanged(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow) (e.Row)), e.Action));
+                FeatureDataRowChanged(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow)(e.Row)), e.Action));
             }
         }
 
@@ -535,7 +535,7 @@ namespace SharpMap.Data
             base.OnRowChanging(e);
             if ((FeatureDataRowChanging != null))
             {
-                FeatureDataRowChanging(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow) (e.Row)), e.Action));
+                FeatureDataRowChanging(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow)(e.Row)), e.Action));
             }
         }
 
@@ -548,7 +548,7 @@ namespace SharpMap.Data
             base.OnRowDeleted(e);
             if ((FeatureDataRowDeleted != null))
             {
-                FeatureDataRowDeleted(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow) (e.Row)), e.Action));
+                FeatureDataRowDeleted(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow)(e.Row)), e.Action));
             }
         }
 
@@ -561,7 +561,7 @@ namespace SharpMap.Data
             base.OnRowDeleting(e);
             if ((FeatureDataRowDeleting != null))
             {
-                FeatureDataRowDeleting(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow) (e.Row)), e.Action));
+                FeatureDataRowDeleting(this, new FeatureDataRowChangeEventArgs(((FeatureDataRow)(e.Row)), e.Action));
             }
         }
 
@@ -646,7 +646,7 @@ namespace SharpMap.Data
             foreach (var dataTable in dataTables)
             {
                 if (dataTable is FeatureDataTable)
-                    yield return (FeatureDataTable) dataTable;
+                    yield return (FeatureDataTable)dataTable;
             }
 
         }
@@ -679,7 +679,7 @@ namespace SharpMap.Data
                 if (itemDataSet.Tables.CanRemove(item))
                     itemDataSet.Tables.Remove(item);
                 else
-                    item = (FeatureDataTable) item.Copy();
+                    item = (FeatureDataTable)item.Copy();
             }
             _dataTables.Add(item);
         }
@@ -735,7 +735,7 @@ namespace SharpMap.Data
                 {
                     if (j >= array.Length)
                         throw new ArgumentException("Insufficient space provided for array");
-                    array[j++] = (FeatureDataTable) _dataTables[i];
+                    array[j++] = (FeatureDataTable)_dataTables[i];
                 }
             }
         }
@@ -780,7 +780,7 @@ namespace SharpMap.Data
                         break;
                     }
                     tmp++;
-                }        
+                }
             }
 
             if (tableToRemove != null)
@@ -836,7 +836,7 @@ namespace SharpMap.Data
                     if (dataTable is FeatureDataTable)
                     {
                         if (i == index)
-                            return (FeatureDataTable) dataTable;
+                            return (FeatureDataTable)dataTable;
                         i++;
                     }
                 }
@@ -854,7 +854,7 @@ namespace SharpMap.Data
     {
         //private FeatureDataTable tableFeatureTable;
 
-        private IGeometry _geometry;
+        private Geometry _geometry;
 
         /// <summary>
         /// Creates an instance of this class
@@ -868,14 +868,17 @@ namespace SharpMap.Data
         /// <summary>
         /// The geometry of the current feature
         /// </summary>
-        public IGeometry Geometry
+        public Geometry Geometry
         {
             get { return _geometry; }
             set
             {
-                if (_geometry == null) {
+                if (_geometry == null)
+                {
                     _geometry = value;
-                } else {
+                }
+                else
+                {
                     if (ReferenceEquals(_geometry, value))
                         return;
                     if (_geometry != null && _geometry.EqualsTopologically(value))

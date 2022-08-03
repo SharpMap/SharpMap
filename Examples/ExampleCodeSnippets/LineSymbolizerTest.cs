@@ -26,7 +26,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
     /// <param name="map"></param>
     /// <param name="lineString"></param>
     /// <param name="graphics"></param>
-    private void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.ILineString lineString,
+    private void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.LineString lineString,
         System.Drawing.Graphics graphics)
     {
 
@@ -36,7 +36,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
         {
             var start = System.Math.Max(0, (length - ArrowLength)/2);
             var end = System.Math.Min(length, (length + ArrowLength)/2);
-            var arrow = (GeoAPI.Geometries.ILineString) lil.ExtractLine(start, end);
+            var arrow = (GeoAPI.Geometries.LineString) lil.ExtractLine(start, end);
 
             RenderArrow(map, graphics, arrow);
 
@@ -48,7 +48,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
 
         while (offset + ArrowLength < lineString.Length)
         {
-            var arrow = (GeoAPI.Geometries.ILineString) lil.ExtractLine(offset, offset + ArrowLength);
+            var arrow = (GeoAPI.Geometries.LineString) lil.ExtractLine(offset, offset + ArrowLength);
             RenderArrow(map, graphics, arrow);
             offset += RepeatInterval;
         }
@@ -61,7 +61,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
     /// <param name="map">The map</param>
     /// <param name="graphics">The graphics object</param>
     /// <param name="arrow">The arrow</param>
-    private void RenderArrow(SharpMap.MapViewport map, System.Drawing.Graphics graphics, GeoAPI.Geometries.ILineString arrow)
+    private void RenderArrow(SharpMap.MapViewport map, System.Drawing.Graphics graphics, GeoAPI.Geometries.LineString arrow)
     {
         var pts = new System.Drawing.PointF[arrow.Coordinates.Length];
         for (var i = 0; i < pts.Length; i++)
@@ -95,16 +95,16 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
 
     public void Render(SharpMap.MapViewport map, GeoAPI.Geometries.ILineal geometry, System.Drawing.Graphics graphics)
     {
-        if (geometry is GeoAPI.Geometries.IMultiLineString)
+        if (geometry is GeoAPI.Geometries.MultiLineString)
         {
-            var mls = (GeoAPI.Geometries.IMultiLineString) geometry;
+            var mls = (GeoAPI.Geometries.MultiLineString) geometry;
             for (var i = 0; i < mls.Count; i++)
             {
-                OnRenderInternal(map, (GeoAPI.Geometries.ILineString) mls.GetGeometryN(i), graphics);
+                OnRenderInternal(map, (GeoAPI.Geometries.LineString) mls.GetGeometryN(i), graphics);
             }
             return;
         }
-        OnRenderInternal(map, (GeoAPI.Geometries.ILineString) geometry, graphics);
+        OnRenderInternal(map, (GeoAPI.Geometries.LineString) geometry, graphics);
     }
 
     protected override void ReleaseManagedResources()

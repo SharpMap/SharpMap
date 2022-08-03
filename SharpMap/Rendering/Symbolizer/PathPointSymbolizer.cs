@@ -27,7 +27,7 @@ namespace SharpMap.Rendering.Symbolizer
     [Serializable]
     public class PathPointSymbolizer : PointSymbolizer
     {
-        
+
         ///<summary>
         /// Creates a <see cref="PathPointSymbolizer"/> that renders circles.
         ///</summary>
@@ -82,7 +82,7 @@ namespace SharpMap.Rendering.Symbolizer
         ///<returns>The PathPointSymbolizer object</returns>
         public static PathPointSymbolizer CreateSquare(Pen line, Brush fill, float size)
         {
-            
+
             GraphicsPath path = new GraphicsPath();
             path.AddRectangle(new RectangleF(-0.5f * size, -0.5f * size, size, size));
             return new PathPointSymbolizer(
@@ -156,11 +156,11 @@ namespace SharpMap.Rendering.Symbolizer
             public object Clone()
             {
                 return new PathDefinition
-                           {
-                               Fill = (Brush) (Fill != null ? Fill.Clone() : null),
-                               Line = (Pen) (Line != null ? Line.Clone() : null),
-                               Path = (GraphicsPath) (Path != null ? Path.Clone() : null),
-                           };
+                {
+                    Fill = (Brush)(Fill != null ? Fill.Clone() : null),
+                    Line = (Pen)(Line != null ? Line.Clone() : null),
+                    Path = (GraphicsPath)(Path != null ? Path.Clone() : null),
+                };
             }
 
             #endregion
@@ -169,7 +169,7 @@ namespace SharpMap.Rendering.Symbolizer
 
         private readonly PathDefinition[] _paths;
 
-        
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -199,8 +199,8 @@ namespace SharpMap.Rendering.Symbolizer
         {
             var pathDefinitions = new PathDefinition[_paths.Length];
             for (var i = 0; i < _paths.Length; i++)
-                pathDefinitions[i] = (PathDefinition) _paths[i].Clone();
-            
+                pathDefinitions[i] = (PathDefinition)_paths[i].Clone();
+
             return new PathPointSymbolizer(pathDefinitions);
         }
 

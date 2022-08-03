@@ -226,10 +226,10 @@ namespace SharpMap.Utilities
             object ISerializationSurrogate.SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
             {
                 var colorMatrix = (ColorMatrix)obj;
-                var floatArray = (float[]) info.GetValue("cm", typeof (float[]));
+                var floatArray = (float[])info.GetValue("cm", typeof(float[]));
                 for (var i = 0; i < floatArray.Length; i++)
                 {
-                    colorMatrix[i/5, i%5] = floatArray[i];
+                    colorMatrix[i / 5, i % 5] = floatArray[i];
                 }
                 return null;
             }

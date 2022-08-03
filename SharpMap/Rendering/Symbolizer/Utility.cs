@@ -22,9 +22,9 @@ namespace SharpMap.Rendering.Symbolizer
         {
             //Get all known colors
             _knownColors = new List<KnownColor>();
-            _knownColors.AddRange((KnownColor[]) Enum.GetValues(typeof(KnownColor)));
+            _knownColors.AddRange((KnownColor[])Enum.GetValues(typeof(KnownColor)));
             //We remove the system colors
-            _knownColors.RemoveAll(x => (int) x < 27 || (int)x > 167);
+            _knownColors.RemoveAll(x => (int)x < 27 || (int)x > 167);
         }
 
         /// <summary>
@@ -73,15 +73,15 @@ namespace SharpMap.Rendering.Symbolizer
                 case GraphicsUnit.World:
                     size *= g.DpiY / g.PageScale;
                     break;
-                /*
-            case GraphicsUnit.Pixel:
-            default:
-                //do nothing
-                break;
-             */
+                    /*
+                case GraphicsUnit.Pixel:
+                default:
+                    //do nothing
+                    break;
+                 */
             }
 
-            return (float) Math.Round(size, MidpointRounding.AwayFromZero);
+            return (float)Math.Round(size, MidpointRounding.AwayFromZero);
         }
     }
 }

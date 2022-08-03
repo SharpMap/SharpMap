@@ -15,7 +15,7 @@ namespace SharpMap.Utilities.Wfs
     public abstract class XPathQueryManager_Decorator
     {
         #region Fields
-        
+
         /// <summary>
         /// The <see cref="IXPathQueryManager"/> that is decorated
         /// </summary>

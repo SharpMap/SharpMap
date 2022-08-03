@@ -119,7 +119,7 @@ namespace SharpMap.Rendering.Decoration
         public Color BackgroundColor { get; set; }
 
         private float _opacity;
-        
+
         /// <summary>
         /// Gets or sets the opacity of map decoration
         /// </summary>
@@ -177,7 +177,7 @@ namespace SharpMap.Rendering.Decoration
         [Obsolete("Use InternalSize(Graphics, MapViewport")]
         protected virtual Size InternalSize(Graphics g, Map map)
         {
-            return InternalSize(g, (MapViewport) map);
+            return InternalSize(g, (MapViewport)map);
         }
 
         private void CalcMapDecorationMetrics(Graphics g, MapViewport map)
@@ -207,8 +207,8 @@ namespace SharpMap.Rendering.Decoration
             int y1 = rectangle.Top + margin.Height;
             int y2 = rectangle.Bottom - margin.Height;
 
-            int arcWidth = 2*margin.Width;
-            int arcHeight = 2*margin.Height;
+            int arcWidth = 2 * margin.Width;
+            int arcHeight = 2 * margin.Height;
 
             if (arcWidth > 0 && arcHeight > 0)
             {
@@ -248,7 +248,7 @@ namespace SharpMap.Rendering.Decoration
             // remove any image to world rotation
             var oldTransform = g.Transform;
             g.ResetTransform();
-            
+
             //Preparing rendering
             OnRendering(g, mvp);
 
@@ -273,7 +273,7 @@ namespace SharpMap.Rendering.Decoration
 
             //Restore old clip region
             g.Clip = oldClip;
-            
+
             // restore any image to world rotation
             g.Transform = oldTransform;
 
@@ -317,7 +317,7 @@ namespace SharpMap.Rendering.Decoration
         [Obsolete("Use OnRender(Graphics, MapViewport")]
         protected virtual void OnRender(Graphics g, Map map)
         {
-            OnRender(g, (MapViewport) map);
+            OnRender(g, (MapViewport)map);
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace SharpMap.Rendering.Decoration
         [Obsolete("Use OnRendered(Graphics, MapViewport")]
         protected virtual void OnRendered(Graphics g, Map map)
         {
-            OnRendered(g, (MapViewport) map);
+            OnRendered(g, (MapViewport)map);
         }
     }
 }

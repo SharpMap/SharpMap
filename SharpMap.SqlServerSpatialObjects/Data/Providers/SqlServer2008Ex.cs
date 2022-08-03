@@ -23,7 +23,7 @@ using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Text;
 using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {

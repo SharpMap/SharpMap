@@ -25,7 +25,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {

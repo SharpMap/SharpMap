@@ -3,8 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using GeoAPI;
-using GeoAPI.Geometries;
+using NtsGeometryFactory = NetTopologySuite.Geometries.GeometryFactory;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -67,7 +66,7 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields with Properties
 
-        internal IGeometryFactory Factory { get; private set; }
+        internal NtsGeometryFactory Factory { get; private set; }
 
         private BoundingBox _BoundingBox = new BoundingBox();
         private string _Cs = ",";
@@ -172,7 +171,7 @@ namespace SharpMap.Utilities.Wfs
                     value = "4326";
                 if (string.Compare(_SRID, value, StringComparison.InvariantCultureIgnoreCase) != 0)
                 {
-                    Factory = GeometryServiceProvider.Instance.CreateGeometryFactory(int.Parse(value));
+                    Factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(int.Parse(value));
                     _SRID = value;
                 }
             }
@@ -240,7 +239,7 @@ namespace SharpMap.Utilities.Wfs
         /// </param>
         public WfsFeatureTypeInfo(string serviceUri, string nsPrefix, string featureTypeNamespace, string featureType,
                                   string geometryName, GeometryTypeEnum geometryType)
-            :this()
+            : this()
         {
             _ServiceURI = serviceUri;
             _Prefix = nsPrefix;
@@ -369,7 +368,7 @@ namespace SharpMap.Utilities.Wfs
             /// Gets the type of the element
             /// </summary>
             public string DataType { get; private set; }
-        } 
+        }
         #endregion
 
         #endregion

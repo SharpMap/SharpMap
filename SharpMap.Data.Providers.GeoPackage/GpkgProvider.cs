@@ -130,9 +130,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var res = new Collection<IGeometry>();
+            var res = new Collection<Geometry>();
             using (var reader = CreateReader(2, bbox))
             {
                 while (reader.Read())
@@ -181,7 +181,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
             using (var rdr = CreateReader(2, null, string.Format("\"{0}\"={1}", _content.OidColumn, oid)))
             {
@@ -289,7 +289,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">The geometry to use as filter</param>
         /// <param name="ds">The feature data set to store the results in</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
 

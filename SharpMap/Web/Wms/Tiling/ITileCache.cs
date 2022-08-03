@@ -15,8 +15,8 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System.Drawing;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
@@ -31,7 +31,7 @@ namespace SharpMap.Web.Wms.Tiling
         /// <param name="box">The bounding <paramref name="box"/> of the area covered by the <paramref name="tile"/>.</param>
         /// <param name="tile">The tile image</param>
         void AddTile(Envelope box, Bitmap tile);
-        
+
         /// <summary>
         /// Function to retrieve a tile from the cache that covers the provided <paramref name="box"/>.
         /// </summary>

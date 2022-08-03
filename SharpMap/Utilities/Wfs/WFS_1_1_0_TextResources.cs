@@ -1,12 +1,11 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
+using NetTopologySuite.Geometries;
 using System;
 using System.IO;
 using System.Text;
 using System.Xml;
-using SharpMap.Data.Providers;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -76,7 +75,7 @@ namespace SharpMap.Utilities.Wfs
             {
                 filterBuilder.Append("%20xmlns:" + featureTypeInfo.Prefix + "=%22" +
                                      Uri.EscapeDataString(featureTypeInfo.FeatureTypeNamespace) + "%22");
-                    //added by PDD to get it to work for deegree default sample
+                //added by PDD to get it to work for deegree default sample
             }
             filterBuilder.Append("%3E");
             if (filter != null)
@@ -148,7 +147,7 @@ namespace SharpMap.Utilities.Wfs
                         !string.IsNullOrEmpty(featureTypeInfo.FeatureTypeNamespace))
                         xWriter.WriteAttributeString("xmlns:" + featureTypeInfo.Prefix,
                                                      featureTypeInfo.FeatureTypeNamespace);
-                            //added by PDD to get it to work for deegree default sample
+                    //added by PDD to get it to work for deegree default sample
                     xWriter.WriteStartElement("Query", NSWFS);
                     xWriter.WriteAttributeString("typeName", qualification + featureTypeInfo.Name);
                     if (!loadAllElements)
@@ -167,7 +166,7 @@ namespace SharpMap.Utilities.Wfs
                             !string.IsNullOrEmpty(featureTypeInfo.FeatureTypeNamespace))
                             xWriter.WriteElementString("PropertyName",
                                 qualification + featureTypeInfo.Geometry._GeometryName);
-                            //added qualification to get it to work for deegree default sample
+                        //added qualification to get it to work for deegree default sample
                         else
                             xWriter.WriteElementString("PropertyName", featureTypeInfo.Geometry._GeometryName);
                     }

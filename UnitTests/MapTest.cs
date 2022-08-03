@@ -14,7 +14,7 @@ using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.IO;
 using SharpMap;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.ScaleBar;
@@ -26,10 +26,10 @@ namespace UnitTests
     [TestFixture]
     public class MapTest
     {
-        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly GeometryFactory Factory = new GeometryFactory();
         private static readonly WKTReader WktReader = new WKTReader(Factory);
 
-        public static IGeometry GeomFromText(string wkt)
+        public static Geometry GeomFromText(string wkt)
         {
             return WktReader.Read(wkt);
         }
@@ -295,7 +295,7 @@ namespace UnitTests
             // When there is no map rotation, a simplified calculation is used. When map is rotated, an affine transformation is used
             // (one affine transformation object instantiated per array, previously one affine transformation per coordinate). 
 
-            // Hypothesis: There should be minimal change for point layers, but significant improvements for geometries with ILineString and IMultiPoint
+            // Hypothesis: There should be minimal change for point layers, but significant improvements for geometries with MultiLineString and MultiPoint
 
             // New methods typically much faster as shown below from several tests:
             // roads_ugl: 3361 polylines (avg 52 vertices per feature)
@@ -580,7 +580,7 @@ namespace UnitTests
             
             //CLOCKWISE ProjNet affine transform (negate degrees)
             //double rad = -1 * deg * Math.PI / 180.0;
-            //GeoAPI.CoordinateSystems.Transformations.IMathTransform trans =
+            //GeoAPI.CoordinateSystems.Transformations.MathTransform trans =
             //    new ProjNet.CoordinateSystems.Transformations.AffineTransform(
             //        scaleX * Math.Cos(rad),
             //        -scaleX * Math.Sin(rad),

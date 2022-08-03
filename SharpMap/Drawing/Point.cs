@@ -1,5 +1,4 @@
-﻿using System.Drawing.Drawing2D;
-#pragma warning disable 1591
+﻿#pragma warning disable 1591
 
 namespace SharpMap.Drawing
 {
@@ -11,7 +10,7 @@ namespace SharpMap.Drawing
 
     public struct PointF
     {
-        public PointF Empty { get { return new PointF();} }
+        public PointF Empty { get { return new PointF(); } }
         public float X { get; set; }
         public float Y { get; set; }
     }
@@ -21,7 +20,7 @@ namespace SharpMap.Drawing
         public double X { get; set; }
         public double Y { get; set; }
 
-        
+
     }
 
     public enum MatrixOrder

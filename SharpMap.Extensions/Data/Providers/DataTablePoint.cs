@@ -19,7 +19,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using GeoAPI.Geometries;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 
 namespace SharpMap.Data.Providers
@@ -162,10 +162,10 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             DataRow[] drow;
-            var features = new Collection<IGeometry>();
+            var features = new Collection<Geometry>();
 
             if (Table.Rows.Count == 0)
             {
@@ -321,7 +321,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="row">The data row</param>
         /// <returns>A geometry</returns>
-        protected virtual IGeometry CreateGeometry(DataRow row)
+        protected virtual Geometry CreateGeometry(DataRow row)
         {
             return Factory.CreatePoint(
                 new Coordinate(

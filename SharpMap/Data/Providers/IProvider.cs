@@ -15,10 +15,9 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.ObjectModel;
-using GeoAPI.Geometries;
-using IGeometry = GeoAPI.Geometries.IGeometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -37,14 +36,14 @@ namespace SharpMap.Data.Providers
     /// <summary>
     /// Interface for data providers
     /// </summary>
-    public interface IProvider<TOid> : IBaseProvider where TOid: IComparable<TOid>
+    public interface IProvider<TOid> : IBaseProvider where TOid : IComparable<TOid>
     {
         /// <summary>
-        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="NetTopologySuite.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="NetTopologySuite.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
@@ -55,7 +54,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        IGeometry GetGeometryByID(TOid oid);
+        Geometry GetGeometryByID(TOid oid);
 
         /// <summary>
         /// Returns a <see cref="SharpMap.Data.FeatureDataRow"/> based on a RowID

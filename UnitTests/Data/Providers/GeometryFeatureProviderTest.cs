@@ -103,7 +103,7 @@ namespace UnitTests.Data.Providers
         }
 
 public static SharpMap.Data.FeatureDataRow FindGeoNearPoint(
-    GeoAPI.Geometries.IPoint point, SharpMap.Layers.VectorLayer layer, double amountGrow)
+    GeoAPI.Geometries.Point point, SharpMap.Layers.VectorLayer layer, double amountGrow)
 {
     var box = new GeoAPI.Geometries.Envelope(point.Coordinate);
     box.ExpandBy(amountGrow);

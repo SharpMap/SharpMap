@@ -43,7 +43,7 @@ namespace WinFormSamples
 
 
             SharpMap.Layers.VectorLayer vl = new VectorLayer("My Geometries");
-            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<IGeometry>());
+            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<Geometry>());
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
@@ -72,7 +72,7 @@ namespace WinFormSamples
             this.label1.Text = this.mapBox1.ActiveTool.ToString();
         }
 
-        void mapBox1_GeometryDefined(GeoAPI.Geometries.IGeometry geometry)
+        void mapBox1_GeometryDefined(GeoAPI.Geometries.Geometry geometry)
         {
             MessageBox.Show("Geometry defined!\r\n"+geometry);
 

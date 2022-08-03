@@ -35,16 +35,16 @@
  *
  */
 
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using System;
 using System.Globalization;
 using System.IO;
-using GeoAPI.Geometries;
-using NetTopologySuite.IO;
 
 namespace SharpMap.Converters.WellKnownText
 {
     /// <summary>
-    /// Outputs the textual representation of a <see cref="GeoAPI.Geometries.IGeometry"/> instance.
+    /// Outputs the textual representation of a <see cref="GeoAPI.Geometries.Geometry"/> instance.
     /// </summary>
     /// <remarks>
     /// <para>The Well-Known Text (WKT) representation of Geometry is designed to exchange geometry data in ASCII form.</para>
@@ -75,7 +75,7 @@ namespace SharpMap.Converters.WellKnownText
         /// <param name="geometry">A Geometry to write.</param>
         /// <returns>A &lt;Geometry Tagged Text&gt; string (see the OpenGIS Simple
         ///  Features Specification)</returns>
-        public static string Write(IGeometry geometry)
+        public static string Write(Geometry geometry)
         {
             StringWriter sw = new StringWriter();
             Write(geometry, sw);
@@ -91,7 +91,7 @@ namespace SharpMap.Converters.WellKnownText
         /// Geometry is written to the output stream as &lt;Geometry Tagged Text&gt; string (see the OpenGIS
         /// Simple Features Specification).
         /// </remarks>
-        public static void Write(IGeometry geometry, StringWriter writer)
+        public static void Write(Geometry geometry, StringWriter writer)
         {
             WKTWriter wkt = new WKTWriter();
             wkt.Write(geometry, writer);
@@ -103,28 +103,28 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="geometry">The Geometry to process.</param>
         /// <param name="writer">The output stream to Append to.</param>
-        private static void AppendGeometryTaggedText(IGeometry geometry, StringWriter writer)
+        private static void AppendGeometryTaggedText(Geometry geometry, StringWriter writer)
         {
             if (geometry == null)
                 throw new NullReferenceException("Cannot write Well-Known Text: geometry was null");
-            
-            if (geometry is IPoint)
+
+            if (geometry is Point)
             {
-                var point = geometry as IPoint;
+                var point = geometry as Point;
                 AppendPointTaggedText(point, writer);
             }
-            else if (geometry is ILineString)
-                AppendLineStringTaggedText(geometry as ILineString, writer);
-            else if (geometry is IPolygon)
-                AppendPolygonTaggedText(geometry as IPolygon, writer);
-            else if (geometry is IMultiPoint)
-                AppendMultiPointTaggedText(geometry as IMultiPoint, writer);
-            else if (geometry is IMultiLineString)
-                AppendMultiLineStringTaggedText(geometry as IMultiLineString, writer);
-            else if (geometry is IMultiPolygon)
-                AppendMultiPolygonTaggedText(geometry as IMultiPolygon, writer);
-            else if (geometry is IGeometryCollection)
-                AppendGeometryCollectionTaggedText(geometry as IGeometryCollection, writer);
+            else if (geometry is LineString)
+                AppendLineStringTaggedText(geometry as LineString, writer);
+            else if (geometry is Polygon)
+                AppendPolygonTaggedText(geometry as Polygon, writer);
+            else if (geometry is MultiPoint)
+                AppendMultiPointTaggedText(geometry as MultiPoint, writer);
+            else if (geometry is MultiLineString)
+                AppendMultiLineStringTaggedText(geometry as MultiLineString, writer);
+            else if (geometry is MultiPolygon)
+                AppendMultiPolygonTaggedText(geometry as MultiPolygon, writer);
+            else if (geometry is GeometryCollection)
+                AppendGeometryCollectionTaggedText(geometry as GeometryCollection, writer);
             else
                 throw new NotSupportedException("Unsupported Geometry implementation:" + geometry.GetType().Name);
         }
@@ -135,7 +135,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="coordinate">the <code>Coordinate</code> to process</param>
         /// <param name="writer">the output writer to Append to</param>
-        private static void AppendPointTaggedText(IPoint coordinate, StringWriter writer)
+        private static void AppendPointTaggedText(Point coordinate, StringWriter writer)
         {
             writer.Write("POINT ");
             AppendPointText(coordinate, writer);
@@ -146,7 +146,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="lineString">The LineString to process.</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendLineStringTaggedText(ILineString lineString, StringWriter writer)
+        private static void AppendLineStringTaggedText(LineString lineString, StringWriter writer)
         {
             writer.Write("LINESTRING ");
             AppendLineStringText(lineString, writer);
@@ -158,7 +158,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="polygon">Th Polygon to process.</param>
         /// <param name="writer">The stream writer to Append to.</param>
-        private static void AppendPolygonTaggedText(IPolygon polygon, StringWriter writer)
+        private static void AppendPolygonTaggedText(Polygon polygon, StringWriter writer)
         {
             writer.Write("POLYGON ");
             AppendPolygonText(polygon, writer);
@@ -170,7 +170,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="multipoint">The MultiPoint to process.</param>
         /// <param name="writer">The output writer to Append to.</param>
-        private static void AppendMultiPointTaggedText(IMultiPoint multipoint, StringWriter writer)
+        private static void AppendMultiPointTaggedText(MultiPoint multipoint, StringWriter writer)
         {
             writer.Write("MULTIPOINT ");
             AppendMultiPointText(multipoint, writer);
@@ -182,7 +182,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="multiLineString">The MultiLineString to process</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendMultiLineStringTaggedText(IMultiLineString multiLineString, StringWriter writer)
+        private static void AppendMultiLineStringTaggedText(MultiLineString multiLineString, StringWriter writer)
         {
             writer.Write("MULTILINESTRING ");
             AppendMultiLineStringText(multiLineString, writer);
@@ -194,7 +194,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="multiPolygon">The MultiPolygon to process</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendMultiPolygonTaggedText(IMultiPolygon multiPolygon, StringWriter writer)
+        private static void AppendMultiPolygonTaggedText(MultiPolygon multiPolygon, StringWriter writer)
         {
             writer.Write("MULTIPOLYGON ");
             AppendMultiPolygonText(multiPolygon, writer);
@@ -206,7 +206,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="geometryCollection">The GeometryCollection to process</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendGeometryCollectionTaggedText(IGeometryCollection geometryCollection,
+        private static void AppendGeometryCollectionTaggedText(GeometryCollection geometryCollection,
                                                                StringWriter writer)
         {
             writer.Write("GEOMETRYCOLLECTION ");
@@ -219,7 +219,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="coordinate">The Coordinate to process.</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendPointText(IPoint coordinate, StringWriter writer)
+        private static void AppendPointText(Point coordinate, StringWriter writer)
         {
             if (coordinate == null || coordinate.IsEmpty)
                 writer.Write("EMPTY");
@@ -265,7 +265,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="lineString">The LineString to process.</param>
         /// <param name="writer">The output stream to Append to.</param>
-        private static void AppendLineStringText(ILineString lineString, StringWriter writer)
+        private static void AppendLineStringText(LineString lineString, StringWriter writer)
         {
             if (lineString == null || lineString.IsEmpty)
                 writer.Write("EMPTY");
@@ -289,7 +289,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="polygon">The Polygon to process.</param>
         /// <param name="writer"></param>
-        private static void AppendPolygonText(IPolygon polygon, StringWriter writer)
+        private static void AppendPolygonText(Polygon polygon, StringWriter writer)
         {
             if (polygon == null || polygon.IsEmpty)
                 writer.Write("EMPTY");
@@ -315,7 +315,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="multiPoint">The MultiPoint to process.</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendMultiPointText(IMultiPoint multiPoint, StringWriter writer)
+        private static void AppendMultiPointText(MultiPoint multiPoint, StringWriter writer)
         {
             if (multiPoint == null || multiPoint.IsEmpty)
                 writer.Write("EMPTY");
@@ -339,7 +339,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="multiLineString">The MultiLineString to process.</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendMultiLineStringText(IMultiLineString multiLineString, StringWriter writer)
+        private static void AppendMultiLineStringText(MultiLineString multiLineString, StringWriter writer)
         {
             if (multiLineString == null || multiLineString.IsEmpty)
                 writer.Write("EMPTY");
@@ -350,7 +350,7 @@ namespace SharpMap.Converters.WellKnownText
                 {
                     if (i > 0)
                         writer.Write(", ");
-                    AppendLineStringText((ILineString)multiLineString.GetGeometryN(i), writer);
+                    AppendLineStringText((LineString)multiLineString.GetGeometryN(i), writer);
                 }
                 writer.Write(")");
             }
@@ -361,7 +361,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="multiPolygon">The MultiPolygon to process.</param>
         /// <param name="writer">The output stream to Append to.</param>
-        private static void AppendMultiPolygonText(IMultiPolygon multiPolygon, StringWriter writer)
+        private static void AppendMultiPolygonText(MultiPolygon multiPolygon, StringWriter writer)
         {
             if (multiPolygon == null || multiPolygon.IsEmpty)
                 writer.Write("EMPTY");
@@ -372,7 +372,7 @@ namespace SharpMap.Converters.WellKnownText
                 {
                     if (i > 0)
                         writer.Write(", ");
-                    AppendPolygonText((IPolygon)multiPolygon.GetGeometryN(i), writer);
+                    AppendPolygonText((Polygon)multiPolygon.GetGeometryN(i), writer);
                 }
                 writer.Write(")");
             }
@@ -383,7 +383,7 @@ namespace SharpMap.Converters.WellKnownText
         /// </summary>
         /// <param name="geometryCollection">The GeometryCollection to process.</param>
         /// <param name="writer">The output stream writer to Append to.</param>
-        private static void AppendGeometryCollectionText(IGeometryCollection geometryCollection, StringWriter writer)
+        private static void AppendGeometryCollectionText(GeometryCollection geometryCollection, StringWriter writer)
         {
             if (geometryCollection == null || geometryCollection.IsEmpty)
                 writer.Write("EMPTY");

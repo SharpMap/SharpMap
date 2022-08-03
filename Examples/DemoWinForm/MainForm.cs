@@ -90,7 +90,7 @@ namespace DemoWinForm
         private void addNewRandomGeometryLayer()
         {
             Random rndGen = new Random();
-            Collection<IGeometry> geometry = new Collection<IGeometry>();
+            Collection<Geometry> geometry = new Collection<Geometry>();
 
             VectorLayer layer = new VectorLayer(String.Empty);
             var gf = new GeometryFactory();
@@ -157,7 +157,7 @@ namespace DemoWinForm
             return Color.FromArgb(rndGen.Next(255), rndGen.Next(255), rndGen.Next(255));
         }
 
-        private static void GeneratePolygons(IGeometryFactory factory, ICollection<IGeometry> geometry, Random rndGen)
+        private static void GeneratePolygons(GeometryFactory factory, ICollection<Geometry> geometry, Random rndGen)
         {
             int numPolygons = rndGen.Next(10, 100);
             for (var polyIndex = 0; polyIndex < numPolygons; polyIndex++)
@@ -177,7 +177,7 @@ namespace DemoWinForm
             }
         }
 
-        private static void GenerateLines(IGeometryFactory factory, ICollection<IGeometry> geometry, Random rndGen)
+        private static void GenerateLines(GeometryFactory factory, ICollection<Geometry> geometry, Random rndGen)
         {
             var numLines = rndGen.Next(10, 100);
             for (var lineIndex = 0; lineIndex < numLines; lineIndex++)
@@ -200,7 +200,7 @@ namespace DemoWinForm
             }
         }
 
-        private static void GeneratePoints(IGeometryFactory factory, ICollection<IGeometry> geometry, Random rndGen)
+        private static void GeneratePoints(GeometryFactory factory, ICollection<Geometry> geometry, Random rndGen)
         {
             var numPoints = rndGen.Next(10, 100);
             for (var pointIndex = 0; pointIndex < numPoints; pointIndex++)

@@ -55,7 +55,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         }
 
         /// <summary>Gets math transform.</summary>
-        public IMathTransform MathTransform
+        public MathTransform MathTransform
         {
             get { return _transform; }
         }

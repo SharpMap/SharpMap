@@ -40,7 +40,7 @@ namespace SharpMap.Data.Providers.Geometry
         /// <returns>
         /// The geometry
         /// </returns>
-        internal IGeometry GetGeometry()
+        internal Geometry GetGeometry()
         {
             var geom = _wkbReader.Read(WellKnownBytes);
             geom.SRID = Header.SrsId;

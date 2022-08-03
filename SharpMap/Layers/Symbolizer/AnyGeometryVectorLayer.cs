@@ -1,7 +1,7 @@
-using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
+using System;
 
 namespace SharpMap.Layers.Symbolizer
 {
@@ -9,7 +9,7 @@ namespace SharpMap.Layers.Symbolizer
     /// Vector layer class than can symbolize any type of geometry
     /// </summary>
     [Serializable]
-    public class AnyGeometryVectorLayer : BaseVectorLayer<IGeometry>
+    public class AnyGeometryVectorLayer : BaseVectorLayer<Geometry>
     {
         /// <summary>
         /// Creates an instance of this class
@@ -17,7 +17,7 @@ namespace SharpMap.Layers.Symbolizer
         /// <param name="layerName">The layer's name</param>
         public AnyGeometryVectorLayer(string layerName)
             : this(layerName, null)
-        {}
+        { }
 
         /// <summary>
         /// Creates an instance of this class
@@ -26,11 +26,11 @@ namespace SharpMap.Layers.Symbolizer
         /// <param name="datasource">The layers's datasource</param>
         public AnyGeometryVectorLayer(string layerName, IProvider datasource)
             : this(layerName, datasource, new GeometrySymbolizer
-                             {
-                                 PointSymbolizer = new RasterPointSymbolizer(),
-                                 LineSymbolizer = new BasicLineSymbolizer(),
-                                 PolygonSymbolizer = new BasicPolygonSymbolizer()
-                             })
+            {
+                PointSymbolizer = new RasterPointSymbolizer(),
+                LineSymbolizer = new BasicLineSymbolizer(),
+                PolygonSymbolizer = new BasicPolygonSymbolizer()
+            })
         {
         }
 

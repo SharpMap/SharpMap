@@ -73,7 +73,7 @@ namespace SharpMap.Demo.Wms.Controllers
                 if (h <= 1) 
                     h = 1;
 
-                IGeometry geometry = row.Geometry;
+                Geometry geometry = row.Geometry;
                 Coordinate[] coords = geometry.Coordinates;
                 int total = coords.Length;
                 double[] values = new double[total * 2];

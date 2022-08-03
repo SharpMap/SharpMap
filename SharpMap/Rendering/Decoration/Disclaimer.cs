@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SharpMap.Rendering.Symbolizer;
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Rendering.Symbolizer;
 
 namespace SharpMap.Rendering.Decoration
 {
@@ -44,7 +44,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public Color ForeColor
         {
-            get ; set;
+            get; set;
         }
 
         private Pen _halo;
@@ -56,7 +56,7 @@ namespace SharpMap.Rendering.Decoration
         /// </summary>
         public int Halo
         {
-            get { return _halo == null ? 0 : (int) _halo.Width; }
+            get { return _halo == null ? 0 : (int)_halo.Width; }
             set
             {
                 if (value < 0) value = 0;
@@ -73,7 +73,8 @@ namespace SharpMap.Rendering.Decoration
         public Color HaloColor
         {
             get { return _haloColor; }
-            set { 
+            set
+            {
                 _haloColor = value;
                 if (Halo > 0)
                     _halo = new Pen(value, Halo);
@@ -102,7 +103,7 @@ namespace SharpMap.Rendering.Decoration
             if (Halo > 0)
             {
                 var gp = new GraphicsPath();
-                gp.AddString(Text, Font.FontFamily, (int) Font.Style,
+                gp.AddString(Text, Font.FontFamily, (int)Font.Style,
                     Utility.ScaleSizeToDeviceUnits(Font.SizeInPoints, GraphicsUnit.Point, g), layoutRectangle, Format);
                 g.DrawPath(_halo, gp);
                 g.FillPath(b, gp);
@@ -111,7 +112,7 @@ namespace SharpMap.Rendering.Decoration
                 g.DrawString(Text, Font, b, layoutRectangle);
 
         }
-        
+
         #endregion
     }
 }

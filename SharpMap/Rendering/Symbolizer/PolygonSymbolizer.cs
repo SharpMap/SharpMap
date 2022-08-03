@@ -1,6 +1,7 @@
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Rendering.Symbolizer
@@ -63,17 +64,17 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="graphics">The graphics object to use.</param>
         public void Render(MapViewport map, IPolygonal geometry, Graphics graphics)
         {
-            var mp = geometry as IMultiPolygon;
+            var mp = geometry as MultiPolygon;
             if (mp != null)
             {
-                for (var i = 0; i < mp.NumGeometries;i++)
+                for (var i = 0; i < mp.NumGeometries; i++)
                 {
-                    var poly = (IPolygon) mp[i];
+                    var poly = (Polygon)mp[i];
                     OnRenderInternal(map, poly, graphics);
                 }
                 return;
             }
-            OnRenderInternal(map, (IPolygon)geometry, graphics);
+            OnRenderInternal(map, (Polygon)geometry, graphics);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The polygon to render</param>
         /// <param name="g">The graphics object to use</param>
-        protected abstract void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g);
+        protected abstract void OnRenderInternal(MapViewport map, Polygon polygon, Graphics g);
 
         private Point _renderOrigin;
 
@@ -116,7 +117,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The polygon</param>
         /// <returns>A graphics path</returns>
-        protected static GraphicsPath PolygonToGraphicsPath(Map map, IPolygon polygon)
+        protected static GraphicsPath PolygonToGraphicsPath(Map map, Polygon polygon)
         {
             return polygon.TransformToImage(map);
         }

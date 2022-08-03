@@ -265,7 +265,7 @@ namespace SharpMap.Rendering.Symbolizer
                     break;
             }
 
-            path.Transform(new Matrix(1f, 0f, 0f, 1f, (float)xStart,  yStart));
+            path.Transform(new Matrix(1f, 0f, 0f, 1f, (float)xStart, yStart));
 
             return path;
         }
@@ -456,14 +456,14 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="ignoreLength"></param>
         /// <param name="path"></param>
         /// <param name="textHeight">actual text height as rendered by graphic</param>
-        public static void DrawString(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily, 
+        public static void DrawString(this Graphics self, Pen halo, Brush fill, string text, FontFamily fontFamily,
             int style, float emSize, StringFormat format, bool ignoreLength, GraphicsPath path,
            float textHeight)
         {
             if (path == null || path.PointCount == 0)
                 return;
 
-            var gp = new GraphicsPath(); 
+            var gp = new GraphicsPath();
             gp.AddString(text, fontFamily, style, emSize, new Point(0, 0), format);
 
             SortedList<float, GraphSegment> edges;
@@ -487,6 +487,6 @@ namespace SharpMap.Rendering.Symbolizer
             gp.Dispose();
         }
 
-        
+
     }
 }

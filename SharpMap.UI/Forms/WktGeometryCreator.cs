@@ -47,12 +47,12 @@ namespace SharpMap.Forms
             Hide();
         }
 
-        private GeoAPI.Geometries.IGeometry _geometry;
+        private GeoAPI.Geometries.Geometry _geometry;
         
         /// <summary>
         /// Gets or sets a value indicating the current geometry
         /// </summary>
-        public GeoAPI.Geometries.IGeometry Geometry
+        public GeoAPI.Geometries.Geometry Geometry
         {
             get
             {

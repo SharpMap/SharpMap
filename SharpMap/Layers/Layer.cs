@@ -15,15 +15,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Drawing;
 using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries.Utilities;
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Base;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using SharpMap.Utilities;
+using System;
+using System.Drawing;
 
 namespace SharpMap.Layers
 {
@@ -101,8 +100,8 @@ namespace SharpMap.Layers
 
         private ICoordinateTransformation _coordinateTransform;
         private ICoordinateTransformation _reverseCoordinateTransform;
-        private IGeometryFactory _sourceFactory;
-        private IGeometryFactory _targetFactory;
+        private GeometryFactory _sourceFactory;
+        private GeometryFactory _targetFactory;
 
         private string _layerName;
         private string _layerTitle;
@@ -111,13 +110,13 @@ namespace SharpMap.Layers
         private int? _targetSrid;
         [field: NonSerialized]
         private bool _shouldNotResetCt;
-        
+
         /// <summary>
         /// The area of the map that was covered by this layer
         /// </summary>
         [field: NonSerialized]
         protected RectangleF CanvasArea = RectangleF.Empty;
-        
+
         // ReSharper disable PublicConstructorInAbstractClass
         ///<summary>
         /// Creates an instance of this class using the given Style
@@ -150,7 +149,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="ProjNet.CoordinateSystems.Transformations.CoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
         public virtual ICoordinateTransformation CoordinateTransformation
@@ -185,7 +184,7 @@ namespace SharpMap.Layers
                     }
                     else
                     {
-                        _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID);
+                        _sourceFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(SRID);
                         // causes targetFactory to be cleared
                         TargetSRID = 0;
                     }
@@ -230,15 +229,15 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets the geometry factory to create source geometries
         /// </summary>
-        protected internal IGeometryFactory SourceFactory { get { return _sourceFactory ?? (_sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID)); } }
+        protected internal GeometryFactory SourceFactory { get { return _sourceFactory ?? (_sourceFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(SRID)); } }
 
         /// <summary>
         /// Gets the geometry factory to create target geometries
         /// </summary>
-        protected internal IGeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
+        protected internal GeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
 
         /// <summary>
-        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="ProjNet.CoordinateSystems.Transformations.CoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
         /// If your CoordinateTransformation can be inverted you can leave this property to null
         /// </summary>
@@ -302,7 +301,7 @@ namespace SharpMap.Layers
                 {
                     _srid = value;
 
-                    _sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    _sourceFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(value);
                     if (!_shouldNotResetCt)
                         _coordinateTransform = _reverseCoordinateTransform = null;
 
@@ -327,7 +326,7 @@ namespace SharpMap.Layers
                 else if (_targetSrid != value)
                 {
                     _targetSrid = value;
-                    _targetFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    _targetFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(value);
                 }
                 if (!_shouldNotResetCt)
                     _coordinateTransform = _reverseCoordinateTransform = null;
@@ -367,7 +366,7 @@ namespace SharpMap.Layers
         Rectangle ILayerEx.Render(Graphics g, MapViewport map)
         {
             Render(g, map, out var canvasArea);
-            return  canvasArea;
+            return canvasArea;
         }
 
         private bool _renderCalled;
@@ -381,12 +380,12 @@ namespace SharpMap.Layers
         {
             if (_renderCalled)
                 return;
-            
+
             _renderCalled = true;
             Render(g, mvp);
             _renderCalled = false;
 
-            var mapRect = new Rectangle(new Point(0, 0), mvp.Size);
+            var mapRect = new Rectangle(new System.Drawing.Point(0, 0), mvp.Size);
             if (CanvasArea.IsEmpty)
             {
                 affectedArea = mapRect;
@@ -400,7 +399,7 @@ namespace SharpMap.Layers
 
                 CanvasArea = RectangleF.Empty;
             }
-            
+
             OnLayerRendered(g);
         }
 
@@ -423,16 +422,16 @@ namespace SharpMap.Layers
             // This is the area of the graphics canvas that needs to be refreshed when invalidating the image. 
             var affectedArea = area.ToRectangle();
 
-//                // proof of concept: draw affected area to screen aligned with graphics canvas
-//                using (var orig = g.Transform.Clone())
-//                {
-//                    var areaToBeRendered = affectedArea;
-//                    areaToBeRendered.Intersect(mapRect);
-//                    g.ResetTransform();
-//                    g.DrawRectangle(new Pen(Color.Red, 3f) {Alignment = System.Drawing.Drawing2D.PenAlignment.Inset},
-//                        areaToBeRendered);
-//                    g.Transform = orig;
-//                }
+            //                // proof of concept: draw affected area to screen aligned with graphics canvas
+            //                using (var orig = g.Transform.Clone())
+            //                {
+            //                    var areaToBeRendered = affectedArea;
+            //                    areaToBeRendered.Intersect(mapRect);
+            //                    g.ResetTransform();
+            //                    g.DrawRectangle(new Pen(Color.Red, 3f) {Alignment = System.Drawing.Drawing2D.PenAlignment.Inset},
+            //                        areaToBeRendered);
+            //                    g.Transform = orig;
+            //                }
 
             // allow for bleed and/or minor labelling misdemeanours
             affectedArea.Inflate(1, 1);
@@ -583,7 +582,7 @@ namespace SharpMap.Layers
         /// Utility function to transform given envelope using a specific transformation
         /// </summary>
         /// <param name="envelope">The source envelope</param>
-        /// <param name="coordinateTransformation">The <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
+        /// <param name="coordinateTransformation">The <see cref="ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
         /// <returns>The target envelope</returns>
         protected virtual Envelope ToTarget(Envelope envelope, ICoordinateTransformation coordinateTransformation)
         {
@@ -633,7 +632,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>The transformed geometry</returns>
-        protected virtual IGeometry ToTarget(IGeometry geometry)
+        protected virtual Geometry ToTarget(Geometry geometry)
         {
             if (geometry.SRID == TargetSRID)
                 return geometry;
@@ -651,7 +650,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>The transformed geometry</returns>
-        protected virtual IGeometry ToSource(IGeometry geometry)
+        protected virtual Geometry ToSource(Geometry geometry)
         {
             if (geometry.SRID == SRID)
                 return geometry;

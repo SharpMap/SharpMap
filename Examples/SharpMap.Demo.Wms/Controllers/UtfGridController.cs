@@ -74,7 +74,7 @@ namespace SharpMap.Demo.Wms.Controllers
                 int i = 1;
                 foreach (GeoJSON val in data)
                 {
-                    IGeometry geom = val.Geometry;
+                    Geometry geom = val.Geometry;
                     IDictionary<string, object> dict = val.Values;
                     grid.FillPolygon(geom, i, dict);
                     i = i + 1;

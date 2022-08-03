@@ -16,12 +16,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Data;
-using GeoAPI.Geometries;
 using System.ComponentModel;
+using System.Data;
 
 namespace SharpMap.Data.Providers
 {
@@ -46,8 +46,8 @@ namespace SharpMap.Data.Providers
     /// <example>
     /// Adding points of interest to the map. This is useful for vehicle tracking etc.
     /// <code lang="C#">
-    /// GeoAPI.Geometries.IGeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
-    /// List&#60;GeoAPI.Geometries.IGeometry&#62; geometries = new List&#60;GeoAPI.Geometries.IGeometry&#62;();
+    /// GeoAPI.Geometries.GeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
+    /// List&#60;NetTopologySuite.Geometries.Geometry&#62; geometries = new List&#60;NetTopologySuite.Geometries.Geometry&#62;();
     /// //Add two points
     /// geometries.Add(gf.CreatePoint(23.345,64.325));
     /// geometries.Add(gf.CreatePoint(23.879,64.194));
@@ -70,7 +70,7 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometries">Set of geometries that this datasource should contain</param>
-        public GeometryFeatureProvider(IEnumerable<IGeometry> geometries)
+        public GeometryFeatureProvider(IEnumerable<Geometry> geometries)
         {
             _features = new FeatureDataTable();
             _features.BeginLoadData();
@@ -113,7 +113,7 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometry">Geometry to be in this datasource</param>
-        public GeometryFeatureProvider(IGeometry geometry)
+        public GeometryFeatureProvider(Geometry geometry)
         {
             _features = new FeatureDataTable();
             var fdr = _features.NewRow();
@@ -195,9 +195,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var list = new Collection<IGeometry>();
+            var list = new Collection<Geometry>();
 
             lock (_features.Rows.SyncRoot)
             {
@@ -260,7 +260,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public IGeometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
             lock (_features.Rows.SyncRoot)
             {
@@ -288,7 +288,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             FeatureDataTable fdt;
             lock (_features.Columns.SyncRoot)
@@ -304,7 +304,7 @@ namespace SharpMap.Data.Providers
                     fdt.LoadDataRow(fdr.ItemArray, true);
                     var tmpGeom = fdr.Geometry;
                     if (tmpGeom != null)
-                        ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = (IGeometry)tmpGeom.Clone();
+                        ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = tmpGeom.Copy();
                 }
             }
             fdt.EndLoadData();
@@ -330,7 +330,7 @@ namespace SharpMap.Data.Providers
                 fdt.LoadDataRow(fdr.ItemArray, false);
                 var geom = fdr.Geometry;
                 if (geom != null)
-                    ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = (IGeometry)geom.Clone();
+                    ((FeatureDataRow)fdt.Rows[fdt.Rows.Count - 1]).Geometry = geom.Copy();
             }
             fdt.AcceptChanges();
             fdt.EndLoadData();

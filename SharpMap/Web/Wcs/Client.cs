@@ -37,7 +37,7 @@ namespace SharpMap.Web.Wcs
         /// </summary>
         public XmlNode VendorSpecificCapabilities
         {
-            get 
+            get
             {
                 return null;// _vendorSpecificCapabilities; 
             }
@@ -364,7 +364,7 @@ namespace SharpMap.Web.Wcs
         /// </summary>
         public void ParseVersion()
         {
-            
+
             if (XmlDoc.DocumentElement.Attributes["version"] != null)
             {
                 _version = XmlDoc.DocumentElement.Attributes["version"].Value;

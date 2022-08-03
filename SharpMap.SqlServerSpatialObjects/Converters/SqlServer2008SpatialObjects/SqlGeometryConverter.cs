@@ -24,17 +24,17 @@ using System.Runtime.Serialization;
 using GeoAPI.Geometries;
 using Microsoft.SqlServer.Types;
 using SharpMap.Data.Providers;
-using SMGeometry = GeoAPI.Geometries.IGeometry;
+using SMGeometry = GeoAPI.Geometries.Geometry;
 using SMGeometryType = GeoAPI.Geometries.OgcGeometryType;
-using SMPoint = GeoAPI.Geometries.IPoint;
-using SMLineString = GeoAPI.Geometries.ILineString;
-using SMLinearRing = GeoAPI.Geometries.ILinearRing;
-using SMPolygon = GeoAPI.Geometries.IPolygon;
-using SMMultiPoint = GeoAPI.Geometries.IMultiPoint;
-using SMMultiLineString = GeoAPI.Geometries.IMultiLineString;
-using SMMultiPolygon = GeoAPI.Geometries.IMultiPolygon;
-using SMGeometryCollection = GeoAPI.Geometries.IGeometryCollection;
-using Factory = GeoAPI.Geometries.IGeometryFactory;
+using SMPoint = GeoAPI.Geometries.Point;
+using SMLineString = GeoAPI.Geometries.LineString;
+using SMLinearRing = GeoAPI.Geometries.LinearRing;
+using SMPolygon = GeoAPI.Geometries.Polygon;
+using SMMultiPoint = GeoAPI.Geometries.MultiPoint;
+using SMMultiLineString = GeoAPI.Geometries.MultiLineString;
+using SMMultiPolygon = GeoAPI.Geometries.MultiPolygon;
+using SMGeometryCollection = GeoAPI.Geometries.GeometryCollection;
+using Factory = GeoAPI.Geometries.GeometryFactory;
 
 namespace SharpMap.Converters.SqlServer2008SpatialObjects
 {

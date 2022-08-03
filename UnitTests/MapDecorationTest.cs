@@ -31,7 +31,7 @@ namespace UnitTests
         public void TestMapDecorationTest()
         {
             var m = new Map(new Size(780, 540)) {BackColor = Color.White};
-            var p = new GeometryProvider(new List<IGeometry>());
+            var p = new GeometryProvider(new List<Geometry>());
             var pts = new [] {new GeoPoint(0, 0), new GeoPoint(779, 539)};
             var ls = m.Factory.CreateLineString(pts);
             p.Geometries.Add(ls);

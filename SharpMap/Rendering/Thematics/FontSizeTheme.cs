@@ -1,9 +1,9 @@
-﻿using System;
-using System.Drawing;
-using SharpMap.Base;
+﻿using SharpMap.Base;
 using SharpMap.Data;
 using SharpMap.Layers;
 using SharpMap.Styles;
+using System;
+using System.Drawing;
 
 namespace SharpMap.Rendering.Thematics
 {
@@ -66,7 +66,7 @@ namespace SharpMap.Rendering.Thematics
         {
             if (_currentStyle != null)
                 _currentStyle.Dispose();
-            
+
             _currentStyle = _labelLayer.Style.Clone();
             _currentSize = _currentStyle.Font.Size;
         }
@@ -85,7 +85,7 @@ namespace SharpMap.Rendering.Thematics
                 if (!style.Enabled) return style;
                 if (!(style is LabelStyle)) return style;
 
-                var labelStyle = (LabelStyle) style;
+                var labelStyle = (LabelStyle)style;
                 return UpdateStyle(labelStyle, CalculateSize(_map, labelStyle.Font.SizeInPoints));
             }
 
@@ -94,7 +94,7 @@ namespace SharpMap.Rendering.Thematics
             {
                 // Get the new size
                 var newSize = CalculateSize(_map, _currentSize);
-                
+
                 // Update the style
                 _currentStyle = UpdateStyle(_currentStyle, newSize);
                 _currentZoom = _map.Zoom;
@@ -117,7 +117,7 @@ namespace SharpMap.Rendering.Thematics
                 labelStyle.Enabled = false;
                 return labelStyle;
             }
-            
+
             // Make sure label style is enabled
             labelStyle.Enabled = true;
 
@@ -160,7 +160,7 @@ namespace SharpMap.Rendering.Thematics
         {
             if (FontSizeScale.HasValue)
                 sizeInMapUnits *= FontSizeScale.Value;
-            return (float)(sizeInMapUnits/_map.PixelHeight);
+            return (float)(sizeInMapUnits / _map.PixelHeight);
         }
 
         /// <summary>

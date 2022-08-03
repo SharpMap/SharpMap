@@ -1,4 +1,4 @@
-﻿using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 
 namespace SharpMap.Web.Wms
 {
@@ -20,7 +20,7 @@ namespace SharpMap.Web.Wms
         /// <param name="minY">The minimum y-ordinate value</param>
         /// <param name="maxY">The maximum y-ordinate value</param>
         /// <param name="srid">Spatial Reference ID</param>
-        public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid) 
+        public SpatialReferencedBoundingBox(double minX, double minY, double maxX, double maxY, int srid)
             : base(minX, maxX, minY, maxY)
         {
             SRID = srid;

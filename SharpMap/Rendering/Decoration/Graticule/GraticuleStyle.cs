@@ -1,6 +1,6 @@
+using SharpMap.Styles;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Decoration.Graticule
 {
@@ -58,7 +58,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
             {
                 _primaryTickSize = value;
                 _isDirty = true;
-            } 
+            }
         }
 
         /// <summary>
@@ -151,13 +151,13 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// <summary>
         /// True if secondary edge cuts (ie subdivisions) should be labelled in addition to primary labels (ie division)/>
         /// </summary>
-        public bool LabelSubdivisions { get; set; } 
+        public bool LabelSubdivisions { get; set; }
 
         /// <summary>
         /// Background color to assist reading labels, or null for no halo
         /// </summary>
         public Brush LabelHalo { get; set; }
-        
+
         /// <summary>
         /// Interval between Primary graticule lines (calculated to provide at least 2 cuts along shortest border)
         /// </summary>
@@ -195,8 +195,8 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// <param name="lineStyle"></param>
         /// <param name="withSecondaryIntervals"></param>
         /// <param name="labelBorders"></param>
-        public GraticuleStyle(GraticuleTheme theme, 
-            GraticuleLineStyle lineStyle, 
+        public GraticuleStyle(GraticuleTheme theme,
+            GraticuleLineStyle lineStyle,
             bool withSecondaryIntervals,
             GraticuleBorders labelBorders) : this()
         {
@@ -225,14 +225,14 @@ namespace SharpMap.Rendering.Decoration.Graticule
                     SecondaryLabelOffset = new Point(2, 1);
 
                     LabelBorders = labelBorders;
-                    LabelHalo = Brushes.AliceBlue; 
+                    LabelHalo = Brushes.AliceBlue;
                     LabelSubdivisions = true;
 
                     break;
 
 
                 default:
-                    
+
                     PrimaryPen = new Pen(Brushes.Gray, 2);
                     PrimaryLineStyle = lineStyle;
                     PrimaryTickSize = 10;
@@ -251,7 +251,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
 
                     SecondaryLabelFont = new Font(FontFamily.GenericSansSerif, 6, FontStyle.Regular);
                     SecondaryLabelColor = Brushes.LightGray;
-                    SecondaryLabelOffset = new Point(SecondaryMargin + 1, -1 - SecondaryLabelFont.Height/2 );
+                    SecondaryLabelOffset = new Point(SecondaryMargin + 1, -1 - SecondaryLabelFont.Height / 2);
 
                     LabelBorders = labelBorders;
                     LabelHalo = Brushes.Gainsboro; // Brushes.PowderBlue; 
@@ -270,8 +270,8 @@ namespace SharpMap.Rendering.Decoration.Graticule
         /// <summary>
         /// Creates an instance of this class.
         /// </summary>
-        public GraticuleStyle() {}
-        
+        public GraticuleStyle() { }
+
         /// <summary>
         /// Returns true if a primary or secondary tick is required for given combination of primary and secondary meridians and parallels 
         /// </summary>
@@ -284,7 +284,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
                 return SecondaryLineStyle == GraticuleLineStyle.SolidTick ||
                        SecondaryLineStyle == GraticuleLineStyle.HollowTick;
         }
-        
+
         /// <summary>
         /// Returns the appropriate tick
         /// </summary>
@@ -299,7 +299,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
                 _secondaryTick = CreateTick(SecondaryMargin, SecondaryLineStyle);
                 _isDirty = false;
             }
-                
+
             return isPrimaryTick ? _primaryTick : _secondaryTick;
         }
 
@@ -316,7 +316,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
 
             var tickSize50 = primaryTickSize * 0.5f;
             var tickSize20 = primaryTickSize * 0.2f;
-            
+
             switch (lineStyle)
             {
                 case GraticuleLineStyle.SolidTick:
@@ -325,7 +325,7 @@ namespace SharpMap.Rendering.Decoration.Graticule
                     points[1] = new PointF(tickSize50, 0);
                     points[2] = new PointF(0, -tickSize50);
                     points[3] = new PointF(0, tickSize50);
-                    
+
                     break;
                 case GraticuleLineStyle.HollowTick:
                     points = new PointF[8];
@@ -333,22 +333,22 @@ namespace SharpMap.Rendering.Decoration.Graticule
                     points[1] = new PointF(-tickSize20, 0);
                     points[2] = new PointF(tickSize20, 0);
                     points[3] = new PointF(tickSize50, 0);
-                    
-                    points[4] = new PointF(0,-tickSize50);
-                    points[5] = new PointF(0,-tickSize20);
-                    points[6] = new PointF(0,tickSize20);
-                    points[7] = new PointF(0,tickSize50);
+
+                    points[4] = new PointF(0, -tickSize50);
+                    points[5] = new PointF(0, -tickSize20);
+                    points[6] = new PointF(0, tickSize20);
+                    points[7] = new PointF(0, tickSize50);
                     break;
-                
+
                 default:
                     return null;
             }
-            
+
             var gp = new GraphicsPath();
             for (var i = 0; i < points.Length; i += 2)
             {
                 gp.StartFigure();
-                gp.AddLine(points[i], points[i+1]);
+                gp.AddLine(points[i], points[i + 1]);
             }
 
             return gp;

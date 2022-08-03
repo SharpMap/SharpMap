@@ -24,12 +24,12 @@
     <ItemGroup>
         <PackageReference Include="Common.Logging" Version="3.4.1" />
         <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
-        <PackageReference Include="GeoAPI.CoordinateSystems" Version="1.7.5" />
-        <PackageReference Include="NetTopologySuite.Core" Version="1.15.3" />
-        <PackageReference Include="System.Drawing.Common" Version="4.6.0" />
-        <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+        <PackageReference Include="NetTopologySuite" Version="2.5.0" />
+        <PackageReference Include="ProjNet" Version="2.0.0" />
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.3" />
         <PackageReference Include="System.Drawing.Primitives" Version="4.3.0" />
-        <PackageReference Include="System.Memory" Version="4.5.3" />
+        <PackageReference Include="System.Memory" Version="4.5.5" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(EnableApiCompat)' == 'true' ">
@@ -37,6 +37,10 @@
         <PackageDownload Include="SharpMap" Version="[1.1.0]" PrivateAssets="All" />
 
         <ResolvedMatchingContract Include="$(NugetPackageRoot)sharpmap\1.1.0\lib\net40-client\SharpMap.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 

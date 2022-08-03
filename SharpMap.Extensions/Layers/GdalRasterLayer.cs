@@ -33,11 +33,11 @@ using SharpMap.Base;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using SharpMap.Rendering.Thematics;
 using Point = System.Drawing.Point;
 
-using Polygon = GeoAPI.Geometries.IPolygon;
+using Polygon = GeoAPI.Geometries.Polygon;
 
 namespace SharpMap.Layers
 {
@@ -70,13 +70,13 @@ namespace SharpMap.Layers
         /// </summary>
         private STRtree<string> _subDataSets;
 
-        private IGeometryFactory _factory;
+        private GeometryFactory _factory;
         
         /// <summary>
         /// Gets or sets a value indicating the geometry factory to use when creating geometries.
         /// </summary>
         /// <returns>A geometry factory</returns>
-        protected IGeometryFactory Factory
+        protected GeometryFactory Factory
         {
             get
             {
@@ -1180,7 +1180,7 @@ namespace SharpMap.Layers
                     // get inverse transform  
                     // NOTE: calling transform.MathTransform.Inverse() once and storing it
                     // is much faster than having to call every time it is needed
-                    IMathTransform inverseTransform = null;
+                    MathTransform inverseTransform = null;
                     if (ReverseCoordinateTransformation != null)
                         inverseTransform = ReverseCoordinateTransformation.MathTransform;
 

@@ -159,7 +159,7 @@ namespace UnitTests.Layers
 
         private void AddAffectedAreaLayer(Map map, Polygon affectedArea)
         {
-            var geoms = new List<IGeometry>(){affectedArea};
+            var geoms = new List<Geometry>(){affectedArea};
             if (!map.MapTransform.IsIdentity)
             {
                 // affectedArea is aligned with Graphics Canvas (not with north arrow)
@@ -453,7 +453,7 @@ namespace UnitTests.Layers
             map.Layers.Add(lLyr);
         }
 
-        private static GeoAPI.Geometries.ILineString CreateSineLine(GeoAPI.Geometries.Coordinate offset,
+        private static GeoAPI.Geometries.LineString CreateSineLine(GeoAPI.Geometries.Coordinate offset,
             double scaleY = 100)
         {
             var factory = new NetTopologySuite.Geometries.GeometryFactory();

@@ -53,7 +53,7 @@ namespace Mapstache
             return RectangleF.FromLTRB(lonlat1.X, lonlat2.Y, lonlat2.X, lonlat1.Y);
         }
 
-        public void FillPolygon(IGeometry geometry, int i, object data = null)
+        public void FillPolygon(Geometry geometry, int i, object data = null)
         {
             using (GraphicsPath gp = this.graphicsPathBuilder.Build(geometry))
             using (Brush brush = CreateBrush(i))

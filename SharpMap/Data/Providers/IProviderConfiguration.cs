@@ -83,7 +83,7 @@ namespace SharpMap.Data.Providers
         /// Gets or sets the spatial object type
         /// </summary>
         public SqlServerSpatialObjectType SpatialObjectType { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether or not to use the spatial index
         /// </summary>
@@ -115,7 +115,7 @@ namespace SharpMap.Data.Providers
         /// <returns>The created provider</returns>
         public IProvider Create()
         {
-            return new SqlServer2008(ConnectionString, TableName, GeometryColumnName, ObjectIdColumnName, 
+            return new SqlServer2008(ConnectionString, TableName, GeometryColumnName, ObjectIdColumnName,
                 SpatialObjectType, SRID, ExtentsMode);
         }
     }

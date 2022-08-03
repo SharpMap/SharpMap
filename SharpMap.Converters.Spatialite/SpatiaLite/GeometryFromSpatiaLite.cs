@@ -34,7 +34,7 @@ namespace SharpMap.Converters
         /// <param name="spatialliteGeom">The geometry blob</param>
         /// <param name="factory">The factory to create the result geometry</param>
         /// <returns>A geometry</returns>
-        public static GeoAPI.Geometries.IGeometry Parse(byte[] spatialliteGeom, GeoAPI.Geometries.IGeometryFactory factory)
+        public static GeoAPI.Geometries.Geometry Parse(byte[] spatialliteGeom, GeoAPI.Geometries.GeometryFactory factory)
         {
             var nBytes = spatialliteGeom.Length;
             if (spatialliteGeom.Length < 44
@@ -81,7 +81,7 @@ namespace SharpMap.Converters
             /* -------------------------------------------------------------------- */
             else if (nGType == 4)
             {
-                List<GeoAPI.Geometries.IPoint> pts = new List<GeoAPI.Geometries.IPoint>();
+                List<GeoAPI.Geometries.Point> pts = new List<GeoAPI.Geometries.Point>();
                 int numGeoms = ReadUInt32(spatialliteGeom, ref idx, isLittleEndian);
                 for (int i = 0; i < numGeoms; i++)
                 {
@@ -101,7 +101,7 @@ namespace SharpMap.Converters
             /* -------------------------------------------------------------------- */
             else if (nGType == 5)
             {
-                List<GeoAPI.Geometries.ILineString> lss = new List<GeoAPI.Geometries.ILineString>();
+                List<GeoAPI.Geometries.MultiLineString> lss = new List<GeoAPI.Geometries.MultiLineString>();
                 int numGeoms = ReadUInt32(spatialliteGeom, ref idx, isLittleEndian);
                 for (int i = 0; i < numGeoms; i++)
                 {
@@ -120,7 +120,7 @@ namespace SharpMap.Converters
             /* -------------------------------------------------------------------- */
             else if (nGType == 6)
             {
-                List<GeoAPI.Geometries.IPolygon> polys = new List<GeoAPI.Geometries.IPolygon>();
+                List<GeoAPI.Geometries.Polygon> polys = new List<GeoAPI.Geometries.Polygon>();
                 int numPolys = ReadUInt32(spatialliteGeom, ref idx, isLittleEndian);
                 for (int i = 0; i < numPolys; i++)
                 {
@@ -139,22 +139,22 @@ namespace SharpMap.Converters
             return null;
         }
 
-        private static GeoAPI.Geometries.IPolygon ReadPolygon(byte[] geom, ref int idx, bool isLittleEndian, GeoAPI.Geometries.IGeometryFactory factory)
+        private static GeoAPI.Geometries.Polygon ReadPolygon(byte[] geom, ref int idx, bool isLittleEndian, GeoAPI.Geometries.GeometryFactory factory)
         {
             var nRings = ReadUInt32(geom,ref idx, isLittleEndian);
 
             if (nRings < 1 || nRings > Int32.MaxValue / (2 * 8))
                 throw new ApplicationException("Currupt SpatialLite geom");
 
-            List<GeoAPI.Geometries.ILineString> lineStrings = new List<GeoAPI.Geometries.ILineString>();
+            List<GeoAPI.Geometries.MultiLineString> lineStrings = new List<GeoAPI.Geometries.MultiLineString>();
             for (int i = 0; i < nRings; i++)
                 lineStrings.Add(ReadLineString(geom,ref idx, isLittleEndian, factory));
 
-            List<GeoAPI.Geometries.ILinearRing> holes = null;
+            List<GeoAPI.Geometries.LinearRing> holes = null;
             var shell = factory.CreateLinearRing(lineStrings[0].Coordinates);
             if (lineStrings.Count > 1)
             {
-                holes = new List<GeoAPI.Geometries.ILinearRing>();
+                holes = new List<GeoAPI.Geometries.LinearRing>();
                 for (int i = 1; i < lineStrings.Count; i++)
                 {
                     holes.Add(factory.CreateLinearRing(lineStrings[i].Coordinates));
@@ -163,7 +163,7 @@ namespace SharpMap.Converters
             return factory.CreatePolygon(shell, holes == null ? null : holes.ToArray());
         }
 
-        private static GeoAPI.Geometries.ILineString ReadLineString(byte[] geom, ref int idx, bool isLittleEndian, GeoAPI.Geometries.IGeometryFactory factory)
+        private static GeoAPI.Geometries.MultiLineString ReadLineString(byte[] geom, ref int idx, bool isLittleEndian, GeoAPI.Geometries.GeometryFactory factory)
         {
             int iPoint;
             var nPointCount = ReadUInt32(geom, ref idx, isLittleEndian);

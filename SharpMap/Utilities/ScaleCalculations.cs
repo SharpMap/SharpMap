@@ -24,8 +24,8 @@ namespace SharpMap.Utilities
 
             try
             {
-                double pageWidth = mapSizeWidth/nPxlPerInch*GeoSpatialMath.MetersPerInch;
-                zoom = Math.Abs(scale*pageWidth)/mapUnitFactor;
+                double pageWidth = mapSizeWidth / nPxlPerInch * GeoSpatialMath.MetersPerInch;
+                zoom = Math.Abs(scale * pageWidth) / mapUnitFactor;
             }
             catch
             {

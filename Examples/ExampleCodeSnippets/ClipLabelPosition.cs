@@ -5,7 +5,7 @@
     /// </summary>
     public class ClipLabelPosition
     {
-        private GeoAPI.Geometries.IGeometry _clip;
+        private GeoAPI.Geometries.Geometry _clip;
         private GeoAPI.Geometries.Prepared.IPreparedGeometry _prepClip;
 
         /// <summary>

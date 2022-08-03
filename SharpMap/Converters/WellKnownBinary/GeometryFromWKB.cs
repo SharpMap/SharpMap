@@ -35,23 +35,23 @@
  *
  */
 
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using GeoAPI.Geometries;
-using NetTopologySuite.IO;
 
 namespace SharpMap.Converters.WellKnownBinary
 {
     /// <summary>
-    ///  Converts Well-known Binary representations to a <see cref="GeoAPI.Geometries.IGeometry"/> instance.
+    ///  Converts Well-known Binary representations to a <see cref="GeoAPI.Geometries.Geometry"/> instance.
     /// </summary>
     /// <remarks>
-    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.IGeometry"/> (WKBGeometry) provides a portable 
-    /// representation of a <see cref="GeoAPI.Geometries.IGeometry"/> value as a contiguous stream of bytes. It permits <see cref="GeoAPI.Geometries.IGeometry"/> 
+    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.Geometry"/> (WKBGeometry) provides a portable 
+    /// representation of a <see cref="GeoAPI.Geometries.Geometry"/> value as a contiguous stream of bytes. It permits <see cref="GeoAPI.Geometries.Geometry"/> 
     /// values to be exchanged between an ODBC client and an SQL database in binary form.</para>
-    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.IGeometry"/> is obtained by serializing a <see cref="GeoAPI.Geometries.IGeometry"/>
+    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.Geometry"/> is obtained by serializing a <see cref="GeoAPI.Geometries.Geometry"/>
     /// instance as a sequence of numeric types drawn from the set {Unsigned Integer, Double} and
     /// then serializing each numeric type as a sequence of bytes using one of two well defined,
     /// standard, binary representations for numeric types (NDR, XDR). The specific binary encoding
@@ -62,13 +62,13 @@ namespace SharpMap.Converters.WellKnownBinary
     public class GeometryFromWKB
     {
         /// <summary>
-        /// Creates a <see cref="GeoAPI.Geometries.IGeometry"/> from the supplied byte[] containing the Well-known Binary representation.
+        /// Creates a <see cref="GeoAPI.Geometries.Geometry"/> from the supplied byte[] containing the Well-known Binary representation.
         /// </summary>
         /// <param name="bytes">byte[] containing the Well-known Binary representation.</param>
         /// <param name="factory">The factory to create the result geometry</param>
-        /// <returns>A <see cref="GeoAPI.Geometries.IGeometry"/> bases on the supplied Well-known Binary representation.</returns>
-        public static IGeometry Parse(byte[] bytes, IGeometryFactory factory)
-        {            
+        /// <returns>A <see cref="GeoAPI.Geometries.Geometry"/> bases on the supplied Well-known Binary representation.</returns>
+        public static Geometry Parse(byte[] bytes, GeometryFactory factory)
+        {
             // Create a memory stream using the suppiled byte array.
             using (var ms = new MemoryStream(bytes))
             {
@@ -77,17 +77,17 @@ namespace SharpMap.Converters.WellKnownBinary
                 {
                     // Call the main create function.
                     return Parse(reader, factory);
-                }                
-            }            
+                }
+            }
         }
 
         /// <summary>
-        /// Creates a <see cref="GeoAPI.Geometries.IGeometry"/> based on the Well-known binary representation.
+        /// Creates a <see cref="GeoAPI.Geometries.Geometry"/> based on the Well-known binary representation.
         /// </summary>
         /// <param name="reader">A <see cref="System.IO.BinaryReader">BinaryReader</see> used to read the Well-known binary representation.</param>
         /// <param name="factory">The factory to create the result geometry</param>
-        /// <returns>A <see cref="GeoAPI.Geometries.IGeometry"/> based on the Well-known binary representation.</returns>
-        public static IGeometry Parse(BinaryReader reader, IGeometryFactory factory)
+        /// <returns>A <see cref="GeoAPI.Geometries.Geometry"/> based on the Well-known binary representation.</returns>
+        public static Geometry Parse(BinaryReader reader, GeometryFactory factory)
         {
             WKBReader wkb = new WKBReader();
             return wkb.Read(reader.BaseStream);
@@ -132,7 +132,7 @@ namespace SharpMap.Converters.WellKnownBinary
             */
         }
 
-        private static IPoint CreateWKBPoint(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static Point CreateWKBPoint(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             // Create and return the point.
             return factory.CreatePoint(new Coordinate(ReadDouble(reader, byteOrder), ReadDouble(reader, byteOrder)));
@@ -141,7 +141,7 @@ namespace SharpMap.Converters.WellKnownBinary
         private static Coordinate[] ReadCoordinates(BinaryReader reader, WkbByteOrder byteOrder)
         {
             // Get the number of points in this linestring.
-            var numPoints = (int) ReadUInt32(reader, byteOrder);
+            var numPoints = (int)ReadUInt32(reader, byteOrder);
 
             // Create a new array of coordinates.
             var coords = new Coordinate[numPoints];
@@ -155,43 +155,43 @@ namespace SharpMap.Converters.WellKnownBinary
             return coords;
         }
 
-        private static ILineString CreateWKBLineString(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static LineString CreateWKBLineString(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             var arrPoint = ReadCoordinates(reader, byteOrder);
             return factory.CreateLineString(arrPoint);
         }
 
-        private static ILinearRing CreateWKBLinearRing(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static LinearRing CreateWKBLinearRing(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             var points = new List<Coordinate>(ReadCoordinates(reader, byteOrder));
-            if (!points[0].Equals2D(points[points.Count-1]))
+            if (!points[0].Equals2D(points[points.Count - 1]))
                 points.Add(new Coordinate(points[0]));
             return factory.CreateLinearRing(points.ToArray());
         }
 
-        private static IPolygon CreateWKBPolygon(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static Polygon CreateWKBPolygon(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             // Get the Number of rings in this Polygon.
-            var numRings = (int) ReadUInt32(reader, byteOrder);
+            var numRings = (int)ReadUInt32(reader, byteOrder);
 
             Debug.Assert(numRings >= 1, "Number of rings in polygon must be 1 or more.");
 
             var shell = CreateWKBLinearRing(reader, byteOrder, factory);
-            
-            var holes = new ILinearRing[--numRings];
+
+            var holes = new LinearRing[--numRings];
             for (var i = 0; i < numRings; i++)
                 holes[i] = CreateWKBLinearRing(reader, byteOrder, factory);
 
             return factory.CreatePolygon(shell, holes);
         }
 
-        private static IMultiPoint CreateWKBMultiPoint(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static MultiPoint CreateWKBMultiPoint(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             // Get the number of points in this multipoint.
-            var numPoints = (int) ReadUInt32(reader, byteOrder);
+            var numPoints = (int)ReadUInt32(reader, byteOrder);
 
             // Create a new array for the points.
-            var points = new IPoint[numPoints];
+            var points = new Point[numPoints];
 
             // Loop on the number of points.
             for (var i = 0; i < numPoints; i++)
@@ -208,13 +208,13 @@ namespace SharpMap.Converters.WellKnownBinary
             return factory.CreateMultiPoint(points);
         }
 
-        private static IMultiLineString CreateWKBMultiLineString(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static MultiLineString CreateWKBMultiLineString(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             // Get the number of linestrings in this multilinestring.
-            var numLineStrings = (int) ReadUInt32(reader, byteOrder);
+            var numLineStrings = (int)ReadUInt32(reader, byteOrder);
 
             // Create a new array for the linestrings .
-            var lines = new ILineString[numLineStrings];
+            var lines = new LineString[numLineStrings];
 
             // Loop on the number of linestrings.
             for (var i = 0; i < numLineStrings; i++)
@@ -231,13 +231,13 @@ namespace SharpMap.Converters.WellKnownBinary
             return factory.CreateMultiLineString(lines);
         }
 
-        private static IMultiPolygon CreateWKBMultiPolygon(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static MultiPolygon CreateWKBMultiPolygon(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             // Get the number of Polygons.
-            var numPolygons = (int) ReadUInt32(reader, byteOrder);
+            var numPolygons = (int)ReadUInt32(reader, byteOrder);
 
             // Create a new array for the Polygons.
-            var polygons = new IPolygon[numPolygons];
+            var polygons = new Polygon[numPolygons];
 
             // Loop on the number of polygons.
             for (var i = 0; i < numPolygons; i++)
@@ -256,13 +256,13 @@ namespace SharpMap.Converters.WellKnownBinary
             return factory.CreateMultiPolygon(polygons);
         }
 
-        private static IGeometry CreateWKBGeometryCollection(BinaryReader reader, WkbByteOrder byteOrder, IGeometryFactory factory)
+        private static Geometry CreateWKBGeometryCollection(BinaryReader reader, WkbByteOrder byteOrder, GeometryFactory factory)
         {
             // The next byte in the array tells the number of geometries in this collection.
-            var numGeometries = (int) ReadUInt32(reader, byteOrder);
+            var numGeometries = (int)ReadUInt32(reader, byteOrder);
 
             // Create a new array for the geometries.
-            var geometries = new IGeometry[numGeometries];
+            var geometries = new Geometry[numGeometries];
 
             // Loop on the number of geometries.
             for (var i = 0; i < numGeometries; i++)
@@ -285,7 +285,7 @@ namespace SharpMap.Converters.WellKnownBinary
             }
             if (byteOrder == WkbByteOrder.Ndr)
                 return reader.ReadUInt32();
-            
+
             throw new ArgumentException("Byte order not recognized");
         }
 
@@ -299,7 +299,7 @@ namespace SharpMap.Converters.WellKnownBinary
             }
             if (byteOrder == WkbByteOrder.Ndr)
                 return reader.ReadDouble();
-            
+
             throw new ArgumentException("Byte order not recognized");
         }
     }

@@ -18,12 +18,12 @@
 // Note:
 // Good stuff on DBase format: http://www.clicketyclick.dk/databases/xbase/format/
 
+using SharpMap.Utilities.Indexing;
 using System;
 using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using SharpMap.Utilities.Indexing;
 
 namespace SharpMap.Data.Providers
 {
@@ -45,7 +45,7 @@ namespace SharpMap.Data.Providers
         /// Event raised when the <see cref="Encoding"/> property has changed
         /// </summary>
         public event EventHandler EncodingChanged;
-        
+
         private struct DbaseField
         {
             public int Address;
@@ -62,7 +62,7 @@ namespace SharpMap.Data.Providers
         private Int16 _recordLength;
         private readonly string _filename;
         private DbaseField[] _dbaseColumns;
-        
+
         private Stream _dbfStream;
         //private BinaryReader br;
         private bool _headerIsParsed;
@@ -132,14 +132,14 @@ namespace SharpMap.Data.Providers
                 ParseDbfHeader(_filename);
         }
 
-//        private Stream GetStream()
-//        {
-//#if USE_MEMORYMAPPED_FILE
-//            return MemMappedFiles[_filename].CreateViewStream();
-//#else
-//            return new FileStream(_filename, FileMode.Open, FileAccess.Read);
-//#endif
-//        }
+        //        private Stream GetStream()
+        //        {
+        //#if USE_MEMORYMAPPED_FILE
+        //            return MemMappedFiles[_filename].CreateViewStream();
+        //#else
+        //            return new FileStream(_filename, FileMode.Open, FileAccess.Read);
+        //#endif
+        //        }
 
         /// <summary>
         /// Closes the dbase file stream
@@ -197,7 +197,7 @@ namespace SharpMap.Data.Providers
         {
             var tree = new BinaryTree<T, uint>();
             for (uint i = 0; i < ((_numberOfRecords > 10000) ? 10000 : _numberOfRecords); i++)
-                tree.Add(new BinaryTree<T, uint>.ItemValue((T) GetValue(i, columnId), i));
+                tree.Add(new BinaryTree<T, uint>.ItemValue((T)GetValue(i, columnId), i));
             return tree;
         }
 #endif
@@ -304,7 +304,7 @@ namespace SharpMap.Data.Providers
 
             if (buffer32[0] != 0x03)
                 throw new NotSupportedException("Unsupported DBF Type");
-            
+
             //Get last modified date
             _lastUpdate = new DateTime(buffer32[1] + 1900, buffer32[2], buffer32[3]);
 
@@ -324,7 +324,7 @@ namespace SharpMap.Data.Providers
             // (   headerlength 
             //   - 32 bytes for the base header
             //   - 1 byte for the header terminator ) / 32 bytes for each field
-            int numberOfColumns = (_headerLength - 32 - 1) / 32; 
+            int numberOfColumns = (_headerLength - 32 - 1) / 32;
             _dbaseColumns = new DbaseField[numberOfColumns];
             for (int i = 0; i < numberOfColumns; i++)
             {
@@ -362,7 +362,7 @@ namespace SharpMap.Data.Providers
                     _dbaseColumns[i].Address = br.ReadInt32();
                     if (i == 0) //Set it to 0 for first column and calculate it for the rest
                         _dbaseColumns[i].Address = 0;
-                    else 
+                    else
                         _dbaseColumns[i].Address = _dbaseColumns[i - 1].Address + _dbaseColumns[i - 1].Length;
 
                     int length = br.ReadByte();
@@ -388,7 +388,7 @@ namespace SharpMap.Data.Providers
 
             _currentRecordBuffer = new byte[_recordLength];
             _headerIsParsed = true;
-            
+
             CreateBaseTable();
         }
 
@@ -538,11 +538,11 @@ namespace SharpMap.Data.Providers
                     if (!string.IsNullOrEmpty(fileName))
                     {
                         fileName = Path.ChangeExtension(fileName, "cpg");
-                        if (!File.Exists(fileName)) 
+                        if (!File.Exists(fileName))
                             fileName = Path.ChangeExtension(fileName, "cst");
                         if (File.Exists(fileName))
                         {
-                            var encoding = File.ReadAllText(fileName).Trim('\r','\n');
+                            var encoding = File.ReadAllText(fileName).Trim('\r', '\n');
                             try
                             {
                                 return Encoding.GetEncoding(encoding);
@@ -564,20 +564,20 @@ namespace SharpMap.Data.Providers
         {
             var tab = new DataTable();
             // all of common, non "base-table" fields implemented
-            tab.Columns.Add("ColumnName", typeof (String));
-            tab.Columns.Add("ColumnSize", typeof (Int32));
-            tab.Columns.Add("ColumnOrdinal", typeof (Int32));
-            tab.Columns.Add("NumericPrecision", typeof (Int16));
-            tab.Columns.Add("NumericScale", typeof (Int16));
-            tab.Columns.Add("DataType", typeof (Type));
-            tab.Columns.Add("AllowDBNull", typeof (bool));
-            tab.Columns.Add("IsReadOnly", typeof (bool));
-            tab.Columns.Add("IsUnique", typeof (bool));
-            tab.Columns.Add("IsRowVersion", typeof (bool));
-            tab.Columns.Add("IsKey", typeof (bool));
-            tab.Columns.Add("IsAutoIncrement", typeof (bool));
-            tab.Columns.Add("IsLong", typeof (bool));
-            
+            tab.Columns.Add("ColumnName", typeof(String));
+            tab.Columns.Add("ColumnSize", typeof(Int32));
+            tab.Columns.Add("ColumnOrdinal", typeof(Int32));
+            tab.Columns.Add("NumericPrecision", typeof(Int16));
+            tab.Columns.Add("NumericScale", typeof(Int16));
+            tab.Columns.Add("DataType", typeof(Type));
+            tab.Columns.Add("AllowDBNull", typeof(bool));
+            tab.Columns.Add("IsReadOnly", typeof(bool));
+            tab.Columns.Add("IsUnique", typeof(bool));
+            tab.Columns.Add("IsRowVersion", typeof(bool));
+            tab.Columns.Add("IsKey", typeof(bool));
+            tab.Columns.Add("IsAutoIncrement", typeof(bool));
+            tab.Columns.Add("IsLong", typeof(bool));
+
             //Why do we need to add the dbase columns?
             //foreach (DbaseField dbf in _dbaseColumns)
             //    tab.Columns.Add(dbf.ColumnName, Type. dbf.DataType);
@@ -632,23 +632,23 @@ namespace SharpMap.Data.Providers
             switch (dataTypeCode)
             {
                 case TypeCode.SByte:
-                    return typeof (sbyte);
+                    return typeof(sbyte);
                 case TypeCode.Boolean:
-                    return typeof (bool);
+                    return typeof(bool);
                 case TypeCode.Int16:
-                    return typeof (short);
+                    return typeof(short);
                 case TypeCode.Int32:
-                    return typeof (int);
+                    return typeof(int);
                 case TypeCode.Int64:
-                    return typeof (long);
+                    return typeof(long);
                 case TypeCode.Single:
-                    return typeof (float);
+                    return typeof(float);
                 case TypeCode.Double:
-                    return typeof (double);
+                    return typeof(double);
                 case TypeCode.String:
-                    return typeof (string);
+                    return typeof(string);
                 case TypeCode.DateTime:
-                    return typeof (DateTime);
+                    return typeof(DateTime);
                 case TypeCode.Object: // HACK
                     return typeof(byte[]);
                 default:
@@ -668,7 +668,7 @@ namespace SharpMap.Data.Providers
                 _baseTable.Columns.Add("Oid", typeof(uint));
                 _baseTable.PrimaryKey = new DataColumn[] { _baseTable.Columns[0] };
             }
-              
+
             foreach (var dbf in _dbaseColumns)
             {
                 //_baseTable.Columns.Add(dbf.ColumnName, dbf.DataType);
@@ -764,7 +764,7 @@ namespace SharpMap.Data.Providers
 
                 _encoding = value;
                 OnEncodingChanged(EventArgs.Empty);
-                
+
             }
         }
 
@@ -804,7 +804,7 @@ namespace SharpMap.Data.Providers
         }
 
         private static readonly NumberFormatInfo Nfi = NumberFormatInfo.InvariantInfo;
-        
+
         private unsafe object ReadDbfValue(DbaseField dbf)
         {
             var tmpBuffer = new ReadOnlySpan<byte>(_currentRecordBuffer, dbf.Address + 1, dbf.Length);

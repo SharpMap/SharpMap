@@ -22,50 +22,50 @@
 
     public class ProcessController : Controller
     {
-        private readonly IGeometryFactory factory = GeometryFactory.Default;
+        private readonly GeometryFactory factory = GeometryFactory.Default;
 
-        private IGeometryCollection ValidateGeo(string geo)
+        private GeometryCollection ValidateGeo(string geo)
         {
             if (String.IsNullOrEmpty(geo))
                 throw new ArgumentException("invalid argument 'geo': empty string");
 
             WKTReader reader = new WKTReader(this.factory);
-            IGeometry data = reader.Read(geo);
+            Geometry data = reader.Read(geo);
 
             // we should expect a GeometryCollection object
-            if (data is IGeometryCollection)
-                return data as IGeometryCollection;
-            throw new ArgumentException("invalid argument 'geo': IGeometryCollection expected");
+            if (data is GeometryCollection)
+                return data as GeometryCollection;
+            throw new ArgumentException("invalid argument 'geo': GeometryCollection expected");
         }
 
-        private ILineString ValidateCut(string cut)
+        private LineString ValidateCut(string cut)
         {
             if (String.IsNullOrEmpty(cut))
                 throw new ArgumentException("invalid argument 'cut': empty string");
 
             WKTReader reader = new WKTReader(this.factory);
-            IGeometry data = reader.Read(cut);
+            Geometry data = reader.Read(cut);
 
             // we should expect a GeometryCollection object
-            if (data is ILineString)
-                return data as ILineString;
-            throw new ArgumentException("invalid argument 'cut': ILineString expected");
+            if (data is LineString)
+                return data as LineString;
+            throw new ArgumentException("invalid argument 'cut': LineString expected");
         }
 
-        private ActionResult MakeResponse(IEnumerable<IGeometry> geometries)
+        private ActionResult MakeResponse(IEnumerable<Geometry> geometries)
         {
             if (geometries == null)
                 throw new ArgumentNullException("geometries");
 
             // we should return a GeometryCollection object
-            IGeometry[] array = geometries.ToArray();
-            IGeometryCollection result = this.factory.CreateGeometryCollection(array);
+            Geometry[] array = geometries.ToArray();
+            GeometryCollection result = this.factory.CreateGeometryCollection(array);
             StringWriter writer = new StringWriter();
             GeoJSONWriter.Write(result, writer);
             return this.Json(new { geo = writer.ToString() });
         }
 
-        private static IEnumerable<IGeometry> GetItems(IGeometry coll)
+        private static IEnumerable<Geometry> GetItems(Geometry coll)
         {
             if (coll == null) 
                 throw new ArgumentNullException("coll");
@@ -77,21 +77,21 @@
         [HttpPost]
         public ActionResult Clean(string geo)
         {
-            IGeometryCollection coll = this.ValidateGeo(geo);
-            IEnumerable<IGeometry> data = DoClean(coll);
+            GeometryCollection coll = this.ValidateGeo(geo);
+            IEnumerable<Geometry> data = DoClean(coll);
             return this.MakeResponse(data);
         }
 
-        private static IEnumerable<IGeometry> DoClean(IGeometryCollection coll)
+        private static IEnumerable<Geometry> DoClean(GeometryCollection coll)
         {
             if (coll == null)
                 throw new ArgumentNullException("coll");
 
-            IEnumerable<IGeometry> items = GetItems(coll);
-            foreach (IGeometry geom in items)
+            IEnumerable<Geometry> items = GetItems(coll);
+            foreach (Geometry geom in items)
             {
                 DouglasPeuckerSimplifier simplifier = new DouglasPeuckerSimplifier(geom);
-                IGeometry clean = simplifier.GetResultGeometry();
+                Geometry clean = simplifier.GetResultGeometry();
                 yield return clean;
             }
         }       
@@ -99,30 +99,30 @@
         [HttpPost]
         public ActionResult Merge(string geo)
         {
-            IGeometryCollection coll = this.ValidateGeo(geo);
-            IEnumerable<IGeometry> data = DoMerge(coll);
+            GeometryCollection coll = this.ValidateGeo(geo);
+            IEnumerable<Geometry> data = DoMerge(coll);
             return this.MakeResponse(data);
         }
 
-        private static IEnumerable<IGeometry> DoMerge(IGeometryCollection coll)
+        private static IEnumerable<Geometry> DoMerge(GeometryCollection coll)
         {
             if (coll == null)
                 throw new ArgumentNullException("coll");
 
-            IEnumerable<IGeometry> items = GetItems(coll);
+            IEnumerable<Geometry> items = GetItems(coll);
             yield return UnaryUnionOp.Union(items.ToArray());
         }
 
         [HttpPost]
         public ActionResult Split(string geo, string cut)
         {
-            IGeometryCollection coll = this.ValidateGeo(geo);
-            ILineString split = this.ValidateCut(cut);
-            IEnumerable<IGeometry> data = DoSplit(coll, split);
+            GeometryCollection coll = this.ValidateGeo(geo);
+            LineString split = this.ValidateCut(cut);
+            IEnumerable<Geometry> data = DoSplit(coll, split);
             return this.MakeResponse(data);
         }
 
-        public static IGeometry Polygonize(IGeometry geometry)
+        public static Geometry Polygonize(Geometry geometry)
         {
             if (geometry == null)
                 throw new ArgumentNullException("geometry");
@@ -136,7 +136,7 @@
             return geometry.Factory.BuildGeometry(polys);
         }
 
-        private static IEnumerable<IGeometry> DoSplit(IGeometryCollection coll, ILineString cut)
+        private static IEnumerable<Geometry> DoSplit(GeometryCollection coll, LineString cut)
         {
             if (coll == null)
                 throw new ArgumentNullException("coll");
@@ -146,18 +146,18 @@
             // adapted from 'SplitPolygon WPS' GeoServer extension:
             // https://github.com/mdavisog/wps-splitpoly/tree/master/src
 
-            IList<IGeometry> output = new List<IGeometry>();
-            IEnumerable<IGeometry> items = GetItems(coll);
-            IEnumerable<IGeometry> valid = items.Where(i => i is IPolygon);
-            foreach (IGeometry item in valid)
+            IList<Geometry> output = new List<Geometry>();
+            IEnumerable<Geometry> items = GetItems(coll);
+            IEnumerable<Geometry> valid = items.Where(i => i is Polygon);
+            foreach (Geometry item in valid)
             {
-                IGeometry nodedLinework = item.Boundary.Union(cut);
-                IGeometry polygons = Polygonize(nodedLinework);
+                Geometry nodedLinework = item.Boundary.Union(cut);
+                Geometry polygons = Polygonize(nodedLinework);
 
                 // only keep polygons which are inside the input                
                 for (int i = 0; i < polygons.NumGeometries; i++)
                 {
-                    IPolygon candpoly = (IPolygon)polygons.GetGeometryN(i);
+                    Polygon candpoly = (Polygon)polygons.GetGeometryN(i);
                     if (item.Contains(candpoly.InteriorPoint))
                         output.Add(candpoly);
                 }                
@@ -165,17 +165,17 @@
             return output;
 
             /*
-            IEnumerable<IGeometry> items = GetItems(coll);
+            IEnumerable<Geometry> items = GetItems(coll);
             LineMerger merger = new LineMerger();            
             merger.Add(items);
             merger.Add(cut);
-            IList<IGeometry> list = merger.GetMergedLineStrings();
+            IList<Geometry> list = merger.GetMergedLineStrings();
 
-            IGeometry union = UnaryUnionOp.Union(list);
+            Geometry union = UnaryUnionOp.Union(list);
 
             Polygonizer polygonizer = new Polygonizer();
             polygonizer.Add(union);
-            ICollection<IGeometry> split = polygonizer.GetPolygons();
+            ICollection<Geometry> split = polygonizer.GetPolygons();
             return split;
              * */
         }

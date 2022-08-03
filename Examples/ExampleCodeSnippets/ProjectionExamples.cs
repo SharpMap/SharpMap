@@ -110,7 +110,7 @@ namespace ExampleCodeSnippets
 
         #region Overrides of MathTransform
 
-        public override GeoAPI.CoordinateSystems.Transformations.IMathTransform Inverse()
+        public override GeoAPI.CoordinateSystems.Transformations.MathTransform Inverse()
         {
             //#warning(System.Drawing.Drawing2D.Matrix uses single precision floating point numbers. This involves reduction of precision, not at all accurate!)
 
@@ -201,7 +201,7 @@ namespace ExampleCodeSnippets
             get { throw new System.NotImplementedException(); }
         }
 
-        public GeoAPI.CoordinateSystems.Transformations.IMathTransform MathTransform
+        public GeoAPI.CoordinateSystems.Transformations.MathTransform MathTransform
         {
             get { return this; }
         }
@@ -262,7 +262,7 @@ namespace ExampleCodeSnippets
                 for (System.Int32 i = 0; i < fdtClone.Columns.Count; i++)
                     newRow[i] = row[i];
 
-                GeoAPI.Geometries.IPoint smpt = (GeoAPI.Geometries.IPoint)row.Geometry;
+                GeoAPI.Geometries.Point smpt = (GeoAPI.Geometries.Point)row.Geometry;
                 System.Drawing.PointF[] pts = new System.Drawing.PointF[] 
                     { new System.Drawing.PointF((float)smpt.X, (float)smpt.Y) };
                 matrix.TransformPoints(pts);
@@ -369,8 +369,8 @@ namespace ExampleCodeSnippets
             //Get affine transformation calculates mean points to improve accuaracy
             //Unfortunately the result is not very good, so, since I know better I manually set these
             //mean points.
-            lst.SetMeanPoints(new GeoAPI.Geometries.IPoint(0, 0), 
-                              new GeoAPI.Geometries.IPoint(matrix.OffsetX, matrix.OffsetY));
+            lst.SetMeanPoints(new GeoAPI.Geometries.Point(0, 0), 
+                              new GeoAPI.Geometries.Point(matrix.OffsetX, matrix.OffsetY));
              */
 
             //Create Affine

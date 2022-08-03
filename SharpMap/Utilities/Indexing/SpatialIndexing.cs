@@ -15,16 +15,16 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using Common.Logging;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using SharpMap.Data.Providers;
+using SharpMap.Utilities.Indexing;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using Common.Logging;
-using GeoAPI.Geometries;
-using NetTopologySuite.Utilities;
-using SharpMap.Data.Providers;
-using SharpMap.Utilities.Indexing;
 
 namespace SharpMap.Utilities.Indexing
 {
@@ -252,9 +252,9 @@ namespace SharpMap.Utilities.SpatialIndexing
                 var geoavg = 0d; // geometric average - midpoint of ALL the objects
 
                 // go through all bbox and calculate the average of the midpoints
-                var frac = 1.0d/objList.Count;
+                var frac = 1.0d / objList.Count;
                 for (var i = 0; i < objList.Count; i++)
-                    geoavg += objList[i].Box.Centre[longaxis]*frac;
+                    geoavg += objList[i].Box.Centre[longaxis] * frac;
 
                 // bucket bbox based on their midpoint's side of the geo average in the longest axis
                 for (var i = 0; i < objList.Count; i++)
@@ -304,18 +304,18 @@ namespace SharpMap.Utilities.SpatialIndexing
             /* -------------------------------------------------------------------- */
             if (input.Width > input.Height)
             {
-                range = input.Width*SplitRatio;
+                range = input.Width * SplitRatio;
 
                 out1 = new Envelope(input.BottomLeft(), new Coordinate(input.MinX + range, input.MaxY));
                 out2 = new Envelope(new Coordinate(input.MaxX - range, input.MinY), input.TopRight());
             }
 
-                /* -------------------------------------------------------------------- */
-                /*      Otherwise split in Y direction.                                 */
-                /* -------------------------------------------------------------------- */
+            /* -------------------------------------------------------------------- */
+            /*      Otherwise split in Y direction.                                 */
+            /* -------------------------------------------------------------------- */
             else
             {
-                range = input.Height*SplitRatio;
+                range = input.Height * SplitRatio;
 
                 out1 = new Envelope(input.BottomLeft(), new Coordinate(input.MaxX, input.MinY + range));
                 out2 = new Envelope(new Coordinate(input.MinX, input.MaxY - range), input.TopRight());
@@ -450,7 +450,7 @@ namespace SharpMap.Utilities.SpatialIndexing
                     var box = new BoxObjects();
                     box.Box = new Envelope(new Coordinate(br.ReadDouble(), br.ReadDouble()),
                         new Coordinate(br.ReadDouble(), br.ReadDouble()));
-                    box.ID = (uint) br.ReadInt32();
+                    box.ID = (uint)br.ReadInt32();
                     node._objList.Add(box);
                 }
             }
@@ -626,7 +626,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         public static double ErrorMetric(Envelope box)
         {
             var temp = new Coordinate(1, 1).Add(box.Max().Subtract(box.Min()));
-            return temp.X*temp.Y;
+            return temp.X * temp.Y;
         }
 
         /// <summary>
@@ -703,7 +703,7 @@ namespace SharpMap.Utilities.SpatialIndexing
     /// </summary>
     public class QuadTreeFactory : ISpatialIndexFactory<uint>
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (QuadTreeFactory));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(QuadTreeFactory));
 
         private static ShapeFile.SpatialIndexCreation _spatialIndexSpatialIndexCreationOption;
 
@@ -732,7 +732,7 @@ namespace SharpMap.Utilities.SpatialIndexing
         /// <returns>A new spatial index item</returns>
         public ISpatialIndexItem<uint> Create(uint oid, Envelope box)
         {
-            return new QuadTree.BoxObjects {ID = oid, Box = box};
+            return new QuadTree.BoxObjects { ID = oid, Box = box };
         }
 
         /// <summary>
@@ -807,7 +807,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             var root = QuadTree.CreateRootNode(extent);
             var h = new Heuristic
             {
-                maxdepth = (int) Math.Ceiling(Math.Log(expectedNumberOfEntries, 2)),
+                maxdepth = (int)Math.Ceiling(Math.Log(expectedNumberOfEntries, 2)),
                 // These are not used for this approach
                 minerror = 10,
                 tartricnt = 5,
@@ -851,7 +851,7 @@ namespace SharpMap.Utilities.SpatialIndexing
             }
 
             Heuristic heur;
-            heur.maxdepth = (int) Math.Ceiling(Math.Log(objList.Count, 2));
+            heur.maxdepth = (int)Math.Ceiling(Math.Log(objList.Count, 2));
             heur.minerror = 10;
             heur.tartricnt = 5;
             heur.mintricnt = 2;

@@ -37,8 +37,8 @@ namespace SharpMap.Utilities
         {
             var sc = new StreamingContext(StreamingContextStates.All);
             var ss = new SurrogateSelector();
-            ss.AddSurrogate(typeof (Pen), sc, new PenSurrogate());
-            ss.AddSurrogate(typeof (Brush), sc, new BrushSurrogate());
+            ss.AddSurrogate(typeof(Pen), sc, new PenSurrogate());
+            ss.AddSurrogate(typeof(Brush), sc, new BrushSurrogate());
             ss.AddSurrogate(typeof(SolidBrush), sc, new SolidBrushSurrogate());
             ss.AddSurrogate(typeof(TextureBrush), sc, new TextureBrushSurrogate());
             ss.AddSurrogate(typeof(HatchBrush), sc, new HatchBrushSurrogate());
@@ -71,7 +71,7 @@ namespace SharpMap.Utilities
                 private readonly ImageFormat _format;
                 public ImageFormatRef(SerializationInfo info, StreamingContext context)
                 {
-                    var guid = (Guid)info.GetValue("guid", typeof (Guid));
+                    var guid = (Guid)info.GetValue("guid", typeof(Guid));
                     _format = new ImageFormat(guid);
                 }
 
@@ -116,7 +116,7 @@ namespace SharpMap.Utilities
         private class StringFormatSurrogate : ISerializationSurrogate
         {
             [Serializable]
-            public class StringFormatRef: IObjectReference, ISerializable
+            public class StringFormatRef : IObjectReference, ISerializable
             {
                 private readonly StringFormat _format;
                 public StringFormatRef(SerializationInfo info, StreamingContext context)
@@ -146,7 +146,7 @@ namespace SharpMap.Utilities
                     throw new NotSupportedException();
                 }
             }
-            
+
             /// <summary>
             /// Populates the provided SerializationInfo with the data needed to serialize the object.
             /// </summary>
@@ -157,12 +157,12 @@ namespace SharpMap.Utilities
             {
                 info.SetType(typeof(StringFormatRef));
 
-                var sf = (StringFormat) obj;
+                var sf = (StringFormat)obj;
                 info.AddValue("Alignment", (int)sf.Alignment);
                 info.AddValue("DigitSubstitutionLanguage", sf.DigitSubstitutionLanguage);
                 info.AddValue("DigitSubstitutionMethod", (int)sf.DigitSubstitutionMethod);
                 info.AddValue("FormatFlags", (int)sf.FormatFlags);
-                info.AddValue("HotkeyPrefix", (int) sf.HotkeyPrefix);
+                info.AddValue("HotkeyPrefix", (int)sf.HotkeyPrefix);
                 info.AddValue("LineAlignment", sf.LineAlignment);
                 info.AddValue("Trimming", sf.Trimming);
                 float firstTabStop;
@@ -173,8 +173,8 @@ namespace SharpMap.Utilities
 
             public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
             {
-                var sf = (StringFormat) obj;
-                
+                var sf = (StringFormat)obj;
+
                 return null;
             }
         }
@@ -202,7 +202,7 @@ namespace SharpMap.Utilities
                 /// <param name="context">The streaming context</param>
                 public PenRef(SerializationInfo info, StreamingContext context)
                 {
-                    var penType = (PenType) info.GetInt32("PenType");
+                    var penType = (PenType)info.GetInt32("PenType");
                     var width = info.GetSingle("Width");
                     switch (penType)
                     {
@@ -210,13 +210,13 @@ namespace SharpMap.Utilities
                             _pen = new Pen((Color)info.GetValue("Color", typeof(Color)), width);
                             break;
                         default:
-                            var brush = (Brush) info.GetValue("Brush", typeof (Brush));
+                            var brush = (Brush)info.GetValue("Brush", typeof(Brush));
                             _pen = new Pen(brush, width);
                             break;
                     }
                     _pen.Alignment = (PenAlignment)info.GetInt32("Alignment");
-                    var ca = (float[]) info.GetValue("CompoundArray", typeof (float[]));
-                    if (ca!= null && ca.Length > 0)
+                    var ca = (float[])info.GetValue("CompoundArray", typeof(float[]));
+                    if (ca != null && ca.Length > 0)
                         _pen.CompoundArray = ca;
 
                     LineCap lineCap;
@@ -269,7 +269,7 @@ namespace SharpMap.Utilities
                     throw new NotSupportedException();
                 }
             }
-            
+
             #region ISerializationSurrogate Members
 
             /// <summary>
@@ -280,9 +280,9 @@ namespace SharpMap.Utilities
             /// <param name="context">The destination for this serialization.</param>
             public void GetObjectData(Object obj, SerializationInfo info, StreamingContext context)
             {
-            
+
                 info.SetType(typeof(PenRef));
-                var pen = (Pen) obj;
+                var pen = (Pen)obj;
 
                 info.AddValue("PenType", pen.PenType);
                 info.AddValue("Width", pen.Width);
@@ -297,7 +297,7 @@ namespace SharpMap.Utilities
                 var clp = pen.StartCap == LineCap.Custom ? pen.CustomStartCap : null;
                 SerializeLineCap(info, "Start", pen.StartCap, clp);
                 clp = pen.EndCap == LineCap.Custom ? pen.CustomEndCap : null;
-                SerializeLineCap(info, "End",pen.EndCap, clp);
+                SerializeLineCap(info, "End", pen.EndCap, clp);
 
                 info.AddValue("DashCap", (int)pen.DashCap);
                 info.AddValue("DashOffset", pen.DashOffset);
@@ -320,10 +320,10 @@ namespace SharpMap.Utilities
                         info.AddValue("Custom" + label + "Cap", customLineCap);
                     }
                     else
-                        info.AddValue(label+"Cap", (int)LineCap.Round);
+                        info.AddValue(label + "Cap", (int)LineCap.Round);
                 }
                 else
-                    info.AddValue(label+"Cap", (int)lineCap);
+                    info.AddValue(label + "Cap", (int)lineCap);
             }
 
             private static bool CustomEndCapSerializable(CustomLineCap clp)
@@ -398,7 +398,7 @@ namespace SharpMap.Utilities
 
             void ISerializationSurrogate.GetObjectData(object obj, SerializationInfo info, StreamingContext context)
             {
-                var aac = (AdjustableArrowCap) obj;
+                var aac = (AdjustableArrowCap)obj;
                 info.SetType(typeof(AdjustableArrowCapRef));
                 info.AddValue("Width", aac.Width);
                 info.AddValue("Height", aac.Height);
@@ -435,7 +435,7 @@ namespace SharpMap.Utilities
             public class CustomLineCapRef : IObjectReference, ISerializable
             {
                 private readonly CustomLineCap _clp;
-                
+
                 /// <summary>
                 /// Serialization constructor
                 /// </summary>
@@ -443,15 +443,15 @@ namespace SharpMap.Utilities
                 /// <param name="context"></param>
                 public CustomLineCapRef(SerializationInfo info, StreamingContext context)
                 {
-                    var baseCap = (LineCap) info.GetInt32("BaseCap");
+                    var baseCap = (LineCap)info.GetInt32("BaseCap");
                     var baseInset = info.GetSingle("BaseInset");
-                    var fillPath = (GraphicsPath) info.GetValue("FillPath", (typeof (GraphicsPath)));
+                    var fillPath = (GraphicsPath)info.GetValue("FillPath", (typeof(GraphicsPath)));
                     var strokePath = (GraphicsPath)info.GetValue("StrokePath", (typeof(GraphicsPath)));
 
                     var startCap = (LineCap)info.GetInt32("StartCap");
                     var endCap = (LineCap)info.GetInt32("StartCap");
                     _clp = new CustomLineCap(fillPath, strokePath, baseCap, baseInset);
-                    _clp.StrokeJoin = (LineJoin) info.GetInt32("StrokeJoin");
+                    _clp.StrokeJoin = (LineJoin)info.GetInt32("StrokeJoin");
                     _clp.WidthScale = info.GetSingle("WidthScale");
                     _clp.SetStrokeCaps(startCap, endCap);
                 }
@@ -469,7 +469,7 @@ namespace SharpMap.Utilities
 
             void ISerializationSurrogate.GetObjectData(object obj, SerializationInfo info, StreamingContext context)
             {
-                
+
                 var clp = (CustomLineCap)obj;
                 info.SetType(typeof(CustomLineCapRef));
                 info.AddValue("BaseCap", clp.BaseCap);

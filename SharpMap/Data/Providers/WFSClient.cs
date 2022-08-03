@@ -1,6 +1,11 @@
 // WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
+using NetTopologySuite.Geometries;
+using SharpMap.CoordinateSystems;
+using SharpMap.Utilities.Indexing;
+using SharpMap.Utilities.SpatialIndexing;
+using SharpMap.Utilities.Wfs;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
@@ -8,11 +13,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Xml.XPath;
-using GeoAPI.Geometries;
-using SharpMap.CoordinateSystems;
-using SharpMap.Utilities.Indexing;
-using SharpMap.Utilities.SpatialIndexing;
-using SharpMap.Utilities.Wfs;
+using GeometryFactory = SharpMap.Utilities.Wfs.GeometryFactory;
 
 namespace SharpMap.Data.Providers
 {
@@ -173,7 +174,7 @@ namespace SharpMap.Data.Providers
             /// Version 1.1.0
             /// </summary>
             WFS1_1_0
-        } ;
+        };
 
         #endregion
 
@@ -249,7 +250,7 @@ namespace SharpMap.Data.Providers
                 {
                     if (value.Length != 2)
                         throw new ArgumentException("Axis order array must have 2 elements");
-                    if (!((value[0] == 0 && value[1] == 1)||
+                    if (!((value[0] == 0 && value[1] == 1) ||
                           (value[0] == 1 && value[1] == 0)))
                         throw new ArgumentException("Axis order array values must be 0 or 1");
                     if (value[0] + value[1] != 1)
@@ -361,7 +362,7 @@ namespace SharpMap.Data.Providers
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
                 _textResources = new WFS_1_0_0_TextResources();
-            else 
+            else
                 _textResources = new WFS_1_1_0_TextResources();
 
             _wfsVersion = wfsVersion;
@@ -491,7 +492,7 @@ namespace SharpMap.Data.Providers
 
             if (wfsVersion == WFSVersionEnum.WFS1_0_0)
                 _textResources = new WFS_1_0_0_TextResources();
-            else 
+            else
                 _textResources = new WFS_1_1_0_TextResources();
 
             _wfsVersion = wfsVersion;
@@ -537,9 +538,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public virtual Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public virtual Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            if (_featureTypeInfo == null) 
+            if (_featureTypeInfo == null)
                 return null;
 
             // if cache is not enabled make a call to server with the provided bounding box
@@ -560,16 +561,16 @@ namespace SharpMap.Data.Providers
                 _tree = SpatialIndexFactory.Create(extent, _labelInfo.Count,
                     _labelInfo.Rows
                         .Cast<FeatureDataRow>()
-                        .Select((row, idx) => SpatialIndexFactory.Create((uint) idx, row.Geometry.EnvelopeInternal)));
+                        .Select((row, idx) => SpatialIndexFactory.Create((uint)idx, row.Geometry.EnvelopeInternal)));
             }
 
             // we then must filter the geometries locally
             var ids = _tree.Search(bbox);
 
-            var coll = new Collection<IGeometry>();
+            var coll = new Collection<Geometry>();
             for (var i = 0; i < ids.Count; i++)
             {
-                var featureRow = (FeatureDataRow) _labelInfo.Rows[(int)ids[i]];
+                var featureRow = (FeatureDataRow)_labelInfo.Rows[(int)ids[i]];
                 coll.Add(featureRow.Geometry);
             }
 
@@ -597,7 +598,7 @@ namespace SharpMap.Data.Providers
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
         /// <exception cref="Exception">Thrown in any case</exception>
-        public virtual IGeometry GetGeometryByID(uint oid)
+        public virtual Geometry GetGeometryByID(uint oid)
         {
             throw new Exception("The method or operation is not implemented.");
         }
@@ -607,7 +608,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public virtual void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             if (_labelInfo == null) return;
 
@@ -623,7 +624,7 @@ namespace SharpMap.Data.Providers
                     var featureGeometry = featureRow.Geometry;
                     if (featureGeometry.Intersects(geom))
                     {
-                        var newRow = (FeatureDataRow) table.Rows.Add(featureRow.ItemArray);
+                        var newRow = (FeatureDataRow)table.Rows.Add(featureRow.ItemArray);
                         newRow.Geometry = featureGeometry;
                     }
                 }
@@ -632,11 +633,11 @@ namespace SharpMap.Data.Providers
             {
                 for (var i = 0; i < _labelInfo.Rows.Count; i++)
                 {
-                    var featureRow = (FeatureDataRow) _labelInfo.Rows[i];
+                    var featureRow = (FeatureDataRow)_labelInfo.Rows[i];
                     var featureGeometry = featureRow.Geometry;
                     if (featureGeometry.Intersects(geom))
                     {
-                        var newRow = (FeatureDataRow) table.Rows.Add(featureRow.ItemArray);
+                        var newRow = (FeatureDataRow)table.Rows.Add(featureRow.ItemArray);
                         newRow.Geometry = featureGeometry;
                     }
                 }
@@ -662,7 +663,7 @@ namespace SharpMap.Data.Providers
             if (_tree != null)
             {
                 // use the index for fast query
-                
+
                 var ids = _tree.Search(box);
                 for (var i = 0; i < ids.Count; i++)
                 {
@@ -677,11 +678,11 @@ namespace SharpMap.Data.Providers
                 // we must filter the geometries locally
                 for (var i = 0; i < _labelInfo.Rows.Count; i++)
                 {
-                    var featureRow = (FeatureDataRow) _labelInfo.Rows[i];
+                    var featureRow = (FeatureDataRow)_labelInfo.Rows[i];
                     var featureGeometry = featureRow.Geometry;
                     if (box.Intersects(featureGeometry.EnvelopeInternal))
                     {
-                        var newRow = (FeatureDataRow) table.Rows.Add(featureRow.ItemArray);
+                        var newRow = (FeatureDataRow)table.Rows.Add(featureRow.ItemArray);
                         newRow.Geometry = featureGeometry;
                     }
                 }
@@ -828,7 +829,7 @@ namespace SharpMap.Data.Providers
 
         #region Private Member
 
-        private Collection<IGeometry> LoadGeometries(Envelope bbox)
+        private Collection<Geometry> LoadGeometries(Envelope bbox)
         {
             var geometryTypeString = _featureTypeInfo.Geometry._GeometryType;
 
@@ -858,7 +859,7 @@ namespace SharpMap.Data.Providers
 
             try
             {
-                Collection<IGeometry> geoms;
+                Collection<Geometry> geoms;
                 switch (geometryTypeString)
                 {
                     /* Primitive geometry elements */
@@ -1014,7 +1015,7 @@ namespace SharpMap.Data.Providers
                 /* Spatial reference ID */
                 var crs = _featureTypeInfoQueryManager.GetValueFromNode(
                     _featureTypeInfoQueryManager.Compile(_textResources.XPATH_SRS),
-                    new[] {new DictionaryEntry("_param1", featureQueryName)});
+                    new[] { new DictionaryEntry("_param1", featureQueryName) });
                 /* If no SRID could be found, try '4326' by default */
                 if (crs == null) _featureTypeInfo.SRID = "4326";
                 else
@@ -1024,7 +1025,7 @@ namespace SharpMap.Data.Providers
                 /* Bounding Box */
                 IXPathQueryManager bboxQuery = _featureTypeInfoQueryManager.GetXPathQueryManagerInContext(
                     _featureTypeInfoQueryManager.Compile(_textResources.XPATH_BBOX),
-                    new[] {new DictionaryEntry("_param1", featureQueryName)});
+                    new[] { new DictionaryEntry("_param1", featureQueryName) });
 
                 if (bboxQuery != null)
                 {
@@ -1274,7 +1275,7 @@ namespace SharpMap.Data.Providers
                                     case "gml:multiSurfaceProperty":
                                         geomType = "MultiSurfacePropertyType";
                                         break;
-                                        // e.g. 'gml:_geometryProperty' 
+                                    // e.g. 'gml:_geometryProperty' 
                                     default:
                                         break;
                                 }

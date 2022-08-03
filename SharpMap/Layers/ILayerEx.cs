@@ -25,5 +25,5 @@ namespace SharpMap.Layers
         /// Event raised when a layer needs to be rendered
         /// </summary>
         event EventHandler RenderRequired;
-   }
+    }
 }

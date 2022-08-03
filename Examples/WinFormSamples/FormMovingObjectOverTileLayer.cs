@@ -15,7 +15,7 @@ namespace WinFormSamples
     public partial class FormMovingObjectOverTileLayer : Form
     {
 
-        private List<IGeometry> geos = new List<IGeometry>();
+        private List<Geometry> geos = new List<Geometry>();
 
         private bool movingUp = true;
         private bool movingLeft = true;
@@ -48,7 +48,7 @@ namespace WinFormSamples
             //Adds a static layer
             var staticLayer = new VectorLayer("Fixed Marker");
             //position = geom.GetCentroid();
-            var aux = new List<IGeometry>();
+            var aux = new List<Geometry>();
             aux.Add(gf.CreatePoint(geom.Centre));
             staticLayer.Style.Symbol = Resources.PumpSmall;
             var geoProviderFixed = new SharpMap.Data.Providers.GeometryProvider(aux);

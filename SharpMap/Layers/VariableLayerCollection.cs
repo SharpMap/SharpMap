@@ -41,7 +41,7 @@ namespace SharpMap.Layers
     public class VariableLayerCollection : LayerCollection
     {
         //private readonly LayerCollection _variableLayers;
-        
+
         //[NonSerialized]
         //private Timer _timer;
 

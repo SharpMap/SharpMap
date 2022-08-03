@@ -10,7 +10,7 @@ namespace UnitTests.Rendering.Symbolizer
     [TestFixture]
     public class CohenSutherlandLineClippingTest
     {
-        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly GeometryFactory Factory = new GeometryFactory();
 
         [Test]
         public void SimpleTest()

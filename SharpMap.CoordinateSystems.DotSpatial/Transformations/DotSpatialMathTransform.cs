@@ -9,7 +9,7 @@ namespace SharpMap.CoordinateSystems.Transformations
     /// <summary>
     /// A math transform based on two <see cref="ProjectionInfo"/>s.
     /// </summary>
-    internal class DotSpatialMathTransform : IMathTransform
+    internal class DotSpatialMathTransform : MathTransform
     {
         private readonly ProjectionInfo _source;
         private readonly ProjectionInfo _target;
@@ -104,7 +104,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// <summary>Creates the inverse transform of this object.</summary>
         /// <remarks>This method may fail if the transform is not one to one. However, all cartographic projections should succeed.</remarks>
         /// <returns></returns>
-        public IMathTransform Inverse()
+        public MathTransform Inverse()
         {
             return _inverse ?? (_inverse = new DotSpatialMathTransform(_target, _source));
         }

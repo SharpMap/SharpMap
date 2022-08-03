@@ -15,13 +15,13 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
-using GeoAPI.Geometries;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SharpMap.Data.Providers
 {
@@ -46,8 +46,8 @@ namespace SharpMap.Data.Providers
     /// <example>
     /// Adding points of interest to the map. This is useful for vehicle tracking etc.
     /// <code lang="C#">
-    /// GeoAPI.Geometries.IGeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
-    /// List&#60;GeoAPI.Geometries.IGeometry&#62; geometries = new List&#60;GeoAPI.Geometries.IGeometry&#62;();
+    /// GeoAPI.Geometries.GeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
+    /// List&#60;NetTopologySuite.Geometries.Geometry&#62; geometries = new List&#60;NetTopologySuite.Geometries.Geometry&#62;();
     /// //Add two points
     /// geometries.Add(new gf.CreatePoint(23.345,64.325));
     /// geometries.Add(new gf.CreatePoint(23.879,64.194));
@@ -62,19 +62,19 @@ namespace SharpMap.Data.Providers
     public class GeometryProvider : PreparedGeometryProvider
     {
         static GeometryProvider() { Map.Configure(); }
-        private List<IGeometry> _geometries;
+        private List<Geometry> _geometries;
 
         /// <summary>
         /// Gets or sets the geometries this datasource contains
         /// </summary>
-        public IList<IGeometry> Geometries
+        public IList<Geometry> Geometries
         {
             get { return _geometries; }
             set
             {
                 if (!ReferenceEquals(_geometries, value))
                 {
-                    var list = value as List<IGeometry> ?? new List<IGeometry>(value);
+                    var list = value as List<Geometry> ?? new List<Geometry>(value);
                     _geometries = list;
 
                     if (_geometries != null && _geometries.Count > 0)
@@ -89,9 +89,9 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometries">Set of geometries that this datasource should contain</param>
-        public GeometryProvider(IEnumerable<IGeometry> geometries)
+        public GeometryProvider(IEnumerable<Geometry> geometries)
         {
-            Geometries = new List<IGeometry>(geometries);
+            Geometries = new List<Geometry>(geometries);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace SharpMap.Data.Providers
         /// <param name="feature">Feature to be in this datasource</param>
         public GeometryProvider(FeatureDataRow feature)
         {
-            Geometries = new List<IGeometry> { feature.Geometry };
+            Geometries = new List<Geometry> { feature.Geometry };
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace SharpMap.Data.Providers
         /// <param name="features">Features to be included in this datasource</param>
         public GeometryProvider(FeatureDataTable features)
         {
-            var geometries = new List<IGeometry>();
+            var geometries = new List<Geometry>();
             for (var i = 0; i < features.Count; i++)
                 geometries.Add(features[i].Geometry);
             Geometries = geometries;
@@ -119,24 +119,24 @@ namespace SharpMap.Data.Providers
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
         /// <param name="geometry">Geometry to be in this datasource</param>
-        public GeometryProvider(IGeometry geometry)
+        public GeometryProvider(Geometry geometry)
         {
-            Geometries = geometry != null ? new List<IGeometry> { geometry } : new List<IGeometry>();
+            Geometries = geometry != null ? new List<Geometry> { geometry } : new List<Geometry>();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
-        /// <param name="wellKnownBinaryGeometry"><see cref="GeoAPI.Geometries.IGeometry"/> as Well-known Binary to be included in this datasource</param>
+        /// <param name="wellKnownBinaryGeometry"><see cref="NetTopologySuite.Geometries.Geometry"/> as Well-known Binary to be included in this datasource</param>
         public GeometryProvider(byte[] wellKnownBinaryGeometry)
-            : this(GeometryFromWKB.Parse(wellKnownBinaryGeometry, GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory()))
+            : this(GeometryFromWKB.Parse(wellKnownBinaryGeometry, NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory()))
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeometryProvider"/>
         /// </summary>
-        /// <param name="wellKnownTextGeometry"><see cref="GeoAPI.Geometries.IGeometry"/> as Well-known Text to be included in this datasource</param>
+        /// <param name="wellKnownTextGeometry"><see cref="NetTopologySuite.Geometries.Geometry"/> as Well-known Text to be included in this datasource</param>
         public GeometryProvider(string wellKnownTextGeometry) : this(GeometryFromWKT.Parse(wellKnownTextGeometry))
         {
         }
@@ -150,9 +150,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var list = new Collection<IGeometry>();
+            var list = new Collection<Geometry>();
             lock (((ICollection)_geometries).SyncRoot)
             {
                 for (var i = 0; i < _geometries.Count; i++)
@@ -185,7 +185,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
             lock (((ICollection)_geometries).SyncRoot)
                 return _geometries[(int)oid];
@@ -196,7 +196,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             throw new NotSupportedException("Attribute data is not supported by the GeometryProvider.");
         }

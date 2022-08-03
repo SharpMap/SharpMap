@@ -18,7 +18,7 @@ namespace SharpMap.Data.Providers
             private int _lastOid;
 
             private ShapeFileIndexEntry _current;
-            
+
             public ShapeFileEnumerator(string shpPath)
                 : this(new FileStream(shpPath, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
@@ -50,7 +50,7 @@ namespace SharpMap.Data.Providers
 
                 // Get the record offset
                 var recordOffset = (int)_shpStream.Position;
-                
+
                 // Get the oid
                 var oid = ShapeFile.SwapByteOrder(_shpReader.ReadInt32());
                 Debug.Assert(oid == _lastOid + 1);
@@ -58,12 +58,12 @@ namespace SharpMap.Data.Providers
 
                 // Get the record length
                 var recordLength = 2 * ShapeFile.SwapByteOrder(_shpReader.ReadInt32());
-                
+
                 // Set the current ShapeFileIndexEntry
                 _current = new ShapeFileIndexEntry(recordOffset, recordLength);
-                
+
                 // Adjust the streams position
-                _shpStream.Seek(recordLength , SeekOrigin.Current);
+                _shpStream.Seek(recordLength, SeekOrigin.Current);
 
                 return true;
             }
@@ -99,7 +99,7 @@ namespace SharpMap.Data.Providers
             {
                 throw new FileNotFoundException("The specified path does not lead to a file", shpPath);
             }
-            
+
             var shxPath = Path.ChangeExtension(shpPath, ".shx");
             if (File.Exists(shxPath))
             {
@@ -110,7 +110,7 @@ namespace SharpMap.Data.Providers
             {
                 var fs = new FileStream(shxPath, FileMode.CreateNew, FileAccess.ReadWrite, FileShare.None);
                 fs.Seek(100, SeekOrigin.Begin);
-                
+
                 using (var bw = new BinaryWriter(fs))
                 {
                     var count = 0;
@@ -171,14 +171,14 @@ namespace SharpMap.Data.Providers
             stream.Seek(24, SeekOrigin.Begin);
             var buf = new byte[4];
             stream.Read(buf, 0, 4);
-            var bufferSize = 2*ShapeFile.SwapByteOrder(BitConverter.ToInt32(buf, 0)) - 100;
+            var bufferSize = 2 * ShapeFile.SwapByteOrder(BitConverter.ToInt32(buf, 0)) - 100;
             _shxBuffer = new byte[bufferSize];
             stream.Seek(100, SeekOrigin.Begin);
             stream.Read(_shxBuffer, 0, bufferSize);
 
-            for (var i = 0; i < bufferSize; i+= 4)
+            for (var i = 0; i < bufferSize; i += 4)
             {
-                var value = 2*ShapeFile.SwapByteOrder(BitConverter.ToInt32(_shxBuffer, i));
+                var value = 2 * ShapeFile.SwapByteOrder(BitConverter.ToInt32(_shxBuffer, i));
                 var tmp = BitConverter.GetBytes(value);
                 Buffer.BlockCopy(tmp, 0, _shxBuffer, i, 4);
             }

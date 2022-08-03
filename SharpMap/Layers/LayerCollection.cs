@@ -73,7 +73,7 @@ namespace SharpMap.Layers
                 {
                     var cloneable = lay as ICloneable;
                     if (cloneable != null)
-                        newColl.Add((ILayer) cloneable.Clone());
+                        newColl.Add((ILayer)cloneable.Clone());
                     else
                         newColl.Add(lay);
                 }

@@ -25,7 +25,7 @@ using GeoAPI.Geometries;
 using SharpMap.Data;
 using GeoAPI.CoordinateSystems.Transformations;
 using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers

@@ -95,7 +95,7 @@ namespace SharpMap.Utilities.Wfs
 
             try
             {
-                _webRequest = (HttpWebRequest) WebRequest.Create(_url);
+                _webRequest = (HttpWebRequest)WebRequest.Create(_url);
             }
             catch (SecurityException ex)
             {
@@ -134,11 +134,11 @@ namespace SharpMap.Utilities.Wfs
                         requestStream.Write(_postData, 0, _postData.Length);
                     }
                 }
-                    /* HTTP GET */
+                /* HTTP GET */
                 else
                     _webRequest.Method = WebRequestMethods.Http.Get;
 
-                _webResponse = (HttpWebResponse) _webRequest.GetResponse();
+                _webResponse = (HttpWebResponse)_webRequest.GetResponse();
                 return _webResponse.GetResponseStream();
             }
             catch (Exception ex)

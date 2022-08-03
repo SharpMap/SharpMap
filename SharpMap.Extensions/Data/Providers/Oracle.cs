@@ -26,7 +26,7 @@ using System.Globalization;
 using GeoAPI.Geometries;
 using Oracle.ManagedDataAccess.Client;
 using SharpMap.Converters.WellKnownBinary;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {

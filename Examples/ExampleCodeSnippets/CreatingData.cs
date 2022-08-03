@@ -86,7 +86,7 @@ namespace ExampleCodeSnippets
 
     public static class ShapeFactory
     {
-        public static GeoAPI.Geometries.ILinearRing CreateRectangle(GeoAPI.Geometries.IGeometryFactory factory, 
+        public static GeoAPI.Geometries.LinearRing CreateRectangle(GeoAPI.Geometries.GeometryFactory factory, 
             GeoAPI.Geometries.Coordinate leftTop, GeoAPI.Geometries.Coordinate rightBottom)
         {
             var pts = new[]
@@ -100,7 +100,7 @@ namespace ExampleCodeSnippets
             return factory.CreateLinearRing(pts);
         }
 
-        public static GeoAPI.Geometries.ILinearRing CreateRectangle(GeoAPI.Geometries.IGeometryFactory factory,
+        public static GeoAPI.Geometries.LinearRing CreateRectangle(GeoAPI.Geometries.GeometryFactory factory,
             GeoAPI.Geometries.Coordinate center, System.Drawing.SizeF size)
         {
             var wh = new System.Drawing.SizeF(size.Width * 0.5f, size.Height * 0.5f);
@@ -110,13 +110,13 @@ namespace ExampleCodeSnippets
             return CreateRectangle(factory, lt, rb);
         }
 
-        public static GeoAPI.Geometries.ILinearRing CreateEllipse(GeoAPI.Geometries.IGeometryFactory factory,
+        public static GeoAPI.Geometries.LinearRing CreateEllipse(GeoAPI.Geometries.GeometryFactory factory,
             GeoAPI.Geometries.Coordinate center, System.Drawing.SizeF size)
         {
             return CreateEllipse(factory, center, size, 12);
         }
 
-        public static GeoAPI.Geometries.ILinearRing CreateEllipse(GeoAPI.Geometries.IGeometryFactory factory,
+        public static GeoAPI.Geometries.LinearRing CreateEllipse(GeoAPI.Geometries.GeometryFactory factory,
             GeoAPI.Geometries.Coordinate center, System.Drawing.SizeF size, int segmentsPerQuadrant)
         {
             const double piHalf = System.Math.PI * 0.5d;
@@ -138,7 +138,7 @@ namespace ExampleCodeSnippets
 
     public class TestShapeFactory
     {
-        public static readonly GeoAPI.Geometries.IGeometryFactory Factory =
+        public static readonly GeoAPI.Geometries.GeometryFactory Factory =
             new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(1000));
         
         [NUnit.Framework.Test]

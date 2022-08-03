@@ -1066,7 +1066,7 @@ namespace SharpMap.Web.Wms
                         var data = Converters.GeoJSON.GeoJSONHelper.GetData(fds);
 
                         // Reproject geometries if needed
-                        IMathTransform transform = null;
+                        MathTransform transform = null;
                         if (queryLayer is VectorLayer)
                         {
                             ICoordinateTransformation transformation = (queryLayer as VectorLayer).CoordinateTransformation;

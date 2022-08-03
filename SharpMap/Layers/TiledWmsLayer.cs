@@ -16,6 +16,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using Common.Logging;
+using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using SharpMap.Rendering.Exceptions;
+using SharpMap.Web.Wms;
+using SharpMap.Web.Wms.Tiling;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -26,12 +32,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Text;
-using GeoAPI.Geometries;
-using SharpMap.Rendering.Exceptions;
-using SharpMap.Utilities;
-using SharpMap.Web.Wms;
-using SharpMap.Web.Wms.Tiling;
-using Common.Logging;
 
 namespace SharpMap.Layers
 {
@@ -51,10 +51,10 @@ namespace SharpMap.Layers
     /// TiledWmsLayer tiledWmsLayer = new TiledWmsLayer("Metacarta", url);
     /// tiledWmsLayer.TileSetsActive.Add(tiledWmsLayer.TileSets["satellite"].Name);
     /// map.Layers.Add(tiledWmsLayer);
-    /// map.ZoomToBox(new GeoAPI.Geometries.Envelope(-180.0, 180.0, -90.0, 90.0));
+    /// map.ZoomToBox(new NetTopologySuite.Geometries.Envelope(-180.0, 180.0, -90.0, 90.0));
     /// </code>
     /// </example>
-    [Obsolete("use TileLayer instead") ]
+    [Obsolete("use TileLayer instead")]
 
     public class TiledWmsLayer : Layer, ILayer
     {
@@ -258,13 +258,13 @@ namespace SharpMap.Layers
                             PointF destMin = map.WorldToImage(tileExtent.Min());
                             PointF destMax = map.WorldToImage(tileExtent.Max());
 
-                            double minX = (int) Math.Round(destMin.X);
-                            double minY = (int) Math.Round(destMax.Y);
-                            double maxX = (int) Math.Round(destMax.X);
-                            double maxY = (int) Math.Round(destMin.Y);
+                            double minX = (int)Math.Round(destMin.X);
+                            double minY = (int)Math.Round(destMax.Y);
+                            double maxX = (int)Math.Round(destMax.X);
+                            double maxY = (int)Math.Round(destMin.Y);
 
                             g.DrawImage(bitmap,
-                                        new Rectangle((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY)),
+                                        new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY)),
                                         0, 0, tileSet.Width, tileSet.Height,
                                         GraphicsUnit.Pixel, _ImageAttributes);
                         }
@@ -286,7 +286,7 @@ namespace SharpMap.Layers
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
         public override Envelope Envelope
         {
-            get 
+            get
             {
                 return _WmsClient.Layer.LatLonBoundingBox; //TODO: no box is allowed in capabilities so check for it
             }
@@ -336,7 +336,7 @@ namespace SharpMap.Layers
                                 box.MinX, box.MinY, box.MaxX, box.MaxY);
             strReq.AppendFormat("&WIDTH={0}&Height={1}", tileSet.Width, tileSet.Height);
             strReq.Append("&LAYERS=");
-                // LAYERS is set in caps because the current version of tilecache.py does not accept mixed case (a little bug)
+            // LAYERS is set in caps because the current version of tilecache.py does not accept mixed case (a little bug)
             if (tileSet.Layers != null && tileSet.Layers.Count > 0)
             {
                 foreach (string layer in tileSet.Layers)
@@ -395,13 +395,13 @@ namespace SharpMap.Layers
 
             try
             {
-                webResponse = (HttpWebResponse) webRequest.GetResponse();
+                webResponse = (HttpWebResponse)webRequest.GetResponse();
 
                 if (webResponse.ContentType.StartsWith("image"))
                 {
                     responseStream = webResponse.GetResponseStream();
-                    bitmap = (Bitmap) Bitmap.FromStream(responseStream);
-                    return (Bitmap) bitmap;
+                    bitmap = (Bitmap)Bitmap.FromStream(responseStream);
+                    return (Bitmap)bitmap;
                 }
                 else
                 {
@@ -477,7 +477,7 @@ namespace SharpMap.Layers
             double minY = Math.Round(dest.Y);
             double maxX = Math.Round(dest.Right);
             double maxY = Math.Round(dest.Bottom);
-            return new Rectangle((int) minX, (int) minY, (int) (maxX - minX), (int) (maxY - minY));
+            return new Rectangle((int)minX, (int)minY, (int)(maxX - minX), (int)(maxY - minY));
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
+using System;
 using System.Drawing;
-using GeoAPI.Geometries;
 
 namespace SharpMap
 {
@@ -107,7 +107,7 @@ namespace SharpMap
             if (!EnforceMaximumExtents)
                 return zoom;
 
-            double arWidth = (double)Size.Width/Size.Height;
+            double arWidth = (double)Size.Width / Size.Height;
 
             if (zoom > _maximumExtents.Width)
                 zoom = _maximumExtents.Width;
@@ -136,7 +136,7 @@ namespace SharpMap
             double maxZoomHeight = _maximumZoom < double.MaxValue ? _maximumZoom : double.MaxValue;
             if (2 * halfHeight > maxZoomHeight)
             {
-                halfHeight = 0.5d*maxZoomHeight;
+                halfHeight = 0.5d * maxZoomHeight;
                 halfWidth = halfHeight / (_pixelAspectRatio * ((double)Size.Height / Size.Width));
                 zoom = 2 * halfWidth;
             }
@@ -149,14 +149,14 @@ namespace SharpMap
 
             double dx = testEnvelope.MinX < maxExtents.MinX
                             ? maxExtents.MinX - testEnvelope.MinX
-                            : testEnvelope.MaxX > maxExtents.MaxX 
-                                ? maxExtents.MaxX - testEnvelope.MaxX 
+                            : testEnvelope.MaxX > maxExtents.MaxX
+                                ? maxExtents.MaxX - testEnvelope.MaxX
                                 : 0;
 
             double dy = testEnvelope.MinY < maxExtents.MinY
                             ? maxExtents.MinY - testEnvelope.MinY
-                            : testEnvelope.MaxY > maxExtents.MaxY 
-                                ? maxExtents.MaxY - testEnvelope.MaxY 
+                            : testEnvelope.MaxY > maxExtents.MaxY
+                                ? maxExtents.MaxY - testEnvelope.MaxY
                                 : 0;
 
             center.X += dx;

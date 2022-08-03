@@ -129,7 +129,7 @@ namespace SharpMap.Web.Wfs
                 public string Role;
 
                 #region Nested type: ContactInfo
-                
+
                 /// <summary>
                 /// Contact info structure
                 /// </summary>
@@ -139,22 +139,22 @@ namespace SharpMap.Web.Wfs
                     /// Telephone
                     /// </summary>
                     public Phone Telephone;
-                    
+
                     /// <summary>
                     /// Address
                     /// </summary>
                     public Address AddressDetails;
-                    
+
                     /// <summary>
                     /// Online resource
                     /// </summary>
                     public string OnlineResource;
-                    
+
                     /// <summary>
                     /// Hours of service
                     /// </summary>
                     public string HoursOfService;
-                    
+
                     /// <summary>
                     /// Contact instructions
                     /// </summary>
@@ -173,7 +173,7 @@ namespace SharpMap.Web.Wfs
                         /// <summary>
                         /// Facsimile number
                         /// </summary>
-                        public string Facsimile;  
+                        public string Facsimile;
                     }
                     #endregion
 
@@ -226,7 +226,7 @@ namespace SharpMap.Web.Wfs
 
         #endregion
 
-        
+
 
 
     }

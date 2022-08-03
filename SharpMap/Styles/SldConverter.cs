@@ -15,13 +15,13 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-﻿using System.Drawing.Drawing2D;
-﻿using System.IO;
-﻿using System.Linq;
-﻿using System.Xml;
+using System.Drawing.Drawing2D;
+using System.IO;
+using System.Linq;
+using System.Xml;
 
 namespace SharpMap.Styles
 {
@@ -77,10 +77,10 @@ namespace SharpMap.Styles
             var featureTypeStyleEls = sldConfig.SelectNodes("//sld:FeatureTypeStyle", nsm);
             if (featureTypeStyleEls == null)
                 return null;
-            
+
             foreach (XmlElement featTypeStyle in featureTypeStyleEls)
             {
-                var el = (XmlElement) featTypeStyle.SelectSingleNode("sld:FeatureTypeName", nsm);
+                var el = (XmlElement)featTypeStyle.SelectSingleNode("sld:FeatureTypeName", nsm);
                 var mainName = el != null ? el.InnerText : "";
                 var rules = featTypeStyle.SelectNodes("sld:Rule", nsm);
 
@@ -88,7 +88,7 @@ namespace SharpMap.Styles
                 {
                     foreach (XmlElement rule in rules)
                     {
-                        el = (XmlElement) rule.SelectSingleNode("sld:Name", nsm);
+                        el = (XmlElement)rule.SelectSingleNode("sld:Name", nsm);
                         var name = el != null ? el.InnerText : "";
                         var style = new VectorStyle();
                         SetSymbologyForRule(style, rule, nsm);
@@ -304,7 +304,7 @@ namespace SharpMap.Styles
 
                 if (!String.IsNullOrEmpty(strokeOpacity))
                 {
-                    opacity = Convert.ToInt32(Math.Round(Convert.ToDouble(strokeOpacity)/0.0039215, 0));
+                    opacity = Convert.ToInt32(Math.Round(Convert.ToDouble(strokeOpacity) / 0.0039215, 0));
                     if (opacity > 255)
                         opacity = 255;
                 }
@@ -365,7 +365,7 @@ namespace SharpMap.Styles
                     Func<string[], float[]> processor = strings =>
                     {
                         var res = new float[strings.Length];
-                        for(var i = 0; i < strings.Length; i++)
+                        for (var i = 0; i < strings.Length; i++)
                             res[i] = float.Parse(strings[i]);
                         return res.ToArray();
                     };
@@ -391,7 +391,7 @@ namespace SharpMap.Styles
 
                 if (!String.IsNullOrEmpty(fillOpacity))
                 {
-                    opacity = Convert.ToInt32(Math.Round(Convert.ToDouble(fillOpacity)/0.0039215, 0));
+                    opacity = Convert.ToInt32(Math.Round(Convert.ToDouble(fillOpacity) / 0.0039215, 0));
                     if (opacity > 255)
                         opacity = 255;
                 }

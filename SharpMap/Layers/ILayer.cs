@@ -15,9 +15,9 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Layers
 {
@@ -92,23 +92,23 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="g">Graphics object reference</param>
         /// <param name="map">Map which is rendered</param>
-        void Render(Graphics g, MapViewport  map);
+        void Render(Graphics g, MapViewport map);
 
         //SharpMap.CoordinateSystems.CoordinateSystem CoordinateSystem { get; set; }
     }
 
     internal static class LayerExtensions
     {
-        public static bool DoRender(this ILayer self, Graphics g, Map map )
+        public static bool DoRender(this ILayer self, Graphics g, Map map)
         {
             // Is the layer enabled for rendering at all
             if (!self.Enabled)
                 return false;
-            
+
             // Get the compare value, zoom or scale
             var compare = self.VisibilityUnits == Styles.VisibilityUnits.ZoomLevel
                 ? map.Zoom
-                : map.GetMapScale((int) g.DpiX);
+                : map.GetMapScale((int)g.DpiX);
 
             // Is the layer enabled for the current scale
             if (self.MinVisible <= compare || compare <= self.MaxVisible)

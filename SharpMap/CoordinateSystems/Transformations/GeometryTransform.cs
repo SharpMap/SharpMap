@@ -15,14 +15,16 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-using System;
 using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
+using System;
 
 // ReSharper disable once CheckNamespace
 namespace GeoAPI.CoordinateSystems.Transformations
 {
     /// <summary>
-    /// Helper class for transforming <see cref="T:GeoAPI.Geometries.IGeometry"/>
+    /// Helper class for transforming <see cref="T:GeoAPI.Geometries.Geometry"/>
     /// </summary>
     public class GeometryTransform
     {
@@ -32,7 +34,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         /// <param name="box">BoundingBox to transform</param>
         /// <param name="transform">Math Transform</param>
         /// <returns>Transformed object</returns>
-        public static Envelope TransformBox(Envelope box, IMathTransform transform)
+        public static Envelope TransformBox(Envelope box, MathTransform transform)
         {
             if (box == null)
                 return null;
@@ -40,41 +42,42 @@ namespace GeoAPI.CoordinateSystems.Transformations
             if (box.IsNull)
                 return new Envelope(box);
 
-            var factory = GeometryServiceProvider.Instance.CreateGeometryFactory();
+            var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory();
             var ring = factory.ToGeometry(box);
             ring = NetTopologySuite.Densify.Densifier.Densify(ring, ring.Length / 100d);
             ring = TransformGeometry(ring, transform, factory);
 
             var res = ring.EnvelopeInternal;
-            res.ExpandToInclude(transform.Transform(box.Centre));
+            var t = transform.Transform(new[] { box.Centre.X, box.Centre.Y });
+            res.ExpandToInclude(t[0], t[1]);
             return res;
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IGeometry"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.Geometry"/>.
         /// </summary>
         /// <param name="g">Geometry to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed Geometry</returns>
-        public static IGeometry TransformGeometry(IGeometry g, IMathTransform transform, IGeometryFactory targetFactory)
+        public static Geometry TransformGeometry(Geometry g, MathTransform transform, GeometryFactory targetFactory)
         {
             if (g == null)
                 return null;
-            if (g is IPoint)
-                return TransformPoint(g as IPoint, transform, targetFactory);
-            if (g is ILineString)
-                return TransformLineString(g as ILineString, transform, targetFactory);
-            if (g is IPolygon)
-                return TransformPolygon(g as IPolygon, transform, targetFactory);
-            if (g is IMultiPoint)
-                return TransformMultiPoint(g as IMultiPoint, transform, targetFactory);
-            if (g is IMultiLineString)
-                return TransformMultiLineString(g as IMultiLineString, transform, targetFactory);
-            if (g is IMultiPolygon)
-                return TransformMultiPolygon(g as IMultiPolygon, transform, targetFactory);
-            if (g is IGeometryCollection)
-                return TransformGeometryCollection(g as IGeometryCollection, transform, targetFactory);
+            if (g is Point)
+                return TransformPoint(g as Point, transform, targetFactory);
+            if (g is LineString)
+                return TransformLineString(g as LineString, transform, targetFactory);
+            if (g is Polygon)
+                return TransformPolygon(g as Polygon, transform, targetFactory);
+            if (g is MultiPoint)
+                return TransformMultiPoint(g as MultiPoint, transform, targetFactory);
+            if (g is MultiLineString)
+                return TransformMultiLineString(g as MultiLineString, transform, targetFactory);
+            if (g is MultiPolygon)
+                return TransformMultiPolygon(g as MultiPolygon, transform, targetFactory);
+            if (g is GeometryCollection)
+                return TransformGeometryCollection(g as GeometryCollection, transform, targetFactory);
             throw new ArgumentException("Could not transform geometry type '" + g.GetType() + "'");
         }
 
@@ -84,7 +87,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         /// <param name="c">The coordinate</param>
         /// <param name="transform">The transformation</param>
         /// <returns>A transformed coordinate</returns>
-        public static Coordinate TransformCoordinate(Coordinate c, IMathTransform transform)
+        public static Coordinate TransformCoordinate(Coordinate c, MathTransform transform)
         {
             var ordinates = transform.Transform(c.ToDoubleArray());
             return new Coordinate(ordinates[0], ordinates[1]);
@@ -96,7 +99,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         /// <param name="c">The array of coordinates</param>
         /// <param name="transform">The transformation</param>
         /// <returns>An array of transformed coordinates</returns>
-        private static Coordinate[] TransformCoordinates(Coordinate[] c, IMathTransform transform)
+        private static Coordinate[] TransformCoordinates(Coordinate[] c, MathTransform transform)
         {
             var res = new Coordinate[c.Length];
             for (var i = 0; i < c.Length; i++)
@@ -108,13 +111,13 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IPoint"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.Point"/>.
         /// </summary>
         /// <param name="p">Point to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed Point</returns>
-        public static IPoint TransformPoint(IPoint p, IMathTransform transform, IGeometryFactory targetFactory)
+        public static Point TransformPoint(Point p, MathTransform transform, GeometryFactory targetFactory)
         {
             try
             {
@@ -128,13 +131,13 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.ILineString"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.LineString"/>.
         /// </summary>
         /// <param name="l">LineString to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed LineString</returns>
-        public static ILineString TransformLineString(ILineString l, IMathTransform transform, IGeometryFactory targetFactory)
+        public static LineString TransformLineString(LineString l, MathTransform transform, GeometryFactory targetFactory)
         {
             try
             {
@@ -147,13 +150,13 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.ILinearRing"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.LinearRing"/>.
         /// </summary>
         /// <param name="r">LinearRing to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed LinearRing</returns>
-        public static ILinearRing TransformLinearRing(ILinearRing r, IMathTransform transform, IGeometryFactory targetFactory)
+        public static LinearRing TransformLinearRing(LinearRing r, MathTransform transform, GeometryFactory targetFactory)
         {
             try
             {
@@ -166,84 +169,84 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IPolygon"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.Polygon"/>.
         /// </summary>
         /// <param name="p">Polygon to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed Polygon</returns>
-        public static IPolygon TransformPolygon(IPolygon p, IMathTransform transform, IGeometryFactory targetFactory)
+        public static Polygon TransformPolygon(Polygon p, MathTransform transform, GeometryFactory targetFactory)
         {
-            var shell = TransformLinearRing((ILinearRing)p.ExteriorRing, transform, targetFactory);
-            ILinearRing[] holes = null;
+            var shell = TransformLinearRing((LinearRing)p.ExteriorRing, transform, targetFactory);
+            LinearRing[] holes = null;
             var holesCount = p.NumInteriorRings;
             if (holesCount > 0)
             {
-                holes = new ILinearRing[holesCount];
+                holes = new LinearRing[holesCount];
                 for (var i = 0; i < holesCount; i++)
-                    holes[i] = TransformLinearRing((ILinearRing)p.GetInteriorRingN(i), transform, targetFactory);
+                    holes[i] = TransformLinearRing((LinearRing)p.GetInteriorRingN(i), transform, targetFactory);
             }
             return targetFactory.CreatePolygon(shell, holes);
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IMultiPoint"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.MultiPoint"/>.
         /// </summary>
         /// <param name="points">MultiPoint to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed MultiPoint</returns>
-        public static IMultiPoint TransformMultiPoint(IMultiPoint points, IMathTransform transform, IGeometryFactory targetFactory)
+        public static MultiPoint TransformMultiPoint(MultiPoint points, MathTransform transform, GeometryFactory targetFactory)
         {
             return targetFactory.CreateMultiPointFromCoords(TransformCoordinates(points.Coordinates, transform));
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IMultiLineString"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.MultiLineString"/>.
         /// </summary>
         /// <param name="lines">MultiLineString to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed MultiLineString</returns>
-        public static IMultiLineString TransformMultiLineString(IMultiLineString lines, IMathTransform transform, IGeometryFactory targetFactory)
+        public static MultiLineString TransformMultiLineString(MultiLineString lines, MathTransform transform, GeometryFactory targetFactory)
         {
-            var lineList = new ILineString[lines.NumGeometries];
+            var lineList = new LineString[lines.NumGeometries];
             for (var i = 0; i < lines.NumGeometries; i++)
             {
-                var line = (ILineString)lines[i];
+                var line = (LineString)lines[i];
                 lineList[i] = TransformLineString(line, transform, targetFactory);
             }
             return targetFactory.CreateMultiLineString(lineList);
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IMultiPolygon"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.MultiPolygon"/>.
         /// </summary>
         /// <param name="polys">MultiPolygon to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed MultiPolygon</returns>
-        public static IMultiPolygon TransformMultiPolygon(IMultiPolygon polys, IMathTransform transform, IGeometryFactory targetFactory)
+        public static MultiPolygon TransformMultiPolygon(MultiPolygon polys, MathTransform transform, GeometryFactory targetFactory)
         {
-            var polyList = new IPolygon[polys.NumGeometries];
+            var polyList = new Polygon[polys.NumGeometries];
             for (var i = 0; i < polys.NumGeometries; i++)
             {
-                var poly = (IPolygon)polys[i];
+                var poly = (Polygon)polys[i];
                 polyList[i] = TransformPolygon(poly, transform, targetFactory);
             }
             return targetFactory.CreateMultiPolygon(polyList);
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.IGeometryCollection"/>.
+        /// Transforms a <see cref="GeoAPI.Geometries.GeometryCollection"/>.
         /// </summary>
         /// <param name="geoms">GeometryCollection to transform</param>
         /// <param name="transform">MathTransform</param>
         /// <param name="targetFactory">The factory to create the target geometry</param>
         /// <returns>Transformed GeometryCollection</returns>
-        public static IGeometryCollection TransformGeometryCollection(IGeometryCollection geoms, IMathTransform transform, IGeometryFactory targetFactory)
+        public static GeometryCollection TransformGeometryCollection(GeometryCollection geoms, MathTransform transform, GeometryFactory targetFactory)
         {
-            var geomList = new IGeometry[geoms.NumGeometries];
+            var geomList = new Geometry[geoms.NumGeometries];
             for (var i = 0; i < geoms.NumGeometries; i++)
             {
                 geomList[i] = TransformGeometry(geoms[i], transform, targetFactory);

@@ -22,7 +22,7 @@ namespace ExampleCodeSnippets
 429023.1119599645 360406.75878171506, 429004.52340613387 360451.71714446822, 
 429004.52340613387 360451.71714446822, 428999.76819468878 360451.93329044303))");
 
-            var points = new System.Collections.Generic.List<GeoAPI.Geometries.IGeometry>(new []
+            var points = new System.Collections.Generic.List<GeoAPI.Geometries.Geometry>(new []
                 {
                     reader.Factory.CreatePoint(new GeoAPI.Geometries.Coordinate(429012.5, 360443.18)),
                     reader.Factory.CreatePoint(new GeoAPI.Geometries.Coordinate(429001.59, 360446.98)),

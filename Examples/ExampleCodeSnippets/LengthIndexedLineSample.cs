@@ -5,8 +5,8 @@ namespace ExampleCodeSnippets
     [NUnit.Framework.TestFixture]
     public class LengthIndexedLineSample
     {
-public GeoAPI.Geometries.IMultiLineString SplitLineString(
-    GeoAPI.Geometries.ILineString lineString, 
+public GeoAPI.Geometries.MultiLineString SplitLineString(
+    GeoAPI.Geometries.LineString lineString, 
     System.Double length)
 {
     if (lineString == null || lineString.IsEmpty)
@@ -16,13 +16,13 @@ public GeoAPI.Geometries.IMultiLineString SplitLineString(
     //var ntsLine = (NetTopologySuite.Geometries.LineString)
     //                SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(lineString, gf);
 
-    var ret = new System.Collections.Generic.List<GeoAPI.Geometries.ILineString>();
+    var ret = new System.Collections.Generic.List<GeoAPI.Geometries.LineString>();
     var lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(lineString);
 
     double currentLength = 0d;
     while (currentLength  < lineString.Length)
     {
-        var tmpLine = (GeoAPI.Geometries.ILineString)
+        var tmpLine = (GeoAPI.Geometries.LineString)
             lil.ExtractLine(currentLength, currentLength + length);
         ret.Add(tmpLine);
         currentLength += length;

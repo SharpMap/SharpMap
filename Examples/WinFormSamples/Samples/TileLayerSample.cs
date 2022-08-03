@@ -333,7 +333,7 @@ namespace WinFormSamples.Samples
             /// </summary>
             private const int Timeout = 30*1000;
 
-            private readonly GeoAPI.Geometries.IGeometryFactory _factory =
+            private readonly GeoAPI.Geometries.GeometryFactory _factory =
                 GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
 
             /// <summary>

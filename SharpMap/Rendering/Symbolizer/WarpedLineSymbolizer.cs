@@ -1,7 +1,7 @@
+using NetTopologySuite.Geometries;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -30,9 +30,9 @@ namespace SharpMap.Rendering.Symbolizer
         public static GraphicsPath GetGreaterSeries(float x, float y)
         {
             var gp = new GraphicsPath();
-            gp.AddLine(new PointF(0.5f*x, y), new PointF(1.5f * x, 0f));
+            gp.AddLine(new PointF(0.5f * x, y), new PointF(1.5f * x, 0f));
             gp.CloseFigure();
-            gp.AddLine(new PointF(1.5f * x, 0f), new PointF(0.5f*x, -y));
+            gp.AddLine(new PointF(1.5f * x, 0f), new PointF(0.5f * x, -y));
             gp.CloseFigure();
             return gp;
         }
@@ -48,9 +48,9 @@ namespace SharpMap.Rendering.Symbolizer
             var gp = new GraphicsPath();
             gp.AddLine(new PointF(0f, 0f), new PointF(0f, y));
             gp.CloseFigure();
-            gp.AddLine(new PointF(0f, y), new PointF(2*x, -y));
+            gp.AddLine(new PointF(0f, y), new PointF(2 * x, -y));
             gp.CloseFigure();
-            gp.AddLine(new PointF(2*x, -y), new PointF(2*x, 0));
+            gp.AddLine(new PointF(2 * x, -y), new PointF(2 * x, 0));
             gp.CloseFigure();
             return gp;
         }
@@ -68,16 +68,16 @@ namespace SharpMap.Rendering.Symbolizer
         /// <returns></returns>
         public static GraphicsPath GetTriangle(float size, int orientation)
         {
-            orientation = orientation%4;
-            var half = 0.5f*size;
-            var twoThirds = 2f*size/3f;
+            orientation = orientation % 4;
+            var half = 0.5f * size;
+            var twoThirds = 2f * size / 3f;
             var gp = new GraphicsPath();
             switch (orientation)
             {
                 case 0:
-                    gp.AddPolygon(new[] { 
-                        new PointF(size, 0f), new PointF(0f, 0f), 
-                        new PointF(half, twoThirds), new PointF(size, 0f) 
+                    gp.AddPolygon(new[] {
+                        new PointF(size, 0f), new PointF(0f, 0f),
+                        new PointF(half, twoThirds), new PointF(size, 0f)
                     });
                     break;
                 case 1:
@@ -88,7 +88,7 @@ namespace SharpMap.Rendering.Symbolizer
                     break;
                 case 2:
                     gp.AddPolygon(new[] {
-                        new PointF(size, 0f), new PointF(0f, 0f), 
+                        new PointF(size, 0f), new PointF(0f, 0f),
                         new PointF(half, -twoThirds), new PointF(size, 0f)
                     });
                     break;
@@ -114,9 +114,9 @@ namespace SharpMap.Rendering.Symbolizer
         public static GraphicsPath GetTriangleSeries(float x, float y)
         {
             var gp = new GraphicsPath();
-            gp.AddPolygon(new[] { new PointF(x, 0f), new PointF(0f, 0f), new PointF(0.5f*x, 2f*x/3f), new PointF(x, 0f) });
+            gp.AddPolygon(new[] { new PointF(x, 0f), new PointF(0f, 0f), new PointF(0.5f * x, 2f * x / 3f), new PointF(x, 0f) });
             gp.CloseFigure();
-            
+
             //Just to move to a new position
             gp.AddEllipse(y, 0f, 0f, 0f);
             gp.CloseFigure();
@@ -133,7 +133,7 @@ namespace SharpMap.Rendering.Symbolizer
         public static GraphicsPath GetTriangleSeriesForward(float x, float y)
         {
             var gp = new GraphicsPath();
-            gp.AddPolygon(new[] { new PointF(0f, -0.5f*x), new PointF(0f, 0.5f*x), new PointF(2f * x / 3f, 0), new PointF(0f, -0.5f*x) });
+            gp.AddPolygon(new[] { new PointF(0f, -0.5f * x), new PointF(0f, 0.5f * x), new PointF(2f * x / 3f, 0), new PointF(0f, -0.5f * x) });
             gp.CloseFigure();
 
             //Just to move to a new position
@@ -166,10 +166,10 @@ namespace SharpMap.Rendering.Symbolizer
         public override object Clone()
         {
             var res = (WarpedLineSymbolizer)MemberwiseClone();
-            res.Fill = (Brush) Fill.Clone();
-            res.Line = (Pen) Line.Clone();
-            res.Pattern = (GraphicsPath) Pattern.Clone();
-            
+            res.Fill = (Brush)Fill.Clone();
+            res.Line = (Pen)Line.Clone();
+            res.Pattern = (GraphicsPath)Pattern.Clone();
+
             return res;
         }
 
@@ -184,17 +184,17 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="lineString">The line string to symbolize.</param>
         /// <param name="graphics">The graphics</param>
-        protected override void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics)
+        protected override void OnRenderInternal(MapViewport map, LineString lineString, Graphics graphics)
         {
-            var clonedPattern = (GraphicsPath) Pattern.Clone();
+            var clonedPattern = (GraphicsPath)Pattern.Clone();
             var graphicsPath = WarpPathToPath.Warp(LineStringToPath(lineString, map), clonedPattern, true, Interval);
-            
+
             if (graphicsPath == null) return;
 
             // Fill?
             if (Fill != null)
                 graphics.FillPath(Fill, graphicsPath);
-            
+
             // Outline
             if (Line != null)
                 graphics.DrawPath(Line, graphicsPath);

@@ -46,7 +46,7 @@ using GeoAPI.Geometries;
 using SharpMap.Forms.Tools;
 using SharpMap.Layers;
 using System.Drawing.Imaging;
-using IGeometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using System.Threading;
 using Common.Logging;
 using System.Collections.Generic;
@@ -391,7 +391,7 @@ namespace SharpMap.Forms
         /// Eventtype fired when a new geometry has been defined
         /// </summary>
         /// <param name="geometry">New Geometry</param>
-        public delegate void GeometryDefinedHandler(IGeometry geometry);
+        public delegate void GeometryDefinedHandler(Geometry geometry);
 
         /// <summary>
         /// Fired when a new polygon has been defined
@@ -2361,7 +2361,7 @@ namespace SharpMap.Forms
                             }
                             else
                             {
-                                IGeometry geom;
+                                Geometry geom;
                                 if (isPoint && QueryGrowFactor == 0)
                                     geom = _map.Factory.CreatePoint(_map.ImageToWorld(new Point(e.X, e.Y)));
                                 else

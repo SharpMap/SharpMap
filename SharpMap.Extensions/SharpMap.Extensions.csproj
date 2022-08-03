@@ -14,20 +14,24 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="GDAL" Version="2.4.2" />
-      <PackageReference Include="NetTopologySuite.Core" Version="1.15.3" />
-      <PackageReference Include="NetTopologySuite.Features" Version="1.15.1" />
-      <PackageReference Include="NetTopologySuite.IO.PostGis" Version="1.15.1" />
-      <PackageReference Include="NetTopologySuite.IO.SpatiaLite" Version="1.15.1" />
-      <PackageReference Include="Npgsql" Version="4.0.10" />
+      <PackageReference Include="GDAL" Version="3.5.0" />
+      <PackageReference Include="NetTopologySuite.Features" Version="2.1.0" />
+      <PackageReference Include="NetTopologySuite.IO.PostGis" Version="2.1.0" />
+      <PackageReference Include="NetTopologySuite.IO.SpatiaLite" Version="2.0.0" />
+      <PackageReference Include="Npgsql" Version="6.0.5" />
       <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.90" />
-      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
     </ItemGroup>
     
     
     <ItemGroup>
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
         
+    </ItemGroup>
+    
+    
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

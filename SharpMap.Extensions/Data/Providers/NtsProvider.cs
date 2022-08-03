@@ -24,7 +24,7 @@ using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NtsGeometry = NetTopologySuite.Geometries.Geometry;
 
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = GeoAPI.Geometries.Geometry;
 using BoundingBox = GeoAPI.Geometries.Envelope;
 
 

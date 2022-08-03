@@ -71,7 +71,7 @@ namespace UnitTests.Data.Providers
             {
                 if (tmpFeatures > 50) break;
 
-                IGeometry geom = null;
+                Geometry geom = null;
                 Assert.DoesNotThrow(() => geom = provider.GetGeometryByID(oid),
                     "GetGeometryByID threw exception:\n\tConnection{0}\n\t{1}",
                     provider.ConnectionID, content.TableName);
@@ -86,7 +86,7 @@ namespace UnitTests.Data.Providers
                 tmpFeatures++;
             }
 
-            Collection<IGeometry> geoms = null;
+            Collection<Geometry> geoms = null;
             Assert.DoesNotThrow(() => geoms = provider.GetGeometriesInView(extent),
                 "GetGeometriesInView threw exception:\n\tConnection{0}\n\t{1}",
                 provider.ConnectionID, content.TableName);

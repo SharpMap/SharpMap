@@ -1,7 +1,7 @@
-using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
+using System;
 
 namespace SharpMap.Layers.Symbolizer
 {
@@ -9,7 +9,7 @@ namespace SharpMap.Layers.Symbolizer
     /// A vector layer class that can symbolize lineal geometries
     /// </summary>
     [Serializable]
-    public class LinealVectorLayer : BaseVectorLayer<ILineal> 
+    public class LinealVectorLayer : BaseVectorLayer<ILineal>
     {
         /// <summary>
         /// Creates an instance of this class

@@ -223,10 +223,10 @@ namespace SharpMap.Data.Providers.OracleUDT
         }
 
         /// <summary>
-        /// Get geometry as GeoAPI IGeometry
+        /// Get geometry as GeoAPI Geometry
         /// </summary>
         /// <returns></returns>
-        public IGeometry AsGeometry()
+        public Geometry AsGeometry()
         {
             if (!SdoGtype.HasValue)
                 return null;

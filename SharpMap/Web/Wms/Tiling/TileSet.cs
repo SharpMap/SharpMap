@@ -15,12 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
@@ -137,7 +137,7 @@ namespace SharpMap.Web.Wms.Tiling
 
             var xnLayers = xnlTileSet.SelectSingleNode("sm:Layers", nsmgr);
             if (xnLayers != null)
-                tileSet.Layers.AddRange(xnLayers.InnerText.Split(new[] {','}));
+                tileSet.Layers.AddRange(xnLayers.InnerText.Split(new[] { ',' }));
 
             tileSet.Name = CreateDefaultName(tileSet._layers);
 
@@ -169,7 +169,7 @@ namespace SharpMap.Web.Wms.Tiling
 
             var xnStyles = xnlTileSet.SelectSingleNode("sm:Styles", nsmgr);
             if (xnStyles != null)
-                tileSet.Styles.AddRange(xnStyles.InnerText.Split(new[] {','}));
+                tileSet.Styles.AddRange(xnStyles.InnerText.Split(new[] { ',' }));
 
             var xnBoundingBox = xnlTileSet.SelectSingleNode("sm:BoundingBox", nsmgr);
             if (xnBoundingBox != null)
@@ -190,7 +190,7 @@ namespace SharpMap.Web.Wms.Tiling
             var xnResolutions = xnlTileSet.SelectSingleNode("sm:Resolutions", nsmgr);
             if (xnResolutions != null)
             {
-                var resolutions = xnResolutions.InnerText.TrimEnd(' ').Split(new[] {' '});
+                var resolutions = xnResolutions.InnerText.TrimEnd(' ').Split(new[] { ' ' });
                 foreach (string resolutionStr in resolutions)
                 {
                     if (resolutionStr != "")

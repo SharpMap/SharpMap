@@ -16,7 +16,7 @@ namespace SharpMap.Demo.Wms.Handlers
     using SharpMap.Layers;
     using SharpMap.Web.Wms;
 
-    using Geometry = GeoAPI.Geometries.IGeometry;
+    using Geometry = GeoAPI.Geometries.Geometry;
     using BoundingBox = GeoAPI.Geometries.Envelope;
 
     public class StdJsonMapHandler : AbstractStdMapHandler
@@ -103,7 +103,7 @@ namespace SharpMap.Demo.Wms.Handlers
             IEnumerable<GeoJSON> data = GeoJSONHelper.GetData(ds);
 
             // Reproject geometries if needed
-            IMathTransform transform = null;
+            MathTransform transform = null;
             if (layer is VectorLayer)
             {
                 ICoordinateTransformation transformation = (layer as VectorLayer).CoordinateTransformation;
