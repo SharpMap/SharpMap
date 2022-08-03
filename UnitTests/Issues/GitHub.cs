@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Features;
 using NUnit.Framework;
 
@@ -74,7 +74,7 @@ namespace UnitTests.Issues
                 var rasterLyr = new SharpMap.Layers.GdalRasterLayer("Raster", rasterFile);
                 map.Layers.Add(rasterLyr);
 
-                var linePoints = new[] { new GeoAPI.Geometries.Coordinate(0, 0), new GeoAPI.Geometries.Coordinate(10, 10) };
+                var linePoints = new[] { new NetTopologySuite.Geometries.Coordinate(0, 0), new NetTopologySuite.Geometries.Coordinate(10, 10) };
                 var line = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326).CreateLineString(linePoints);
                 var linealDs = new SharpMap.Data.Providers.GeometryProvider(line);
                 var linealLyr = new SharpMap.Layers.VectorLayer("Lineal", linealDs) { SRID = 4326 };

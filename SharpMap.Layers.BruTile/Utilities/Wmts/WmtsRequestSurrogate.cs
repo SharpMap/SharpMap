@@ -1,8 +1,8 @@
 // Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile.Wmts;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using BruTile.Wmts;
 
 namespace SharpMap.Utilities.Wmts
 {
@@ -19,8 +19,8 @@ namespace SharpMap.Utilities.Wmts
         public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
         {
             var urls = new List<ResourceUrl>(info.GetInt32("numResourceUrls"));
-            for(var i = 0; i < urls.Capacity;i++)
-                urls.Add((ResourceUrl)info.GetValue(string.Format("resourceUrl{0}",i), typeof(ResourceUrl)));
+            for (var i = 0; i < urls.Capacity; i++)
+                urls.Add((ResourceUrl)info.GetValue(string.Format("resourceUrl{0}", i), typeof(ResourceUrl)));
 
             Utility.SetFieldValue(ref obj, "_resourceUrls", newValue: urls);
             Utility.SetFieldValue(ref obj, "_syncLock", newValue: new object());

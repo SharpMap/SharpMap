@@ -9,7 +9,7 @@ namespace SharpMap.Demo.Wms.Helpers
     using System.IO;
     using System.Web;
 
-    using GeoAPI.CoordinateSystems.Transformations;
+    using NetTopologySuite.CoordinateSystems.Transformations;
 
     using SharpMap.Data.Providers;
     using SharpMap.Demo.Wms.Models;

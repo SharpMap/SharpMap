@@ -23,21 +23,21 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using Common.Logging;
-using GeoAPI;
-using GeoAPI.Geometries;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using OSGeo.GDAL;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
+using NetTopologySuite.CoordinateSystems;
+using NetTopologySuite.CoordinateSystems.Transformations;
 using NetTopologySuite.Index.Strtree;
 using SharpMap.Base;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
-using Geometry = GeoAPI.Geometries.Geometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using SharpMap.Rendering.Thematics;
 using Point = System.Drawing.Point;
 
-using Polygon = GeoAPI.Geometries.Polygon;
+using Polygon = NetTopologySuite.Geometries.Polygon;
 
 namespace SharpMap.Layers
 {

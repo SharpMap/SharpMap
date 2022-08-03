@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NtsGeometry = NetTopologySuite.Geometries.Geometry;
 
-using Geometry = GeoAPI.Geometries.Geometry;
-using BoundingBox = GeoAPI.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
 
 
 namespace SharpMap.Data.Providers

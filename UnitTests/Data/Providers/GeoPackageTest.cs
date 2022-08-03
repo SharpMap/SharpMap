@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite;
 using NUnit.Framework;
 using SharpMap.Data;
@@ -15,7 +15,7 @@ namespace UnitTests.Data.Providers
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            NetTopologySuite.GeometryServiceProvider.Instance = new NtsGeometryServices();
         }
 
         [TestCase(@"geonames_belgium.gpkg")]

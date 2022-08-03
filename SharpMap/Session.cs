@@ -1,5 +1,4 @@
 ﻿using Common.Logging;
-using GeoAPI;
 using NetTopologySuite;
 using ProjNet;
 using System;

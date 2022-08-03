@@ -1,5 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using SharpMap;
+﻿using SharpMap;
 using SharpMap.Rendering;
 using SharpMap.Utilities;
 using System;
@@ -8,12 +7,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 
-namespace GeoAPI.Geometries
+namespace NetTopologySuite.Geometries
 {
     /// <summary>
-    /// Set of extension methods for use of GeoAPI within SharpMap
+    /// Set of extension methods for use of NetTopologySuite within SharpMap
     /// </summary>
-    public static class GeoAPIEx
+    public static class NtsExtensions
     {
 
         /// <summary>
@@ -374,7 +373,7 @@ namespace GeoAPI.Geometries
 
 
         private static readonly FieldInfo _envFi;
-        static GeoAPIEx()
+        static NtsExtensions()
         {
             try
             {

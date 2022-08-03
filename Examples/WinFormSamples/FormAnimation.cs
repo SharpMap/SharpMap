@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Data;
 using SharpMap.Styles;

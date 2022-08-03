@@ -12,7 +12,7 @@
                 new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
-            GeoAPI.GeometryServiceProvider.Instance = gss;
+            NetTopologySuite.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)

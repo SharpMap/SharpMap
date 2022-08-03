@@ -7,7 +7,7 @@ namespace Mapstache
     using System.Drawing.Drawing2D;
     using System.Linq;
 
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     public class GraphicsPathBuilder
     {

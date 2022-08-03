@@ -67,7 +67,7 @@ namespace UnitTests.Rendering.GroupStyle
 
             Map m = new Map(new Size(11, 11));
             m.BackColor = Color.White;
-            m.ZoomToBox(new GeoAPI.Geometries.Envelope(-5, 5, -5, 5));
+            m.ZoomToBox(new NetTopologySuite.Geometries.Envelope(-5, 5, -5, 5));
             m.Layers.Add(vLay);
             var img = m.GetMap();
 

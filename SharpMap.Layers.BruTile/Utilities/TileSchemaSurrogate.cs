@@ -1,11 +1,11 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile;
+using BruTile.Wmts;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile;
-using BruTile.Wmts;
 
 namespace SharpMap.Utilities
 {
@@ -15,7 +15,7 @@ namespace SharpMap.Utilities
 
         public virtual void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            var ts = (TileSchema) obj;
+            var ts = (TileSchema)obj;
             info.AddValue("name", ts.Name);
             info.AddValue("srs", ts.Srs);
             info.AddValue("extent", ts.Extent);
@@ -39,30 +39,30 @@ namespace SharpMap.Utilities
 
         public virtual object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
         {
-            var ts = (TileSchema) obj;
+            var ts = (TileSchema)obj;
             ts.Name = info.GetString("name");
             ts.Srs = info.GetString("srs");
             var extentRef = (ExtentSurrogate.ExtentRef)info.GetValue("extent", typeof(ExtentSurrogate.ExtentRef));
-            ts.Extent = (Extent) ((IObjectReference) extentRef).GetRealObject(context);
+            ts.Extent = (Extent)((IObjectReference)extentRef).GetRealObject(context);
             ts.OriginX = info.GetDouble("originX");
             ts.OriginY = info.GetDouble("originY");
             //ts.Width = info.GetInt32("width");
             //ts.Height = info.GetInt32("height");
             ts.Format = info.GetString("format");
-            
-            var type = (Type) info.GetValue("resolutionsType", typeof (Type));
-            var list = (IDictionary<string, Resolution>) Activator.CreateInstance(type);
+
+            var type = (Type)info.GetValue("resolutionsType", typeof(Type));
+            var list = (IDictionary<string, Resolution>)Activator.CreateInstance(type);
             var count = info.GetInt32("resolutionsCount");
             for (var i = 0; i < count; i++)
             {
                 var key = info.GetString(string.Format("rk{0}", i));
                 var valueRef = (IObjectReference)
                         info.GetValue(string.Format("rv{0}", i), typeof(ResolutionSurrogate.ResolutionRef));
-                var value = (Resolution) valueRef.GetRealObject(context);
+                var value = (Resolution)valueRef.GetRealObject(context);
                 list.Add(key, value);
             }
             Utility.SetFieldValue(ref obj, "_resolutions", BindingFlags.NonPublic | BindingFlags.Instance, list);
-            
+
             ts.YAxis = (YAxis)info.GetInt32("axis");
             return ts;
         }
@@ -76,7 +76,7 @@ namespace SharpMap.Utilities
         {
             public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
             {
-                var ts = (WmtsTileSchema) obj;
+                var ts = (WmtsTileSchema)obj;
                 info.AddValue("name", ts.Name);
                 info.AddValue("srs", ts.Srs);
                 info.AddValue("extent", ts.Extent);
@@ -118,8 +118,8 @@ namespace SharpMap.Utilities
                     var key = info.GetString(string.Format("rk{0}", i));
                     var valueRef = (IObjectReference)
                         info.GetValue(string.Format("rv{0}", i), typeof(ResolutionSurrogate.ResolutionRef));
-                    var value = (Resolution) valueRef.GetRealObject(context);
-                    list.Add(key,value);
+                    var value = (Resolution)valueRef.GetRealObject(context);
+                    list.Add(key, value);
                 }
                 Utility.SetPropertyValue(ref obj, "Resolutions", BindingFlags.Public | BindingFlags.Instance, list);
 
@@ -135,11 +135,11 @@ namespace SharpMap.Utilities
                 CrsIdentifier tmp;
                 if (CrsIdentifier.TryParse(info.GetString("supportedSRS"), out tmp))
                     Utility.SetPropertyValue(ref obj, "SupportedSRS", BindingFlags.Instance | BindingFlags.Public, tmp);
-                
+
                 return ts;
             }
         }
-        
+
         internal class BingSchemaSurrogate : TileSchemaSurrogate
         {
         }

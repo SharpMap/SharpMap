@@ -1,6 +1,6 @@
 using System;
 using System.ComponentModel;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;

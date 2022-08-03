@@ -1,5 +1,4 @@
-﻿using GeoAPI;
-using NetTopologySuite;
+﻿using NetTopologySuite;
 using ProjNet;
 
 namespace SharpMap

@@ -20,7 +20,7 @@
  */
 using System;
 using DotSpatial.Projections;
-using GeoAPI.CoordinateSystems;
+using NetTopologySuite.CoordinateSystems;
 
 namespace SharpMap.CoordinateSystems
 {

@@ -10,7 +10,7 @@ using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Symbolizer;
 using SharpMap.Styles;
-using Point = GeoAPI.Geometries.Coordinate;
+using Point = NetTopologySuite.Geometries.Coordinate;
 namespace WinFormSamples.Samples
 {
     class TextOnPathSample

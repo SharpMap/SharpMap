@@ -221,8 +221,8 @@ namespace SharpMap.Data.Providers
             {
                 cols.Add(new DataColumn(column.ColumnName, column.DataType, column.Expression, column.ColumnMapping)
 
-                                /*{AllowDBNull = column.AllowDBNull, AutoIncrement = column.AutoIncrement, AutoIncrementSeed = column.AutoIncrementSeed,
-                                    AutoIncrementStep = column.AutoIncrementStep, Caption = column.Caption}*/);
+                                        /*{AllowDBNull = column.AllowDBNull, AutoIncrement = column.AutoIncrement, AutoIncrementSeed = column.AutoIncrementSeed,
+                                            AutoIncrementStep = column.AutoIncrementStep, Caption = column.Caption}*/);
             }
             /*
             var constraints = res.Constraints;
@@ -454,8 +454,8 @@ namespace SharpMap.Data.Providers
             {
                 cols.Add(new DataColumn(column.ColumnName, column.DataType, column.Expression, column.ColumnMapping)
 
-                                    /*{AllowDBNull = column.AllowDBNull, AutoIncrement = column.AutoIncrement, AutoIncrementSeed = column.AutoIncrementSeed,
-                                        AutoIncrementStep = column.AutoIncrementStep, Caption = column.Caption}*/);
+                                            /*{AllowDBNull = column.AllowDBNull, AutoIncrement = column.AutoIncrement, AutoIncrementSeed = column.AutoIncrementSeed,
+                                                AutoIncrementStep = column.AutoIncrementStep, Caption = column.Caption}*/);
             }
             /*
             var constraints = res.Constraints;

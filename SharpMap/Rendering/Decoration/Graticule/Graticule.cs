@@ -1,6 +1,5 @@
 using Common.Logging;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using NetTopologySuite.CoordinateSystems.Transformations;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;

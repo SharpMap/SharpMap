@@ -15,6 +15,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using SharpKml.Engine;
+using SharpMap.Rendering.Symbolizer;
+using SharpMap.Rendering.Thematics;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -24,17 +29,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net;
-using GeoAPI.Geometries;
-using SharpKml.Dom;
-using SharpKml.Engine;
-using SharpMap.Rendering.Symbolizer;
-using SharpMap.Rendering.Thematics;
-using SharpMap.Styles;
-using LinearRing = SharpKml.Dom.LinearRing;
-using LineString = SharpKml.Dom.LineString;
-using Point = SharpKml.Dom.Point;
-using Polygon = SharpKml.Dom.Polygon;
-using Style = SharpKml.Dom.Style;
 
 namespace SharpMap.Data.Providers
 {
@@ -107,7 +101,7 @@ namespace SharpMap.Data.Providers
         /// <param name="internalFile">The internal file to read, or null for default kml document</param>
         /// <param name="stylesOnly">True to skip geometries and read styles only</param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static KmlProvider FromKmz(Stream stream,  string internalFile = null, bool stylesOnly = false)
+        public static KmlProvider FromKmz(Stream stream, string internalFile = null, bool stylesOnly = false)
         {
             var kmz = KmzFile.Open(stream);
 
@@ -136,7 +130,7 @@ namespace SharpMap.Data.Providers
         #region private fields and constants
 
         private GeometryFactory _geometryFactory;
-        private Dictionary<Placemark, List<Geometry>> _geometrys;
+        private Dictionary<SharpKml.Dom.Placemark, List<Geometry>> _geometrys;
         private Dictionary<string, VectorStyle> _kmlStyles;
         private Dictionary<string, StyleMap> _styleMaps;
         private Dictionary<string, Image> _symbolDict;
@@ -193,7 +187,7 @@ namespace SharpMap.Data.Providers
         /// <param name="stylesOnly">True to skip geometries and read styles only</param>
         private void ParseKml(KmlFile kmlFile, bool stylesOnly)
         {
-            var kml = kmlFile.Root as Kml;
+            var kml = kmlFile.Root as SharpKml.Dom.Kml;
             if (kml == null)
             {
                 // for further info refer to https://github.com/samcragg/sharpkml/issues/24 
@@ -201,14 +195,14 @@ namespace SharpMap.Data.Providers
                     "Kml file is null! Please check that the file conforms to http://www.opengis.net/kml/2.2 standards");
             }
 
-            var doc = kml.Feature as Document;
+            var doc = kml.Feature as SharpKml.Dom.Document;
             if (doc == null)
             {
                 throw new Exception(
                     "Kml file does not have a document node! please check that the file conforms to http://www.opengis.net/kml/2.2 standards");
             }
 
-            _geometryFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+            _geometryFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
             ConnectionID = doc.Name;
             if (doc.Description != null && !string.IsNullOrEmpty(doc.Description.Text))
                 ConnectionID += " (" + doc.Description.Text + ")";
@@ -217,30 +211,30 @@ namespace SharpMap.Data.Providers
             ExtractStyleMaps(kml);
 
             if (stylesOnly) return;
-            
+
             ExtractGeometries(kml);
             ValidatePlacemarkStyles(kml);
         }
 
         /// <summary>
-        /// Method called for rendering each feature (KML Placemark)      
+        /// Method called for rendering each feature (KML SharpKml.Dom.Placemark)      
         /// </summary>
         /// <param name="row"></param>
         /// <returns></returns>
         public VectorStyle GetKmlStyle(FeatureDataRow row)
         {
             // get styleID from row
-            var styleId = (string) row["StyleUrl"];
+            var styleId = (string)row["StyleUrl"];
 
-            // get any inline style (overrides) that apply to this Placemark
-            var pm = (Placemark) row["Object"];
-            var styleOverrides = pm.Styles.OfType<Style>().ToList().FirstOrDefault();
+            // get any inline style (overrides) that apply to this SharpKml.Dom.Placemark
+            var pm = (SharpKml.Dom.Placemark)row["Object"];
+            var styleOverrides = pm.Styles.OfType<SharpKml.Dom.Style>().ToList().FirstOrDefault();
 
             if (_kmlStyles.ContainsKey(styleId))
             {
                 return ApplyStyleOverrides(_kmlStyles[styleId], styleOverrides);
             }
-            
+
             if (_styleMaps.ContainsKey(styleId))
             {
                 var sm = _styleMaps[styleId];
@@ -261,7 +255,7 @@ namespace SharpMap.Data.Providers
         /// Parse Styles defined at the head of the KML document 
         /// </summary>
         /// <param name="kml"></param>
-        private void ExtractStyles(Element kml)
+        private void ExtractStyles(SharpKml.Dom.Element kml)
         {
             _kmlStyles = new Dictionary<string, VectorStyle>();
 
@@ -270,18 +264,18 @@ namespace SharpMap.Data.Providers
             _symbolDict = new Dictionary<string, Image>();
             _externalFiles = new HashSet<string>();
 
-            foreach (var kmlStyle in kml.Flatten().OfType<Style>())
+            foreach (var kmlStyle in kml.Flatten().OfType<SharpKml.Dom.Style>())
             {
                 if (string.IsNullOrEmpty(kmlStyle.Id))
                     continue;
-                
+
                 if (_kmlStyles.ContainsKey(kmlStyle.Id))
                     continue;
 
-                SetKmlStyleDefaults(kmlStyle);                    
-                
-                var vectorStyle = ApplyStyleOverrides(new VectorStyle(){Enabled =  true}, kmlStyle);
-                
+                SetKmlStyleDefaults(kmlStyle);
+
+                var vectorStyle = ApplyStyleOverrides(new VectorStyle() { Enabled = true }, kmlStyle);
+
                 _kmlStyles.Add(kmlStyle.Id, vectorStyle);
             }
         }
@@ -291,22 +285,22 @@ namespace SharpMap.Data.Providers
         /// both the Normal and Highlight Styles which could include external references 
         /// </summary>
         /// <param name="kml"></param>
-        private void ExtractStyleMaps(Element kml)
+        private void ExtractStyleMaps(SharpKml.Dom.Element kml)
         {
             _styleMaps = new Dictionary<string, StyleMap>();
 
-            foreach (var style in kml.Flatten().OfType<StyleMapCollection>())
+            foreach (var style in kml.Flatten().OfType<SharpKml.Dom.StyleMapCollection>())
             {
-                var styleMap = new StyleMap {Id = style.Id};
+                var styleMap = new StyleMap { Id = style.Id };
                 if (_styleMaps.ContainsKey(styleMap.Id)) continue;
-                    
+
                 style.ToList().ForEach(x =>
                 {
                     if (x.State == null) return;
                     if (x.StyleUrl == null) return;
                     if (!x.StyleUrl.OriginalString.Contains("#")) return;
 
-                    var tokens = x.StyleUrl.OriginalString.Split(new char[]{'#'}, StringSplitOptions.RemoveEmptyEntries);
+                    var tokens = x.StyleUrl.OriginalString.Split(new char[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
                     var styleName = tokens.Last();
 
                     if (tokens.Length == 2)
@@ -314,10 +308,10 @@ namespace SharpMap.Data.Providers
 
                     switch (x.State.Value)
                     {
-                        case StyleState.Normal:
+                        case SharpKml.Dom.StyleState.Normal:
                             styleMap.NormalStyleUrl = styleName;
                             break;
-                        case StyleState.Highlight:
+                        case SharpKml.Dom.StyleState.Highlight:
                             styleMap.HighlightStyleUrl = styleName;
                             break;
                     }
@@ -335,8 +329,8 @@ namespace SharpMap.Data.Providers
             // style defined in external document at specified relative or absolute location
             if (string.IsNullOrWhiteSpace(styleUrl)) return;
             if (styleUrl.StartsWith("#")) return; // internal style
-            
-            var tokens = styleUrl.Split(new char[]{'#'}, StringSplitOptions.RemoveEmptyEntries);
+
+            var tokens = styleUrl.Split(new char[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
             if (tokens.Length != 2) return;
 
             if (_kmlStyles.ContainsKey(tokens[1])) return;
@@ -380,7 +374,7 @@ namespace SharpMap.Data.Providers
                     foreach (var key in prov._kmlStyles.Keys)
                         if (!_kmlStyles.ContainsKey(key))
                             _kmlStyles.Add(key, prov._kmlStyles[key]);
-                    
+
                     foreach (var key in prov._styleMaps.Keys)
                         if (!_styleMaps.ContainsKey(key))
                             _styleMaps.Add(key, prov._styleMaps[key]);
@@ -401,9 +395,9 @@ namespace SharpMap.Data.Providers
         /// has already been loaded 
         /// </remarks>
         /// <param name="kml"></param>
-        private void ValidatePlacemarkStyles(Element kml)
+        private void ValidatePlacemarkStyles(SharpKml.Dom.Element kml)
         {
-            foreach (var f in kml.Flatten().OfType<Placemark>())
+            foreach (var f in kml.Flatten().OfType<SharpKml.Dom.Placemark>())
             {
                 if (f.StyleUrl != null && !string.IsNullOrWhiteSpace(f.StyleUrl.OriginalString))
                 {
@@ -414,7 +408,7 @@ namespace SharpMap.Data.Providers
                 else
                 {
                     // Possible inline style: ensure KML default styling values are set  
-                    var kmlStyle = f.Styles.OfType<Style>().ToList().FirstOrDefault();                    
+                    var kmlStyle = f.Styles.OfType<SharpKml.Dom.Style>().ToList().FirstOrDefault();
                     if (kmlStyle != null)
                         SetKmlStyleDefaults(kmlStyle);
                 }
@@ -431,31 +425,31 @@ namespace SharpMap.Data.Providers
             public string HighlightStyleUrl { get; set; }
         }
 
-        
+
         /// <summary>
         /// Apply PolyStyle, LineStyle, and/or IconStyle elements of a KML Style to the given VectorStyle.
         /// </summary>
         /// <remarks>
         /// As per KML documentation, in cases where a style element is defined both in a
-        /// shared style and in an inline style for a Feature (eg Placemark) the value of
+        /// shared style and in an inline style for a Feature (eg SharpKml.Dom.Placemark) the value of
         /// the Feature's inline style takes precedence over the value for the shared style
         /// </remarks>
         /// <param name="vectorStyle">cloned if kmlStyle is not null</param>
         /// <param name="kmlStyle">Style to apply to existing VectorStyle</param>
-        private VectorStyle ApplyStyleOverrides(VectorStyle vectorStyle, Style kmlStyle)
+        private VectorStyle ApplyStyleOverrides(VectorStyle vectorStyle, SharpKml.Dom.Style kmlStyle)
         {
             if (kmlStyle == null) return vectorStyle;
 
             if (kmlStyle.Polygon == null && kmlStyle.Line == null && kmlStyle.Icon == null) return vectorStyle;
 
             vectorStyle = vectorStyle.Clone();
-            
+
             if (kmlStyle.Polygon != null)
             {
                 // fill
-                var fill = kmlStyle.Polygon.Fill.GetValueOrDefault(((SolidBrush) vectorStyle.Fill).Color.A > 0);
+                var fill = kmlStyle.Polygon.Fill.GetValueOrDefault(((SolidBrush)vectorStyle.Fill).Color.A > 0);
                 var argb = kmlStyle.Polygon.Color?.Argb ?? ((SolidBrush)vectorStyle.Fill).Color.ToArgb();
-                
+
                 vectorStyle.Fill =
                     fill
                         ? new SolidBrush(Color.FromArgb(argb))
@@ -466,9 +460,9 @@ namespace SharpMap.Data.Providers
 
                 var width = kmlStyle.Line?.Width ?? vectorStyle.Outline.Width;
                 argb = kmlStyle.Line?.Color?.Argb ?? vectorStyle.Outline.Color.ToArgb();
-                
+
                 vectorStyle.Outline = vectorStyle.EnableOutline
-                    ? new Pen(Color.FromArgb(argb), (float) width)
+                    ? new Pen(Color.FromArgb(argb), (float)width)
                     : new Pen(Color.Transparent);
             }
 
@@ -476,7 +470,7 @@ namespace SharpMap.Data.Providers
             {
                 var width = kmlStyle.Line.Width.GetValueOrDefault(vectorStyle.Line.Width);
                 var argb = kmlStyle.Line.Color?.Argb ?? vectorStyle.Line.Color.ToArgb();
-                vectorStyle.Line = new Pen(Color.FromArgb(argb), (float) width);
+                vectorStyle.Line = new Pen(Color.FromArgb(argb), (float)width);
             }
 
             try
@@ -484,7 +478,7 @@ namespace SharpMap.Data.Providers
                 if (kmlStyle.Icon != null)
                 {
                     RasterPointSymbolizer rps = null;
-                    
+
                     if (kmlStyle.Icon.Icon != null && kmlStyle.Icon.Icon.Href != null)
                     {
                         rps = new RasterPointSymbolizer();
@@ -504,8 +498,8 @@ namespace SharpMap.Data.Providers
 
                     if (vectorStyle.PointSymbolizer is RasterPointSymbolizer)
                     {
-                        rps =(RasterPointSymbolizer) vectorStyle.PointSymbolizer;
-                        
+                        rps = (RasterPointSymbolizer)vectorStyle.PointSymbolizer;
+
                         var argb = kmlStyle.Icon.Color?.Argb ?? ((SolidBrush)vectorStyle.PointColor).Color.ToArgb();
                         rps.SymbolColor = Color.FromArgb(argb);
                         rps.RemapColor = Color.White;
@@ -525,65 +519,65 @@ namespace SharpMap.Data.Providers
         /// Convert KML geometry to NTS geometry     
         /// </summary>
         /// <param name="kml"></param>
-        public void ExtractGeometries(Element kml)
+        public void ExtractGeometries(SharpKml.Dom.Element kml)
         {
-            _geometrys = new Dictionary<Placemark, List<Geometry>>();
+            _geometrys = new Dictionary<SharpKml.Dom.Placemark, List<Geometry>>();
 
             //todo handle other geom types such as gxTrack and gxMutliTrack
-            foreach (var f in kml.Flatten().OfType<Polygon>())
+            foreach (var f in kml.Flatten().OfType<SharpKml.Dom.Polygon>())
             {
                 ProcessPolygonGeometry(f);
             }
 
-            foreach (var f in kml.Flatten().OfType<LineString>())
+            foreach (var f in kml.Flatten().OfType<SharpKml.Dom.LineString>())
             {
                 ProcessLineStringGeometry(f);
             }
 
-            foreach (var f in kml.Flatten().OfType<Point>())
+            foreach (var f in kml.Flatten().OfType<SharpKml.Dom.Point>())
             {
                 ProcessPointGeometry(f);
             }
 
-//            foreach (var f in kml.Flatten().OfType<LinearRing>())
-//            {
-//                ProcessLinearRingGeometry(f);
-//            }
+            //            foreach (var f in kml.Flatten().OfType<LinearRing>())
+            //            {
+            //                ProcessLinearRingGeometry(f);
+            //            }
 
-            foreach (var f in kml.Flatten().OfType<MultipleGeometry>())
+            foreach (var f in kml.Flatten().OfType<SharpKml.Dom.MultipleGeometry>())
             {
                 ProcessMultipleGeometry(f);
             }
         }
 
-        private void ProcessMultipleGeometry(MultipleGeometry f)
+        private void ProcessMultipleGeometry(SharpKml.Dom.MultipleGeometry f)
         {
             f.Geometry.ToList().ForEach(g =>
             {
-                if (g is Polygon)
+                if (g is SharpKml.Dom.Polygon)
                 {
-                    ProcessPolygonGeometry((Polygon)g);
+                    ProcessPolygonGeometry((SharpKml.Dom.Polygon)g);
                 }
-                if (g is LineString)
+                if (g is SharpKml.Dom.LineString)
                 {
-                    ProcessLineStringGeometry((LineString)g);
+                    ProcessLineStringGeometry((SharpKml.Dom.LineString)g);
                 }
-                if (g is Point)
+                if (g is SharpKml.Dom.Point)
                 {
-                    ProcessPointGeometry((Point)g);
+                    ProcessPointGeometry((SharpKml.Dom.Point)g);
                 }
-//                if (g is LinearRing)
-//                {
-//                    ProcessLinearRingGeometry((LinearRing) g);
-//                }
-                if (g is MultipleGeometry)
+                //                if (g is LinearRing)
+                //                {
+                //                    ProcessLinearRingGeometry((LinearRing) g);
+                //                }
+                if (g is SharpKml.Dom.MultipleGeometry)
                 {
-                    ProcessMultipleGeometry((MultipleGeometry)g);
+                    ProcessMultipleGeometry((SharpKml.Dom.MultipleGeometry)g);
                 }
             });
         }
 
-        private void ProcessPolygonGeometry(Polygon f)
+        private void ProcessPolygonGeometry(SharpKml.Dom.Polygon f)
         {
             var outerRing = _geometryFactory.CreateLinearRing(
                 f.OuterBoundary.LinearRing.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
@@ -597,10 +591,10 @@ namespace SharpMap.Data.Providers
             }
 
             var pGeom = _geometryFactory.CreatePolygon(outerRing, innerHoles.ToArray());
-            AddGeometryToCollection(f.GetParent<Placemark>(), pGeom);
+            AddGeometryToCollection(f.GetParent<SharpKml.Dom.Placemark>(), pGeom);
         }
 
-        private void ProcessLineStringGeometry(LineString f)
+        private void ProcessLineStringGeometry(SharpKml.Dom.LineString f)
         {
             Geometry pGeom;
             if (f.Coordinates.Count == 1)
@@ -615,28 +609,28 @@ namespace SharpMap.Data.Providers
                 pGeom = _geometryFactory.CreateLineString(
                         f.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
             }
-            AddGeometryToCollection(f.GetParent<Placemark>(), pGeom);
+            AddGeometryToCollection(f.GetParent<SharpKml.Dom.Placemark>(), pGeom);
         }
 
-        private void ProcessPointGeometry(Point f)
+        private void ProcessPointGeometry(SharpKml.Dom.Point f)
         {
             var coords = new Coordinate(f.Coordinate.Longitude, f.Coordinate.Latitude);
 
             var pGeom = _geometryFactory.CreatePoint(coords);
-            AddGeometryToCollection(f.GetParent<Placemark>(), pGeom);
+            AddGeometryToCollection(f.GetParent<SharpKml.Dom.Placemark>(), pGeom);
         }
 
         [Obsolete("ProcessPolygonGeometry correctly handles exterior and interior LinearRings")]
-        private void ProcessLinearRingGeometry(LinearRing f)
+        private void ProcessLinearRingGeometry(SharpKml.Dom.LinearRing f)
         {
             var ring = _geometryFactory.CreateLinearRing(
                     f.Coordinates.Select(crd => new Coordinate(crd.Longitude, crd.Latitude)).ToArray());
 
             var geom = RingsArePolygons ? (Geometry)_geometryFactory.CreatePolygon(ring) : ring;
-            AddGeometryToCollection(f.GetParent<Placemark>(), geom);
+            AddGeometryToCollection(f.GetParent<SharpKml.Dom.Placemark>(), geom);
         }
 
-        private void AddGeometryToCollection(Placemark parent, Geometry geom)
+        private void AddGeometryToCollection(SharpKml.Dom.Placemark parent, Geometry geom)
         {
             List<Geometry> placeMarkGeoms;
             if (_geometrys.TryGetValue(parent, out placeMarkGeoms) == false)
@@ -654,10 +648,10 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
+        /// <returns>Features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/></returns>
         public Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             var box = _geometryFactory.ToGeometry(bbox);
@@ -673,11 +667,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="NetTopologySuite.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="NetTopologySuite.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
@@ -687,7 +681,7 @@ namespace SharpMap.Data.Providers
             var res = new Collection<uint>();
 
             uint id = 0;
-            
+
             _geometrys.Where(x => box.Intersects(_geometryFactory.BuildGeometry(x.Value))).ToList().ForEach(x =>
             {
                 res.Add(id);
@@ -705,7 +699,7 @@ namespace SharpMap.Data.Providers
         {
             var sid = oid.ToString(NumberFormatInfo.InvariantInfo);
             var tmp = _geometrys.FirstOrDefault(x => x.Key.Id == sid);
-            
+
             return tmp.Value != null ?
                 _geometryFactory.BuildGeometry(tmp.Value) : null;
         }
@@ -737,7 +731,7 @@ namespace SharpMap.Data.Providers
                 feature.Value.Where(pGeom.Intersects).ToList()
                     .ForEach(v =>
                     {
-                        var newRow = (FeatureDataRow) fdt.LoadDataRow(GetAssetProperties(feature.Key), true);
+                        var newRow = (FeatureDataRow)fdt.LoadDataRow(GetAssetProperties(feature.Key), true);
                         newRow.Geometry = v;
                     }
                     );
@@ -778,7 +772,7 @@ namespace SharpMap.Data.Providers
 
             if (tmp.Value != null)
             {
-                var res = (FeatureDataRow) _schemaTable.NewRow();
+                var res = (FeatureDataRow)_schemaTable.NewRow();
                 res.ItemArray = GetAssetProperties(tmp.Key);
                 res.Geometry = _geometryFactory.BuildGeometry(tmp.Value);
                 res.AcceptChanges();
@@ -833,7 +827,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// The spatial reference ID (CRS)
         /// </summary>
-        public int SRID { get { return 4326; } set { }}
+        public int SRID { get { return 4326; } set { } }
 
         #region private helper methods
 
@@ -848,18 +842,18 @@ namespace SharpMap.Data.Providers
                 fdt.Columns.Add("StyleUrl", typeof(string));
 
             if (!fdt.Columns.Contains("Object"))
-                fdt.Columns.Add("Object", typeof(Placemark));
+                fdt.Columns.Add("Object", typeof(SharpKml.Dom.Placemark));
         }
 
-        private static object[] GetAssetProperties(Feature f)
+        private static object[] GetAssetProperties(SharpKml.Dom.Feature f)
         {
-            var styleUrl = ""; 
+            var styleUrl = "";
             if (f.StyleUrl != null)
             {
-                var tokens = f.StyleUrl.ToString().Split(new char[]{'#'}, StringSplitOptions.RemoveEmptyEntries);
+                var tokens = f.StyleUrl.ToString().Split(new char[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
                 if (tokens.Length > 0) styleUrl = tokens.Last();
             }
-           
+
             return new object[]
             {
                 f.Id,
@@ -877,26 +871,26 @@ namespace SharpMap.Data.Providers
         /// in internal dictionary, thus simplifying subsequent VectorStyle generation. 
         /// </remarks>
         /// <param name="style">The Style to check defaults</param>
-        private static void SetKmlStyleDefaults(Style style)
+        private static void SetKmlStyleDefaults(SharpKml.Dom.Style style)
         {
             if (style.Polygon != null)
             {
-                style.Polygon.Fill = style.Polygon.Fill.GetValueOrDefault(PolygonStyle.DefaultFill);
-                style.Polygon.Outline = style.Polygon.Outline.GetValueOrDefault(PolygonStyle.DefaultOutline);
-                style.Polygon.Color = style.Polygon.Color.GetValueOrDefault(ColorStyle.DefaultColor);
+                style.Polygon.Fill = style.Polygon.Fill.GetValueOrDefault(SharpKml.Dom.PolygonStyle.DefaultFill);
+                style.Polygon.Outline = style.Polygon.Outline.GetValueOrDefault(SharpKml.Dom.PolygonStyle.DefaultOutline);
+                style.Polygon.Color = style.Polygon.Color.GetValueOrDefault(SharpKml.Dom.ColorStyle.DefaultColor);
             }
-            
+
             if (style.Line != null)
             {
-                style.Line.Width = style.Line.Width.GetValueOrDefault(LineStyle.DefaultWidth);
-                style.Line.Color = style.Line.Color.GetValueOrDefault(ColorStyle.DefaultColor);
+                style.Line.Width = style.Line.Width.GetValueOrDefault(SharpKml.Dom.LineStyle.DefaultWidth);
+                style.Line.Color = style.Line.Color.GetValueOrDefault(SharpKml.Dom.ColorStyle.DefaultColor);
             }
 
             if (style.Icon != null)
             {
-                if (style.Icon.Icon == null) style.Icon.Icon = new IconStyle.IconLink(Pushpins.YellowPushpin); 
-                style.Icon.Scale = style.Icon.Scale.GetValueOrDefault(IconStyle.DefaultScale);
-                style.Icon.Color = style.Icon.Color.GetValueOrDefault(ColorStyle.DefaultColor);
+                if (style.Icon.Icon == null) style.Icon.Icon = new SharpKml.Dom.IconStyle.IconLink(Pushpins.YellowPushpin);
+                style.Icon.Scale = style.Icon.Scale.GetValueOrDefault(SharpKml.Dom.IconStyle.DefaultScale);
+                style.Icon.Color = style.Icon.Color.GetValueOrDefault(SharpKml.Dom.ColorStyle.DefaultColor);
                 style.Icon.Heading = style.Icon.Heading.GetValueOrDefault(0);
             }
         }
@@ -907,8 +901,8 @@ namespace SharpMap.Data.Providers
             vectorStyle.Enabled = true;
             try
             {
-                var defaultIcon = GetImageFromUrl(Pushpins.RedPushpin); 
-                vectorStyle.PointSymbolizer = new RasterPointSymbolizer {Symbol = defaultIcon, Scale = 1f};
+                var defaultIcon = GetImageFromUrl(Pushpins.RedPushpin);
+                vectorStyle.PointSymbolizer = new RasterPointSymbolizer { Symbol = defaultIcon, Scale = 1f };
             }
             catch (Exception ex)
             {

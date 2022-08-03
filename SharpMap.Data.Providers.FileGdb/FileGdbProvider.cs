@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+using NetTopologySuite.Geometries;
+using SharpMap.Data.Providers.Converter;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,9 +23,6 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using GeoAPI.Geometries;
-using SharpMap.Data.Providers.Converter;
-
 using EsriGdb = Esri.FileGDB.Geodatabase;
 using EsriTable = Esri.FileGDB.Table;
 

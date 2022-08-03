@@ -25,7 +25,7 @@ namespace WinFormSamples
             var pcs = (ProjectedCoordinateSystem)ProjectedCoordinateSystem.WebMercator;
             css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
 
-            GeoAPI.GeometryServiceProvider.Instance = gss;
+            NetTopologySuite.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)

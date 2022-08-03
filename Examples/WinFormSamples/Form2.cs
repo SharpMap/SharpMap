@@ -17,9 +17,9 @@ namespace WinFormSamples
     using System.Windows.Forms;
     using BruTile;
     //using BruTile.PreDefined;
-    using GeoAPI.Geometries;
     using NetTopologySuite.Geometries;
-    using GeoAPI.CoordinateSystems.Transformations;
+    using NetTopologySuite.Geometries;
+    using NetTopologySuite.CoordinateSystems.Transformations;
     using SharpMap.Data.Providers;
     using SharpMap.Forms;
     using SharpMap.Layers;

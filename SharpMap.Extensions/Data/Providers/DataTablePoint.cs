@@ -18,9 +18,9 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using GeoAPI.Geometries;
-using Geometry = GeoAPI.Geometries.Geometry;
-using BoundingBox = GeoAPI.Geometries.Envelope;
+using NetTopologySuite.Geometries;
+using Geometry = NetTopologySuite.Geometries.Geometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
 
 namespace SharpMap.Data.Providers
 {

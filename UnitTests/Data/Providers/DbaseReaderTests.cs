@@ -14,7 +14,7 @@ namespace UnitTests.Data.Providers
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }
 
         private int GetNumberOfRecords(DbaseReader reader)

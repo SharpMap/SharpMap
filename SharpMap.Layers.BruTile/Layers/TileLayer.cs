@@ -1,4 +1,10 @@
-﻿using System;
+﻿using BruTile;
+using BruTile.Cache;
+using BruTile.Web;
+using Common.Logging;
+using NetTopologySuite.Geometries;
+using SharpMap.Base;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
@@ -8,12 +14,6 @@ using System.IO;
 using System.Net;
 using System.Runtime.Serialization;
 using System.Threading;
-using BruTile;
-using BruTile.Cache;
-using BruTile.Web;
-using Common.Logging;
-using GeoAPI.Geometries;
-using SharpMap.Base;
 
 namespace SharpMap.Layers
 {
@@ -27,7 +27,7 @@ namespace SharpMap.Layers
         private static readonly ILog Logger = LogManager.GetLogger<TileLayer>();
 
         #region Fields
-        
+
         //string layerName;
         ///// <summary>
         ///// The <see cref="ImageAttributes"/> used when rendering the tiles
@@ -49,19 +49,19 @@ namespace SharpMap.Layers
         /// A file cache
         /// </summary>
         protected FileCache _fileCache;
-        
+
         /// <summary>
         /// The format of the images
         /// </summary>
         protected ImageFormat _ImageFormat;
-        
+
         /// <summary>
         /// Value indicating if "error" tiles should be generated or not.
         /// </summary>
         protected readonly bool _showErrorInTile;
 
         InterpolationMode _interpolationMode = InterpolationMode.HighQualityBicubic;
-        
+
         /// <summary>
         /// Color that is treated as a placeholder for transparency
         /// </summary>
@@ -82,7 +82,7 @@ namespace SharpMap.Layers
             {
                 var extent = _source.Schema.Extent;
                 return new Envelope(
-                    extent.MinX, extent.MaxX, 
+                    extent.MinX, extent.MaxX,
                     extent.MinY, extent.MaxY);
             }
         }
@@ -118,7 +118,7 @@ namespace SharpMap.Layers
         /// <param name="transparentColor">The color to be treated as transparent color</param>
         /// <param name="showErrorInTile">Flag indicating that an error tile should be generated for <see cref="WebException"/>s</param>
         public TileLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile)
-            : this(tileSource,layerName, transparentColor, showErrorInTile,null)
+            : this(tileSource, layerName, transparentColor, showErrorInTile, null)
         {
         }
 
@@ -187,13 +187,13 @@ namespace SharpMap.Layers
             if (!map.Size.IsEmpty && map.Size.Width > 0 && map.Size.Height > 0)
             {
                 var bmp = new Bitmap(map.Size.Width, map.Size.Height, PixelFormat.Format32bppArgb);
-                
+
                 using (var g = Graphics.FromImage(bmp))
                 {
                     g.InterpolationMode = InterpolationMode;
                     g.Transform = graphics.Transform.Clone();
 
-                    var extent = new Extent(map.Envelope.MinX, map.Envelope.MinY, 
+                    var extent = new Extent(map.Envelope.MinX, map.Envelope.MinY,
                                             map.Envelope.MaxX, map.Envelope.MaxY);
                     var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, Math.Max(map.PixelWidth, map.PixelHeight));
                     var tiles = new List<TileInfo>(_source.Schema.GetTileInfos(extent, level));
@@ -202,14 +202,14 @@ namespace SharpMap.Layers
 
                     IList<WaitHandle> waitHandles = new List<WaitHandle>();
                     var toRender = new System.Collections.Concurrent.ConcurrentDictionary<TileIndex, Bitmap>();
-                    var takenFromCache = new System.Collections.Concurrent.ConcurrentDictionary<TileIndex,bool>();
+                    var takenFromCache = new System.Collections.Concurrent.ConcurrentDictionary<TileIndex, bool>();
                     foreach (TileInfo info in tiles)
                     {
                         var image = _bitmaps.Find(info.Index);
                         if (image != null)
                         {
                             toRender.TryAdd(info.Index, image);
-                            takenFromCache.TryAdd(info.Index,true);
+                            takenFromCache.TryAdd(info.Index, true);
                             continue;
                         }
                         if (_fileCache != null && _fileCache.Exists(info.Index))
@@ -249,14 +249,14 @@ namespace SharpMap.Layers
                             var min = map.WorldToImage(new Coordinate(info.Extent.MinX, info.Extent.MinY));
                             var max = map.WorldToImage(new Coordinate(info.Extent.MaxX, info.Extent.MaxY));
 
-                            min = new PointF((float) Math.Round(min.X), (float) Math.Round(min.Y));
-                            max = new PointF((float) Math.Round(max.X), (float) Math.Round(max.Y));
+                            min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
+                            max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
                             try
                             {
                                 g.DrawImage(bitmap,
-                                            new Rectangle((int) min.X, (int) max.Y, (int) (max.X - min.X),
-                                                          (int) (min.Y - max.Y)),
+                                            new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X),
+                                                          (int)(min.Y - max.Y)),
                                             0, 0, tileWidth, tileHeight,
                                             GraphicsUnit.Pixel,
                                             ia);
@@ -298,8 +298,8 @@ namespace SharpMap.Layers
             //MemoryCache<Bitmap> bitmaps = (MemoryCache<Bitmap>)parameters[2];
             var bitmaps = (ConcurrentDictionary<TileIndex, Bitmap>)parameters[2];
             AutoResetEvent autoResetEvent = (AutoResetEvent)parameters[3];
-            bool retry = (bool) parameters[4];
-            var takenFromCache = (IDictionary<TileIndex, bool>) parameters[5];
+            bool retry = (bool)parameters[4];
+            var takenFromCache = (IDictionary<TileIndex, bool>)parameters[5];
 
             var setEvent = true;
             try
@@ -316,7 +316,7 @@ namespace SharpMap.Layers
                 {
                     AddImageToFileCache(tileInfo, bitmap);
                 }
-                
+
             }
             catch (WebException ex)
             {
@@ -348,10 +348,10 @@ namespace SharpMap.Layers
                         // we don't want fatal exceptions here!
                         Logger.Error(e);
                     }
-                    
+
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error(ex.Message);
             }

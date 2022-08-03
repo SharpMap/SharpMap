@@ -1,4 +1,4 @@
-﻿using GeoAPI;
+﻿using NetTopologySuite;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Converters.WellKnownText;
@@ -240,7 +240,7 @@ namespace SharpMap.CoordinateSystems
         /// Method to create a coordinate tranformation between two spatial reference systems, defined by their identifiers
         /// </summary>
         /// <remarks>
-        /// This is a convenience function for <see cref="M:GeoAPI.CoordinateSystemServices.CreateTransformation(GeoAPI.CoordinateSystems.CoordinateSystem,GeoAPI.CoordinateSystems.CoordinateSystem)"/>.
+        /// This is a convenience function for <see cref="M:NetTopologySuite.CoordinateSystemServices.CreateTransformation(NetTopologySuite.CoordinateSystems.CoordinateSystem,NetTopologySuite.CoordinateSystems.CoordinateSystem)"/>.
         /// </remarks>
         /// <param name="sourceSrid">The identifier for the source spatial reference system.</param><param name="targetSrid">The identifier for the target spatial reference system.</param>
         /// <returns>

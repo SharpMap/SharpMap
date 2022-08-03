@@ -21,13 +21,13 @@ namespace SharpMap.Utilities.Web
         public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
         {
             Utility.SetFieldValue(ref obj, "_baseUrl", Utility.PrivateInstance, info.GetString("baseUrl"));
-            Utility.SetFieldValue(ref obj, "_baseUrls", Utility.PrivateInstance, 
+            Utility.SetFieldValue(ref obj, "_baseUrls", Utility.PrivateInstance,
                                   Utility.SetDictionary<string, System.Uri>(info, context, "baseUrls"));
             Utility.SetFieldValue(ref obj, "_imageFormat", Utility.PrivateInstance, info.GetString("imageFormat"));
             Utility.SetFieldValue(ref obj, "_customParameters", Utility.PrivateInstance,
                                   Utility.SetDictionary<string, string>(info, context, "customParameters"));
-            Utility.SetFieldValue(ref obj, "_serverNodes", Utility.PrivateInstance, 
-                                  Utility.SetList<string>(info, context,"serverNodes"));
+            Utility.SetFieldValue(ref obj, "_serverNodes", Utility.PrivateInstance,
+                                  Utility.SetList<string>(info, context, "serverNodes"));
             //Not serialized, but nonethelesss needed.
             Utility.SetFieldValue(ref obj, "_random", Utility.PrivateInstance, new System.Random());
             return null;

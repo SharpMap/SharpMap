@@ -43,13 +43,13 @@ using System.IO;
 namespace SharpMap.Converters.WellKnownBinary
 {
     /// <summary>
-    /// Converts a <see cref="GeoAPI.Geometries.Geometry"/> instance to a Well-known Binary string representation.
+    /// Converts a <see cref="NetTopologySuite.Geometries.Geometry"/> instance to a Well-known Binary string representation.
     /// </summary>
     /// <remarks>
-    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.Geometry"/> (WKBGeometry) provides a portable 
-    /// representation of a <see cref="GeoAPI.Geometries.Geometry"/> value as a contiguous stream of bytes. It permits <see cref="GeoAPI.Geometries.Geometry"/> 
+    /// <para>The Well-known Binary Representation for <see cref="NetTopologySuite.Geometries.Geometry"/> (WKBGeometry) provides a portable 
+    /// representation of a <see cref="NetTopologySuite.Geometries.Geometry"/> value as a contiguous stream of bytes. It permits <see cref="NetTopologySuite.Geometries.Geometry"/> 
     /// values to be exchanged between an ODBC client and an SQL database in binary form.</para>
-    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.Geometry"/> is obtained by serializing a <see cref="GeoAPI.Geometries.Geometry"/>
+    /// <para>The Well-known Binary Representation for <see cref="NetTopologySuite.Geometries.Geometry"/> is obtained by serializing a <see cref="NetTopologySuite.Geometries.Geometry"/>
     /// instance as a sequence of numeric types drawn from the set {Unsigned Integer, Double} and
     /// then serializing each numeric type as a sequence of bytes using one of two well defined,
     /// standard, binary representations for numeric types (NDR, XDR). The specific binary encoding

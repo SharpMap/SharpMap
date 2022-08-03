@@ -24,7 +24,7 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using Image=System.Web.UI.WebControls.Image;
-using Point=GeoAPI.Geometries.Coordinate;
+using Point=NetTopologySuite.Geometries.Coordinate;
 
 namespace SharpMap.Web.UI.Ajax
 {

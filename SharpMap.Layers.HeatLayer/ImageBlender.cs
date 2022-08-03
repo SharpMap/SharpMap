@@ -363,7 +363,7 @@ namespace SharpMap.Layers
                 System.Runtime.InteropServices.Marshal.Copy(srcScan0 + y * srcStride, srcBuffer, 0, srcStride);
                 System.Runtime.InteropServices.Marshal.Copy(dstScan0 + y * dstStride, dstBuffer, 0, dstStride);
 
-                for (var x = 0; x < 3* destWidth; x++)
+                for (var x = 0; x < 3 * destWidth; x++)
                 {
                     dstBuffer[x] = channelProcessFunction(ref srcBuffer[x], ref dstBuffer[x]);
                 }

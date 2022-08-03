@@ -1,10 +1,10 @@
 // Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile;
+using BruTile.Web;
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile;
-using BruTile.Web;
 
 namespace SharpMap.Utilities.Web
 {
@@ -29,7 +29,7 @@ namespace SharpMap.Utilities.Web
                 // Provider
                 var tp = (HttpTileProvider)info.GetValue("provider", typeof(HttpTileProvider));
 
-                _httpTileSource = new HttpTileSource(schema, "http://localhost", attribution: attribution) {Name = name};
+                _httpTileSource = new HttpTileSource(schema, "http://localhost", attribution: attribution) { Name = name };
                 object obj = _httpTileSource;
                 Utility.SetFieldValue(ref obj, "_provider", BindingFlags.NonPublic | BindingFlags.Instance, tp);
             }
@@ -48,7 +48,7 @@ namespace SharpMap.Utilities.Web
 
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            var ts = (HttpTileSource) obj;
+            var ts = (HttpTileSource)obj;
             info.SetType(typeof(HttpTileSourceRef));
             info.AddValue("name", ts.Name, typeof(string));
 
@@ -56,10 +56,10 @@ namespace SharpMap.Utilities.Web
             var type = ts.Schema.GetType();
             info.AddValue("schemaType", type);
             info.AddValue("schema", ts.Schema, type);
-            
+
             // Attribution
             info.AddValue("attText", ts.Attribution?.Text ?? string.Empty);
-            info.AddValue("attUrl", ts.Attribution?.Url?? string.Empty);
+            info.AddValue("attUrl", ts.Attribution?.Url ?? string.Empty);
 
             //Provider
             var p = Utility.GetFieldValue<HttpTileProvider>(ts, "_provider");

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 
@@ -11,7 +11,7 @@ namespace UnitTests.Serialization
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }
 
         internal static IProvider CreateProvider(string name=null)
@@ -38,7 +38,7 @@ namespace UnitTests.Serialization
         {
             try
             {
-                var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
+                var gf = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory();
 
                 if (typeof(T) == typeof(GeometryProvider))
                     return (T) (IProvider) new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));

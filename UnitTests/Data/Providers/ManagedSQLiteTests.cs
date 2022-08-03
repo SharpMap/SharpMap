@@ -1,7 +1,7 @@
 ﻿//#if !LINUX
 using System;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Operation.Distance;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
@@ -90,7 +90,7 @@ namespace UnitTests.Data.Providers
                 sq.ExecuteIntersectionQuery(ext, ds);
                 NUnit.Framework.Assert.AreEqual(775, ds.Tables[0].Count);
 
-                var env = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(sq.SRID).ToGeometry(ext);
+                var env = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(sq.SRID).ToGeometry(ext);
                 var dsEnv = new SharpMap.Data.FeatureDataSet();
                 sq.ExecuteIntersectionQuery(env, dsEnv);
                 NUnit.Framework.Assert.AreEqual(775, dsEnv.Tables[0].Count);

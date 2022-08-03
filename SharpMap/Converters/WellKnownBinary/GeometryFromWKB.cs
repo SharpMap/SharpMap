@@ -45,13 +45,13 @@ using System.IO;
 namespace SharpMap.Converters.WellKnownBinary
 {
     /// <summary>
-    ///  Converts Well-known Binary representations to a <see cref="GeoAPI.Geometries.Geometry"/> instance.
+    ///  Converts Well-known Binary representations to a <see cref="NetTopologySuite.Geometries.Geometry"/> instance.
     /// </summary>
     /// <remarks>
-    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.Geometry"/> (WKBGeometry) provides a portable 
-    /// representation of a <see cref="GeoAPI.Geometries.Geometry"/> value as a contiguous stream of bytes. It permits <see cref="GeoAPI.Geometries.Geometry"/> 
+    /// <para>The Well-known Binary Representation for <see cref="NetTopologySuite.Geometries.Geometry"/> (WKBGeometry) provides a portable 
+    /// representation of a <see cref="NetTopologySuite.Geometries.Geometry"/> value as a contiguous stream of bytes. It permits <see cref="NetTopologySuite.Geometries.Geometry"/> 
     /// values to be exchanged between an ODBC client and an SQL database in binary form.</para>
-    /// <para>The Well-known Binary Representation for <see cref="GeoAPI.Geometries.Geometry"/> is obtained by serializing a <see cref="GeoAPI.Geometries.Geometry"/>
+    /// <para>The Well-known Binary Representation for <see cref="NetTopologySuite.Geometries.Geometry"/> is obtained by serializing a <see cref="NetTopologySuite.Geometries.Geometry"/>
     /// instance as a sequence of numeric types drawn from the set {Unsigned Integer, Double} and
     /// then serializing each numeric type as a sequence of bytes using one of two well defined,
     /// standard, binary representations for numeric types (NDR, XDR). The specific binary encoding
@@ -62,11 +62,11 @@ namespace SharpMap.Converters.WellKnownBinary
     public class GeometryFromWKB
     {
         /// <summary>
-        /// Creates a <see cref="GeoAPI.Geometries.Geometry"/> from the supplied byte[] containing the Well-known Binary representation.
+        /// Creates a <see cref="NetTopologySuite.Geometries.Geometry"/> from the supplied byte[] containing the Well-known Binary representation.
         /// </summary>
         /// <param name="bytes">byte[] containing the Well-known Binary representation.</param>
         /// <param name="factory">The factory to create the result geometry</param>
-        /// <returns>A <see cref="GeoAPI.Geometries.Geometry"/> bases on the supplied Well-known Binary representation.</returns>
+        /// <returns>A <see cref="NetTopologySuite.Geometries.Geometry"/> bases on the supplied Well-known Binary representation.</returns>
         public static Geometry Parse(byte[] bytes, GeometryFactory factory)
         {
             // Create a memory stream using the suppiled byte array.
@@ -82,11 +82,11 @@ namespace SharpMap.Converters.WellKnownBinary
         }
 
         /// <summary>
-        /// Creates a <see cref="GeoAPI.Geometries.Geometry"/> based on the Well-known binary representation.
+        /// Creates a <see cref="NetTopologySuite.Geometries.Geometry"/> based on the Well-known binary representation.
         /// </summary>
         /// <param name="reader">A <see cref="System.IO.BinaryReader">BinaryReader</see> used to read the Well-known binary representation.</param>
         /// <param name="factory">The factory to create the result geometry</param>
-        /// <returns>A <see cref="GeoAPI.Geometries.Geometry"/> based on the Well-known binary representation.</returns>
+        /// <returns>A <see cref="NetTopologySuite.Geometries.Geometry"/> based on the Well-known binary representation.</returns>
         public static Geometry Parse(BinaryReader reader, GeometryFactory factory)
         {
             WKBReader wkb = new WKBReader();

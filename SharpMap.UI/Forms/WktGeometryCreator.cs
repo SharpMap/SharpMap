@@ -47,12 +47,12 @@ namespace SharpMap.Forms
             Hide();
         }
 
-        private GeoAPI.Geometries.Geometry _geometry;
+        private NetTopologySuite.Geometries.Geometry _geometry;
         
         /// <summary>
         /// Gets or sets a value indicating the current geometry
         /// </summary>
-        public GeoAPI.Geometries.Geometry Geometry
+        public NetTopologySuite.Geometries.Geometry Geometry
         {
             get
             {

@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Npgsql;
 using System.Globalization;

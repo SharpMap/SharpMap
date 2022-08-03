@@ -1,11 +1,11 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile.Cache;
+using BruTile.Web;
 using System;
 using System.Net.Http;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile.Cache;
-using BruTile.Web;
 
 namespace SharpMap.Utilities.Web
 {
@@ -25,11 +25,11 @@ namespace SharpMap.Utilities.Web
                 var fetchTile = (Func<Uri, byte[]>)info.GetValue("_fetchTile", type);
 
                 type = (Type)info.GetValue("_persistentCacheType", typeof(Type));
-                var persistentCache = (IPersistentCache<byte[]>) info.GetValue("_persistentCache", type);
+                var persistentCache = (IPersistentCache<byte[]>)info.GetValue("_persistentCache", type);
 
                 _httpTileProvider = new HttpTileProvider(request, persistentCache, fetchTile);
             }
-            
+
             object IObjectReference.GetRealObject(StreamingContext context)
             {
                 return _httpTileProvider;
@@ -40,8 +40,8 @@ namespace SharpMap.Utilities.Web
                 throw new NotSupportedException();
             }
         }
-        
-        
+
+
         #region Implementation of ISerializationSurrogate
 
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)

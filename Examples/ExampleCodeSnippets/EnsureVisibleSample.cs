@@ -1,7 +1,7 @@
 
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 
 namespace ExampleCodeSnippets
@@ -10,7 +10,7 @@ namespace ExampleCodeSnippets
         [NUnit.Framework.TestFixture]
     public class EnsureVisibleSample
     {
-public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate pt)
+public static void EnsureVisible(SharpMap.Map map, NetTopologySuite.Geometries.Coordinate pt)
 {
     const double ensureVisibleRatio = 0.1d;
             
@@ -54,7 +54,7 @@ public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate 
     System.Console.WriteLine(string.Format("Map.Center needs to be shifted by: [{0}, {1}]", dx, dy));
 
     //Set new center Center
-    map.Center = new GeoAPI.Geometries.Coordinate(map.Center.X + dx, map.Center.Y + dy);
+    map.Center = new NetTopologySuite.Geometries.Coordinate(map.Center.X + dx, map.Center.Y + dy);
 
 }
 
@@ -85,16 +85,16 @@ public static void EnsureVisible(SharpMap.Map map, GeoAPI.Geometries.Coordinate 
             map.Layers.Add(vl);
             map.ZoomToExtents();
             map.Zoom = 60; //2*30
-            map.Center = new GeoAPI.Geometries.Coordinate(0,0);
+            map.Center = new NetTopologySuite.Geometries.Coordinate(0,0);
 
             System.Console.WriteLine(map.Center);
-            EnsureVisible(map, new GeoAPI.Geometries.Coordinate(-30, 0));
+            EnsureVisible(map, new NetTopologySuite.Geometries.Coordinate(-30, 0));
             System.Console.WriteLine(map.Center);
             System.Console.WriteLine();
-            EnsureVisible(map, new GeoAPI.Geometries.Coordinate(15, 20));
+            EnsureVisible(map, new NetTopologySuite.Geometries.Coordinate(15, 20));
             System.Console.WriteLine(map.Center);
             System.Console.WriteLine();
-            EnsureVisible(map, new GeoAPI.Geometries.Coordinate(15, -20));
+            EnsureVisible(map, new NetTopologySuite.Geometries.Coordinate(15, -20));
             System.Console.WriteLine(map.Center);
         }
 

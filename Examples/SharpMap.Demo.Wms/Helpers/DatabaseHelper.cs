@@ -4,7 +4,7 @@ namespace SharpMap.Demo.Wms.Helpers
     using System.Drawing;
     using System.Drawing.Drawing2D;
 
-    using GeoAPI.CoordinateSystems.Transformations;
+    using NetTopologySuite.CoordinateSystems.Transformations;
 
     using SharpMap.Data.Providers;
     using SharpMap.Layers;

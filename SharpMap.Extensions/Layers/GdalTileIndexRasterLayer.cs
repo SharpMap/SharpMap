@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using OSGeo.GDAL;
 using SharpMap.Base;
 using SharpMap.Data;

@@ -2,7 +2,7 @@
 using System.Drawing.Drawing2D;
 using SharpMap;
 using SharpMap.Layers;
-using Point=GeoAPI.Geometries.Coordinate;
+using Point=NetTopologySuite.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {

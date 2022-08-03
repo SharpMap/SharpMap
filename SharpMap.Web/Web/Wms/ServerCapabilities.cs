@@ -22,7 +22,7 @@ using System.Reflection;
 using System.Web;
 using System.Xml;
 using System.Xml.Schema;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using System.Collections.Generic;
 

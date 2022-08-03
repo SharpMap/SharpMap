@@ -11,7 +11,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SharpSbn.GeoAPI" Version="1.2.0" />
+      <PackageReference Include="SharpSbn" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup>

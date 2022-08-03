@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Data.Providers;
@@ -8,7 +8,7 @@ using SharpMap.Rendering.Decoration;
 //using SharpMap.Geometries;
 using SharpMap.Rendering.Decoration.ScaleBar;
 using SharpMap.Layers;
-using GeoPoint = GeoAPI.Geometries.Coordinate;
+using GeoPoint = NetTopologySuite.Geometries.Coordinate;
 
 namespace UnitTests
 {

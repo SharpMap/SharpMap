@@ -6,8 +6,8 @@ namespace SharpMap.Demo.Wms.Controllers
     using System.Linq;
     using System.Web.Mvc;
 
-    using GeoAPI;
-    using GeoAPI.Geometries;
+    using NetTopologySuite;
+    using NetTopologySuite.Geometries;
 
     using NetTopologySuite;
     using NetTopologySuite.Geometries;

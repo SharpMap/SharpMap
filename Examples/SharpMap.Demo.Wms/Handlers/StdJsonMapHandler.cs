@@ -9,15 +9,15 @@ namespace SharpMap.Demo.Wms.Handlers
 
     using NetTopologySuite.Geometries;
 
-    using GeoAPI.CoordinateSystems.Transformations;
+    using NetTopologySuite.CoordinateSystems.Transformations;
 
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;
     using SharpMap.Layers;
     using SharpMap.Web.Wms;
 
-    using Geometry = GeoAPI.Geometries.Geometry;
-    using BoundingBox = GeoAPI.Geometries.Envelope;
+    using Geometry = NetTopologySuite.Geometries.Geometry;
+    using BoundingBox = NetTopologySuite.Geometries.Envelope;
 
     public class StdJsonMapHandler : AbstractStdMapHandler
     {

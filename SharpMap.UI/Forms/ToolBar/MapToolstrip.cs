@@ -205,7 +205,7 @@ namespace SharpMap.Forms
             //What is to do here?
         }
 
-        private void OnMapCenterChanged(GeoAPI.Geometries.Coordinate geoPoint)
+        private void OnMapCenterChanged(NetTopologySuite.Geometries.Coordinate geoPoint)
         {
         }
         

@@ -36,7 +36,7 @@ namespace UnitTests.Data.Providers
 
             var ext = p.GetExtents();
             
-            var g = p.GetGeometriesInView(new GeoAPI.Geometries.Envelope(-90, 90, -180, 180));
+            var g = p.GetGeometriesInView(new NetTopologySuite.Geometries.Envelope(-90, 90, -180, 180));
             Assert.That(g.Count > 0);
 
             var fds = new FeatureDataSet();

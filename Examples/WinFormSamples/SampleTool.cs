@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Forms;

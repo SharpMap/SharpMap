@@ -6,7 +6,7 @@ namespace UnitTests.Rendering.Symbolizer
     {
         static LineSymbolizerTest()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
         }
 
         [NUnit.Framework.Test] 

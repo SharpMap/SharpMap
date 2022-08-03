@@ -18,7 +18,7 @@ namespace UnitTests.Data.Providers
         {
             try
             {
-                GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
+                NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
 
                 var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
                 if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
@@ -133,7 +133,7 @@ namespace UnitTests.Data.Providers
         /// <summary>
         /// Get the envelope of the entire roads_ugl file
         /// </summary>
-        private static GeoAPI.Geometries.Envelope GetTestEnvelope()
+        private static NetTopologySuite.Geometries.Envelope GetTestEnvelope()
         {
             return SharpMap.Converters.WellKnownText.GeometryFromWKT.Parse("POLYGON ((-97.23724071609665 41.698023105763589, -82.424263624596563 41.698023105763589, -82.424263624596563 49.000629000758515, -97.23724071609665 49.000629000758515, -97.23724071609665 41.698023105763589))").EnvelopeInternal;
         }
@@ -143,7 +143,7 @@ namespace UnitTests.Data.Providers
         {
             using (var sq = GetTestProvider())
             {
-                GeoAPI.Geometries.Envelope extents = sq.GetExtents();
+                NetTopologySuite.Geometries.Envelope extents = sq.GetExtents();
                 Assert.IsNotNull(extents);
             }
         }

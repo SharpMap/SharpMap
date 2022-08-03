@@ -56,13 +56,13 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Static constructor. Needed to get <see cref="GeoAPI.NetTopologySuite.NtsGeometryServices.Instance"/> set.
+        /// Static constructor. Needed to get <see cref="NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance"/> set.
         /// </summary>
         static Map()
         {
             try
             {
-                _logger.Debug("Trying to get GeoAPI.NetTopologySuite.NtsGeometryServices.Instance");
+                _logger.Debug("Trying to get NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
                 var instance = NetTopologySuite.NtsGeometryServices.Instance;
                 if (instance == null)
                 {
@@ -75,7 +75,7 @@ namespace SharpMap
                 _logger.Debug("Loading NetTopologySuite");
                 Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
-                _logger.Debug("Trying to get GeoAPI.NetTopologySuite.NtsGeometryServices.Instance");
+                _logger.Debug("Trying to get NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
                 var instance = NetTopologySuite.NtsGeometryServices.Instance;
                 if (instance == null)
                 {
@@ -90,23 +90,23 @@ namespace SharpMap
             {
                 _logger.Debug("In design mode");
                 Trace.WriteLine("In design mode");
-                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
+                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of NetTopologySuite and redirection 
                 // is not available at design time..
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
                 Trace.WriteLine("Loaded NetTopologySuite");
                 try
                 {
-                    _logger.Debug("Trying to access GeoAPI.NetTopologySuite.NtsGeometryServices.Instance");
-                    Trace.WriteLine("Trying to access GeoAPI.NetTopologySuite.NtsGeometryServices.Instance");
-                    if (GeoAPI.NetTopologySuite.NtsGeometryServices.Instance == null)
+                    _logger.Debug("Trying to access NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
+                    Trace.WriteLine("Trying to access NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
+                    if (NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance == null)
                     {
                         _logger.Debug("Returned null, setting it to default");
                         Trace.WriteLine("Returned null, setting it to default");
                         var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                        GeoAPI.NetTopologySuite.NtsGeometryServices.Instance =
+                        NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance =
                             ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                                GeoAPI.IGeometryServices;
+                                NetTopologySuite.IGeometryServices;
                     }
                 }
 
@@ -115,9 +115,9 @@ namespace SharpMap
                     _logger.Debug("InvalidOperationException thrown, setting it to default");
                     Trace.WriteLine("InvalidOperationException thrown, setting it to default");
                     var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    GeoAPI.NetTopologySuite.NtsGeometryServices.Instance =
+                    NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance =
                         ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                            GeoAPI.IGeometryServices;
+                            NetTopologySuite.IGeometryServices;
                 }
                 _logger.Debug("Exiting design mode handling");
                 Trace.WriteLine("Exiting design mode handling");

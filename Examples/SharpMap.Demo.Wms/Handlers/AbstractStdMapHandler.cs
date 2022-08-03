@@ -3,7 +3,7 @@ namespace SharpMap.Demo.Wms.Handlers
     using System;
     using System.Web;
 
-    using GeoAPI;
+    using NetTopologySuite;
 
     using NetTopologySuite;
 

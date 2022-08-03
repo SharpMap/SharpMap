@@ -341,7 +341,7 @@ namespace WinFormSamples
             UpdatePropertyGrid();
         }
 
-        private void mapImage_MapCenterChanged(GeoAPI.Geometries.Coordinate center)
+        private void mapImage_MapCenterChanged(NetTopologySuite.Geometries.Coordinate center)
         {
             UpdatePropertyGrid();
         }

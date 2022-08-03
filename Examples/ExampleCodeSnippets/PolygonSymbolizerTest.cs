@@ -12,7 +12,7 @@ namespace ExampleCodeSnippets
                 base.Begin(g, map, aproximateNumberOfGeometries);
                 _oldRenderOrigin = g.RenderingOrigin;
             }
-            protected override void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.Polygon polygon, System.Drawing.Graphics g)
+            protected override void OnRenderInternal(SharpMap.MapViewport map, NetTopologySuite.Geometries.Polygon polygon, System.Drawing.Graphics g)
             {
                 var pt = polygon.Centroid;
                 g.RenderingOrigin = 

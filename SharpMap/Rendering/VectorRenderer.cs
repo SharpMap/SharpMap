@@ -15,7 +15,6 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Rendering.Symbolizer;
 using SharpMap.Styles;
@@ -824,7 +823,7 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.MultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -838,7 +837,7 @@ namespace SharpMap.Rendering
             PointF offset, float rotation, MapViewport map) => DrawMultiPointEx(g, points, symbol, symbolScale, offset, rotation, map);
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.MultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -861,7 +860,7 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.MultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -872,7 +871,7 @@ namespace SharpMap.Rendering
             => DrawMultiPointEx(symbolizer, g, points, map);
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.MultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -886,7 +885,7 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.MultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -899,7 +898,7 @@ namespace SharpMap.Rendering
             => DrawMultiPointEx(g, points, brush, size, offset, map);
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.MultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>

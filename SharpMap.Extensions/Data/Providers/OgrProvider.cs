@@ -18,13 +18,13 @@
 using System;
 using System.Collections.ObjectModel;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Extensions.Data;
 //using SharpMap.Geometries;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry=GeoAPI.Geometries.Geometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry=NetTopologySuite.Geometries.Geometry;
 using OgrOgr = OSGeo.OGR.Ogr;
 using OgrDataSource = OSGeo.OGR.DataSource;
 using OgrLayer = OSGeo.OGR.Layer;
@@ -654,7 +654,7 @@ namespace SharpMap.Data.Providers
         //    return null;
         //}
 
-        //private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, GeoAPI.Geometries.GeometryFactory factory)
+        //private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, NetTopologySuite.Geometries.GeometryFactory factory)
         private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, OgrGeometryReader reader)
         {
             var values = new object[ogrFeature.GetFieldCount()];

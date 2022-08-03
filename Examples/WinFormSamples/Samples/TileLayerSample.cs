@@ -157,7 +157,7 @@ namespace WinFormSamples.Samples
             return map;
         }
 
-        private static GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
+        private static NetTopologySuite.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
         {
 
             //The SRS for this datasource is EPSG:4326, therefore we need to transfrom it to OSM projection
@@ -333,8 +333,8 @@ namespace WinFormSamples.Samples
             /// </summary>
             private const int Timeout = 30*1000;
 
-            private readonly GeoAPI.Geometries.GeometryFactory _factory =
-                GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+            private readonly NetTopologySuite.Geometries.GeometryFactory _factory =
+                NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
 
             /// <summary>
             /// gets realtime data from public transport in city vilnius of lithuania
@@ -455,7 +455,7 @@ namespace WinFormSamples.Samples
 
                         if (lat.HasValue && lng.HasValue)
                         {
-                            dr.Geometry = _factory.CreatePoint(new GeoAPI.Geometries.Coordinate(lng.Value, lat.Value));
+                            dr.Geometry = _factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(lng.Value, lat.Value));
                             fdt.Rows.Add(dr);
                         }
                     }

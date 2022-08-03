@@ -31,7 +31,7 @@ namespace SharpMap.UI.WPF
     using System.Windows.Forms.Integration;
     using System.Windows.Input;
 
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     using Data.Providers;
     using Forms;

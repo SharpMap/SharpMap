@@ -18,7 +18,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reactive.Linq;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Layers;

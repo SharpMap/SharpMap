@@ -24,13 +24,13 @@ using System.Linq;
 using System.Reflection;
 using System.Web;
 using System.Xml;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using System.Collections.Generic;
 using System.Text;
-using GeoAPI.CoordinateSystems.Transformations;
+using NetTopologySuite.CoordinateSystems.Transformations;
 
 namespace SharpMap.Web.Wms
 {    

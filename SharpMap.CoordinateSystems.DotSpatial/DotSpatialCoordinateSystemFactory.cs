@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Globalization;
 using DotSpatial.Projections;
-using GeoAPI.CoordinateSystems;
-using DatumType = GeoAPI.CoordinateSystems.DatumType;
+using NetTopologySuite.CoordinateSystems;
+using DatumType = NetTopologySuite.CoordinateSystems.DatumType;
 
 namespace SharpMap.CoordinateSystems
 {
@@ -14,7 +14,7 @@ namespace SharpMap.CoordinateSystems
     public class DotSpatialCoordinateSystemFactory : ICoordinateSystemFactory
     {
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.ICompoundCoordinateSystem" />.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.ICompoundCoordinateSystem" />.
         /// </summary>
         /// <param name="name">Name of compound coordinate system.</param>
         /// <param name="head">Head coordinate system</param>
@@ -27,9 +27,9 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates an <see cref="T:GeoAPI.CoordinateSystems.IEllipsoid" /> from radius values.
+        /// Creates an <see cref="T:NetTopologySuite.CoordinateSystems.IEllipsoid" /> from radius values.
         /// </summary>
-        /// <seealso cref="M:GeoAPI.CoordinateSystems.ICoordinateSystemFactory.CreateFlattenedSphere(System.String,System.Double,System.Double,GeoAPI.CoordinateSystems.ILinearUnit)" />
+        /// <seealso cref="M:NetTopologySuite.CoordinateSystems.ICoordinateSystemFactory.CreateFlattenedSphere(System.String,System.Double,System.Double,NetTopologySuite.CoordinateSystems.ILinearUnit)" />
         /// <param name="name">Name of ellipsoid</param>
         /// <param name="semiMajorAxis"></param>
         /// <param name="semiMinorAxis"></param>
@@ -42,7 +42,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IFittedCoordinateSystem" />.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IFittedCoordinateSystem" />.
         /// </summary>
         /// <remarks>The units of the axes in the fitted coordinate system will be
         /// inferred from the units of the base coordinate system. If the affine map
@@ -63,9 +63,9 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates an <see cref="T:GeoAPI.CoordinateSystems.IEllipsoid" /> from an major radius, and inverse flattening.
+        /// Creates an <see cref="T:NetTopologySuite.CoordinateSystems.IEllipsoid" /> from an major radius, and inverse flattening.
         /// </summary>
-        /// <seealso cref="M:GeoAPI.CoordinateSystems.ICoordinateSystemFactory.CreateEllipsoid(System.String,System.Double,System.Double,GeoAPI.CoordinateSystems.ILinearUnit)" />
+        /// <seealso cref="M:NetTopologySuite.CoordinateSystems.ICoordinateSystemFactory.CreateEllipsoid(System.String,System.Double,System.Double,NetTopologySuite.CoordinateSystems.ILinearUnit)" />
         /// <param name="name">Name of ellipsoid</param>
         /// <param name="semiMajorAxis">Semi major-axis</param>
         /// <param name="inverseFlattening">Inverse flattening</param>
@@ -90,8 +90,8 @@ namespace SharpMap.CoordinateSystems
 
         /// <summary>
         /// Creates a spatial reference object given its Well-known text representation.
-        /// The output object may be either a <see cref="T:GeoAPI.CoordinateSystems.IGeographicCoordinateSystem" /> or
-        /// a <see cref="T:GeoAPI.CoordinateSystems.IProjectedCoordinateSystem" />.
+        /// The output object may be either a <see cref="T:NetTopologySuite.CoordinateSystems.IGeographicCoordinateSystem" /> or
+        /// a <see cref="T:NetTopologySuite.CoordinateSystems.IProjectedCoordinateSystem" />.
         /// </summary>
         /// <param name="wkt">The Well-known text representation for the spatial reference</param>
         /// <returns>The resulting spatial reference object</returns>
@@ -136,7 +136,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IGeographicCoordinateSystem" />, which could be Lat/Lon or Lon/Lat.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IGeographicCoordinateSystem" />, which could be Lat/Lon or Lon/Lat.
         /// </summary>
         /// <param name="name">Name of geographical coordinate system</param>
         /// <param name="angularUnit">Angular units</param>
@@ -153,13 +153,13 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates <see cref="T:GeoAPI.CoordinateSystems.IHorizontalDatum" /> from ellipsoid and Bursa-World parameters.
+        /// Creates <see cref="T:NetTopologySuite.CoordinateSystems.IHorizontalDatum" /> from ellipsoid and Bursa-World parameters.
         /// </summary>
         /// <remarks>
         /// Since this method contains a set of Bursa-Wolf parameters, the created
         /// datum will always have a relationship to WGS84. If you wish to create a
         /// horizontal datum that has no relationship with WGS84, then you can
-        /// either specify a <see cref="T:GeoAPI.CoordinateSystems.DatumType">horizontalDatumType</see> of <see cref="F:GeoAPI.CoordinateSystems.DatumType.HD_Other" />, or create it via WKT.
+        /// either specify a <see cref="T:NetTopologySuite.CoordinateSystems.DatumType">horizontalDatumType</see> of <see cref="F:NetTopologySuite.CoordinateSystems.DatumType.HD_Other" />, or create it via WKT.
         /// </remarks>
         /// <param name="name">Name of ellipsoid</param>
         /// <param name="datumType">Type of datum</param>
@@ -174,7 +174,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.ILocalCoordinateSystem">local coordinate system</see>.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.ILocalCoordinateSystem">local coordinate system</see>.
         /// </summary>
         /// <remarks>
         ///  The dimension of the local coordinate system is determined by the size of
@@ -194,7 +194,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.ILocalDatum" />.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.ILocalDatum" />.
         /// </summary>
         /// <param name="name">Name of datum</param>
         /// <param name="datumType">Datum type</param>
@@ -206,7 +206,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IPrimeMeridian" />, relative to Greenwich.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IPrimeMeridian" />, relative to Greenwich.
         /// </summary>
         /// <param name="name">Name of prime meridian</param>
         /// <param name="angularUnit">Angular unit</param>
@@ -219,7 +219,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IProjectedCoordinateSystem" /> using a projection object.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IProjectedCoordinateSystem" /> using a projection object.
         /// </summary>
         /// <param name="name">Name of projected coordinate system</param>
         /// <param name="gcs">Geographic coordinate system</param>
@@ -236,7 +236,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IProjection" />.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IProjection" />.
         /// </summary>
         /// <param name="name">Name of projection</param>
         /// <param name="wktProjectionClass">Projection class</param>
@@ -249,7 +249,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IVerticalCoordinateSystem" /> from a <see cref="T:GeoAPI.CoordinateSystems.IVerticalDatum">datum</see> and <see cref="T:GeoAPI.CoordinateSystems.ILinearUnit">linear units</see>.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IVerticalCoordinateSystem" /> from a <see cref="T:NetTopologySuite.CoordinateSystems.IVerticalDatum">datum</see> and <see cref="T:NetTopologySuite.CoordinateSystems.ILinearUnit">linear units</see>.
         /// </summary>
         /// <param name="name">Name of vertical coordinate system</param>
         /// <param name="datum">Vertical datum</param>
@@ -264,7 +264,7 @@ namespace SharpMap.CoordinateSystems
         }
 
         /// <summary>
-        /// Creates a <see cref="T:GeoAPI.CoordinateSystems.IVerticalDatum" /> from an enumerated type value.
+        /// Creates a <see cref="T:NetTopologySuite.CoordinateSystems.IVerticalDatum" /> from an enumerated type value.
         /// </summary>
         /// <param name="name">Name of datum</param>
         /// <param name="datumType">Type of datum</param>

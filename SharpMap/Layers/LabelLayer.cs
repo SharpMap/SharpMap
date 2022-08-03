@@ -15,7 +15,6 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;
@@ -264,14 +263,14 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>
         /// <para>If this method is not null, it will override the position based on the centroid of the boundingbox of the feature </para>
-        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a GeoAPI.Geometries.Coordinate.</para>
+        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a NetTopologySuite.Geometries.Coordinate.</para>
         /// <para>If the delegate returns a null, the centroid of the feature will be used</para>
         /// <example>
         /// Creating a custom position by using X and Y values from the FeatureDataRow attributes "LabelX" and "LabelY", using
         /// an anonymous delegate:
         /// <code lang="C#">
         /// myLabelLayer.LabelPositionDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
-        ///				{ return new GeoAPI.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
+        ///				{ return new NetTopologySuite.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
         /// </code>
         /// </example>
         /// </remarks>

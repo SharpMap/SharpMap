@@ -16,7 +16,6 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using Common.Logging;
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Utilities.Indexing;

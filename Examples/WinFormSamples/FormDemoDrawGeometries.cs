@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Data;
 using SharpMap.Styles;
@@ -14,7 +14,7 @@ using BruTile.Web;
 using BruTile.Predefined;
 using SharpMap.Data.Providers;
 
-using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
+using GeometryTransform = NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform;
 
 namespace WinFormSamples
 {
@@ -62,7 +62,7 @@ namespace WinFormSamples
             this.mapBox1.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(mapBox1_MouseMove);
         }
 
-        void mapBox1_MouseMove(GeoAPI.Geometries.Coordinate worldPos, MouseEventArgs imagePos)
+        void mapBox1_MouseMove(NetTopologySuite.Geometries.Coordinate worldPos, MouseEventArgs imagePos)
         {
             this.label2.Text = worldPos.X.ToString("N4") + "/" + worldPos.Y.ToString("N4");
         }
@@ -72,7 +72,7 @@ namespace WinFormSamples
             this.label1.Text = this.mapBox1.ActiveTool.ToString();
         }
 
-        void mapBox1_GeometryDefined(GeoAPI.Geometries.Geometry geometry)
+        void mapBox1_GeometryDefined(NetTopologySuite.Geometries.Geometry geometry)
         {
             MessageBox.Show("Geometry defined!\r\n"+geometry);
 

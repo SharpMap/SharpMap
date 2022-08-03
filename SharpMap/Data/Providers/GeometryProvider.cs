@@ -46,7 +46,7 @@ namespace SharpMap.Data.Providers
     /// <example>
     /// Adding points of interest to the map. This is useful for vehicle tracking etc.
     /// <code lang="C#">
-    /// GeoAPI.Geometries.GeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
+    /// NetTopologySuite.Geometries.GeometryFactory gf = new NetTopologySuite.Geometries.GeometryFactory();
     /// List&#60;NetTopologySuite.Geometries.Geometry&#62; geometries = new List&#60;NetTopologySuite.Geometries.Geometry&#62;();
     /// //Add two points
     /// geometries.Add(new gf.CreatePoint(23.345,64.325));

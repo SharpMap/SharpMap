@@ -21,11 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
-using GeoAPI.CoordinateSystems.Transformations;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.Geometry;
+using NetTopologySuite.CoordinateSystems.Transformations;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers

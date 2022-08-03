@@ -15,7 +15,7 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using GeoAPI.CoordinateSystems.Transformations;
+using NetTopologySuite.CoordinateSystems.Transformations;
 using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Base;

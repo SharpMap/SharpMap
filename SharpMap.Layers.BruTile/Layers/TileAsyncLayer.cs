@@ -1,17 +1,17 @@
-﻿using System;
+﻿using BruTile;
+using BruTile.Cache;
+using Common.Logging;
+using NetTopologySuite.Geometries;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Threading;
-using BruTile;
-using BruTile.Cache;
 using System.IO;
 using System.Net;
-using GeoAPI.Geometries;
-using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
-using Common.Logging;
 
 namespace SharpMap.Layers
 {
@@ -39,7 +39,7 @@ namespace SharpMap.Layers
             get { return _onlyRedrawWhenComplete; }
             set { _onlyRedrawWhenComplete = value; }
         }
-        
+
         /// <summary>
         /// Returns the number of tiles that are in queue for download
         /// </summary>
@@ -49,7 +49,7 @@ namespace SharpMap.Layers
         /// Event raised when tiles are downloaded
         /// </summary>
         public event DownloadProgressHandler DownloadProgressChanged;
-        
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -95,7 +95,7 @@ namespace SharpMap.Layers
         /// <param name="fileCache">If the layer should use a file-cache so store tiles, set this to a fileCacheProvider. Set to null to avoid filecache</param>
         /// <param name="imgFormat">Set the format of the tiles to be used</param>
         public TileAsyncLayer(ITileSource tileSource, string layerName, Color transparentColor, bool showErrorInTile, FileCache fileCache, ImageFormat imgFormat)
-            : base(tileSource, layerName, transparentColor, showErrorInTile, fileCache,imgFormat)
+            : base(tileSource, layerName, transparentColor, showErrorInTile, fileCache, imgFormat)
         {
         }
 
@@ -107,16 +107,16 @@ namespace SharpMap.Layers
         /// <summary>
         /// Method to cancel the async layer
         /// </summary>
-        
+
         public void Cancel()
         {
             //lock (_currentDownloads)
             //{
-                var cts = _cancellationTokenSource;
-                cts?.Cancel();
-                //_currentDownloads.Clear();
-                _numPendingDownloads = 0;
-                DownloadProgressChanged?.Invoke(_numPendingDownloads);
+            var cts = _cancellationTokenSource;
+            cts?.Cancel();
+            //_currentDownloads.Clear();
+            _numPendingDownloads = 0;
+            DownloadProgressChanged?.Invoke(_numPendingDownloads);
             //}
         }
 
@@ -129,7 +129,7 @@ namespace SharpMap.Layers
         {
             var bbox = map.Envelope;
             var extent = new Extent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
-            string level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, Math.Max(map.PixelWidth, map.PixelHeight));
+            var level = BruTile.Utilities.GetNearestLevel(_source.Schema.Resolutions, Math.Max(map.PixelWidth, map.PixelHeight));
             var tiles = new List<TileInfo>(_source.Schema.GetTileInfos(extent, level));
 
             tiles.Sort(new DistanceComparison(map.CenterOfInterest));
@@ -153,7 +153,7 @@ namespace SharpMap.Layers
 
                 foreach (var info in tiles)
                 {
-                    var bitmap = _bitmaps.Find(info.Index); 
+                    var bitmap = _bitmaps.Find(info.Index);
                     if (bitmap != null)
                     {
                         //draws directly the bitmap
@@ -183,7 +183,7 @@ namespace SharpMap.Layers
                         // Increase num pending downloads
                         Interlocked.Increment(ref _numPendingDownloads);
                         DownloadProgressChanged?.Invoke(_numPendingDownloads);
-                        
+
                         taskFactory.StartNew(() =>
                             {
                                 if (token.IsCancellationRequested)
@@ -265,10 +265,10 @@ namespace SharpMap.Layers
                 min = new PointF((float)Math.Round(min.X), (float)Math.Round(min.Y));
                 max = new PointF((float)Math.Round(max.X), (float)Math.Round(max.Y));
 
-                using (var ia = (ImageAttributes) imageAttributes.Clone())
+                using (var ia = (ImageAttributes)imageAttributes.Clone())
                 {
                     g.DrawImage(bm,
-                        new Rectangle((int) min.X, (int) max.Y, (int) (max.X - min.X), (int) (min.Y - max.Y)),
+                        new Rectangle((int)min.X, (int)max.Y, (int)(max.X - min.X), (int)(min.Y - max.Y)),
                         0, 0,
                         sourceWidth, sourceHeight,
                         GraphicsUnit.Pixel,
@@ -327,7 +327,7 @@ namespace SharpMap.Layers
 
                     if (cancelToken.IsCancellationRequested)
                         cancelToken.ThrowIfCancellationRequested();
-                    
+
                     OnMapNewTileAvailable(tileInfo, bitmap);
                 }
                 return true;
@@ -336,7 +336,7 @@ namespace SharpMap.Layers
             {
                 if (Logger.IsDebugEnabled)
                     Logger.DebugFormat("Exception downloading tile {0},{1},{2} {3}", tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row, ex.Message);
-                
+
                 if (retry)
                 {
                     return GetTileOnThread(cancelToken, tileProvider, tileInfo, bitmaps, false);

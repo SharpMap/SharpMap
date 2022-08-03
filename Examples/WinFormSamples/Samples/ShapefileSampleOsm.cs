@@ -21,7 +21,7 @@ namespace WinFormSamples.Samples
         public const string PathOsm = "GeoData/OSM";
 
 
-        private static GeoAPI.Geometries.Envelope _roadsExtents;
+        private static NetTopologySuite.Geometries.Envelope _roadsExtents;
 
         //Could have used SharpMap.Rendering.Thematics.CustomTheme,
         //but that one does not perserve styles for fast retrieval.

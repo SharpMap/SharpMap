@@ -16,25 +16,19 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GeoAPI;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-
-
 using EsriExtent = Esri.FileGDB.Envelope;
-
-using EsriShapeBuffer = Esri.FileGDB.ShapeBuffer;
-using EsriPointShapeBuffer = Esri.FileGDB.PointShapeBuffer;
-using EsriMultiPointShapeBuffer = Esri.FileGDB.MultiPointShapeBuffer;
-using EsriMultiPartShapeBuffer = Esri.FileGDB.MultiPartShapeBuffer;
-
 using EsriGeometryType = Esri.FileGDB.GeometryType;
+using EsriMultiPartShapeBuffer = Esri.FileGDB.MultiPartShapeBuffer;
+using EsriMultiPointShapeBuffer = Esri.FileGDB.MultiPointShapeBuffer;
+using EsriPointShapeBuffer = Esri.FileGDB.PointShapeBuffer;
+using EsriShapeBuffer = Esri.FileGDB.ShapeBuffer;
 using EsriShapeType = Esri.FileGDB.ShapeType;
-using EsriShapeModifiers = Esri.FileGDB.ShapeModifiers;
 
 
 
@@ -44,7 +38,7 @@ namespace SharpMap.Data.Providers.Converter
     internal class FileGdbGeometryConverter
     {
 
-        private static readonly GeometryFactory geometryFactory = GeometryServiceProvider.Instance.CreateGeometryFactory();
+        private static readonly GeometryFactory geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory();
 
 
         internal static EsriExtent ToEsriExtent(Envelope bbox)
@@ -115,7 +109,7 @@ namespace SharpMap.Data.Providers.Converter
                     var index = offset + j;
                     var point = multiPartShapeBuffer.Points[index];
                     vertices.Add(hasZ
-                            ? new Coordinate(point.x, point.y, multiPartShapeBuffer.Zs[index])
+                            ? new CoordinateZ(point.x, point.y, multiPartShapeBuffer.Zs[index])
                             : new Coordinate(point.x, point.y));
                 }
                 lines.Add(new LineString(vertices.ToArray()));
@@ -155,7 +149,7 @@ namespace SharpMap.Data.Providers.Converter
                     var index = offset + j;
                     var point = multiPartShapeBuffer.Points[index];
                     vertices.Add(hasZ
-                        ? new Coordinate(point.x, point.y, multiPartShapeBuffer.Zs[index])
+                        ? new CoordinateZ(point.x, point.y, multiPartShapeBuffer.Zs[index])
                         : new Coordinate(point.x, point.y));
                 }
 
@@ -219,7 +213,7 @@ namespace SharpMap.Data.Providers.Converter
                     for (var j = 0; j < count; j++)
                     {
                         var vertex = hasZ
-                                         ? new Coordinate(reader.ReadDouble(), reader.ReadDouble(), double.NaN)
+                                         ? new CoordinateZ(reader.ReadDouble(), reader.ReadDouble(), double.NaN)
                                          : new Coordinate(reader.ReadDouble(), reader.ReadDouble());
                         vertices.Add(vertex);
                         allVertices.Add(vertex);
@@ -289,7 +283,7 @@ namespace SharpMap.Data.Providers.Converter
                     for (var j = 0; j < count; j++)
                     {
                         var vertex = hasZ
-                                         ? new Coordinate(reader.ReadDouble(), reader.ReadDouble(), double.NaN)
+                                         ? new CoordinateZ(reader.ReadDouble(), reader.ReadDouble(), double.NaN)
                                          : new Coordinate(reader.ReadDouble(), reader.ReadDouble());
                         vertices.Add(vertex);
                         allVertices.Add(vertex);

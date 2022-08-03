@@ -10,7 +10,7 @@ namespace Mapstache
     using System.Runtime.InteropServices;
     using System.Text;
 
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     public class Utf8GridResults
     {

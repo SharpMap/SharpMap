@@ -1,6 +1,6 @@
 ﻿using System;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
+using NetTopologySuite.CoordinateSystems;
+using NetTopologySuite.CoordinateSystems.Transformations;
 
 namespace SharpMap.CoordinateSystems.Transformations
 {

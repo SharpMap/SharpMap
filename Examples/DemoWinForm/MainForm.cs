@@ -26,9 +26,9 @@ using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Forms;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
-using GeoPoint = GeoAPI.Geometries.Coordinate;
+using GeoPoint = NetTopologySuite.Geometries.Coordinate;
 
 namespace DemoWinForm
 {

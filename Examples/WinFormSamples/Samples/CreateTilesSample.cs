@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using GeoAPI.CoordinateSystems.Transformations;
+using NetTopologySuite.CoordinateSystems.Transformations;
 
 /*------------------------------------------------------------------------------ 
 Create Date : 2011-09-25
@@ -145,7 +145,7 @@ namespace WinFormSamples.Samples
                     var centerY = centerY0;
                     for (var j = 0; j < lineNumberImage; j++, centerY = centerY - imageHeight)
                     {
-                        _map.Center = new GeoAPI.Geometries.Coordinate(centerX, centerY);
+                        _map.Center = new NetTopologySuite.Geometries.Coordinate(centerX, centerY);
                         using (var img = _map.GetMap())
                         {
                             using (var transImg = new System.Drawing.Bitmap(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))

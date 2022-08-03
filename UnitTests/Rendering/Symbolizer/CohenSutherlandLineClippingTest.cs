@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Data;
 using NUnit.Framework;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 

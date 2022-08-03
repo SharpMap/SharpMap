@@ -7,11 +7,11 @@ namespace SharpMap.Demo.Wms.Controllers
     using System.Linq;
     using System.Web.Mvc;
 
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     using Mapstache;
 
-    using GeoAPI.CoordinateSystems.Transformations;
+    using NetTopologySuite.CoordinateSystems.Transformations;
 
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;

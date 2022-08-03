@@ -1,7 +1,7 @@
 ﻿using ProjNet.CoordinateSystems;
 using System.Collections.Generic;
 
-namespace GeoAPI
+namespace NetTopologySuite
 {
     /// <summary>
     /// An interface for classes that offer access to coordinate system creating facillities.

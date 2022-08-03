@@ -44,7 +44,7 @@ using System.IO;
 namespace SharpMap.Converters.WellKnownText
 {
     /// <summary>
-    /// Outputs the textual representation of a <see cref="GeoAPI.Geometries.Geometry"/> instance.
+    /// Outputs the textual representation of a <see cref="NetTopologySuite.Geometries.Geometry"/> instance.
     /// </summary>
     /// <remarks>
     /// <para>The Well-Known Text (WKT) representation of Geometry is designed to exchange geometry data in ASCII form.</para>

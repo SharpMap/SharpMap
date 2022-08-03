@@ -107,7 +107,7 @@
         {
             using (var provider = GetProvider())
             {
-                GeoAPI.Geometries.Geometry result = null;
+                NetTopologySuite.Geometries.Geometry result = null;
                 NUnit.Framework.Assert.DoesNotThrow( () => result = provider.GetGeometryByID(1));
                 NUnit.Framework.Assert.IsNotNull(result);
             }

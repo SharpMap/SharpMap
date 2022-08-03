@@ -22,11 +22,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
+      <Compile Remove="Properties\**" />
+      <EmbeddedResource Remove="Properties\**" />
+      <None Remove="Properties\**" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\" />
+        <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
     <ItemGroup>

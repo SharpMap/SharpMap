@@ -44,7 +44,7 @@ namespace UnitTests.Data.Providers
             var maxX = _rnd.Next((int)minX, (int)ext.MaxX);
             var minY = _rnd.Next((int)ext.MinY, (int)ext.MaxY);
             var maxY = _rnd.Next((int)minY, (int)ext.MaxY);
-            var box = new GeoAPI.Geometries.Envelope(minX, maxX, minY, maxY);
+            var box = new NetTopologySuite.Geometries.Envelope(minX, maxX, minY, maxY);
 
             System.Diagnostics.Trace.WriteLine(string.Format(
                 @"{0:000}/{2:00}: Executing intersection query agains {1}", 
@@ -65,13 +65,13 @@ namespace UnitTests.Data.Providers
             var fdt = new SharpMap.Data.FeatureDataTable();
             fdt.Columns.Add(new DataColumn("ID", typeof(uint)));
 
-            var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
+            var gf = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory();
 
             for (var i = 0; i < 5; i++)
             {
                 var row = fdt.NewRow();
                 row[0] = (uint)i;
-                row.Geometry = gf.CreatePoint(new GeoAPI.Geometries.Coordinate(i, i));
+                row.Geometry = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(i, i));
                 fdt.AddRow(row);
             }
             var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
@@ -86,26 +86,26 @@ namespace UnitTests.Data.Providers
             var fdt = new SharpMap.Data.FeatureDataTable();
             fdt.Columns.Add(new DataColumn("ID", typeof(uint)));
 
-            var gf = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory();
+            var gf = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory();
 
             for (var i = 0; i < 5; i++)
             {
                 var row = fdt.NewRow();
                 row[0] = (uint)i;
-                row.Geometry = gf.CreatePoint(new GeoAPI.Geometries.Coordinate(i, i));
+                row.Geometry = gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(i, i));
                 fdt.AddRow(row);
             }
             var layer = new SharpMap.Layers.VectorLayer("TMP", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
 
-            var res = FindGeoNearPoint(gf.CreatePoint(new GeoAPI.Geometries.Coordinate(0.1, 0.1)), layer, 0.2d);
+            var res = FindGeoNearPoint(gf.CreatePoint(new NetTopologySuite.Geometries.Coordinate(0.1, 0.1)), layer, 0.2d);
             NUnit.Framework.Assert.IsNotNull(res);
             NUnit.Framework.Assert.AreEqual(0, (uint)res[0]);
         }
 
 public static SharpMap.Data.FeatureDataRow FindGeoNearPoint(
-    GeoAPI.Geometries.Point point, SharpMap.Layers.VectorLayer layer, double amountGrow)
+    NetTopologySuite.Geometries.Point point, SharpMap.Layers.VectorLayer layer, double amountGrow)
 {
-    var box = new GeoAPI.Geometries.Envelope(point.Coordinate);
+    var box = new NetTopologySuite.Geometries.Envelope(point.Coordinate);
     box.ExpandBy(amountGrow);
 
     var fds = new SharpMap.Data.FeatureDataSet();

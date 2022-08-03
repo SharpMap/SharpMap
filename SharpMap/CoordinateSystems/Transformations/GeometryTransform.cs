@@ -15,16 +15,15 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-using GeoAPI.Geometries;
 using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems.Transformations;
 using System;
 
 // ReSharper disable once CheckNamespace
-namespace GeoAPI.CoordinateSystems.Transformations
+namespace NetTopologySuite.CoordinateSystems.Transformations
 {
     /// <summary>
-    /// Helper class for transforming <see cref="T:GeoAPI.Geometries.Geometry"/>
+    /// Helper class for transforming <see cref="T:NetTopologySuite.Geometries.Geometry"/>
     /// </summary>
     public class GeometryTransform
     {
@@ -54,7 +53,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.Geometry"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.Geometry"/>.
         /// </summary>
         /// <param name="g">Geometry to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -111,7 +110,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.Point"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.Point"/>.
         /// </summary>
         /// <param name="p">Point to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -131,7 +130,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.LineString"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.LineString"/>.
         /// </summary>
         /// <param name="l">LineString to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -150,7 +149,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.LinearRing"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.LinearRing"/>.
         /// </summary>
         /// <param name="r">LinearRing to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -169,7 +168,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.Polygon"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.Polygon"/>.
         /// </summary>
         /// <param name="p">Polygon to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -190,7 +189,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.MultiPoint"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.MultiPoint"/>.
         /// </summary>
         /// <param name="points">MultiPoint to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -202,7 +201,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.MultiLineString"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.MultiLineString"/>.
         /// </summary>
         /// <param name="lines">MultiLineString to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -220,7 +219,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.MultiPolygon"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.MultiPolygon"/>.
         /// </summary>
         /// <param name="polys">MultiPolygon to transform</param>
         /// <param name="transform">MathTransform</param>
@@ -238,7 +237,7 @@ namespace GeoAPI.CoordinateSystems.Transformations
         }
 
         /// <summary>
-        /// Transforms a <see cref="GeoAPI.Geometries.GeometryCollection"/>.
+        /// Transforms a <see cref="NetTopologySuite.Geometries.GeometryCollection"/>.
         /// </summary>
         /// <param name="geoms">GeometryCollection to transform</param>
         /// <param name="transform">MathTransform</param>

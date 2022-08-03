@@ -1,6 +1,6 @@
 using BruTile.Predefined;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using NetTopologySuite.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Data;

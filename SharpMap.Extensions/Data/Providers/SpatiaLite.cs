@@ -24,7 +24,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
 

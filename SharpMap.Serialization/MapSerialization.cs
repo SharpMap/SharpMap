@@ -1,12 +1,11 @@
-﻿using System;
+﻿using SharpMap.Serialization.Model;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Drawing;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Xml.Serialization;
-using SharpMap.Serialization.Model;
 
 namespace SharpMap.Serialization
 {
@@ -25,7 +24,7 @@ namespace SharpMap.Serialization
             Map m = new Map();
 
             if (md.Extent != null)
-                m.ZoomToBox(new GeoAPI.Geometries.Envelope(md.Extent.Xmin, md.Extent.Xmax, md.Extent.Ymin, md.Extent.Ymax));
+                m.ZoomToBox(new NetTopologySuite.Geometries.Envelope(md.Extent.Xmin, md.Extent.Xmax, md.Extent.Ymin, md.Extent.Ymax));
 
             if (!string.IsNullOrEmpty(md.BackGroundColor))
             {
@@ -55,14 +54,14 @@ namespace SharpMap.Serialization
                     }
                     else
                     {
-                        wmsl.AddChildLayers(wmsl.RootLayer,true);
+                        wmsl.AddChildLayers(wmsl.RootLayer, true);
                     }
                     lay = wmsl;
                 }
                 //And some simple tiled layers
                 else if (l is OsmLayer)
                 {
-                    var ol = (OsmLayer) l;
+                    var ol = (OsmLayer)l;
                     BruTile.Predefined.KnownTileSource kts;
                     if (!Enum.TryParse(ol.KnownTileSource, out kts))
                         kts = BruTile.Predefined.KnownTileSource.OpenStreetMap;
@@ -71,27 +70,27 @@ namespace SharpMap.Serialization
                     else
                         lay = new Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(kts, ol.ApiKey), l.Name);
                 }
-                    /*
-                else if (l is GoogleLayer)
-                {
-                    lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap), l.Name);
-                }
-                else if (l is GoogleSatLayer)
-                {
-                    lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleSatellite), l.Name);
-                }
-                else if (l is GoogleTerrainLayer)
-                {
-                    lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleTerrain), l.Name);
-                }
-                      */
+                /*
+            else if (l is GoogleLayer)
+            {
+                lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleMap), l.Name);
+            }
+            else if (l is GoogleSatLayer)
+            {
+                lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleSatellite), l.Name);
+            }
+            else if (l is GoogleTerrainLayer)
+            {
+                lay = new Layers.TileLayer(new BruTile.Web.GoogleTileSource(BruTile.Web.GoogleMapType.GoogleTerrain), l.Name);
+            }
+                  */
                 if (lay != null)
                 {
                     lay.MinVisible = l.MinVisible;
                     lay.MaxVisible = l.MaxVisible;
                     m.Layers.Add(lay);
                 }
-                
+
             }
 
 

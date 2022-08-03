@@ -17,7 +17,7 @@ namespace UnitTests.Data.Providers
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            GeoAPI.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
+            NetTopologySuite.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
         }
 
         [Test]

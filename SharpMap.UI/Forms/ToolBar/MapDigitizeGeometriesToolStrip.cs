@@ -134,7 +134,7 @@ namespace SharpMap.Forms.ToolBar
                 return;
             }
 
-            _geometryProvider = new Data.Providers.GeometryProvider((GeoAPI.Geometries.Geometry)null);
+            _geometryProvider = new Data.Providers.GeometryProvider((NetTopologySuite.Geometries.Geometry)null);
             _layer = new Layers.VectorLayer("_tmp_Geometries", _geometryProvider);
 
             MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
@@ -201,7 +201,7 @@ namespace SharpMap.Forms.ToolBar
             }
         }
 
-        private void OnGeometryDefined(GeoAPI.Geometries.Geometry geometry)
+        private void OnGeometryDefined(NetTopologySuite.Geometries.Geometry geometry)
         {
             if (geometry == null)
                 return;
@@ -216,7 +216,7 @@ namespace SharpMap.Forms.ToolBar
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public MapBox.GeometryDefinedHandler GeometryDefinedHandler{ get; set; }
 
-        private void DefaultGeometryDefinedMethod(GeoAPI.Geometries.Geometry geom)
+        private void DefaultGeometryDefinedMethod(NetTopologySuite.Geometries.Geometry geom)
         {
             using (var frm = new WktGeometryCreator())
             {

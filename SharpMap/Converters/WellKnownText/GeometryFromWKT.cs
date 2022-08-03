@@ -44,7 +44,7 @@ using System.IO;
 namespace SharpMap.Converters.WellKnownText
 {
     /// <summary>
-    ///  Converts a Well-known Text representation to a <see cref="GeoAPI.Geometries.Geometry"/> instance.
+    ///  Converts a Well-known Text representation to a <see cref="NetTopologySuite.Geometries.Geometry"/> instance.
     /// </summary>
     /// <remarks>
     /// <para>The Well-Known Text (WKT) representation of Geometry is designed to exchange geometry data in ASCII form.</para>
@@ -70,10 +70,10 @@ namespace SharpMap.Converters.WellKnownText
     public class GeometryFromWKT
     {
         /// <summary>
-        /// Converts a Well-known text representation to a <see cref="GeoAPI.Geometries.Geometry"/>.
+        /// Converts a Well-known text representation to a <see cref="NetTopologySuite.Geometries.Geometry"/>.
         /// </summary>
-        /// <param name="wellKnownText">A <see cref="GeoAPI.Geometries.Geometry"/> tagged text string ( see the OpenGIS Simple Features Specification.</param>
-        /// <returns>Returns a <see cref="GeoAPI.Geometries.Geometry"/> specified by wellKnownText.  Throws an exception if there is a parsing problem.</returns>
+        /// <param name="wellKnownText">A <see cref="NetTopologySuite.Geometries.Geometry"/> tagged text string ( see the OpenGIS Simple Features Specification.</param>
+        /// <returns>Returns a <see cref="NetTopologySuite.Geometries.Geometry"/> specified by wellKnownText.  Throws an exception if there is a parsing problem.</returns>
         public static Geometry Parse(string wellKnownText)
         {
             // throws a parsing exception is there is a problem.
@@ -82,11 +82,11 @@ namespace SharpMap.Converters.WellKnownText
         }
 
         /// <summary>
-        /// Converts a Well-known Text representation to a <see cref="GeoAPI.Geometries.Geometry"/>.
+        /// Converts a Well-known Text representation to a <see cref="NetTopologySuite.Geometries.Geometry"/>.
         /// </summary>
         /// <param name="reader">A Reader which will return a Geometry Tagged Text
         /// string (see the OpenGIS Simple Features Specification)</param>
-        /// <returns>Returns a <see cref="GeoAPI.Geometries.Geometry"/> read from StreamReader. 
+        /// <returns>Returns a <see cref="NetTopologySuite.Geometries.Geometry"/> read from StreamReader. 
         /// An exception will be thrown if there is a parsing problem.</returns>
         public static Geometry Parse(TextReader reader)
         {

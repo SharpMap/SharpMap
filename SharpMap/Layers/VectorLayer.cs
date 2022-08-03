@@ -89,8 +89,8 @@ namespace SharpMap.Layers
         /// Specifies whether polygons should be clipped prior to rendering
         /// </summary>
         /// <remarks>
-        /// <para>Clipping will clip <see cref="GeoAPI.Geometries.Polygon"/> and
-        /// <see cref="GeoAPI.Geometries.MultiPolygon"/> to the current view prior
+        /// <para>Clipping will clip <see cref="NetTopologySuite.Geometries.Polygon"/> and
+        /// <see cref="NetTopologySuite.Geometries.MultiPolygon"/> to the current view prior
         /// to rendering the object.</para>
         /// <para>Enabling clipping might improve rendering speed if you are rendering 
         /// only small portions of very large objects.</para>

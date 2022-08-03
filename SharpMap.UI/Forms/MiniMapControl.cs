@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Forms
 {

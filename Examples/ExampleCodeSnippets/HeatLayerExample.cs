@@ -2,7 +2,7 @@
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite;
 using SharpMap.Data;
@@ -15,7 +15,7 @@ namespace ExampleCodeSnippets
     {
         static HeatLayerExample ()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            NetTopologySuite.GeometryServiceProvider.Instance = new NtsGeometryServices();
         }
         [Test]
         public void HeatLayerTest()
@@ -91,7 +91,7 @@ namespace ExampleCodeSnippets
         private static void FillRealDataTable(FeatureDataTable table)
         {
             table.BeginLoadData();
-            var factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+            var factory = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
 
             uint id = 0;
             foreach (var datas in PointData())

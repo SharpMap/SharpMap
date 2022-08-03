@@ -10,7 +10,7 @@ using SharpMap.Rendering;
 using SharpMap.Rendering.Symbolizer;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using Point = GeoAPI.Geometries.Coordinate;
+using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {

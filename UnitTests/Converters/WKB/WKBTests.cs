@@ -1,7 +1,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;

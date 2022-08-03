@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Moq;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
@@ -14,12 +14,12 @@ using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.IO;
 using SharpMap;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.Geometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.ScaleBar;
-using Point = GeoAPI.Geometries.Coordinate;
-using BoundingBox = GeoAPI.Geometries.Envelope;
+using Point = NetTopologySuite.Geometries.Coordinate;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
 
 namespace UnitTests
 {
@@ -580,7 +580,7 @@ namespace UnitTests
             
             //CLOCKWISE ProjNet affine transform (negate degrees)
             //double rad = -1 * deg * Math.PI / 180.0;
-            //GeoAPI.CoordinateSystems.Transformations.MathTransform trans =
+            //NetTopologySuite.CoordinateSystems.Transformations.MathTransform trans =
             //    new ProjNet.CoordinateSystems.Transformations.AffineTransform(
             //        scaleX * Math.Cos(rad),
             //        -scaleX * Math.Sin(rad),

@@ -149,7 +149,7 @@ namespace SharpMap.Data.Providers
     ///demoMap.Layers.Add(layer6);
     ///demoMap.Layers.Add(layLabel);
     ///
-    ///demoMap.Center = new GeoAPI.Geometries.Coordinate(-74.0, 40.7);
+    ///demoMap.Center = new NetTopologySuite.Geometries.Coordinate(-74.0, 40.7);
     ///demoMap.Zoom = 10;
     /// // Alternatively zoom closer
     /// // demoMap.Zoom = 0.2;
@@ -534,10 +534,10 @@ namespace SharpMap.Data.Providers
         #region IProvider Member
 
         /// <summary>
-        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
+        /// <returns>Features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/></returns>
         public virtual Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             if (_featureTypeInfo == null)
@@ -578,11 +578,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="NetTopologySuite.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="NetTopologySuite.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>

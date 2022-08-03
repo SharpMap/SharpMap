@@ -1,9 +1,9 @@
-﻿using System;
+﻿using BruTile;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
-using BruTile;
 
 namespace SharpMap.Data.Providers.Tiles
 {
@@ -15,7 +15,7 @@ namespace SharpMap.Data.Providers.Tiles
         private const string SelectTileMatrix =
             "SELECT * FROM \"gpkg_tile_matrix\" WHERE \"table_name\"=? ORDER by \"zoom_level\";";
 
-        private readonly Dictionary<string, Resolution> _resolutions;
+        private readonly Dictionary<int, Resolution> _resolutions;
 
         private readonly string _name;
 
@@ -26,52 +26,52 @@ namespace SharpMap.Data.Providers.Tiles
 
             var tms = GpkgTileMatrixSet.Read(content);
             Format = "image/png";
-            Extent = new Extent(content.Extent.MinX, content.Extent.MinY, 
+            Extent = new Extent(content.Extent.MinX, content.Extent.MinY,
                                 content.Extent.MaxX, content.Extent.MaxY);
             Srs = "EPSG:" + content.SRID;
             _resolutions = tms.ToResolutions();
         }
 
-        public int GetTileWidth(string levelId)
+        public int GetTileWidth(int level)
         {
-            return _resolutions[levelId].TileWidth;
+            return _resolutions[level].TileWidth;
         }
 
-        public int GetTileHeight(string levelId)
+        public int GetTileHeight(int level)
         {
-            return _resolutions[levelId].TileHeight;
+            return _resolutions[level].TileHeight;
         }
 
-        public double GetOriginX(string levelId)
+        public double GetOriginX(int level)
         {
-            return _resolutions[levelId].Left;
+            return _resolutions[level].Left;
         }
 
-        public double GetOriginY(string levelId)
+        public double GetOriginY(int level)
         {
-            return _resolutions[levelId].Top; 
+            return _resolutions[level].Top;
         }
 
-        public long GetMatrixWidth(string levelId)
+        public long GetMatrixWidth(int level)
         {
-            return _resolutions[levelId].MatrixWidth;
+            return _resolutions[level].MatrixWidth;
         }
 
-        public long GetMatrixHeight(string levelId)
+        public long GetMatrixHeight(int level)
         {
-            return _resolutions[levelId].MatrixHeight;
+            return _resolutions[level].MatrixHeight;
         }
 
-        public IEnumerable<TileInfo> GetTileInfos(Extent extent, string levelId)
+        public IEnumerable<TileInfo> GetTileInfos(Extent extent, int level)
         {
             // todo: move this method elsewhere.
-            var range = TileTransform.WorldToTile(extent, levelId, this);
+            var range = TileTransform.WorldToTile(extent, level, this);
 
             // todo: use a method to get tilerange for full schema and intersect with requested tilerange.
-            var startX = Math.Max(range.FirstCol, GetMatrixFirstCol(levelId));
-            var stopX = Math.Min(range.FirstCol + range.ColCount, GetMatrixFirstCol(levelId) + GetMatrixWidth(levelId));
-            var startY = Math.Max(range.FirstRow, GetMatrixFirstRow(levelId));
-            var stopY = Math.Min(range.FirstRow + range.RowCount, GetMatrixFirstRow(levelId) + GetMatrixHeight(levelId));
+            var startX = Math.Max(range.FirstCol, GetMatrixFirstCol(level));
+            var stopX = Math.Min(range.FirstCol + range.ColCount, GetMatrixFirstCol(level) + GetMatrixWidth(level));
+            var startY = Math.Max(range.FirstRow, GetMatrixFirstRow(level));
+            var stopY = Math.Min(range.FirstRow + range.RowCount, GetMatrixFirstRow(level) + GetMatrixHeight(level));
 
             for (var x = startX; x < stopX; x++)
             {
@@ -79,8 +79,8 @@ namespace SharpMap.Data.Providers.Tiles
                 {
                     yield return new TileInfo
                     {
-                        Extent = TileTransform.TileToWorld(new TileRange(x, y), levelId, this),
-                        Index = new TileIndex(x, y, levelId)
+                        Extent = TileTransform.TileToWorld(new TileRange(x, y), level, this),
+                        Index = new TileIndex(x, y, level)
                     };
                 }
             }
@@ -92,17 +92,17 @@ namespace SharpMap.Data.Providers.Tiles
             return GetTileInfos(extent, level);
         }
 
-        public Extent GetExtentOfTilesInView(Extent extent, string levelId)
+        public Extent GetExtentOfTilesInView(Extent extent, int level)
         {
-            return TileSchema.GetExtentOfTilesInView(this, extent, levelId);
+            return TileSchema.GetExtentOfTilesInView(this, extent, level);
         }
 
-        public int GetMatrixFirstCol(string levelId)
+        public int GetMatrixFirstCol(int level)
         {
             return 0;
         }
 
-        public int GetMatrixFirstRow(string levelId)
+        public int GetMatrixFirstRow(int level)
         {
             return 0;
         }
@@ -116,7 +116,7 @@ namespace SharpMap.Data.Providers.Tiles
 
         public Extent Extent { get; private set; }
 
-        public IDictionary<string, Resolution> Resolutions
+        public IDictionary<int, Resolution> Resolutions
         {
             get { return _resolutions; }
         }
@@ -181,17 +181,17 @@ namespace SharpMap.Data.Providers.Tiles
 
             public List<GpkgTileMatrix> TileMatrices { get; private set; }
 
-            public Dictionary<string, Resolution> ToResolutions()
+            public Dictionary<int, Resolution> ToResolutions()
             {
-                var res = new Dictionary<string, Resolution>(TileMatrices.Count);
+                var res = new Dictionary<int, Resolution>(TileMatrices.Count);
                 foreach (var tileMatrix in TileMatrices)
                 {
                     var tmp = new Resolution(
-                        tileMatrix.ZoomLevel.ToString(), tileMatrix.PixelXSize,
+                        tileMatrix.ZoomLevel, tileMatrix.PixelXSize,
                         tileMatrix.TileWidth, tileMatrix.TileHeight,
                         MinX, MaxY,
                         tileMatrix.MatrixWidth, tileMatrix.MatrixHeight);
-                    res.Add(tmp.Id, tmp);
+                    res.Add(tmp.Level, tmp);
                 }
                 return res;
             }

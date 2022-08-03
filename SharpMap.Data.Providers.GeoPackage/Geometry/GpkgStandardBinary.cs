@@ -1,7 +1,7 @@
-using System.IO;
-using GeoAPI.DataStructures;
-using GeoAPI.Geometries;
+using NetTopologySuite.DataStructures;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using System.IO;
 
 namespace SharpMap.Data.Providers.Geometry
 {
@@ -10,8 +10,8 @@ namespace SharpMap.Data.Providers.Geometry
     /// </summary>
     internal class GpkgStandardBinary
     {
-        private static readonly  Interval _full = Interval.Create(double.MinValue, double.MaxValue);
-        
+        private static readonly Interval _full = Interval.Create(double.MinValue, double.MaxValue);
+
         private WKBReader _wkbReader;
         public GpkgBinaryHeader Header;
         public byte[] WellKnownBytes;
@@ -27,7 +27,7 @@ namespace SharpMap.Data.Providers.Geometry
             var res = new GpkgStandardBinary
             {
                 Header = GpkgBinaryHeader.Read(reader),
-                WellKnownBytes = reader.ReadBytes((int) (reader.BaseStream.Length - reader.BaseStream.Position)),
+                WellKnownBytes = reader.ReadBytes((int)(reader.BaseStream.Length - reader.BaseStream.Position)),
                 _wkbReader = wkbReader
             };
 
@@ -40,12 +40,12 @@ namespace SharpMap.Data.Providers.Geometry
         /// <returns>
         /// The geometry
         /// </returns>
-        internal Geometry GetGeometry()
+        internal NetTopologySuite.Geometries.Geometry GetGeometry()
         {
             var geom = _wkbReader.Read(WellKnownBytes);
             geom.SRID = Header.SrsId;
             if (Header.MRange != _full)
-                GeoAPIEx.SetExtent(geom as NetTopologySuite.Geometries.Geometry, Header.Extent);
+                NtsExtensions.SetExtent(geom as NetTopologySuite.Geometries.Geometry, Header.Extent);
             return geom;
         }
     }

@@ -1,17 +1,18 @@
-﻿using System;
+﻿using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using SharpMap.Data.Providers.IO;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Text;
-using GeoAPI.Geometries;
-using SharpMap.Data.Providers.IO;
 
 namespace SharpMap.Data.Providers
 {
     [Serializable]
     internal class GpkgProvider : BaseProvider
     {
-        private const string SqlBuildRtreeConstraint = 
+        private const string SqlBuildRtreeConstraint =
             "SELECT 'rtree_' || \"table_name\" || '_' || \"column_name\" FROM \"gpkg_extensions\" WHERE \"table_name\"=? AND \"extension_name\"='gpkg_rtree_index';";
 
         private readonly GpkgContent _content;
@@ -25,11 +26,11 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="content">The geopackage content</param>
         public GpkgProvider(GpkgContent content)
-            :base(content.SRID)
+            : base(content.SRID)
         {
             _content = content;
             ConnectionID = content.ConnectionString;
-            _reader = new GpkgStandardBinaryReader(GeoAPI.GeometryServiceProvider.Instance);
+            _reader = new GpkgStandardBinaryReader(NtsGeometryServices.Instance);
             _extent = content.Extent;
             _baseTable = content.GetBaseTable();
             _rtreeConstraint = BuildRtreeConstraint(content);
@@ -43,15 +44,15 @@ namespace SharpMap.Data.Providers
                 var cmd = new SQLiteCommand(SqlBuildRtreeConstraint, cn);
                 cmd.Parameters.AddWithValue(null, content.TableName);
                 var tmp = cmd.ExecuteScalar();
-                if (tmp == null) 
+                if (tmp == null)
                     return string.Empty;
-                rtreeName = (string) tmp;
+                rtreeName = (string)tmp;
             }
 
             var sb = new StringBuilder();
             sb.AppendFormat(" \"{0}\" IN (", _content.OidColumn);
             sb.AppendFormat("SELECT \"id\" FROM \"{0}\" WHERE minX>=? AND maxX<=? AND minY>=? AND maxY<=?)", rtreeName);
-            
+
             return sb.ToString();
         }
 
@@ -100,22 +101,22 @@ namespace SharpMap.Data.Providers
             {
                 if (!string.IsNullOrEmpty(_rtreeConstraint))
                 {
-                    var addX = extent.Width*0.000012 + Double.Epsilon;
-                    var addY = extent.Height*0.000012 + Double.Epsilon;
+                    var addX = extent.Width * 0.000012 + Double.Epsilon;
+                    var addY = extent.Height * 0.000012 + Double.Epsilon;
                     sql.AppendFormat(" {0} {1}", whereAdded ? "AND" : "WHERE", _rtreeConstraint);
-                    cmd.Parameters.AddWithValue(null, extent.MinX-addX); 
-                    cmd.Parameters.AddWithValue(null, extent.MaxX+addX);
-                    cmd.Parameters.AddWithValue(null, extent.MinY-addY);
-                    cmd.Parameters.AddWithValue(null, extent.MaxY+addY);
+                    cmd.Parameters.AddWithValue(null, extent.MinX - addX);
+                    cmd.Parameters.AddWithValue(null, extent.MaxX + addX);
+                    cmd.Parameters.AddWithValue(null, extent.MinY - addY);
+                    cmd.Parameters.AddWithValue(null, extent.MaxY + addY);
                 }
             }
 
             // Terminate statment
             sql.Append(";");
             cmd.CommandText = sql.ToString();
-            
+
             System.Diagnostics.Debug.WriteLine(
-                string.Format("SQL: '{0}'",cmd.CommandText));
+                string.Format("SQL: '{0}'", cmd.CommandText));
 
             return cmd.ExecuteReader();
         }
@@ -126,20 +127,20 @@ namespace SharpMap.Data.Providers
         public string DefinitionQuery { get; set; }
 
         /// <summary>
-        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
+        /// <returns>Features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/></returns>
+        public override Collection<NetTopologySuite.Geometries.Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var res = new Collection<Geometry>();
+            var res = new Collection<NetTopologySuite.Geometries.Geometry>();
             using (var reader = CreateReader(2, bbox))
             {
                 while (reader.Read())
                 {
                     if (reader.IsDBNull(0)) continue;
 
-                    var gpkg = _reader.Read((byte[]) reader.GetValue(0));
+                    var gpkg = _reader.Read((byte[])reader.GetValue(0));
                     if (gpkg.Header.IsEmpty) continue;
 
                     if (bbox.Intersects(gpkg.Header.Extent))
@@ -154,11 +155,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="NetTopologySuite.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="NetTopologySuite.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
@@ -170,7 +171,7 @@ namespace SharpMap.Data.Providers
                 if (rdr.HasRows)
                 {
                     while (rdr.Read())
-                        res.Add((uint) rdr.GetInt64(0));
+                        res.Add((uint)rdr.GetInt64(0));
                 }
             }
             return res;
@@ -181,7 +182,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override Geometry GetGeometryByID(uint oid)
+        public override NetTopologySuite.Geometries.Geometry GetGeometryByID(uint oid)
         {
             using (var rdr = CreateReader(2, null, string.Format("\"{0}\"={1}", _content.OidColumn, oid)))
             {
@@ -191,8 +192,8 @@ namespace SharpMap.Data.Providers
                     if (rdr.IsDBNull(0))
                         return null;
 
-                    var geom = _reader.Read((byte[]) rdr.GetValue(0));
-                    if (!geom.Header.IsEmpty) 
+                    var geom = _reader.Read((byte[])rdr.GetValue(0));
+                    if (!geom.Header.IsEmpty)
                         return geom.GetGeometry();
                 }
             }
@@ -218,14 +219,14 @@ namespace SharpMap.Data.Providers
                     while (rdr.Read())
                     {
                         if (rdr.IsDBNull(geometryIndex)) continue;
-                        
+
                         var geom = _reader.Read((byte[])rdr.GetValue(geometryIndex));
                         if (geom.Header.IsEmpty) continue;
                         if (!box.Intersects(geom.Header.Extent)) continue;
 
                         var data = new object[geometryIndex];
                         rdr.GetValues(data);
-                        var fdr = (FeatureDataRow) table.LoadDataRow(data, true);
+                        var fdr = (FeatureDataRow)table.LoadDataRow(data, true);
                         fdr.Geometry = geom.GetGeometry();
                     }
                 }
@@ -266,9 +267,9 @@ namespace SharpMap.Data.Providers
                     rdr.GetValues(data);
                     var row = _baseTable.NewRow();
                     row.ItemArray = data;
-                    row.Geometry = rdr.IsDBNull(rdr.FieldCount-1)
-                        ? null 
-                        : _reader.Read((byte[]) rdr.GetValue(rdr.FieldCount - 1)).GetGeometry();
+                    row.Geometry = rdr.IsDBNull(rdr.FieldCount - 1)
+                        ? null
+                        : _reader.Read((byte[])rdr.GetValue(rdr.FieldCount - 1)).GetGeometry();
                     return row;
                 }
             }
@@ -289,7 +290,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">The geometry to use as filter</param>
         /// <param name="ds">The feature data set to store the results in</param>
-        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(NetTopologySuite.Geometries.Geometry geom, FeatureDataSet ds)
         {
             var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
 
@@ -315,7 +316,7 @@ namespace SharpMap.Data.Providers
                         {
                             var data = new object[geometryIndex];
                             rdr.GetValues(data);
-                            var fdr = (FeatureDataRow) table.LoadDataRow(data, true);
+                            var fdr = (FeatureDataRow)table.LoadDataRow(data, true);
                             fdr.Geometry = tmpGeom;
                         }
                     }

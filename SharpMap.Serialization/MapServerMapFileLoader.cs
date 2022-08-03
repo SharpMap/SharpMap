@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Common.Logging;
-using System.Drawing;
+﻿using Common.Logging;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
-using System.Globalization;
 using SharpMap.Styles;
-using GeoAPI.Geometries;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
 namespace SharpMap.Serialization
 {
     /// <summary>
@@ -191,7 +191,7 @@ namespace SharpMap.Serialization
                             lay.DataSource = sf;
                         }
 
-                        ApplyStyling(lay, classes,classItem, type);
+                        ApplyStyling(lay, classes, classItem, type);
 
                         m.Layers.Add(lay);
                         return;
@@ -269,7 +269,7 @@ namespace SharpMap.Serialization
                     Brush b = new SolidBrush(styles[0].Color);
                     vs.PointColor = b;
                     vs.PointSize = (float)styles[0].Size;
-                    if (styles[0].Offset != Point.Empty)
+                    if (styles[0].Offset != System.Drawing.Point.Empty)
                     {
                         vs.SymbolOffset = new PointF(styles[0].Offset.X, styles[0].Offset.Y);
                     }
@@ -277,7 +277,7 @@ namespace SharpMap.Serialization
                 else if (string.Compare(type, "line", StringComparison.InvariantCultureIgnoreCase) == 0)
                 {
                     vs.Line = new Pen(styles[0].Color, (float)styles[0].Width);
-                    if (styles[0].Offset != Point.Empty)
+                    if (styles[0].Offset != System.Drawing.Point.Empty)
                     {
                         vs.LineOffset = styles[0].Offset.Y;
                     }
@@ -287,7 +287,7 @@ namespace SharpMap.Serialization
                     Brush b = new SolidBrush(styles[0].Color);
                     vs.Fill = b;
                 }
-                
+
                 if (styles[0].OutlineColor != Color.Empty)
                 {
                     vs.EnableOutline = true;
@@ -299,7 +299,7 @@ namespace SharpMap.Serialization
             {
                 GroupStyle gs = new GroupStyle();
                 for (int i = 0; i < styles.Length; i++)
-                    gs.AddStyle(CreateStyle(new [] { styles[i] }, type));
+                    gs.AddStyle(CreateStyle(new[] { styles[i] }, type));
                 return gs;
             }
         }
@@ -321,7 +321,7 @@ namespace SharpMap.Serialization
                 string[] parts = ParseLine(line);
                 if (parts != null && parts.Length > 0)
                 {
-                    if (string.Compare(parts[0],"END", StringComparison.InvariantCultureIgnoreCase) == 0)
+                    if (string.Compare(parts[0], "END", StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
                         return classEl;
                     }
@@ -343,7 +343,7 @@ namespace SharpMap.Serialization
                     }
                     else if (string.Compare(parts[0], "NAME", StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
-                        classEl.Name= parts[1];
+                        classEl.Name = parts[1];
                     }
                 }
             }
@@ -361,7 +361,7 @@ namespace SharpMap.Serialization
                 BackGroundColor = Color.Empty,
                 OutlineColor = Color.Empty,
                 Size = 1,
-                Offset = Point.Empty
+                Offset = System.Drawing.Point.Empty
             };
 
             while ((line = sr.ReadLine()) != null)
@@ -385,7 +385,7 @@ namespace SharpMap.Serialization
                     }
                     else if (string.Compare(parts[0], "EXPRESSION", StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
-                        styleEl.Offset = new Point(int.Parse(parts[1]), int.Parse(parts[2]));
+                        styleEl.Offset = new System.Drawing.Point(int.Parse(parts[1]), int.Parse(parts[2]));
                     }
                     else if (string.Compare(parts[0], "SIZE", StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
@@ -405,15 +405,15 @@ namespace SharpMap.Serialization
                     }
                     else if (string.Compare(parts[0], "LINECAP", StringComparison.InvariantCultureIgnoreCase) == 0)
                     {
-                        switch(parts[1].ToLower())
+                        switch (parts[1].ToLower())
                         {
                             case "square":
                                 styleEl.LineCap = System.Drawing.Drawing2D.LineCap.Square;
                                 break;
-                                case "round":
+                            case "round":
                                 styleEl.LineCap = System.Drawing.Drawing2D.LineCap.Round;
                                 break;
-                                case "butt":
+                            case "butt":
                                 styleEl.LineCap = System.Drawing.Drawing2D.LineCap.Flat;
                                 break;
                         }
@@ -463,9 +463,9 @@ namespace SharpMap.Serialization
                 if (!inQuote && parmChars[index] == ' ')
                     parmChars[index] = '\n';
             }
-            string[] parts = new string(parmChars).Split(new [] {'\n'},  StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = new string(parmChars).Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < parts.Length; i++)
-                parts[i] = parts[i].Trim(' ', '\"','\'');
+                parts[i] = parts[i].Trim(' ', '\"', '\'');
 
             return parts;
         }
@@ -481,7 +481,7 @@ namespace SharpMap.Serialization
             public Color BackGroundColor { get; set; }
             public System.Drawing.Drawing2D.LineCap LineCap { get; set; }
             public System.Drawing.Drawing2D.LineJoin LineJoin { get; set; }
-            public Point Offset { get; set; }
+            public System.Drawing.Point Offset { get; set; }
 
         }
         class ClassElement
