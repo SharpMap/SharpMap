@@ -24,17 +24,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BruTile.MbTiles" Version="2.1.2" />
+        <PackageReference Include="BruTile.MbTiles" Version="3.1.3" />
         <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="2.0.4" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Npgsql" Version="6.0.5" />
-        <PackageReference Include="NUnit" Version="3.12.0" />
-        <PackageReference Include="Moq" Version="4.2.1312.1319" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+        <PackageReference Include="NUnit" Version="3.13.3" />
+        <PackageReference Include="Moq" Version="4.18.2" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.1">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.Reactive.Core" Version="4.2" />
+        <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
         <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
     </ItemGroup>
 
@@ -52,7 +52,7 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">
-        <PackageReference Include="GDAL.Native" Version="2.4.2" />
+        <PackageReference Include="GDAL.Native" Version="3.5.0" />
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' != 'ReleaseLinux' ">

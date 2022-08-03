@@ -19,7 +19,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="GDAL.Native" Version="2.4.2" />
+      <PackageReference Include="GDAL.Native" Version="3.5.0" />
       <PackageReference Include="Npgsql" Version="6.0.5" />
     </ItemGroup>
 

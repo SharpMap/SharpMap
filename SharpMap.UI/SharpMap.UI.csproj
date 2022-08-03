@@ -30,7 +30,7 @@
 
     <ItemGroup>
         <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
-        <PackageReference Include="System.Resources.Extensions" Version="4.7.0" />
+        <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
     </ItemGroup>
 
     <ItemGroup>
