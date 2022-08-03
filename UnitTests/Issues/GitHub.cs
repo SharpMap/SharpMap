@@ -1,8 +1,8 @@
-﻿using System;
-using System.Net;
+﻿using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Features;
 using NUnit.Framework;
+using System;
+using System.Net;
 
 namespace UnitTests.Issues
 {
@@ -106,7 +106,7 @@ namespace UnitTests.Issues
 
             SharpMap.Layers.WmsLayer wmsLayer = null;
             ServicePointManager.SecurityProtocol = sptFail;
-            Assert.That(() => wmsLayer = new SharpMap.Layers.WmsLayer("WMSFAIL", url), Throws.InstanceOf<System.ApplicationException>() );
+            Assert.That(() => wmsLayer = new SharpMap.Layers.WmsLayer("WMSFAIL", url), Throws.InstanceOf<System.ApplicationException>());
             ServicePointManager.SecurityProtocol = sptSucceed;
             Assert.That(() => wmsLayer = new SharpMap.Layers.WmsLayer("WMSSUCCED", url), Throws.Nothing);
             Assert.That(wmsLayer, Is.Not.Null, "wmsLayer null");

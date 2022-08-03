@@ -1,13 +1,13 @@
 ﻿// code adapted from: https://github.com/awcoats/mapstache
 namespace Mapstache
 {
+    using NetTopologySuite.Geometries;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using Point = System.Drawing.Point;
     using System.Drawing.Drawing2D;
     using System.Linq;
-
-    using NetTopologySuite.Geometries;
 
     public class GraphicsPathBuilder
     {
@@ -22,8 +22,8 @@ namespace Mapstache
             if (size.IsEmpty)
                 throw new ArgumentException("Size is empty.", "size");
 
-            this.metersToPixel = bounds.Width/size.Width;
-            this.topLeft = new Point((int) bounds.Left, (int) (bounds.Top));
+            this.metersToPixel = bounds.Width / size.Width;
+            this.topLeft = new Point((int)bounds.Left, (int)(bounds.Top));
             this.size = size;
         }
 
@@ -102,8 +102,8 @@ namespace Mapstache
         private PointF GetPixel(PointF ll)
         {
             Point meters = SphericalMercator.FromLonLat(ll);
-            float x = (meters.X - this.topLeft.X)/this.metersToPixel;
-            float y = (meters.Y - this.topLeft.Y)/this.metersToPixel;
+            float x = (meters.X - this.topLeft.X) / this.metersToPixel;
+            float y = (meters.Y - this.topLeft.Y) / this.metersToPixel;
             y = this.size.Height - y;
             return new PointF(x, y);
         }

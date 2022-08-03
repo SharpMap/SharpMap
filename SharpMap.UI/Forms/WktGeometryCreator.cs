@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NetTopologySuite.IO;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using NetTopologySuite.IO;
 
 namespace SharpMap.Forms
 {
@@ -38,7 +38,7 @@ namespace SharpMap.Forms
 
             cboWktKeywords.DisplayMember = "Key";
             cboWktKeywords.ValueMember = "Value";
-            
+
         }
 
         private void btnOk_Click(object sender, EventArgs e)
@@ -48,7 +48,7 @@ namespace SharpMap.Forms
         }
 
         private NetTopologySuite.Geometries.Geometry _geometry;
-        
+
         /// <summary>
         /// Gets or sets a value indicating the current geometry
         /// </summary>
@@ -59,7 +59,7 @@ namespace SharpMap.Forms
                 return _geometry;
             }
 
-            set 
+            set
             {
                 if (ReferenceEquals(_geometry, value))
                     return;
@@ -70,7 +70,7 @@ namespace SharpMap.Forms
         }
 
         private readonly WKTWriter _wktWriter =
-            new WKTWriter(2) {Formatted = true, MaxCoordinatesPerLine = 3, Tab = 2};
+            new WKTWriter(2) { Formatted = true, MaxCoordinatesPerLine = 3, Tab = 2 };
         private WKTReader _wktReader = new WKTReader();
 
 

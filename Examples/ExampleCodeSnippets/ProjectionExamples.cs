@@ -1,8 +1,11 @@
 //#define alglib
 
+using NetTopologySuite;
+using ProjNet.CoordinateSystems;
+
 namespace ExampleCodeSnippets
 {
-    
+
     [NUnit.Framework.TestFixture]
     public class ProjectionExamples
     {
@@ -412,7 +415,7 @@ namespace ExampleCodeSnippets
         }
     }
     
-    #endif
+#endif
 
         [NUnit.Framework.Test]
         public void TestGdalRasterLayer()
@@ -428,7 +431,7 @@ namespace ExampleCodeSnippets
             var p1 = ecw1.GetProjection();
             ecw2.ReprojectToCoordinateSystem(p1);
 
-            var m = new SharpMap.Map(new System.Drawing.Size( 1024, 768));
+            var m = new SharpMap.Map(new System.Drawing.Size(1024, 768));
             m.Layers.Add(ecw1);
             m.Layers.Add(ecw2);
 
@@ -439,34 +442,34 @@ namespace ExampleCodeSnippets
             }
         }
 
-public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
-    NetTopologySuite.CoordinateSystems.ICoordinateSystem target)
-{
-    for (var i = 0; i < fds.Tables.Count; i ++)
-    {
-        var fdt = fds.Tables[i];
-        ReprojectFeatureDataTable(fdt, target);
-    }
+        public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
+            CoordinateSystem target)
+        {
+            for (var i = 0; i < fds.Tables.Count; i++)
+            {
+                var fdt = fds.Tables[i];
+                ReprojectFeatureDataTable(fdt, target);
+            }
 
-}
+        }
 
-public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
-    NetTopologySuite.CoordinateSystems.ICoordinateSystem target)
-{
-    var source = SharpMap.CoordinateSystems.CoordinateSystemExtensions.GetCoordinateSystem(fdt[0].Geometry);
+        public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
+            CoordinateSystem target)
+        {
+            var source = SharpMap.CoordinateSystems.CoordinateSystemExtensions.GetCoordinateSystem(fdt[0].Geometry);
 
-    var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
-    var ct = ctFactory.CreateFromCoordinateSystems(source, target);
-            
-    var geomFactory = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory((int)target.AuthorityCode);
+            var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+            var ct = ctFactory.CreateFromCoordinateSystems(source, target);
 
-    for (var i = 0; i < fdt.Rows.Count; i++)
-    {
-        var fdr = fdt[i];
-        fdr.Geometry =
-            NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
-                ct.MathTransform, geomFactory);
-    }
-}
+            var geomFactory = NtsGeometryServices.Instance.CreateGeometryFactory((int)target.AuthorityCode);
+
+            for (var i = 0; i < fdt.Rows.Count; i++)
+            {
+                var fdr = fdt[i];
+                fdr.Geometry =
+                    NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
+                        ct.MathTransform, geomFactory);
+            }
+        }
     }
 }

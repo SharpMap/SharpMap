@@ -32,7 +32,7 @@ namespace ExampleCodeSnippets
             return arr;
         }
 
-        
+
         /// <summary>
         /// Creates a FeatureDataTable from arrays of x, y and z components
         /// </summary>
@@ -40,7 +40,7 @@ namespace ExampleCodeSnippets
         /// <param name="ycomponents">an array of doubles representing the y ordinate values</param>
         /// <param name="zcomponents">an array of doubles representing the z ordinate values</param>
         /// <returns></returns>
-        public static SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents, 
+        public static SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents,
                                                                  double[] ycomponents,
                                                                  double[] zcomponents, double[] data = null)
         {
@@ -60,17 +60,17 @@ namespace ExampleCodeSnippets
             }
 
             var fdt = new SharpMap.Data.FeatureDataTable();
-            fdt.Columns.Add("TimeStamp", typeof (System.DateTime)); // add example timestamp attribute
+            fdt.Columns.Add("TimeStamp", typeof(System.DateTime)); // add example timestamp attribute
             if (data != null)
                 fdt.Columns.Add("Data", typeof(System.Double)); // add example timestamp attribute
 
-            
+
             for (var i = 0; i < xcomponents.Length; i++)
             {
                 SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
 
                 fdr.Geometry = factory.CreatePoint(threedee
-                                   ? new NetTopologySuite.Geometries.Coordinate(xcomponents[i], ycomponents[i], zcomponents[i])
+                                   ? new NetTopologySuite.Geometries.CoordinateZ(xcomponents[i], ycomponents[i], zcomponents[i])
                                    : new NetTopologySuite.Geometries.Coordinate(xcomponents[i], ycomponents[i]));
 
                 fdr["TimeStamp"] = System.DateTime.Now; //set the timestamp property
@@ -86,15 +86,15 @@ namespace ExampleCodeSnippets
 
     public static class ShapeFactory
     {
-        public static NetTopologySuite.Geometries.LinearRing CreateRectangle(NetTopologySuite.Geometries.GeometryFactory factory, 
+        public static NetTopologySuite.Geometries.LinearRing CreateRectangle(NetTopologySuite.Geometries.GeometryFactory factory,
             NetTopologySuite.Geometries.Coordinate leftTop, NetTopologySuite.Geometries.Coordinate rightBottom)
         {
             var pts = new[]
                             {
-                                leftTop, 
-                                new NetTopologySuite.Geometries.Coordinate(rightBottom.X, leftTop.Y), 
+                                leftTop,
+                                new NetTopologySuite.Geometries.Coordinate(rightBottom.X, leftTop.Y),
                                 rightBottom,
-                                new NetTopologySuite.Geometries.Coordinate(leftTop.X, rightBottom.Y), 
+                                new NetTopologySuite.Geometries.Coordinate(leftTop.X, rightBottom.Y),
                                 leftTop
                             };
             return factory.CreateLinearRing(pts);
@@ -140,7 +140,7 @@ namespace ExampleCodeSnippets
     {
         public static readonly NetTopologySuite.Geometries.GeometryFactory Factory =
             new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(1000));
-        
+
         [NUnit.Framework.Test]
         public void TestRectangle()
         {

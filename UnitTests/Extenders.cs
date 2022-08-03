@@ -13,15 +13,15 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
+using SharpMap;
+using SharpMap.Layers;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Reactive.Linq;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
-using SharpMap;
-using SharpMap.Layers;
 
 namespace UnitTests
 {
@@ -52,7 +52,7 @@ namespace UnitTests
             public int SourceHeight { get; private set; }
 
             public ImageAttributes ImageAttributes { get; private set; }
-        } 
+        }
         #endregion
 
         #region DownloadProgressEventArgs class
@@ -64,7 +64,7 @@ namespace UnitTests
             }
 
             public int TilesRemaining { get; private set; }
-        } 
+        }
         #endregion
 
         #region Map extenders
@@ -75,28 +75,28 @@ namespace UnitTests
             {
                 case LayerCollectionType.Background:
                     return map.BackgroundLayer;
-                    
+
                 case LayerCollectionType.Static:
                     return map.Layers;
-                
+
                 case LayerCollectionType.Variable:
-                    return  map.VariableLayers;
+                    return map.VariableLayers;
                 default:
                     throw new Exception();
             }
         }
-        
+
         public static IObservable<MapNewTileAvailableEventArgs> GetMapNewTileAvailableAsObservable(this Map map)
         {
             var listener = new EventListener(map, "MapNewTileAvaliable");
             return listener.SavedArgs.ToObservable()
                 .Select(dict => new MapNewTileAvailableEventArgs(
-                    (TileLayer) dict["sender"],
-                    (Envelope) dict["bbox"],
-                    (Bitmap) dict["bm"],
-                    (int) dict["sourceWidth"],
-                    (int) dict["sourceHeight"],
-                    (ImageAttributes) dict["imageAttributes"]));
+                    (TileLayer)dict["sender"],
+                    (Envelope)dict["bbox"],
+                    (Bitmap)dict["bm"],
+                    (int)dict["sourceWidth"],
+                    (int)dict["sourceHeight"],
+                    (ImageAttributes)dict["imageAttributes"]));
         }
 
         #endregion

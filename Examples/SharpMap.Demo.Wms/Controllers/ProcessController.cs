@@ -1,24 +1,17 @@
 ﻿namespace SharpMap.Demo.Wms.Controllers
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.IO;
-    using System.Linq;
-    using System.Web.Mvc;
-
-    using NetTopologySuite.Geometries;
-
     using NetTopologySuite.Geometries;
     using NetTopologySuite.Geometries.Utilities;
     using NetTopologySuite.IO;
-    using NetTopologySuite.Operation.Linemerge;
     using NetTopologySuite.Operation.Polygonize;
     using NetTopologySuite.Operation.Union;
     using NetTopologySuite.Simplify;
-
     using SharpMap.Converters.GeoJSON;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Web.Mvc;
 
     public class ProcessController : Controller
     {
@@ -29,7 +22,7 @@
             if (String.IsNullOrEmpty(geo))
                 throw new ArgumentException("invalid argument 'geo': empty string");
 
-            WKTReader reader = new WKTReader(this.factory);
+            WKTReader reader = new WKTReader(NetTopologySuite.NtsGeometryServices.Instance);
             Geometry data = reader.Read(geo);
 
             // we should expect a GeometryCollection object
@@ -67,7 +60,7 @@
 
         private static IEnumerable<Geometry> GetItems(Geometry coll)
         {
-            if (coll == null) 
+            if (coll == null)
                 throw new ArgumentNullException("coll");
 
             for (int i = 0; i < coll.NumGeometries; i++)
@@ -94,7 +87,7 @@
                 Geometry clean = simplifier.GetResultGeometry();
                 yield return clean;
             }
-        }       
+        }
 
         [HttpPost]
         public ActionResult Merge(string geo)
@@ -130,7 +123,7 @@
             var lines = LineStringExtracter.GetLines(geometry);
             var geoms = lines.ToList();
 
-            var polygonizer = new Polygonizer();            
+            var polygonizer = new Polygonizer();
             polygonizer.Add(geoms);
             var polys = polygonizer.GetPolygons();
             return geometry.Factory.BuildGeometry(polys);
@@ -160,7 +153,7 @@
                     Polygon candpoly = (Polygon)polygons.GetGeometryN(i);
                     if (item.Contains(candpoly.InteriorPoint))
                         output.Add(candpoly);
-                }                
+                }
             }
             return output;
 

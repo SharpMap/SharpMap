@@ -1,11 +1,11 @@
-using System;
+using Microsoft.SqlServer.Types;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
-using SharpMap.Geometries;
 using SharpMap.Data.Providers;
+using SharpMap.Geometries;
+using System;
 
 namespace UnitTests.Converters
 {
@@ -28,7 +28,6 @@ namespace UnitTests.Converters
         [OneTimeSetUp]
         public void SetupFixture()
         {
-            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
             //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
         }
 

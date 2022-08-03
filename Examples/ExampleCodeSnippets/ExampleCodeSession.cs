@@ -6,13 +6,11 @@
         [NUnit.Framework.SetUp]
         public void SetUp()
         {
-            var gss = new NetTopologySuite.NtsGeometryServices();
+            var gss = NetTopologySuite.NtsGeometryServices.Instance;
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
                 new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
                 new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
-
-            NetTopologySuite.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)

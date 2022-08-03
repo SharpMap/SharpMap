@@ -1,20 +1,16 @@
-using ProjNet.CoordinateSystems;
-
 namespace SharpMap.Demo.Wms.Helpers
 {
+    using ProjNet.CoordinateSystems;
+    using SharpMap.Data.Providers;
+    using SharpMap.Demo.Wms.Models;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Web;
-
-    using NetTopologySuite.CoordinateSystems.Transformations;
-
-    using SharpMap.Data.Providers;
-    using SharpMap.Demo.Wms.Models;
-    using SharpMap.Layers;
-    using SharpMap.Styles;
 
     public static class ShapefileHelper
     {

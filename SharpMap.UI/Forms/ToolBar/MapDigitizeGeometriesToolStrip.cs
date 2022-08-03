@@ -60,7 +60,7 @@ namespace SharpMap.Forms.ToolBar
             _clear.ToolTipText += @"Removes all geometries from the geometry layer";
 
             _sep1 = new ToolStripSeparator();
-            _sep1.Size = new System.Drawing.Size(6,6);
+            _sep1.Size = new System.Drawing.Size(6, 6);
 
             _addPoint = new ToolStripButton();
             _addPoint.Name = "_addPoint";
@@ -107,7 +107,7 @@ namespace SharpMap.Forms.ToolBar
         {
             Debug.WriteLine(string.Format("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name));
             if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("\nButtonClicked '{0}'",((ToolStripButton)sender).Name);
+                _logger.DebugFormat("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name);
         }
 
         /// <inheritdoc/>
@@ -141,7 +141,7 @@ namespace SharpMap.Forms.ToolBar
             MapControl.GeometryDefined += OnGeometryDefined;
 
 
-            
+
         }
 
         private void OnRemoveFeatures(object sender, EventArgs e)
@@ -155,7 +155,7 @@ namespace SharpMap.Forms.ToolBar
             if (MapControl == null) return;
 
             var checkedButton = (ToolStripButton)sender;
-            
+
             MapBox.Tools newTool;
             if (sender == _addPoint)
                 newTool = MapBox.Tools.DrawPoint;
@@ -214,7 +214,7 @@ namespace SharpMap.Forms.ToolBar
         /// A handler that is invoked when a new geometry was defined.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public MapBox.GeometryDefinedHandler GeometryDefinedHandler{ get; set; }
+        public MapBox.GeometryDefinedHandler GeometryDefinedHandler { get; set; }
 
         private void DefaultGeometryDefinedMethod(NetTopologySuite.Geometries.Geometry geom)
         {

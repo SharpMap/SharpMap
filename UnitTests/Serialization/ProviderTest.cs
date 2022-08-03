@@ -1,26 +1,20 @@
-﻿using System;
-using System.IO;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
+using System;
+using System.IO;
 
 namespace UnitTests.Serialization
 {
     public class ProviderTest : BaseSerializationTest
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-        }
-
-        internal static IProvider CreateProvider(string name=null)
+        internal static IProvider CreateProvider(string name = null)
         {
             name = name ?? "geometryprovider";
             switch (name.ToLower())
             {
                 default:
-                //case "geometryprovider":
+                    //case "geometryprovider":
                     return CreateProvider<GeometryProvider>();
                 case "shapefile":
                     return CreateProvider<ShapeFile>();
@@ -34,20 +28,20 @@ namespace UnitTests.Serialization
         }
 
         internal static T CreateProvider<T>()
-        where T: IProvider
+        where T : IProvider
         {
             try
             {
-                var gf = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory();
+                var gf = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory();
 
                 if (typeof(T) == typeof(GeometryProvider))
-                    return (T) (IProvider) new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
+                    return (T)(IProvider)new GeometryProvider(gf.CreatePoint(new Coordinate(1, 1)));
 
                 if (typeof(T) == typeof(ShapeFile))
-                    return (T) (IProvider) new ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"));
+                    return (T)(IProvider)new ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"));
 
                 if (typeof(T) == typeof(PostGIS))
-                    return (T) (IProvider) new PostGIS(
+                    return (T)(IProvider)new PostGIS(
                         "Host=ivv-t3s.ivv-aachen.de;Port=5432;integrated security=true;database=postgis_sample;",
                         "rivers", "wkb_geometry", "ogc_fid");
 
@@ -60,9 +54,9 @@ namespace UnitTests.Serialization
                         "HighWays", "Geometry", "PK_UID");
 
 #if !LINUX
-            if (typeof(T) == typeof(SqlServer2008))
-                return (T)(IProvider)new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
-                                                       "Roads", "wkb_geometry", "ogc_fid", SqlServerSpatialObjectType.Geometry);
+                if (typeof(T) == typeof(SqlServer2008))
+                    return (T)(IProvider)new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
+                                                           "Roads", "wkb_geometry", "ogc_fid", SqlServerSpatialObjectType.Geometry);
 #endif
                 throw new NotSupportedException();
             }
@@ -128,8 +122,8 @@ namespace UnitTests.Serialization
         {
             var sql2008S = new SqlServer2008("Data Source=IVV-SQLD; Database=OBE;Integrated Security=SSPI;",
                                              "roads", "spatialCol", "idCol",
-                                             spatialType, 
-                                             4326, 
+                                             spatialType,
+                                             4326,
                                              SqlServer2008ExtentsMode.EnvelopeAggregate);
 
             var sql2008D = SandD(sql2008S, GetFormatter());

@@ -1,18 +1,11 @@
-﻿using System.Data.OleDb;
-using SharpMap.Data.Providers;
+﻿using SharpMap.Data.Providers;
+using System.Data.OleDb;
 
 namespace ExampleCodeSnippets
 {
     [NUnit.Framework.TestFixture]
     public class NtsTests
     {
-        [NUnit.Framework.OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            NetTopologySuite.GeometryServiceProvider.Instance =
-                NetTopologySuite.NtsGeometryServices.Instance;
-        }
-
         [NUnit.Framework.Test]
         public void TestDiscussionNtsAndBaffeled()
         {
@@ -22,7 +15,7 @@ namespace ExampleCodeSnippets
 429023.1119599645 360406.75878171506, 429004.52340613387 360451.71714446822, 
 429004.52340613387 360451.71714446822, 428999.76819468878 360451.93329044303))");
 
-            var points = new System.Collections.Generic.List<NetTopologySuite.Geometries.Geometry>(new []
+            var points = new System.Collections.Generic.List<NetTopologySuite.Geometries.Geometry>(new[]
                 {
                     reader.Factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(429012.5, 360443.18)),
                     reader.Factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(429001.59, 360446.98)),
@@ -30,7 +23,7 @@ namespace ExampleCodeSnippets
                     reader.Factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(429016.9, 360413.04))
                 });
 
-            var inside = new System.Collections.Generic.List<bool>(new[] {false, true, true, true});
+            var inside = new System.Collections.Generic.List<bool>(new[] { false, true, true, true });
 
             for (var i = 0; i < points.Count; i++)
             {
@@ -55,7 +48,7 @@ namespace ExampleCodeSnippets
 
             var table = WriteCsv();
 
-            var p = new DbPoint(OleDbFactory.Instance, 
+            var p = new DbPoint(OleDbFactory.Instance,
                 "Provider=" + Properties.Settings.Default.OleDbProvider + ";Data Source=\"" + System.IO.Path.GetTempPath() + "\";" +
                 "Extended Properties=\"text;HDR=Yes;FMT=Delimited\"", table, "ID", "X", "Y");
 
@@ -83,7 +76,7 @@ namespace ExampleCodeSnippets
             var ext = p.GetExtents();
             var oids = p.GetObjectIDsInView(ext);
             NUnit.Framework.Assert.AreEqual(4, oids.Count);
-            
+
             System.IO.File.Delete(System.IO.Path.Combine(System.IO.Path.GetTempPath(), table));
         }
 
@@ -103,10 +96,10 @@ namespace ExampleCodeSnippets
             using (var sr = new System.IO.StreamWriter(System.IO.File.OpenWrite(filename)))
             {
                 sr.WriteLine("ID;Name;X;Y");
-                sr.WriteLine("1;One;{0};{1}", 429012.5,360443.18);
-                sr.WriteLine("2;Two;{0};{1}",429001.59,360446.98);
-                sr.WriteLine("3;Three;{0};{1}",429003.31,360425.45);
-                sr.WriteLine("4;Four;{0};{1}",429016.9,360413.04);
+                sr.WriteLine("1;One;{0};{1}", 429012.5, 360443.18);
+                sr.WriteLine("2;Two;{0};{1}", 429001.59, 360446.98);
+                sr.WriteLine("3;Three;{0};{1}", 429003.31, 360425.45);
+                sr.WriteLine("4;Four;{0};{1}", 429016.9, 360413.04);
             }
 
             return System.IO.Path.GetFileName(filename);

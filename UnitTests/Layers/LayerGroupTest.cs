@@ -1,5 +1,4 @@
-﻿using System;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
 using SharpMap.Styles;
@@ -16,7 +15,7 @@ namespace UnitTests.Layers
             {
                 get { return null; }
             }
-        } 
+        }
         #endregion
 
         #region FooLayer class
@@ -26,10 +25,10 @@ namespace UnitTests.Layers
             {
                 get { return new Envelope(5, 10, 5, 10); }
             }
-        } 
+        }
         #endregion
 
-        private NetTopologySuite.CoordinateSystems.Transformations.ICoordinateTransformation CreateTransformation()
+        private ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation CreateTransformation()
         {
             var ctf = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
             return ctf.CreateFromCoordinateSystems(
@@ -37,7 +36,7 @@ namespace UnitTests.Layers
                 ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
         }
 
-        private NetTopologySuite.CoordinateSystems.Transformations.ICoordinateTransformation CreateReverseTransformation()
+        private ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation CreateReverseTransformation()
         {
             var ctf = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
             return ctf.CreateFromCoordinateSystems(
@@ -147,7 +146,7 @@ namespace UnitTests.Layers
             //group.TargetSRID = 4318; // different to CoordinateTransformation above!!!
             group.Proj4Projection = "dummy";
             group.Style = new LabelStyle();
-            
+
             var clonedGroup = (LayerGroup)group.Clone();
 
             Assert.That(clonedGroup.CoordinateTransformation.SourceCS.WKT, Is.EqualTo(group.CoordinateTransformation.SourceCS.WKT), "CoordinateTransformation mismatch");

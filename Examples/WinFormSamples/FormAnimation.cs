@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using NetTopologySuite.Geometries;
-using SharpMap.Layers;
-using SharpMap.Data;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using BruTile.Web;
-using System.IO;
-using System.Drawing.Drawing2D;
+﻿using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
-using System.Threading;
+using SharpMap.Layers;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace WinFormSamples
 {
@@ -23,7 +13,7 @@ namespace WinFormSamples
 
         public FormAnimation()
         {
-   
+
             InitializeComponent();
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
@@ -45,14 +35,14 @@ namespace WinFormSamples
 
             this.mapBox1.Map.Layers.Add(layCountries);
 
-            
 
-            this.mapBox1.Map.ZoomToExtents(); 
+
+            this.mapBox1.Map.ZoomToExtents();
             this.mapBox1.Refresh();
 
 
-            
-            
+
+
         }
 
 
@@ -68,10 +58,10 @@ namespace WinFormSamples
             {
                 var bb = this.mapBox1.Map.Envelope;
 
-                for (int i = 0; i < 50; i=i+5)
+                for (int i = 0; i < 50; i = i + 5)
                 {
 
-                    this.mapBox1.Map.ZoomToBox(new Envelope(bb.MinX - i, bb.MaxX + i, bb.MinY - i, bb.MaxY+ i));
+                    this.mapBox1.Map.ZoomToBox(new Envelope(bb.MinX - i, bb.MaxX + i, bb.MinY - i, bb.MaxY + i));
                     this.mapBox1.Refresh();
 
                     Image image = mapBox1.Image;
@@ -82,7 +72,7 @@ namespace WinFormSamples
                 this.mapBox1.Refresh();
 
             }
-            
+
         }
 
     }

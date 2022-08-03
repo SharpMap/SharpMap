@@ -15,16 +15,16 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using SharpMap.Layers;
 using System;
+using System.Collections.Generic;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.Web;
 using System.Xml;
 using System.Xml.Schema;
-using NetTopologySuite.Geometries;
-using SharpMap.Layers;
-using System.Collections.Generic;
 
 namespace SharpMap.Web.Wms
 {
@@ -185,7 +185,7 @@ namespace SharpMap.Web.Wms
             LayerRootNode.AppendChild(CreateElement("CRS", "EPSG:" + map.Layers[0].SRID, capabilities, false,
                                                     wmsNamespaceURI)); //TODO
             LayerRootNode.AppendChild(GenerateBoundingBoxElement(map.GetExtents(), map.Layers[0].SRID, capabilities));
-                        
+
             XmlElement geoBox = capabilities.CreateElement("EX_GeographicBoundingBox", wmsNamespaceURI);
 
             //Using default values here. This should be changed when projection library is complete
@@ -302,10 +302,10 @@ namespace SharpMap.Web.Wms
             XmlNode LayerNode = doc.CreateNode(XmlNodeType.Element, "Layer", wmsNamespaceURI);
             LayerNode.AppendChild(CreateElement("Name", layer.LayerName, doc, false, wmsNamespaceURI));
             LayerNode.AppendChild(CreateElement("Title", layer.LayerTitle ?? layer.LayerName, doc, false, wmsNamespaceURI));
-			//if this is a vector layer with themes property set, add the Styles
+            //if this is a vector layer with themes property set, add the Styles
             if (layer.GetType() == typeof(VectorLayer))
                 if ((layer as VectorLayer).Themes != null)
-                    foreach (KeyValuePair<string,SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
+                    foreach (KeyValuePair<string, SharpMap.Rendering.Thematics.ITheme> kvp in (layer as VectorLayer).Themes)
                     {
                         XmlNode styleNode = doc.CreateNode(XmlNodeType.Element, "Style", wmsNamespaceURI);
                         styleNode.AppendChild(CreateElement("Name", kvp.Key, doc, false, wmsNamespaceURI));
@@ -313,10 +313,10 @@ namespace SharpMap.Web.Wms
                         LayerNode.AppendChild(styleNode);
                     }
             //If this is a grouplayer, add childlayers recursively
-            if (layer.GetType() == typeof (LayerGroup))
-                foreach (Layer childlayer in ((LayerGroup) layer).Layers)
+            if (layer.GetType() == typeof(LayerGroup))
+                foreach (Layer childlayer in ((LayerGroup)layer).Layers)
                     LayerNode.AppendChild(GetWmsLayerNode(childlayer, doc));
-            
+
             LayerNode.Attributes.Append(CreateAttribute("queryable", GetQueriable(layer), doc));
 
             LayerNode.AppendChild(GenerateBoundingBoxElement(layer.Envelope, layer.SRID, doc));

@@ -1,3 +1,11 @@
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Utilities;
+using NUnit.Framework;
+using SharpMap;
+using SharpMap.Data;
+using SharpMap.Data.Providers;
+using SharpMap.Layers;
+using SharpMap.Rendering.Decoration;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -5,17 +13,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.Geometries.Utilities;
-using NUnit.Framework;
-using ProjNet.CoordinateSystems.Transformations;
-using SharpMap;
-using SharpMap.Data;
-using SharpMap.Data.Providers;
-using SharpMap.Drawing;
-using SharpMap.Layers;
-using SharpMap.Rendering.Decoration;
 using Color = System.Drawing.Color;
 using LabelStyle = SharpMap.Styles.LabelStyle;
 using PointF = System.Drawing.PointF;
@@ -95,7 +92,7 @@ namespace UnitTests.Layers
                     SetMapTransform(map, rot);
                     map.ZoomToBox(extents, true);
 
-                    var affectedArea = GetAffectedArea(map, (Layer) map.Layers[1]);
+                    var affectedArea = GetAffectedArea(map, (Layer)map.Layers[1]);
                     AddAffectedAreaLayer(map, affectedArea);
 
                     using (var img = map.GetMap())
@@ -142,7 +139,7 @@ namespace UnitTests.Layers
             using (var img = new Bitmap(map.Size.Width, map.Size.Height))
             using (var g = Graphics.FromImage(img))
             {
-                var rect = ((ILayerEx) layer).Render(g, (MapViewport) map);
+                var rect = ((ILayerEx)layer).Render(g, (MapViewport)map);
                 var pts = new PointF[]
                 {
                     new PointF(rect.X, rect.Y),
@@ -151,7 +148,7 @@ namespace UnitTests.Layers
                     new PointF(rect.X, rect.Y + rect.Height),
                     new PointF(rect.X, rect.Y),
                 };
-                
+
                 var coords = map.ImageToWorld(pts);
                 return new Polygon(new LinearRing(coords));
             }
@@ -159,14 +156,14 @@ namespace UnitTests.Layers
 
         private void AddAffectedAreaLayer(Map map, Polygon affectedArea)
         {
-            var geoms = new List<Geometry>(){affectedArea};
+            var geoms = new List<Geometry>() { affectedArea };
             if (!map.MapTransform.IsIdentity)
             {
                 // affectedArea is aligned with Graphics Canvas (not with north arrow)
                 // The following steps are simply to show this geom in world units  
                 var centreX = affectedArea.EnvelopeInternal.Centre.X;
                 var centreY = affectedArea.EnvelopeInternal.Centre.Y;
-                
+
                 // apply negative rotation about center of polygon
                 var rad = NetTopologySuite.Utilities.Degrees.ToRadians(map.MapTransformRotation);
                 var trans = new AffineTransformation();
@@ -189,12 +186,12 @@ namespace UnitTests.Layers
                     new Coordinate(minX , minY ),
                     new Coordinate(minX , maxY ),
                 };
-               
+
                 // rotate enclosing envelope back to world units
                 trans = new AffineTransformation();
                 trans.Compose(AffineTransformation.RotationInstance(rad));
                 trans.Compose(AffineTransformation.TranslationInstance(centreX, centreY));
-                
+
                 // construct geom to show on screen
                 var enclosing = trans.Transform(new Polygon(new LinearRing(coords)));
                 geoms.Add(enclosing);
@@ -218,7 +215,7 @@ namespace UnitTests.Layers
             fdt.Columns.Add(new DataColumn("ID", typeof(int)));
             fdt.Columns.Add(new DataColumn("LABEL", typeof(string)));
 
-            var factory = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4236);
+            var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4236);
             var fdr = fdt.NewRow();
             fdr[0] = 1;
             fdr[1] = "Test Label";
@@ -297,7 +294,7 @@ namespace UnitTests.Layers
             fdt.Columns.Add(new DataColumn("ID", typeof(int)));
             fdt.Columns.Add(new DataColumn("LABEL", typeof(string)));
 
-            var factory = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4236);
+            var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4236);
             var fdr = fdt.NewRow();
             fdr[0] = 1;
             fdr[1] = "Test Label";
@@ -343,7 +340,7 @@ namespace UnitTests.Layers
 
             var vtAlgins = new[]
             {
-                LabelStyle.VerticalAlignmentEnum.Top, 
+                LabelStyle.VerticalAlignmentEnum.Top,
                 LabelStyle.VerticalAlignmentEnum.Middle,
                 LabelStyle.VerticalAlignmentEnum.Bottom
             };
@@ -376,8 +373,8 @@ namespace UnitTests.Layers
                                     map.Zoom *= 1.25;
                                     break;
                                 case LabelLayerMode.SineCurveClipped:
-//                            map.ZoomToExtents();
-//                            map.Zoom *= 0.6;
+                                    //                            map.ZoomToExtents();
+                                    //                            map.Zoom *= 0.6;
                                     break;
                                 case LabelLayerMode.SineCurveExtended:
                                     map.ZoomToExtents();
@@ -385,10 +382,10 @@ namespace UnitTests.Layers
                                     break;
                             }
 
-                            var affectedArea = GetAffectedArea(map, (Layer) map.Layers[1]);
+                            var affectedArea = GetAffectedArea(map, (Layer)map.Layers[1]);
                             if (affectedArea == null)
                                 continue;
-                            
+
                             AddAffectedAreaLayer(map, affectedArea);
 
                             using (var img = map.GetMap())
@@ -408,8 +405,8 @@ namespace UnitTests.Layers
             }
         }
 
-        private void AddSineCurveLayers(Map map, LabelLayerMode mode,  
-            LabelStyle.HorizontalAlignmentEnum hzAlign, 
+        private void AddSineCurveLayers(Map map, LabelLayerMode mode,
+            LabelStyle.HorizontalAlignmentEnum hzAlign,
             LabelStyle.VerticalAlignmentEnum vtAlign)
         {
             string text;
@@ -428,10 +425,10 @@ namespace UnitTests.Layers
             fdt.BeginInit();
             fdt.Columns.Add(new System.Data.DataColumn("ID", typeof(int)));
             fdt.Columns.Add(new System.Data.DataColumn("LABEL", typeof(string)));
-            fdt.PrimaryKey = new[] {fdt.Columns[0]};
+            fdt.PrimaryKey = new[] { fdt.Columns[0] };
             fdt.EndInit();
             fdt.BeginLoadData();
-            var fdr = (SharpMap.Data.FeatureDataRow) fdt.LoadDataRow(new object[] {1, text}, true);
+            var fdr = (SharpMap.Data.FeatureDataRow)fdt.LoadDataRow(new object[] { 1, text }, true);
             fdr.Geometry = CreateSineLine(new NetTopologySuite.Geometries.Coordinate(10, 10));
             fdt.EndLoadData();
 
@@ -441,12 +438,12 @@ namespace UnitTests.Layers
             vLyr.SRID = map.SRID;
             map.Layers.Add(vLyr);
 
-            var lLyr = new SharpMap.Layers.LabelLayer("Label") {DataSource = vLyr.DataSource, LabelColumn = "LABEL"};
+            var lLyr = new SharpMap.Layers.LabelLayer("Label") { DataSource = vLyr.DataSource, LabelColumn = "LABEL" };
             lLyr.TextRenderingHint = System.Drawing.Text.TextRenderingHint.ClearTypeGridFit;
             lLyr.Style.ForeColor = System.Drawing.Color.Cyan;
-            lLyr.Style.BackColor = new SolidBrush(Color.FromArgb(128,Color.LightSlateGray));
+            lLyr.Style.BackColor = new SolidBrush(Color.FromArgb(128, Color.LightSlateGray));
             //lLyr.Style.Halo = new Pen(Color.Yellow, 4);
-            lLyr.Style.IgnoreLength = mode==LabelLayerMode.SineCurveExtended;
+            lLyr.Style.IgnoreLength = mode == LabelLayerMode.SineCurveExtended;
             lLyr.Style.HorizontalAlignment = hzAlign;
             lLyr.Style.VerticalAlignment = vtAlign;
             //ll.Style.IsTextOnPath = textOnPath;
@@ -461,9 +458,9 @@ namespace UnitTests.Layers
             for (int i = 0; i <= 180; i++)
             {
                 cs.SetOrdinate(i, NetTopologySuite.Geometries.Ordinate.X, offset.X + 2 * i);
-                cs.SetOrdinate(i, NetTopologySuite.Geometries.Ordinate.Y, offset.Y + scaleY * System.Math.Sin(2d * i * System.Math.PI/180d));
+                cs.SetOrdinate(i, NetTopologySuite.Geometries.Ordinate.Y, offset.Y + scaleY * System.Math.Sin(2d * i * System.Math.PI / 180d));
             }
-            return factory.CreateLineString(cs);        
+            return factory.CreateLineString(cs);
         }
 
         [NUnit.Framework.TestCase(SymbolizerMode.Rps, PointAlignment.Horizontal, true)]
@@ -474,11 +471,11 @@ namespace UnitTests.Layers
         [NUnit.Framework.TestCase(SymbolizerMode.Cps, PointAlignment.Diagonal, false)]
         [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Horizontal, true)]
         [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Vertical, false)]
-        [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Diagonal, false)]       
+        [NUnit.Framework.TestCase(SymbolizerMode.Pps, PointAlignment.Diagonal, false)]
         [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Horizontal, true)]
         [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Vertical, false)]
-        [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Diagonal, false)]       
-        public void PointSymbolizer_AffectedArea(SymbolizerMode symMode,  PointAlignment alignMode, bool testRotations)
+        [NUnit.Framework.TestCase(SymbolizerMode.Lps, PointAlignment.Diagonal, false)]
+        public void PointSymbolizer_AffectedArea(SymbolizerMode symMode, PointAlignment alignMode, bool testRotations)
         {
             using (var map = new Map())
             {
@@ -508,7 +505,7 @@ namespace UnitTests.Layers
                     SetMapTransform(map, rot);
                     map.ZoomToBox(extents, true);
 
-                    var affectedArea = GetAffectedArea(map, (Layer) map.Layers[0]);
+                    var affectedArea = GetAffectedArea(map, (Layer)map.Layers[0]);
                     AddAffectedAreaLayer(map, affectedArea);
 
                     using (var img = map.GetMap())
@@ -530,31 +527,31 @@ namespace UnitTests.Layers
             switch (mode)
             {
                 case PointAlignment.Horizontal:
-                    pts.Add(new NetTopologySuite.Geometries.Point(99,7));
-                    pts.Add(new NetTopologySuite.Geometries.Point(100,7));
-                    pts.Add(new NetTopologySuite.Geometries.Point(101,7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99, 7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(100, 7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(101, 7));
                     break;
                 case PointAlignment.Vertical:
-                    pts.Add(new NetTopologySuite.Geometries.Point(99,7));
-                    pts.Add(new NetTopologySuite.Geometries.Point(99,8));
-                    pts.Add(new NetTopologySuite.Geometries.Point(99,9));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99, 7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99, 8));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99, 9));
                     break;
                 case PointAlignment.Diagonal:
-                    pts.Add(new NetTopologySuite.Geometries.Point(99,7));
-                    pts.Add(new NetTopologySuite.Geometries.Point(100,8));
-                    pts.Add(new NetTopologySuite.Geometries.Point(101,9));
+                    pts.Add(new NetTopologySuite.Geometries.Point(99, 7));
+                    pts.Add(new NetTopologySuite.Geometries.Point(100, 8));
+                    pts.Add(new NetTopologySuite.Geometries.Point(101, 9));
                     break;
             }
             return pts;
-        }           
-        
+        }
+
         private void AddRasterPointSymbolizerLayers(Map map, PointAlignment mode)
         {
             var pts = GetSymbolizerPoints(mode);
-            
+
             var vLyr = new VectorLayer("RasterPoint", new GeometryFeatureProvider(pts.AsEnumerable()));
             var rps = new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer();
-            rps.Symbol = GetRasterSymbol(); 
+            rps.Symbol = GetRasterSymbol();
             rps.Rotation = 30f;
             vLyr.Style.PointSymbolizer = rps;
             map.Layers.Add(vLyr);
@@ -578,9 +575,9 @@ namespace UnitTests.Layers
         private void AddCharacterPointSymbolizerLayers(Map map, PointAlignment mode)
         {
             var pts = GetSymbolizerPoints(mode);
-            
+
             var vLyr = new VectorLayer("CharPoint", new GeometryFeatureProvider(pts.AsEnumerable()));
-            var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
             {
                 Halo = 1,
                 HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
@@ -594,13 +591,13 @@ namespace UnitTests.Layers
             vLyr.Style.PointSize = 4f;
             map.Layers.Add(vLyr);
         }
-        
+
         private void AddLinePointSymbolizerLayers(Map map, PointAlignment mode)
         {
             var pts = GetSymbolizerPoints(mode);
-            
+
             var vLyr = new VectorLayer("LinePoint", new GeometryFeatureProvider(pts.AsEnumerable()));
-            var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
             {
                 Halo = 1,
                 HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
@@ -615,13 +612,13 @@ namespace UnitTests.Layers
         }
 
         private void AddPathPointSymbolizerLayers(Map map, PointAlignment mode)
-        { 
+        {
             var pts = GetSymbolizerPoints(mode);
-            
+
             var vLyr = new VectorLayer("PathPoint with 2 parts", new GeometryFeatureProvider(pts.AsEnumerable()));
 
             var gpTriangle1 = new System.Drawing.Drawing2D.GraphicsPath();
-            gpTriangle1.AddPolygon(new [] { new System.Drawing.Point(0, 0), new System.Drawing.Point(5, 10), new System.Drawing.Point(10, 0), new System.Drawing.Point(0, 0), });
+            gpTriangle1.AddPolygon(new[] { new System.Drawing.Point(0, 0), new System.Drawing.Point(5, 10), new System.Drawing.Point(10, 0), new System.Drawing.Point(0, 0), });
             var gpTriangle2 = new System.Drawing.Drawing2D.GraphicsPath();
             gpTriangle2.AddPolygon(new[] { new System.Drawing.Point(0, 0), new System.Drawing.Point(-5, -10), new System.Drawing.Point(-10, 0), new System.Drawing.Point(0, 0), });
             var pps = new
@@ -662,7 +659,7 @@ namespace UnitTests.Layers
         private void AddListPointSymbolizerLayers(Map map, PointAlignment mode)
         {
             var pts = GetSymbolizerPoints(mode);
-            
+
             var vLyr = new VectorLayer("ListPoint with Pps and Cps", new GeometryFeatureProvider(pts.AsEnumerable()));
             var pps =
                 SharpMap.Rendering.Symbolizer.PathPointSymbolizer.CreateSquare(new System.Drawing.Pen(System.Drawing.Color.Red, 2),
@@ -701,7 +698,7 @@ namespace UnitTests.Layers
                 ConfigureMap(map);
 
                 AddLineLayers(map, alignMode, width, offset);
-                
+
                 var extents = map.GetExtents();
                 extents.ExpandBy(0.2);
 
@@ -710,7 +707,7 @@ namespace UnitTests.Layers
                     SetMapTransform(map, rot);
                     map.ZoomToBox(extents, true);
 
-                    var affectedArea = GetAffectedArea(map, (Layer) map.Layers[0]);
+                    var affectedArea = GetAffectedArea(map, (Layer)map.Layers[0]);
                     AddAffectedAreaLayer(map, affectedArea);
 
                     using (var img = map.GetMap())
@@ -730,7 +727,7 @@ namespace UnitTests.Layers
         {
             var pts = GetSymbolizerPoints(mode);
             var line = new LineString(GetSymbolizerPoints(mode).Select(p => new Coordinate(p.X, p.Y)).ToArray());
-            
+
             var vLyr = new VectorLayer("Line", new GeometryFeatureProvider(line));
             vLyr.Style.Line = new Pen(Color.Green, width);
             vLyr.Style.LineOffset = offset;

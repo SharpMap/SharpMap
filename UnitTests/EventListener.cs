@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -19,7 +18,7 @@ namespace UnitTests
         private static readonly MethodInfo _dictionarySetItemMethod =
             typeof(Dictionary<string, object>).GetProperty("Item").GetSetMethod();
 
-        private static readonly MethodInfo _listAddMethod = typeof(ObservableCollection<Dictionary<string, object>>).GetMethod("Add"); 
+        private static readonly MethodInfo _listAddMethod = typeof(ObservableCollection<Dictionary<string, object>>).GetMethod("Add");
         #endregion
 
         private readonly ObservableCollection<Dictionary<string, object>> _savedArgs = new ObservableCollection<Dictionary<string, object>>();
@@ -47,17 +46,17 @@ namespace UnitTests
 
             var delegateParameters = invokeMethod.GetParameters();
 
-            var args = new List<Type> {typeof (EventListener)};
-            args.AddRange(delegateParameters.Select(p=>p.ParameterType));
+            var args = new List<Type> { typeof(EventListener) };
+            args.AddRange(delegateParameters.Select(p => p.ParameterType));
 
             var dm = new DynamicMethod(methodName,
-                typeof (void),
+                typeof(void),
                 args.ToArray(),
                 typeof(EventListener));
 
             var generator = dm.GetILGenerator(256);
-            generator.DeclareLocal(typeof (Dictionary<string, object>));
-            
+            generator.DeclareLocal(typeof(Dictionary<string, object>));
+
             generator.Emit(OpCodes.Newobj, _dictionaryCto);
             generator.Emit(OpCodes.Stloc_0);
 
@@ -87,7 +86,7 @@ namespace UnitTests
             generator.Emit(OpCodes.Ldfld, savedArgsField);
             generator.Emit(OpCodes.Ldloc_0);
             generator.Emit(OpCodes.Callvirt, _listAddMethod);
-            
+
             generator.Emit(OpCodes.Ret);
 
             return dm.CreateDelegate(delegateType, this);
@@ -106,7 +105,7 @@ namespace UnitTests
             get
             {
                 return _dynamicSavedArgs ??
-                       (_dynamicSavedArgs = _savedArgs.Select(dict => (dynamic) dict.ToExpando()).ToList());
+                       (_dynamicSavedArgs = _savedArgs.Select(dict => (dynamic)dict.ToExpando()).ToList());
             }
         }
     }

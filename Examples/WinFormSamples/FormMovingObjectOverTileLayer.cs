@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using NetTopologySuite.Geometries;
+﻿using BruTile.Predefined;
 using NetTopologySuite.Geometries;
 using SharpMap.Layers;
-using BruTile.Predefined;
-
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using WinFormSamples.Properties;
-
 using GeometryTransform = NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform;
 
 namespace WinFormSamples
@@ -77,7 +74,7 @@ namespace WinFormSamples
         private void timer1_Tick(object sender, EventArgs e)
         {
             const double step = 25;
-            
+
             double dx, dy;
             if (movingLeft)
                 dx = -step;

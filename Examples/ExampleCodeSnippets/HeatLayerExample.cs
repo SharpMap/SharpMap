@@ -1,22 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
+using SharpMap.Data;
+using SharpMap.Layers;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
-using NetTopologySuite;
-using SharpMap.Data;
-using SharpMap.Layers;
 
 namespace ExampleCodeSnippets
 {
     [TestFixture]
     public class HeatLayerExample
     {
-        static HeatLayerExample ()
-        {
-            NetTopologySuite.GeometryServiceProvider.Instance = new NtsGeometryServices();
-        }
         [Test]
         public void HeatLayerTest()
         {
@@ -82,8 +78,8 @@ namespace ExampleCodeSnippets
         private static FeatureDataTable GetRealFeatureDataTable()
         {
             var res = new FeatureDataTable();
-            res.Columns.Add("Oid", typeof (uint));
-            res.Columns.Add("Data", typeof (int));
+            res.Columns.Add("Oid", typeof(uint));
+            res.Columns.Add("Data", typeof(int));
 
             return res;
         }
@@ -91,12 +87,12 @@ namespace ExampleCodeSnippets
         private static void FillRealDataTable(FeatureDataTable table)
         {
             table.BeginLoadData();
-            var factory = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+            var factory = NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
             uint id = 0;
             foreach (var datas in PointData())
             {
-                var row = (FeatureDataRow) table.LoadDataRow(new object[] {id++, datas[0]}, LoadOption.OverwriteChanges);
+                var row = (FeatureDataRow)table.LoadDataRow(new object[] { id++, datas[0] }, LoadOption.OverwriteChanges);
                 row.Geometry = factory.CreatePoint(new Coordinate(datas[2], datas[1]));
             }
             table.EndLoadData();

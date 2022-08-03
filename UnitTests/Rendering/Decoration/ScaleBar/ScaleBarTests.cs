@@ -1,10 +1,6 @@
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.IO;
+using NetTopologySuite;
 using NetTopologySuite.CoordinateSystems.Transformations;
 using NetTopologySuite.Geometries;
-using NetTopologySuite;
 using NUnit.Framework;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
@@ -14,6 +10,10 @@ using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.ScaleBar;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.IO;
 using Unit = SharpMap.Rendering.Decoration.ScaleBar.Unit;
 
 namespace UnitTests.Rendering.Decoration.ScaleBar
@@ -24,33 +24,31 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
         private Map _map;
 
         //private readonly List<int> _testLatitudes = new List<int> {0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85};
-        private readonly List<int> _testLatitudes = new List<int> {0, 10, 20, 30, 40, 50, 60, 70, 80};
+        private readonly List<int> _testLatitudes = new List<int> { 0, 10, 20, 30, 40, 50, 60, 70, 80 };
 
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             //System.IO.Directory.CreateDirectory(Path.Combine(Path.GetTempPath(), "BruTileCache", "Osm"));
 
-//            var files = System.IO.Directory.GetFiles(Path.Combine(Path.GetTempPath(), "SharpMap"));
-//            foreach (var file in files)
-//                System.IO.File.Delete(file);
+            //            var files = System.IO.Directory.GetFiles(Path.Combine(Path.GetTempPath(), "SharpMap"));
+            //            foreach (var file in files)
+            //                System.IO.File.Delete(file);
 
-            var gss = new NtsGeometryServices();
+            var gss = NtsGeometryServices.Instance;
             var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
                 new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
             // plug-in WebMercator so that correct spherical definition is directly available to Layer Transformations using SRID
-            var pcs = (ProjectedCoordinateSystem) ProjectedCoordinateSystem.WebMercator;
-            css.AddCoordinateSystem((int) pcs.AuthorityCode, pcs);
+            var pcs = (ProjectedCoordinateSystem)ProjectedCoordinateSystem.WebMercator;
+            css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
 
-            NetTopologySuite.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
-            NetTopologySuite.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
 
             _map = new Map
             {
@@ -69,21 +67,21 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
             _map.Layers.Add(lyr);
 
             // Add bru-tile map background 
-//            var cacheFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BruTileCache", "Osm");
-//            var lyrBruTile = new TileLayer(
-//                BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap),
-//                "Tiles", Color.Transparent, true, cacheFolder)
-//            {
-//                SRID = 3857,
-//                TargetSRID = _map.SRID
-//            };
-//            _map.BackgroundLayer.Add(lyrBruTile);
+            //            var cacheFolder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "BruTileCache", "Osm");
+            //            var lyrBruTile = new TileLayer(
+            //                BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap),
+            //                "Tiles", Color.Transparent, true, cacheFolder)
+            //            {
+            //                SRID = 3857,
+            //                TargetSRID = _map.SRID
+            //            };
+            //            _map.BackgroundLayer.Add(lyrBruTile);
 
             var scaleBar = new SharpMap.Rendering.Decoration.ScaleBar.ScaleBar()
             {
-                MapUnit = (int) Unit.Meter,
-                BarUnitLargeScale = (int) Unit.Kilometer,
-                BarUnitSmallScale = (int) Unit.Meter,
+                MapUnit = (int)Unit.Meter,
+                BarUnitLargeScale = (int)Unit.Kilometer,
+                BarUnitSmallScale = (int)Unit.Meter,
                 Anchor = MapDecorationAnchor.Center,
                 BarStyle = ScaleBarStyle.Meridian,
                 BarColor1 = Color.Transparent,
@@ -97,14 +95,14 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
 
         private GeometryFeatureProvider CreateScaleBarDataSource()
         {
-            var fdt = new FeatureDataTable {TableName = "ScaleBarTests"};
+            var fdt = new FeatureDataTable { TableName = "ScaleBarTests" };
             fdt.Columns.Add(new DataColumn("oid", typeof(uint)));
             fdt.Columns[0].AutoIncrement = true;
 
             fdt.Columns.Add(new DataColumn("Latitude", typeof(int))); // start latitude for filtering
             fdt.Columns.Add(new DataColumn("Interval", typeof(int))); // distance interval for filtering
 
-            fdt.PrimaryKey = new[] {fdt.Columns[0]};
+            fdt.PrimaryKey = new[] { fdt.Columns[0] };
 
             LoadData(fdt);
 
@@ -1181,8 +1179,8 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
             foreach (var lyr in _map.BackgroundLayer)
                 lyr.Enabled = true;
 
-            var scaleBar = (SharpMap.Rendering.Decoration.ScaleBar.ScaleBar) _map.Decorations[0];
-            scaleBar.MapUnit = (int) Unit.Meter;
+            var scaleBar = (SharpMap.Rendering.Decoration.ScaleBar.ScaleBar)_map.Decorations[0];
+            scaleBar.MapUnit = (int)Unit.Meter;
 
             GenerateScaleBarImages("WebMerc", null, interval);
 
@@ -1199,13 +1197,13 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
 
             foreach (var lyr in _map.Layers)
                 if (lyr is VectorLayer)
-                    ((VectorLayer) lyr).TargetSRID = _map.SRID;
+                    ((VectorLayer)lyr).TargetSRID = _map.SRID;
 
             foreach (var lyr in _map.BackgroundLayer)
                 lyr.Enabled = false;
 
-            var scaleBar = (SharpMap.Rendering.Decoration.ScaleBar.ScaleBar) _map.Decorations[0];
-            scaleBar.MapUnit = (int) Unit.Meter;
+            var scaleBar = (SharpMap.Rendering.Decoration.ScaleBar.ScaleBar)_map.Decorations[0];
+            scaleBar.MapUnit = (int)Unit.Meter;
 
             //GenerateScaleBarImages("Utm47N", null, interval);
 
@@ -1222,13 +1220,13 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
 
             foreach (var lyr in _map.Layers)
                 if (lyr is VectorLayer)
-                    ((VectorLayer) lyr).TargetSRID = _map.SRID;
+                    ((VectorLayer)lyr).TargetSRID = _map.SRID;
 
             foreach (var lyr in _map.BackgroundLayer)
                 lyr.Enabled = false;
 
-            var scaleBar = (SharpMap.Rendering.Decoration.ScaleBar.ScaleBar) _map.Decorations[0];
-            scaleBar.MapUnit = (int) Unit.Degree;
+            var scaleBar = (SharpMap.Rendering.Decoration.ScaleBar.ScaleBar)_map.Decorations[0];
+            scaleBar.MapUnit = (int)Unit.Degree;
 
             GenerateScaleBarImages("Wgs84", null, interval);
 
@@ -1239,16 +1237,16 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
 
         private void GenerateScaleBarImages(string srDescr, int? centerLat, int interval)
         {
-            var vectorLyr = (VectorLayer) _map.Layers[0];
+            var vectorLyr = (VectorLayer)_map.Layers[0];
 
             // apply Filter Delegate and zoom to resulting extents
             // interval = distance in metres between points stepping out from common meridian
-            var gfp = (GeometryFeatureProvider) vectorLyr.DataSource;
+            var gfp = (GeometryFeatureProvider)vectorLyr.DataSource;
             if (!centerLat.HasValue)
-                gfp.FilterDelegate = row => ((int) row["Interval"] == interval || (int) row["Interval"] == 0);
+                gfp.FilterDelegate = row => ((int)row["Interval"] == interval || (int)row["Interval"] == 0);
             else
-                gfp.FilterDelegate = row => (((int) row["Latitude"]) == (int) centerLat.Value &&
-                                             ((int) row["Interval"] == interval || (int) row["Interval"] == 0));
+                gfp.FilterDelegate = row => (((int)row["Latitude"]) == (int)centerLat.Value &&
+                                             ((int)row["Interval"] == interval || (int)row["Interval"] == 0));
 
             var geometries = vectorLyr.DataSource.GetGeometriesInView(new Envelope(-180, 180, -90, 90));
             var box = new Envelope();

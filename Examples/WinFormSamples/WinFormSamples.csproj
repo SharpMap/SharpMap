@@ -20,8 +20,7 @@
 
     <ItemGroup>
       <PackageReference Include="GDAL.Native" Version="2.4.2" />
-      <PackageReference Include="Npgsql" Version="4.0.10" />
-      <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
+      <PackageReference Include="Npgsql" Version="6.0.5" />
     </ItemGroup>
 
 

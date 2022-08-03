@@ -1,8 +1,8 @@
+using DotSpatial.Projections;
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
 using System;
 using System.Collections.Generic;
-using DotSpatial.Projections;
-using NetTopologySuite.CoordinateSystems.Transformations;
-using NetTopologySuite.Geometries;
 
 namespace SharpMap.CoordinateSystems.Transformations
 {
@@ -28,7 +28,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         {
             _source = source;
             _target = target;
-            _order = new[] {_source, _target};
+            _order = new[] { _source, _target };
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// <summary>Creates the inverse transform of this object.</summary>
         /// <remarks>This method may fail if the transform is not one to one. However, all cartographic projections should succeed.</remarks>
         /// <returns></returns>
-        public MathTransform Inverse()
+        public override MathTransform Inverse()
         {
             return _inverse ?? (_inverse = new DotSpatialMathTransform(_target, _source));
         }
@@ -114,7 +114,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public double[] Transform(double[] point)
+        public new double[] Transform(double[] point)
         {
             var xy = new double[2];
             var numOrdinates = point.Length;
@@ -135,31 +135,6 @@ namespace SharpMap.CoordinateSystems.Transformations
             if (numOrdinates < 4)
                 return new[] { xy[2], xy[1], z[0] };
             return new[] { xy[0], xy[1], z[0], m[0] };
-        }
-
-        /// <summary>
-        /// Transforms a a coordinate. The input coordinate remains unchanged.
-        /// </summary>
-        /// <param name="coordinate">The coordinate to transform</param>
-        /// <returns>The transformed coordinate</returns>
-        [Obsolete]
-        public ICoordinate Transform(ICoordinate coordinate)
-        {
-            // Set up fields
-            var xy = new[] {coordinate.X, coordinate.Y};
-            var z = double.IsNaN(coordinate.Z) ? null : new[] {coordinate.Z};
-            var m = double.IsNaN(coordinate.M) ? null : new[] {coordinate.M};
-            
-            //Do the reprojection
-            Reproject.ReprojectPoints(xy, z, _order[0], _order[1], 0, 1);
-
-            // Put result in new object
-            var res = (ICoordinate) Activator.CreateInstance(coordinate.GetType());
-            res.X = xy[0];
-            res.Y = xy[1];
-            if (z != null) res.Z = z[0];
-            if (m != null) res.M = m[0];
-            return res;
         }
 
         /// <summary>
@@ -200,7 +175,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// <returns></returns>
         public IList<double[]> TransformList(IList<double[]> points)
         {
-            var xy = new double[points.Count*2];
+            var xy = new double[points.Count * 2];
             var numOrdinates = points[0].Length;
             var z = numOrdinates > 2 ? new double[points.Count] : null;
             var m = numOrdinates > 3 ? new double[points.Count] : null;
@@ -226,7 +201,7 @@ namespace SharpMap.CoordinateSystems.Transformations
                 else if (numOrdinates > 2)
                     res.Add(new[] { xy[j++], xy[j++], z[j] });
                 else
-                    res.Add(new []{ xy[j++], xy[j++] });
+                    res.Add(new[] { xy[j++], xy[j++] });
             }
             return res;
         }
@@ -255,12 +230,12 @@ namespace SharpMap.CoordinateSystems.Transformations
         }
 
         /// <summary>Reverses the transformation</summary>
-        public void Invert()
+        public override void Invert()
         {
             if (_isInverted)
-                _order = new[] {_source, _target};
+                _order = new[] { _source, _target };
             else
-                _order = new[] { _target, _source};
+                _order = new[] { _target, _source };
             _isInverted = !_isInverted;
         }
 
@@ -269,10 +244,10 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </summary>
         /// <param name="coordinateSequence">The coordinate sequence to transform.</param>
         /// <returns>The transformed coordinate sequence.</returns>
-        public ICoordinateSequence Transform(ICoordinateSequence coordinateSequence)
+        public CoordinateSequence Transform(CoordinateSequence coordinateSequence)
         {
             //if (coordinateSequence)
-            
+
             var xy = new double[coordinateSequence.Count * 2];
             var numOrdinates = coordinateSequence.Dimension;
             var z = numOrdinates > 2 ? new double[coordinateSequence.Count] : null;
@@ -283,9 +258,9 @@ namespace SharpMap.CoordinateSystems.Transformations
             {
                 xy[j++] = coordinateSequence.GetX(i);
                 xy[j++] = coordinateSequence.GetY(i);
-                if (numOrdinates > 2) 
+                if (numOrdinates > 2)
                     z[i] = coordinateSequence.GetOrdinate(i, Ordinate.Z);
-                if (numOrdinates > 3) 
+                if (numOrdinates > 3)
                     m[i] = coordinateSequence.GetOrdinate(i, Ordinate.M);
             }
 
@@ -294,7 +269,7 @@ namespace SharpMap.CoordinateSystems.Transformations
 
             // Set up result
             j = 0;
-            var res = (ICoordinateSequence)coordinateSequence.Clone();
+            var res = coordinateSequence.Copy();
             for (var i = 0; i < coordinateSequence.Count; i++)
             {
                 res.SetOrdinate(i, Ordinate.X, xy[j++]);
@@ -309,26 +284,34 @@ namespace SharpMap.CoordinateSystems.Transformations
             return res;
         }
 
+        public override void Transform(ref double x, ref double y, ref double z)
+        {
+            var ret = Transform(new[] { x, y, x });
+            x = ret[0];
+            y = ret[1];
+            z = ret[2];
+        }
+
         /// <summary>Gets the dimension of input points.</summary>
-        public int DimSource
+        public override int DimSource
         {
             get { throw new NotSupportedException(); }
         }
 
         /// <summary>Gets the dimension of output points.</summary>
-        public int DimTarget
+        public override int DimTarget
         {
             get { throw new NotSupportedException(); }
         }
 
         /// <summary>Gets a Well-Known text representation of this object.</summary>
-        public string WKT
+        public override string WKT
         {
             get { throw new NotSupportedException(); }
         }
 
         /// <summary>Gets an XML representation of this object.</summary>
-        public string XML
+        public override string XML
         {
             get { throw new NotSupportedException(); }
         }

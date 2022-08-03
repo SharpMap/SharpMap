@@ -1,10 +1,10 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
+using SharpMap.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows.Forms;
-using NetTopologySuite.Geometries;
-using SharpMap.Properties;
 
 namespace SharpMap.Forms.ToolBar
 {
@@ -42,7 +42,7 @@ namespace SharpMap.Forms.ToolBar
         /// Creates an instance of this class
         /// </summary>
         public MapZoomToolStrip(IContainer container)
-            :base(container)
+            : base(container)
         {
             InitializeComponent();
             AddScales();
@@ -264,7 +264,7 @@ namespace SharpMap.Forms.ToolBar
         }
 
         #region ZoomExtentStack
-        
+
         /// <summary>
         /// An implementation of zoom previous/zoom next like *** MapControl
         /// </summary>
@@ -430,11 +430,11 @@ namespace SharpMap.Forms.ToolBar
                 // correct index
                 if (_skip == 0)
                     _index = _zoomExtentStack.Count - 1;
-                else 
+                else
                     _skip--;
             }
         }
-        
+
         #endregion
 
         private void OnCheckedChanged(object sender, EventArgs e)
@@ -445,16 +445,16 @@ namespace SharpMap.Forms.ToolBar
 
             if (tsb == _pan)
                 TrySetActiveTool(tsb, MapBox.Tools.Pan);
-            
+
             if (tsb == _zoomToWindow)
                 TrySetActiveTool(tsb, MapBox.Tools.ZoomWindow);
-            
+
             if (tsb == _minZoom)
             {
                 MapControl.Map.MinimumZoom =
                     _minZoom.Checked ? MapControl.Map.Zoom : Double.Epsilon;
             }
-            
+
             if (tsb == _maxZoom)
             {
                 MapControl.Map.MaximumZoom =
@@ -482,7 +482,7 @@ namespace SharpMap.Forms.ToolBar
         private void ResetControls()
         {
             Visible = true;
-            
+
             if (MapControl.Map != null)
             {
                 _minZoom.Checked = MapControl.Map.MinimumZoom > Double.Epsilon;
@@ -495,7 +495,7 @@ namespace SharpMap.Forms.ToolBar
 
             _mvpLock = new MapViewportLock(MapControl.Map);
         }
-        
+
         /// <inheritdoc cref="MapToolStrip.OnMapControlChangedInternal"/>
         protected override void OnMapControlChangedInternal(EventArgs e)
         {
@@ -534,8 +534,8 @@ namespace SharpMap.Forms.ToolBar
                 return;
 
             ResetControls();
-           
-            _predefinedScales.Text = string.Format(NumberFormatInfo.CurrentInfo, "1:{0}", 
+
+            _predefinedScales.Text = string.Format(NumberFormatInfo.CurrentInfo, "1:{0}",
                 Math.Round(MapControl.Map.GetMapScale(_dpiX), 0, MidpointRounding.AwayFromZero));
 
             MapControl.Map.MapViewOnChange += OnMapMapViewOnChange;
@@ -546,7 +546,7 @@ namespace SharpMap.Forms.ToolBar
             if (sender != MapControl)
                 return;
             _zoomExtentStack.Clear();
-            
+
             MapControl.Map.MapViewOnChange -= OnMapMapViewOnChange;
             _mvpLock = null;
 
@@ -574,7 +574,7 @@ namespace SharpMap.Forms.ToolBar
                                 {
                                     _zoomPrev.Enabled = _zoomExtentStack.CanZoomPrevious;
                                     _zoomNext.Enabled = _zoomExtentStack.CanZoomNext;
-                                    _predefinedScales.Text = string.Format("1:{0}", 
+                                    _predefinedScales.Text = string.Format("1:{0}",
                                         Math.Round(scale, 0, MidpointRounding.AwayFromZero));
                                 });
             else
@@ -620,7 +620,7 @@ namespace SharpMap.Forms.ToolBar
 
         private void OnScaleSelected(object sender, EventArgs e)
         {
-            
+
             if (MapControl == null) return;
 
             if (string.IsNullOrEmpty(_predefinedScales.Text))
@@ -628,7 +628,7 @@ namespace SharpMap.Forms.ToolBar
 
             var text = _predefinedScales.Text;
             if (!text.StartsWith("1:"))
-                 text = "1:" + text;
+                text = "1:" + text;
 
             double val;
             if (!double.TryParse(text.Substring(2), NumberStyles.Float, NumberFormatInfo.CurrentInfo, out val))

@@ -1,9 +1,6 @@
-using System;
-using System.ComponentModel;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using NUnit.Framework;
 
 namespace UnitTests.Converters.WKT
 {
@@ -45,12 +42,12 @@ namespace UnitTests.Converters.WKT
         public void ParseLineString()
         {
             string linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
-            var geom = GeomFromText(linestring) as MultiLineString;
+            var geom = GeomFromText(linestring) as LineString;
             Assert.IsNotNull(geom);
             Assert.AreEqual(40, geom.Length);
             Assert.IsFalse(geom.IsRing);
             Assert.AreEqual(linestring, geom.AsText());
-            Assert.IsTrue((GeomFromText("LINESTRING EMPTY") as MultiLineString).IsEmpty);
+            Assert.IsTrue((GeomFromText("LINESTRING EMPTY") as LineString).IsEmpty);
             Assert.AreEqual("LINESTRING EMPTY", Factory.CreateLineString((Coordinate[])null).AsText());
             linestring = "LINESTRING (-3.32348670085011 56.3658879665301, 5.72037855874896E-05 53.5353372259589)";
             geom = GeomFromText(linestring) as LineString;
@@ -66,13 +63,13 @@ namespace UnitTests.Converters.WKT
             Assert.AreEqual(3, geom.NumGeometries);
             Assert.AreEqual(180, geom.Length);
             Assert.AreEqual(120, geom[2].Length);
-            Assert.IsFalse(((MultiLineString)geom[0]).IsClosed, "[0].IsClosed");
-            Assert.IsFalse(((MultiLineString)geom[1]).IsClosed, "[1].IsClosed");
-            Assert.IsTrue(((MultiLineString)geom[2]).IsClosed, "[2].IsClosed");
+            Assert.IsFalse(((LineString)geom[0]).IsClosed, "[0].IsClosed");
+            Assert.IsFalse(((LineString)geom[1]).IsClosed, "[1].IsClosed");
+            Assert.IsTrue(((LineString)geom[2]).IsClosed, "[2].IsClosed");
             Assert.IsTrue(geom[0].IsSimple, "[0].IsSimple");
             Assert.IsTrue(geom[1].IsSimple, "[1].IsSimple");
             Assert.IsTrue(geom[2].IsSimple, "[2].IsSimple");
-            Assert.IsTrue(((MultiLineString)geom[2]).IsRing, "Third line is a ring");
+            Assert.IsTrue(((LineString)geom[2]).IsRing, "Third line is a ring");
             Assert.AreEqual(multiLinestring, geom.AsText());
             Assert.IsTrue(GeomFromText("MULTILINESTRING EMPTY").IsEmpty);
             geom = GeomFromText("MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), EMPTY, (20 20, 50 20, 50 60, 20 20))") as MultiLineString;
@@ -142,8 +139,8 @@ namespace UnitTests.Converters.WKT
             polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 29 21, 29 29, 21 29, 21 21), (23 23, 23 27, 27 27, 27 23, 23 23))";
             geom = GeomFromText(polygon) as Polygon;
             Assert.IsNotNull(geom);
-            Assert.AreEqual(88, geom.Length);            
-            Assert.AreEqual(20, geom.Area);            
+            Assert.AreEqual(88, geom.Length);
+            Assert.AreEqual(20, geom.Area);
             LinearRing exteriorRing = geom.ExteriorRing as LinearRing;
             Assert.IsNotNull(exteriorRing);
             Assert.AreEqual(40, exteriorRing.Length);
@@ -173,6 +170,6 @@ namespace UnitTests.Converters.WKT
             Assert.AreEqual("POLYGON EMPTY", Factory.CreatePolygon(null, null).AsText());
         }
 
-        
+
     }
 }

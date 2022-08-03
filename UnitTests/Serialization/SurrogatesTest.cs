@@ -1,8 +1,7 @@
-﻿using System;
+﻿using NUnit.Framework;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using NUnit.Framework;
 
 namespace UnitTests.Serialization
 {
@@ -101,7 +100,7 @@ namespace UnitTests.Serialization
             {
                 for (var i = 0; i < bmp.Width; i++)
                     for (var j = 0; j < bmp.Height; j++)
-                        bmp.SetPixel(i, j, Color.FromKnownColor((KnownColor)(27+(i * bmp.Width + j) % 100)));
+                        bmp.SetPixel(i, j, Color.FromKnownColor((KnownColor)(27 + (i * bmp.Width + j) % 100)));
 
                 var brushS = new TextureBrush(bmp)
                 { WrapMode = WrapMode.TileFlipXY, Transform = new Matrix(0.9f, 1f, 1f, 0.9f, 0.2f, 0.2f) };
@@ -155,7 +154,7 @@ namespace UnitTests.Serialization
             CompareLgb(brushS, brushD);
 
             var myBlend = new Blend();
-            myBlend.Factors = new []{ .2f, .4f, .8f, .8f, .4f, .2f };
+            myBlend.Factors = new[] { .2f, .4f, .8f, .8f, .4f, .2f };
             myBlend.Positions = new[] { 0.0f, .2f, .4f, .6f, .8f, 1.0f };
 
             brushS.Blend = myBlend;
@@ -244,14 +243,14 @@ namespace UnitTests.Serialization
             for (var i = 0; i < 5; i++)
                 for (var j = 0; j < 5; j++)
                 {
-                    Assert.AreEqual(cmS[i,j], cmD[i, j], "Colormatrix differs at {0}, {1}", i, j);
+                    Assert.AreEqual(cmS[i, j], cmD[i, j], "Colormatrix differs at {0}, {1}", i, j);
                 }
         }
 
         [Test]
         public void TestColorMap()
         {
-            var cmS = new []
+            var cmS = new[]
             {
                 new ColorMap {OldColor = Color.Red, NewColor = Color.Green},
                 new ColorMap {OldColor = Color.Green, NewColor = Color.Red},
@@ -268,6 +267,6 @@ namespace UnitTests.Serialization
                 Assert.AreEqual(cmS[i].OldColor, cmD[i].OldColor, "Old color differs at {0}", i);
                 Assert.AreEqual(cmS[i].NewColor, cmD[i].NewColor, "New color differs at {0}", i);
             }
-        }    
+        }
     }
 }

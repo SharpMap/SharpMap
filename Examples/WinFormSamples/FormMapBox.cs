@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Windows.Forms;
-using ProjNet.CoordinateSystems;
+﻿using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap;
 using SharpMap.CoordinateSystems;
 using SharpMap.CoordinateSystems.Transformations;
+using SharpMap.Data;
 using SharpMap.Forms;
 using SharpMap.Forms.Tools;
 using SharpMap.Layers;
-using System.Drawing.Drawing2D;
-using SharpMap.Data;
 using SharpMap.Rendering.Decoration;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using WinFormSamples.Samples;
 
 namespace WinFormSamples
@@ -33,14 +32,14 @@ namespace WinFormSamples
             {
                 if (value == UseDotSpatial) return;
 
-                var s = (Session) Session.Instance;
-                var css = !value 
+                var s = (Session)Session.Instance;
+                var css = !value
                     ? new CoordinateSystemServices(
                         new CoordinateSystemFactory(),
                         new CoordinateTransformationFactory(),
                         SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems())
                     : new CoordinateSystemServices(
-                        new DotSpatialCoordinateSystemFactory(), 
+                        new DotSpatialCoordinateSystemFactory(),
                         new DotSpatialCoordinateTransformationFactory(),
                         SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
                 s.SetCoordinateSystemServices(css);
@@ -52,7 +51,7 @@ namespace WinFormSamples
             AddToListView = false;
 
             InitializeComponent();
-            
+
             mapBox1.ActiveTool = MapBox.Tools.Pan;
 
             var loadedAssemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -63,9 +62,9 @@ namespace WinFormSamples
             {
                 lvwDecorations.Items.Add(name);
             }
-            
+
             AddToListView = true;
-            
+
             AppDomain.CurrentDomain.AssemblyLoad += HandleAssemblyLoad;
 
             pgMapDecoration.SelectedObject = null;
@@ -101,7 +100,7 @@ namespace WinFormSamples
 #pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception)
             {
-                
+
             }
 #pragma warning restore CA1031 // Do not catch general exception types
         }
@@ -119,7 +118,7 @@ namespace WinFormSamples
             foreach (ILayer layer in lc)
             {
                 if (layer is VectorLayer)
-                    ((VectorLayer) layer).Style.SymbolRotation = -angle;
+                    ((VectorLayer)layer).Style.SymbolRotation = -angle;
                 else if (layer is LabelLayer)
                     ((LabelLayer)layer).Style.Rotation = -angle;
             }
@@ -142,7 +141,7 @@ namespace WinFormSamples
 
         private void btnTool_Click(object sender, EventArgs e)
         {
-            var btn = (Button) sender;
+            var btn = (Button)sender;
             IMapTool tool = null;
 
             switch (btn.Name)
@@ -159,7 +158,7 @@ namespace WinFormSamples
             if (oldCustomTool is SampleTool) btnTool.Font = new Font(btn.Font, FontStyle.Regular);
             if (oldCustomTool is MagnifierTool) btnTool2.Font = new Font(btn.Font, FontStyle.Regular);
 
-            if (oldCustomTool is IDisposable) ((IDisposable) oldCustomTool).Dispose();
+            if (oldCustomTool is IDisposable) ((IDisposable)oldCustomTool).Dispose();
 
             mapBox1.CustomTool = tool;
             btn.Font = new Font(btn.Font, tool == null ? FontStyle.Regular : FontStyle.Bold);
@@ -174,7 +173,7 @@ namespace WinFormSamples
             //    mapBox1.ActiveTool = MapBox.Tools.Pan;
             //}
         }
-        
+
         void mapBox1_MapQueryStarted(object sender, EventArgs e)
         {
             dataGridView1.DataSource = _queriedData = null;
@@ -193,7 +192,7 @@ namespace WinFormSamples
                 _queriedData = new FeatureDataSet();
             _queriedData.Tables.Add(data);
         }
-        
+
         private void btnCreateTiles_Click(object sender, EventArgs e)
         {
             if (mapBox1.Map == null)
@@ -208,8 +207,8 @@ namespace WinFormSamples
                 f.ShowDialog();
             }
         }
-        
-                private void radioButton_Click(object sender, EventArgs e)
+
+        private void radioButton_Click(object sender, EventArgs e)
         {
             Cursor mic = mapBox1.Cursor;
             mapBox1.Cursor = Cursors.WaitCursor;
@@ -286,8 +285,8 @@ namespace WinFormSamples
                         {
                             mapBox1.Refresh();
 
-                            MessageBox.Show("Requires SqlServer connection string to be defined (Project / Settings)", 
-                                "Sql Server", MessageBoxButtons.OK,MessageBoxIcon.Information);
+                            MessageBox.Show("Requires SqlServer connection string to be defined (Project / Settings)",
+                                "Sql Server", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             return;
                         }
                         // now show SqlServer dialog
@@ -402,12 +401,12 @@ namespace WinFormSamples
                     {
                         string cn = InputBox(
                             "Please enter connection string.\n" +
-                            "For e.g. PostGis Rasters sth. like 'PG:host=... port=... dbname=... schema=... table=... column=...'", 
+                            "For e.g. PostGis Rasters sth. like 'PG:host=... port=... dbname=... schema=... table=... column=...'",
                             @"GDAL Raster Layer Connection", _gdalConnection);
                         if (string.IsNullOrEmpty(cn))
                             return;
-                        
-                        map = Samples.GdalSample.InitializeMap(tbAngle.Value, new []{ cn });
+
+                        map = Samples.GdalSample.InitializeMap(tbAngle.Value, new[] { cn });
                         _gdalConnection = cn;
                     }
                     else
@@ -519,42 +518,43 @@ namespace WinFormSamples
                 Padding = new Padding(5),
                 Margin = new Padding(10)
             };
-            
+
             var textLabel = new TextBox
             {
-                Left = prompt.Margin.Left, 
-                Top = prompt.Margin.Top, 
+                Left = prompt.Margin.Left,
+                Top = prompt.Margin.Top,
                 Width = prompt.ClientSize.Width - prompt.Margin.Left - prompt.Margin.Right,
                 BackColor = SystemColors.Control,
                 BorderStyle = BorderStyle.None,
                 Multiline = true,
                 HideSelection = true,
-                ReadOnly = true, Enabled = false
+                ReadOnly = true,
+                Enabled = false
             };
 
             var size = SizeF.Empty;
             using (var g = Graphics.FromHwnd(IntPtr.Zero))
-                size =  g.MeasureString(text, DefaultFont, new SizeF(textLabel.Width, 20 * textLabel.Height));
+                size = g.MeasureString(text, DefaultFont, new SizeF(textLabel.Width, 20 * textLabel.Height));
             textLabel.Height = System.Drawing.Size.Ceiling(size).Height;
             textLabel.Lines = text.Split('\n');
             textLabel.SelectionStart = 0;
             textLabel.SelectionLength = 0;
 
-            var textBox = new TextBox 
-            { 
-                Left = prompt.Margin.Left, 
-                Top = textLabel.Bottom, 
+            var textBox = new TextBox
+            {
+                Left = prompt.Margin.Left,
+                Top = textLabel.Bottom,
                 Width = prompt.ClientSize.Width - prompt.Margin.Left - prompt.Margin.Right,
-                Multiline = true, 
+                Multiline = true,
                 Text = defaultValue ?? string.Empty
             };
 
             var confirmation = new Button
             {
-                Text = "&OK", 
-                Width = 100, 
+                Text = "&OK",
+                Width = 100,
                 Left = prompt.ClientSize.Width - prompt.Margin.Right - 100,
-                Top = textBox.Top + textBox.Height + prompt.Padding.Vertical, 
+                Top = textBox.Top + textBox.Height + prompt.Padding.Vertical,
                 DialogResult = DialogResult.OK
             };
 

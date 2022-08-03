@@ -57,7 +57,7 @@ namespace SharpMap.Web
             using (var stream = new MemoryStream())
             {
                 map.Save(stream, ImageFormat.Png);
-                HttpContext.Current.Cache.Insert(guid, stream.ToArray(), null, 
+                HttpContext.Current.Cache.Insert(guid, stream.ToArray(), null,
                                                  Cache.NoAbsoluteExpiration,
                                                  TimeSpan.FromMinutes(minutes));
             }

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using NetTopologySuite.Geometries;
-using NUnit.Framework;
+﻿using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Npgsql;
 using NpgsqlTypes;
+using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace UnitTests.Data.Providers
 {
@@ -20,8 +19,6 @@ namespace UnitTests.Data.Providers
         {
             try
             {
-                NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-
                 var connStrBuilder = new NpgsqlConnectionStringBuilder(Properties.Settings.Default.PostGis);
                 if (string.IsNullOrEmpty(connStrBuilder.Host) || string.IsNullOrEmpty(connStrBuilder.Database))
                 {

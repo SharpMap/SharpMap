@@ -13,11 +13,11 @@
 
         public static string Join(this IEnumerable<string> strings, char separator)
         {
-            if (strings == null) 
+            if (strings == null)
                 return String.Empty;
 
             var sb = new StringBuilder();
-            foreach (var s in strings) 
+            foreach (var s in strings)
                 sb.Append(s).Append(separator);
             return sb.ToString().TrimEnd(separator);
         }
@@ -33,7 +33,7 @@
             return arr.Join(',');
         }
 
-        private static void Flip(IList<string> arr, int first, int second) 
+        private static void Flip(IList<string> arr, int first, int second)
         {
             var temp = arr[first];
             arr[first] = arr[second];

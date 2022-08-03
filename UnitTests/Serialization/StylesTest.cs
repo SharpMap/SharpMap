@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NUnit.Framework;
+using SharpMap.Styles;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using NUnit.Framework;
-using SharpMap.Styles;
 
 namespace UnitTests.Serialization
 {

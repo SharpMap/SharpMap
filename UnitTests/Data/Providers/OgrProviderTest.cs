@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SharpMap;
 using SharpMap.Data;
-using SharpMap.Data.Providers;
+using System;
+using System.IO;
 using OgrProvider = SharpMap.Data.Providers.Ogr;
 
 namespace UnitTests.Data.Providers
@@ -56,8 +55,8 @@ namespace UnitTests.Data.Providers
                 throw new IgnoreException("Getting data failed", ex);
             }
 
-            Assert.DoesNotThrow(() => OgrProvider.CreateFromFeatureDataTable(fdt, 
-                ((FeatureDataRow)fdt.Rows[0]).Geometry.OgcGeometryType, srid, 
+            Assert.DoesNotThrow(() => OgrProvider.CreateFromFeatureDataTable(fdt,
+                ((FeatureDataRow)fdt.Rows[0]).Geometry.OgcGeometryType, srid,
                 driver, connection));
         }
     }

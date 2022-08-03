@@ -1,7 +1,7 @@
-using System;
 using NUnit.Framework;
 using SharpMap.Layers;
 using SharpMap.Web.Wms;
+using System;
 
 namespace UnitTests
 {
@@ -13,7 +13,7 @@ namespace UnitTests
         public void AddLayerFail()
         {
             WmsLayer layer = new WmsLayer("wms", "http://wms.iter.dk/example_capabilities_1_3_0.xml");
-            Assert.Throws<ArgumentException>(() => layer.AddLayer("NonExistingLayer") );
+            Assert.Throws<ArgumentException>(() => layer.AddLayer("NonExistingLayer"));
         }
 
         [Test]

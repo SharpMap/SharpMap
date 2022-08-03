@@ -1,5 +1,4 @@
 ﻿using NetTopologySuite.Geometries;
-using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Data;

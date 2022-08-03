@@ -9,12 +9,11 @@ namespace UnitTests.Data.Providers
     {
         private string _tableName;
 
-        public override void OneTimeSetUp()
+        public OleDbPointProviderTest()
         {
             if (System.IntPtr.Size == 8)
                 Assert.Ignore("Only run in 32bit mode, because most Excel installations are 32bit.");
-            base.OneTimeSetUp();
-
+            
             try
             {
                 // Check if the OLE DB provider is available

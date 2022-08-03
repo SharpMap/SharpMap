@@ -1,6 +1,6 @@
 using DotSpatial.Projections;
-using NetTopologySuite.CoordinateSystems;
-using NetTopologySuite.CoordinateSystems.Transformations;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 
 namespace SharpMap.CoordinateSystems.Transformations
 {
@@ -8,7 +8,7 @@ namespace SharpMap.CoordinateSystems.Transformations
     /// An implementation for a coordinate transformation factory, that creates 
     /// coordinate transformations based on <see cref="DotSpatialCoordinateSystem"/>s.
     /// </summary>
-    public class DotSpatialCoordinateTransformationFactory : ICoordinateTransformationFactory
+    public class DotSpatialCoordinateTransformationFactory : CoordinateTransformationFactory
     {
         /// <summary>
         /// Creates a transformation between two coordinate systems.
@@ -25,16 +25,14 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// For this method to work properly, the input coordinate systems must either be 
         /// <see cref="DotSpatialCoordinateSystem"/>s or return valid <see cref="IInfo.WKT"/> values.
         /// </remarks>
-        public ICoordinateTransformation CreateFromCoordinateSystems(ICoordinateSystem sourceCS, ICoordinateSystem targetCS)
+        public new ICoordinateTransformation CreateFromCoordinateSystems(CoordinateSystem sourceCS, CoordinateSystem targetCS)
         {
             if (sourceCS == null || targetCS == null)
                 return null;
 
-            var source = sourceCS as DotSpatialCoordinateSystem ??
-                         new DotSpatialCoordinateSystem(ProjectionInfo.FromEsriString(sourceCS.WKT));
+            var source = new DotSpatialCoordinateSystem(ProjectionInfo.FromEsriString(sourceCS.WKT));
 
-            var target = targetCS as DotSpatialCoordinateSystem ??
-                         new DotSpatialCoordinateSystem(ProjectionInfo.FromEsriString(targetCS.WKT));
+            var target = new DotSpatialCoordinateSystem(ProjectionInfo.FromEsriString(targetCS.WKT));
 
             return new DotSpatialCoordinateTransformation(source, target);
         }

@@ -51,7 +51,7 @@
                 }
             }
         }
-        
+
         [NUnit.Framework.Test]
         public void TestXml1()
         {
@@ -65,7 +65,7 @@
   </Points>
 </root>";
             var xmlFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "xml");
-            
+
             using (var sw = new System.IO.StreamWriter(System.IO.File.OpenWrite(xmlFileName)))
                 sw.Write(xml);
 

@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using SharpMap;
-using SharpMap.Data;
+﻿using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Symbolizer;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
@@ -30,7 +28,7 @@ namespace WinFormSamples.Samples
                 case 2:
                     _mapId++;
                     return InitializeMapOsm(angle);
-                    //return InitializeMapSharpDX(angle);
+                //return InitializeMapSharpDX(angle);
                 case 3:
                     _mapId -= 3;
                     return InitializeMapWithSymbolizerLayers(angle);
@@ -49,103 +47,104 @@ namespace WinFormSamples.Samples
             var layCountries = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer(
                 "Countries",
                 new ShapeFile("GeoData/World/countries.shp", true),
-                new BasicPolygonSymbolizer {Fill = new SolidBrush(Color.Green), Outline = Pens.Black,}
-                ) {SRID = 4326};
+                new BasicPolygonSymbolizer { Fill = new SolidBrush(Color.Green), Outline = Pens.Black, }
+                )
+            { SRID = 4326 };
 
             //Set up a river layer
             var symbolizer = new CachedLineSymbolizer();
-            symbolizer.LineSymbolizeHandlers.AddRange( new [] {
+            symbolizer.LineSymbolizeHandlers.AddRange(new[] {
                 new PlainLineSymbolizeHandler { Line = new Pen(Color.Blue, 3) { LineJoin = LineJoin.Round } },
                 new PlainLineSymbolizeHandler{ Line = new Pen(Color.Aqua, 1)}, });
 
             var layRivers = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Rivers")
-                                {
-                                    //Set the datasource to a shapefile in the App_data folder
-                                    DataSource = new ShapeFile("GeoData/World/rivers.shp", true),
-                                    //Define a blue 2px wide pen
-                                    Symbolizer = symbolizer,
-                                    SRID = 4326
-                                };
+            {
+                //Set the datasource to a shapefile in the App_data folder
+                DataSource = new ShapeFile("GeoData/World/rivers.shp", true),
+                //Define a blue 2px wide pen
+                Symbolizer = symbolizer,
+                SRID = 4326
+            };
 
             //Set up a cities layer
             var layCities = new SharpMap.Layers.Symbolizer.PuntalVectorLayer("Cities")
-                                {
-                                    //Set the datasource to a shapefile in the App_data folder
-                                    DataSource = new ShapeFile("GeoData/World/cities.shp", true),
-                                    Symbolizer = new RasterPointSymbolizer() { Scale = 0.8f },
-                                    MaxVisible = 40
-                                } ;
+            {
+                //Set the datasource to a shapefile in the App_data folder
+                DataSource = new ShapeFile("GeoData/World/cities.shp", true),
+                Symbolizer = new RasterPointSymbolizer() { Scale = 0.8f },
+                MaxVisible = 40
+            };
 
             //Set up a country label layer
             var layLabel = new LabelLayer("Country labels")
-                               {
-                                   DataSource = layCountries.DataSource,
-                                   Enabled = true,
-                                   LabelColumn = "Name",
-                                   LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
-                                   Style =
+            {
+                DataSource = layCountries.DataSource,
+                Enabled = true,
+                LabelColumn = "Name",
+                LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
+                Style =
                                        new LabelStyle
-                                           {
-                                               ForeColor = Color.White,
-                                               Font = new Font(FontFamily.GenericSerif, 12),
-                                               BackColor = new SolidBrush(Color.FromArgb(128, 255, 0, 0)),
-                                               HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center
-                                           },
-                                   MaxVisible = 90,
-                                   MinVisible = 30,
-                                   SRID = 4326,
-                                   MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest,
-                                   
-                               };
+                                       {
+                                           ForeColor = Color.White,
+                                           Font = new Font(FontFamily.GenericSerif, 12),
+                                           BackColor = new SolidBrush(Color.FromArgb(128, 255, 0, 0)),
+                                           HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center
+                                       },
+                MaxVisible = 90,
+                MinVisible = 30,
+                SRID = 4326,
+                MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest,
+
+            };
 
             //Set up a city label layer
             var layCityLabel = new LabelLayer("City labels")
-                                   {
-                                       DataSource = layCities.DataSource,
-                                       Enabled = true,
-                                       LabelColumn = "Name",
-                                       TextRenderingHint = TextRenderingHint.AntiAlias,
-                                       SmoothingMode = SmoothingMode.AntiAlias,
-                                       SRID = 4326,
-                                       LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
-                                       Style =
+            {
+                DataSource = layCities.DataSource,
+                Enabled = true,
+                LabelColumn = "Name",
+                TextRenderingHint = TextRenderingHint.AntiAlias,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                SRID = 4326,
+                LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
+                Style =
                                            new LabelStyle
-                                               {
-                                                   ForeColor = Color.Black,
-                                                   Font = new Font(FontFamily.GenericSerif, 11),
-                                                   HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Left,
-                                                   VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Bottom,
-                                                   Offset = new PointF(3, 3),
-                                                   CollisionDetection = true,
-                                                   Halo = new Pen(Color.Yellow, 2)
-                                               }, 
-                                       MaxVisible = layLabel.MinVisible,
-                                   };
+                                           {
+                                               ForeColor = Color.Black,
+                                               Font = new Font(FontFamily.GenericSerif, 11),
+                                               HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Left,
+                                               VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Bottom,
+                                               Offset = new PointF(3, 3),
+                                               CollisionDetection = true,
+                                               Halo = new Pen(Color.Yellow, 2)
+                                           },
+                MaxVisible = layLabel.MinVisible,
+            };
 
             //Setup River label
             var layRiverLabel = new LabelLayer("River labels")
-                                   {
-                                       DataSource = layRivers.DataSource,
-                                       Enabled = true,
-                                       LabelColumn = "Name",
-                                       TextRenderingHint = TextRenderingHint.AntiAlias,
-                                       SmoothingMode = SmoothingMode.AntiAlias,
-                                       SRID = 4326,
-                                       LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
-                                       MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.All,
-                                       Style =
+            {
+                DataSource = layRivers.DataSource,
+                Enabled = true,
+                LabelColumn = "Name",
+                TextRenderingHint = TextRenderingHint.AntiAlias,
+                SmoothingMode = SmoothingMode.AntiAlias,
+                SRID = 4326,
+                LabelFilter = LabelCollisionDetection.QuickAccurateCollisionDetectionMethod,
+                MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.All,
+                Style =
                                            new LabelStyle
-                                               {
-                                                   ForeColor = Color.DarkBlue,
-                                                   Font = new Font(FontFamily.GenericSansSerif, 11),
-                                                   HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
-                                                   VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
-                                                   CollisionDetection = true,
-                                                   Halo = new Pen(Color.Azure, 2), 
-                                                   IgnoreLength =  true
-                                                   
-                                               }, 
-                                   };
+                                           {
+                                               ForeColor = Color.DarkBlue,
+                                               Font = new Font(FontFamily.GenericSansSerif, 11),
+                                               HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
+                                               VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
+                                               CollisionDetection = true,
+                                               Halo = new Pen(Color.Azure, 2),
+                                               IgnoreLength = true
+
+                                           },
+            };
 
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
@@ -245,17 +244,23 @@ namespace WinFormSamples.Samples
                 new LabelStyle
                 {
                     MaxVisible = 10,
-                    CollisionBuffer = new Size(0, 0), CollisionDetection = true, Enabled = true,
-                    ForeColor = Color.LightSlateGray, Halo = new Pen(Color.Silver, 1), 
+                    CollisionBuffer = new Size(0, 0),
+                    CollisionDetection = true,
+                    Enabled = true,
+                    ForeColor = Color.LightSlateGray,
+                    Halo = new Pen(Color.Silver, 1),
                     HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                     VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
                     Font = new Font(GenericFontFamilies.SansSerif.ToString(), 8f, FontStyle.Regular)
-                } ,
+                },
                 new LabelStyle
                 {
                     MaxVisible = layLabel.MinVisible,
-                    CollisionBuffer = new Size(3, 3), CollisionDetection = true, Enabled = true,
-                    ForeColor = Color.LightSlateGray, Halo = new Pen(Color.Silver, 5), 
+                    CollisionBuffer = new Size(3, 3),
+                    CollisionDetection = true,
+                    Enabled = true,
+                    ForeColor = Color.LightSlateGray,
+                    Halo = new Pen(Color.Silver, 5),
                     HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center,
                     VerticalAlignment = LabelStyle.VerticalAlignmentEnum.Middle,
                     Font = new Font(GenericFontFamilies.SansSerif.ToString(), 16f, FontStyle.Bold)
@@ -291,7 +296,7 @@ namespace WinFormSamples.Samples
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
             //map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layCountries));
-            map.Layers.Add(layCountries); 
+            map.Layers.Add(layCountries);
             map.Layers.Add(layRivers);
             map.Layers.Add(layCities);
             map.Layers.Add(layLabel);

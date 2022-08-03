@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Xml.Schema;
-using System.Xml;
-using System.Collections.Specialized;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SharpMap.Utilities.Wfs;
+using System;
+using System.Collections.Specialized;
+using System.IO;
+using System.Xml;
+using System.Xml.Schema;
 
 namespace UnitTests.WFS
 {
@@ -15,12 +12,6 @@ namespace UnitTests.WFS
     [Ignore("Tests disabled because they download external schemas from the internet")]
     public class RequestValidationTest
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-        }
-
         [Test]
         public void TestGETFilter1_1_0()
         {
@@ -38,7 +29,7 @@ namespace UnitTests.WFS
             readerSettings.ValidationEventHandler += new ValidationEventHandler(ValidationEventHandler);
 
             MemoryStream ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(qscoll["FILTER"]));
-            
+
             XmlTextReader xmlReader = new XmlTextReader(ms);
             XmlReader objXmlReader = XmlReader.Create(xmlReader, readerSettings);
             while (objXmlReader.Read()) { }

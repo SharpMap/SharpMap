@@ -1,27 +1,26 @@
 ﻿//#if !LINUX
-using System;
-using System.IO;
 using NetTopologySuite.Geometries;
-using NetTopologySuite.Operation.Distance;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
+using System;
+using System.IO;
 
 namespace UnitTests.Data.Providers
 {
     [NUnit.Framework.TestFixture, NUnit.Framework.Category("KnownToFailOnTeamCityAtCodebetter")]
     public class ManagedSQLiteTests : ProviderTest
     {
-//#if LINUX
-//        [NUnit.Framework.OneTimeSetUp]
-//        public void OneTimeSetUp()
-//        {
-//            if (Environment.OSVersion.Platform == PlatformID.Unix)
-//            {
-//                if (!File.Exists("libSQLite.Interop.so"))
-//                    throw new IgnoreException($"'libSQLite.Interop.so' not present");
-//            }
-//        }
-//#endif
+        //#if LINUX
+        //        [NUnit.Framework.OneTimeSetUp]
+        //        public void OneTimeSetUp()
+        //        {
+        //            if (Environment.OSVersion.Platform == PlatformID.Unix)
+        //            {
+        //                if (!File.Exists("libSQLite.Interop.so"))
+        //                    throw new IgnoreException($"'libSQLite.Interop.so' not present");
+        //            }
+        //        }
+        //#endif
 
         private string GetTestDBPath()
         {
@@ -90,7 +89,7 @@ namespace UnitTests.Data.Providers
                 sq.ExecuteIntersectionQuery(ext, ds);
                 NUnit.Framework.Assert.AreEqual(775, ds.Tables[0].Count);
 
-                var env = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(sq.SRID).ToGeometry(ext);
+                var env = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(sq.SRID).ToGeometry(ext);
                 var dsEnv = new SharpMap.Data.FeatureDataSet();
                 sq.ExecuteIntersectionQuery(env, dsEnv);
                 NUnit.Framework.Assert.AreEqual(775, dsEnv.Tables[0].Count);
@@ -100,7 +99,7 @@ namespace UnitTests.Data.Providers
         [NUnit.Framework.Test]
         public void TestReadPolys()
         {
-            using (var sq = 
+            using (var sq =
                 new SharpMap.Data.Providers.ManagedSpatiaLite(GetTestDBPath(), "regions", "Geometry", "ROWID"))
             {
                 var ext = sq.GetExtents();

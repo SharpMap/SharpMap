@@ -1,16 +1,16 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using System.IO;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
-using ColorBlend=SharpMap.Rendering.Thematics.ColorBlend;
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.IO;
+using ColorBlend = SharpMap.Rendering.Thematics.ColorBlend;
 using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples

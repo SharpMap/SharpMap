@@ -1,19 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using BruTile.Predefined;
 using NetTopologySuite.Geometries;
 using SharpMap.Layers;
-using SharpMap.Data;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using BruTile.Web;
-using BruTile.Predefined;
-using SharpMap.Data.Providers;
-
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using GeometryTransform = NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform;
 
 namespace WinFormSamples
@@ -25,7 +15,7 @@ namespace WinFormSamples
 
         public FormDemoDrawGeometries()
         {
-   
+
             InitializeComponent();
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
@@ -74,7 +64,7 @@ namespace WinFormSamples
 
         void mapBox1_GeometryDefined(NetTopologySuite.Geometries.Geometry geometry)
         {
-            MessageBox.Show("Geometry defined!\r\n"+geometry);
+            MessageBox.Show("Geometry defined!\r\n" + geometry);
 
             geoProvider.Geometries.Add(geometry);
 
@@ -105,7 +95,7 @@ namespace WinFormSamples
             this.mapBox1.Refresh();
         }
 
-          private void button7_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)
         {
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawPoint;
         }
@@ -133,7 +123,7 @@ namespace WinFormSamples
 
         private void button6_Click(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

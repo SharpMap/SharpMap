@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 
 namespace SharpMap.UI.WPF
 {
@@ -21,7 +17,7 @@ namespace SharpMap.UI.WPF
             return coord.Z;
         }
 #pragma warning disable 618
-        public static double Get_M(this ICoordinate coord)
+        public static double Get_M(this Coordinate coord)
 #pragma warning restore 618
         {
             return coord.M;

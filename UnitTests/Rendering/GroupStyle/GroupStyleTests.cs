@@ -1,8 +1,8 @@
 ﻿using NUnit.Framework;
+using SharpMap;
+using SharpMap.Layers;
 using System.Drawing;
 using System.Drawing.Imaging;
-using SharpMap.Layers;
-using SharpMap;
 
 namespace UnitTests.Rendering.GroupStyle
 {

@@ -1,22 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SharpMap.Data.Providers;
+using System.Linq;
 
 namespace UnitTests.Data.Providers
 {
     [NUnit.Framework.TestFixture]
     public class DbaseReaderTests
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            NetTopologySuite.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-        }
-
         private int GetNumberOfRecords(DbaseReader reader)
         {
             var numberOfRecordsField = typeof(DbaseReader).GetField("_numberOfRecords", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);

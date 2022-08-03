@@ -37,7 +37,7 @@ namespace WinFormSamples.Samples
             layCities.MaxVisible = 40;
 
             //Set up a country label layer
-            SharpMap.Layers.LabelLayer layLabel = new SharpMap.Layers.LabelLayer("Country labels") 
+            SharpMap.Layers.LabelLayer layLabel = new SharpMap.Layers.LabelLayer("Country labels")
             {
                 DataSource = layCountries.DataSource,
                 Enabled = true,
@@ -64,10 +64,10 @@ namespace WinFormSamples.Samples
                 Enabled = true,
                 LabelColumn = "name",
                 PriorityColumn = "population",
-                PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 
-                { 
-                    Int32 retVal = 10000000 * (Int32)( (String)fdr["capital"] == "Y" ? 1 : 0 );
-                    return  retVal + Convert.ToInt32(fdr["population"]);
+                PriorityDelegate = delegate (SharpMap.Data.FeatureDataRow fdr)
+                {
+                    Int32 retVal = 10000000 * (Int32)((String)fdr["capital"] == "Y" ? 1 : 0);
+                    return retVal + Convert.ToInt32(fdr["population"]);
                 },
                 TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,

@@ -1,6 +1,6 @@
-﻿using System;
-using NetTopologySuite.CoordinateSystems;
-using NetTopologySuite.CoordinateSystems.Transformations;
+﻿using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using System;
 
 namespace SharpMap.CoordinateSystems.Transformations
 {
@@ -73,15 +73,15 @@ namespace SharpMap.CoordinateSystems.Transformations
         }
 
         /// <summary>Source coordinate system.</summary>
-        public ICoordinateSystem SourceCS
+        public CoordinateSystem SourceCS
         {
-            get { return _source; }
+            get { return new CoordinateSystemFactory().CreateFromXml(_source.XML); }
         }
 
         /// <summary>Target coordinate system.</summary>
-        public ICoordinateSystem TargetCS
+        public CoordinateSystem TargetCS
         {
-            get { return _target; }
+            get { return new CoordinateSystemFactory().CreateFromXml(_target.XML); }
         }
 
         /// <summary>

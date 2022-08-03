@@ -16,8 +16,8 @@ namespace UnitTests.Data.Providers
                 new SharpMap.Data.Providers.WFS("http://geo.vliz.be/geoserver/wfs?service=WFS&request=GetCapabilities",
                     "nsTmp", "elevation_10m", SharpMap.Data.Providers.WFS.WFSVersionEnum.WFS1_1_0);
             Assert.That(p.SRID == 4326);
-            Assert.That(p.AxisOrder[0] == 1 && p.AxisOrder[1]==0);
-            p.AxisOrder = new[] {0, 1};
+            Assert.That(p.AxisOrder[0] == 1 && p.AxisOrder[1] == 0);
+            p.AxisOrder = new[] { 0, 1 };
             Assert.That(p.AxisOrder[0] == 0 && p.AxisOrder[1] == 1);
 
             Assert.Throws<System.ArgumentException>(() => p.AxisOrder = new[] { 0, 1, 4 });
@@ -35,7 +35,7 @@ namespace UnitTests.Data.Providers
             //p.FeatureTypeInfo.Geometry._GeometryType = 
 
             var ext = p.GetExtents();
-            
+
             var g = p.GetGeometriesInView(new NetTopologySuite.Geometries.Envelope(-90, 90, -180, 180));
             Assert.That(g.Count > 0);
 

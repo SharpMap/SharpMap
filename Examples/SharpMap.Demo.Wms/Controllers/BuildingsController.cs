@@ -1,19 +1,13 @@
 namespace SharpMap.Demo.Wms.Controllers
 {
+    using NetTopologySuite.Geometries;
+    using SharpMap.Data;
+    using SharpMap.Data.Providers;
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Web.Mvc;
-
-    using NetTopologySuite;
-    using NetTopologySuite.Geometries;
-
-    using NetTopologySuite;
-    using NetTopologySuite.Geometries;
-
-    using SharpMap.Data;
-    using SharpMap.Data.Providers;
+    using Point = System.Drawing.Point;
 
     public class BuildingsController : Controller
     {
@@ -21,10 +15,7 @@ namespace SharpMap.Demo.Wms.Controllers
         private const int TileSize = 256;
         private const int MaxZoom = 18;
 
-        public BuildingsController()
-        {
-            GeometryServiceProvider.SetInstanceIfNotAlreadySetDirectly(new NtsGeometryServices());
-        }
+        public BuildingsController()        {                    }
 
         private Point GeoToPixel(double lat, double lon, int zoom)
         {
@@ -70,7 +61,7 @@ namespace SharpMap.Demo.Wms.Controllers
                 if (c == 0)
                     c = 5; // default value for "null" (zero) heights
                 int h = c * ScaleZ >> zz;
-                if (h <= 1) 
+                if (h <= 1)
                     h = 1;
 
                 Geometry geometry = row.Geometry;

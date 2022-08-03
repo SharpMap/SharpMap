@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Reflection;
-using NUnit.Framework;
 
 namespace UnitTests.Serialization
 {
@@ -31,55 +31,55 @@ namespace UnitTests.Serialization
             }
         }
 
-        [Test]    
+        [Test]
         public void Main()
+        {
+            Type myType = (typeof(MyTypeClass));
+            // Get the public properties.
+            PropertyInfo[] myPropertyInfo = myType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            System.Diagnostics.Trace.WriteLine($"The number of public properties is {myPropertyInfo.Length}.");
+            // Display the public properties.
+            DisplayPropertyInfo(myPropertyInfo);
+            // Get the nonpublic properties.
+            PropertyInfo[] myPropertyInfo1 = myType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance);
+            System.Diagnostics.Trace.WriteLine($"The number of protected properties is {myPropertyInfo1.Length}.");
+            // Display all the nonpublic properties.
+            DisplayPropertyInfo(myPropertyInfo1);
+
+            try
             {
-                Type myType = (typeof(MyTypeClass));
-                // Get the public properties.
-                PropertyInfo[] myPropertyInfo = myType.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                System.Diagnostics.Trace.WriteLine($"The number of public properties is {myPropertyInfo.Length}.");
-                // Display the public properties.
-                DisplayPropertyInfo(myPropertyInfo);
-                // Get the nonpublic properties.
-                PropertyInfo[] myPropertyInfo1 = myType.GetProperties(BindingFlags.NonPublic | BindingFlags.Instance);
-                System.Diagnostics.Trace.WriteLine($"The number of protected properties is {myPropertyInfo1.Length}.");
-                // Display all the nonpublic properties.
-                DisplayPropertyInfo(myPropertyInfo1);
-
-                try
-                {
-                    // Get Type object of MyClass.
-                    myType = typeof(MyTypeClass);
-                    // Get the PropertyInfo by passing the property name and specifying the BindingFlags.
-                    PropertyInfo myPropInfo = myType.GetProperty("MyProperty1", BindingFlags.Public | BindingFlags.Instance);
-                    // Display Name propety to System.Diagnostics.Trace.
-                    System.Diagnostics.Trace.WriteLine("{0} is a property of MyClass.", myPropInfo.Name);
-                }
-                catch (NullReferenceException e)
-                {
-                    System.Diagnostics.Trace.WriteLine("MyProperty does not exist in MyClass." + e.Message);
-                }
-
+                // Get Type object of MyClass.
+                myType = typeof(MyTypeClass);
+                // Get the PropertyInfo by passing the property name and specifying the BindingFlags.
+                PropertyInfo myPropInfo = myType.GetProperty("MyProperty1", BindingFlags.Public | BindingFlags.Instance);
+                // Display Name propety to System.Diagnostics.Trace.
+                System.Diagnostics.Trace.WriteLine("{0} is a property of MyClass.", myPropInfo.Name);
             }
-            public static void DisplayPropertyInfo(PropertyInfo[] myPropertyInfo)
+            catch (NullReferenceException e)
             {
-                // Display information for all properties. 
-                for (int i = 0; i < myPropertyInfo.Length; i++)
-                {
-                    PropertyInfo myPropInfo = (PropertyInfo)myPropertyInfo[i];
-                    System.Diagnostics.Trace.WriteLine($"The property name is {myPropInfo.Name}." );
-                    System.Diagnostics.Trace.WriteLine($"The property type is {myPropInfo.PropertyType}.");
-                }
+                System.Diagnostics.Trace.WriteLine("MyProperty does not exist in MyClass." + e.Message);
             }
 
-        public static object GetFieldValue(object item, string fieldName, 
+        }
+        public static void DisplayPropertyInfo(PropertyInfo[] myPropertyInfo)
+        {
+            // Display information for all properties. 
+            for (int i = 0; i < myPropertyInfo.Length; i++)
+            {
+                PropertyInfo myPropInfo = (PropertyInfo)myPropertyInfo[i];
+                System.Diagnostics.Trace.WriteLine($"The property name is {myPropInfo.Name}.");
+                System.Diagnostics.Trace.WriteLine($"The property type is {myPropInfo.PropertyType}.");
+            }
+        }
+
+        public static object GetFieldValue(object item, string fieldName,
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance)
         {
             var type = item.GetType();
             return GetFieldValue(type, item, fieldName, flags);
         }
 
-        private static object GetFieldValue(Type type, object item, string fieldName, 
+        private static object GetFieldValue(Type type, object item, string fieldName,
             BindingFlags flags)
         {
             var fld = type.GetField(fieldName, flags);
@@ -92,7 +92,7 @@ namespace UnitTests.Serialization
             return fld.GetValue(item);
         }
 
-        public static object GetPropertyValue(object item, string propertyName, 
+        public static object GetPropertyValue(object item, string propertyName,
             BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance)
         {
             var type = item.GetType();

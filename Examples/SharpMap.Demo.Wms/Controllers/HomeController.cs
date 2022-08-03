@@ -1,11 +1,10 @@
 ﻿namespace SharpMap.Demo.Wms.Controllers
 {
+    using SharpMap.Demo.Wms.Models;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Web.Mvc;
-
-    using SharpMap.Demo.Wms.Models;
 
     public class HomeController : Controller
     {
@@ -18,9 +17,9 @@
             // BindingFlags.Public | BindingFlags.DeclaredOnly returns an empty array...
             MethodInfo[] methods = type.GetMethods();
             foreach (MethodInfo method in methods)
-            {                
+            {
                 bool valid = method.ReturnType == typeof(ActionResult);
-                if (!valid) 
+                if (!valid)
                     continue;
 
                 object[] attributes = method.GetCustomAttributes(typeof(ObsoleteAttribute), false);
@@ -30,10 +29,10 @@
                 int i = type.Name.IndexOf("Controller", StringComparison.Ordinal);
                 string url = String.Format("{0}/{1}", type.Name.Substring(0, i), method.Name);
                 items.Add(new DemoItem(method.Name, url));
-            }            
+            }
             return items;
         }
-        
+
         [Obsolete]
         public ActionResult Index()
         {
@@ -94,6 +93,6 @@
         public ActionResult D3()
         {
             return this.View();
-        } 
+        }
     }
 }

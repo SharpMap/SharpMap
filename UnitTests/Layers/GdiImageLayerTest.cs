@@ -1,12 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Globalization;
-using System.IO;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Layers;
+using System;
+using System.Drawing;
+using Point = System.Drawing.Point;
+using System.Drawing.Imaging;
+using System.Globalization;
+using System.IO;
 
 namespace UnitTests.Layers
 {
@@ -32,7 +33,7 @@ namespace UnitTests.Layers
         private static void CreateWorldFile(string imageFile, Size size, PointF? origin)
         {
             if (origin == null) return;
-            
+
             var ext = Path.GetExtension(imageFile);
             if (ext == null)
                 throw new ArgumentException("imageFile");
@@ -54,7 +55,7 @@ namespace UnitTests.Layers
         {
             if (File.Exists(imageFile))
             {
-                foreach (var file in Directory.GetFiles(Path.GetTempPath(), 
+                foreach (var file in Directory.GetFiles(Path.GetTempPath(),
                     Path.GetFileNameWithoutExtension(imageFile) + ".*"))
                 {
                     try
@@ -76,8 +77,8 @@ namespace UnitTests.Layers
         {
             var imageFile = CreateImage(new Size(512, 256));
             GdiImageLayer l = null;
-            
-            Assert.DoesNotThrow( () => l = new GdiImageLayer(imageFile));
+
+            Assert.DoesNotThrow(() => l = new GdiImageLayer(imageFile));
 
             Assert.NotNull(l);
             Assert.AreEqual(Path.GetFileName(imageFile), l.LayerName);
@@ -113,7 +114,7 @@ namespace UnitTests.Layers
         public void TestTransparency()
         {
             var tmpFile = GdiImageLayerTest.CreateImage(new Size(300, 300), new PointF(10, 10));
-            using(var l = new GdiImageLayer(tmpFile))
+            using (var l = new GdiImageLayer(tmpFile))
             using (var pl = new GdiImageLayerProxy<GdiImageLayer>(l, 0.3f))
             using (var m = new Map(new Size(450, 450)))
             {
@@ -122,7 +123,7 @@ namespace UnitTests.Layers
                 using (var img = (Bitmap)m.GetMap())
                 {
                     var color = img.GetPixel(225, 225);
-                    Assert.LessOrEqual(Math.Abs((int)Math.Round(0.3f*255, MidpointRounding.AwayFromZero) - color.A),1);
+                    Assert.LessOrEqual(Math.Abs((int)Math.Round(0.3f * 255, MidpointRounding.AwayFromZero) - color.A), 1);
                 }
             }
             GdiImageLayerTest.DeleteTmpFiles(tmpFile);
@@ -152,7 +153,7 @@ namespace UnitTests.Layers
         {
             var tmpFile = GdiImageLayerTest.CreateImage(new Size(300, 300), new PointF(10, 10));
             using (var l = new GdiImageLayer(tmpFile))
-            using (var pl = new GdiImageLayerProxy<GdiImageLayer>(l, new ColorMap{OldColor = Color.Red, NewColor = Color.MistyRose}))
+            using (var pl = new GdiImageLayerProxy<GdiImageLayer>(l, new ColorMap { OldColor = Color.Red, NewColor = Color.MistyRose }))
             using (var m = new Map(new Size(450, 450)))
             {
                 m.Layers.Add(pl);

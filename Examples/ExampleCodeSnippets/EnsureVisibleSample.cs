@@ -1,69 +1,69 @@
 
-using System;
-using System.Drawing;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System;
+using System.Drawing;
 
 namespace ExampleCodeSnippets
 {
     using cd = CreatingData;
-        [NUnit.Framework.TestFixture]
+    [NUnit.Framework.TestFixture]
     public class EnsureVisibleSample
     {
-public static void EnsureVisible(SharpMap.Map map, NetTopologySuite.Geometries.Coordinate pt)
-{
-    const double ensureVisibleRatio = 0.1d;
-            
-    //Get current map envelope
-    var bb = map.Envelope;
-    System.Console.WriteLine(string.Format("Map envelope: {0}", bb));
-            
-    //Set valid envelope
-    var evbb = bb.Grow(- ensureVisibleRatio * bb.Width, -ensureVisibleRatio * bb.Height );
-    System.Console.WriteLine(string.Format("Valid envelope: {0}", evbb));
-            
-    //Test if Point is in valid envelope
-    if (evbb.Contains(pt)) return;
+        public static void EnsureVisible(SharpMap.Map map, NetTopologySuite.Geometries.Coordinate pt)
+        {
+            const double ensureVisibleRatio = 0.1d;
 
-    //It is not
-    System.Console.WriteLine(string.Format("Valid envelope does not contain {0}", pt));
+            //Get current map envelope
+            var bb = map.Envelope;
+            System.Console.WriteLine(string.Format("Map envelope: {0}", bb));
 
-    //LineString from Map.Center -> to Point
-    var ls = map.Factory.CreateLineString(new[] {evbb.Centre, pt});
-    System.Console.WriteLine(string.Format("LineString Map.Center -> Point: {0}", ls));
+            //Set valid envelope
+            var evbb = bb.Grow(-ensureVisibleRatio * bb.Width, -ensureVisibleRatio * bb.Height);
+            System.Console.WriteLine(string.Format("Valid envelope: {0}", evbb));
 
-    //Setup Linestring from BoundingBox
-    var evbbpts = new [] {evbb.TopLeft(), evbb.TopRight(), evbb.BottomRight(), evbb.BottomLeft(), evbb.TopLeft() };
-    var evbblinearring = map.Factory.CreateLineString(evbbpts);
-    System.Console.WriteLine(string.Format("Linestring of valid envelope: {0}", evbblinearring));
+            //Test if Point is in valid envelope
+            if (evbb.Contains(pt)) return;
 
-    //// convert geometries to NTS
-    //var ntsevbb = (NetTopologySuite.Geometries.LineString)
-    //    SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(evbblinearring, gf);
-    //var ntsls = (NetTopologySuite.Geometries.LineString)
-    //    SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(ls, gf);
+            //It is not
+            System.Console.WriteLine(string.Format("Valid envelope does not contain {0}", pt));
 
-    // Get intersection point
-    var intGeo = evbblinearring.Intersection(ls);
-    var intPt = (NetTopologySuite.Geometries.Point)intGeo;
-    System.Console.WriteLine(string.Format("Intersection point is: {0}", intPt));
+            //LineString from Map.Center -> to Point
+            var ls = map.Factory.CreateLineString(new[] { evbb.Centre, pt });
+            System.Console.WriteLine(string.Format("LineString Map.Center -> Point: {0}", ls));
 
-    //Compute offset
-    var dx = pt.X - intPt.X;
-    var dy = pt.Y - intPt.Y;
-    System.Console.WriteLine(string.Format("Map.Center needs to be shifted by: [{0}, {1}]", dx, dy));
+            //Setup Linestring from BoundingBox
+            var evbbpts = new[] { evbb.TopLeft(), evbb.TopRight(), evbb.BottomRight(), evbb.BottomLeft(), evbb.TopLeft() };
+            var evbblinearring = map.Factory.CreateLineString(evbbpts);
+            System.Console.WriteLine(string.Format("Linestring of valid envelope: {0}", evbblinearring));
 
-    //Set new center Center
-    map.Center = new NetTopologySuite.Geometries.Coordinate(map.Center.X + dx, map.Center.Y + dy);
+            //// convert geometries to NTS
+            //var ntsevbb = (NetTopologySuite.Geometries.LineString)
+            //    SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(evbblinearring, gf);
+            //var ntsls = (NetTopologySuite.Geometries.LineString)
+            //    SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(ls, gf);
 
-}
+            // Get intersection point
+            var intGeo = evbblinearring.Intersection(ls);
+            var intPt = (NetTopologySuite.Geometries.Point)intGeo;
+            System.Console.WriteLine(string.Format("Intersection point is: {0}", intPt));
+
+            //Compute offset
+            var dx = pt.X - intPt.X;
+            var dy = pt.Y - intPt.Y;
+            System.Console.WriteLine(string.Format("Map.Center needs to be shifted by: [{0}, {1}]", dx, dy));
+
+            //Set new center Center
+            map.Center = new NetTopologySuite.Geometries.Coordinate(map.Center.X + dx, map.Center.Y + dy);
+
+        }
 
         [NUnit.Framework.Test]
         public void TestEnsureVisible()
         {
             //Create a map
-            SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720,360));
-            
+            SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720, 360));
+
             //Create some random sample data
             SharpMap.Data.FeatureDataTable fdt =
                 cd.CreatePointFeatureDataTableFromArrays(cd.GetRandomOrdinates(80, -180, 180),
@@ -71,7 +71,7 @@ public static void EnsureVisible(SharpMap.Map map, NetTopologySuite.Geometries.C
 
             //Create layer and datasource
             SharpMap.Layers.VectorLayer vl = new SharpMap.Layers.VectorLayer("Points", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
-            
+
             //Create default style
             SharpMap.Styles.VectorStyle defaultStyle = new SharpMap.Styles.VectorStyle();
             defaultStyle.Symbol = new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
@@ -85,7 +85,7 @@ public static void EnsureVisible(SharpMap.Map map, NetTopologySuite.Geometries.C
             map.Layers.Add(vl);
             map.ZoomToExtents();
             map.Zoom = 60; //2*30
-            map.Center = new NetTopologySuite.Geometries.Coordinate(0,0);
+            map.Center = new NetTopologySuite.Geometries.Coordinate(0, 0);
 
             System.Console.WriteLine(map.Center);
             EnsureVisible(map, new NetTopologySuite.Geometries.Coordinate(-30, 0));

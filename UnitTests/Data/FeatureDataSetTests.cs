@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NUnit.Framework;
+using SharpMap.Data;
+using System;
 using System.Data;
 using System.Linq;
-using NUnit.Framework;
-using SharpMap.Data;
 
 namespace UnitTests.Data
 {
@@ -11,8 +11,8 @@ namespace UnitTests.Data
         [Test]
         public void TestCreateJoin()
         {
-            var fds = new FeatureDataSet {DataSetName = "Join"};
-            var ds = (DataSet) fds;
+            var fds = new FeatureDataSet { DataSetName = "Join" };
+            var ds = (DataSet)fds;
 
             var t1 = CreateFeatureDataTable("T1");
             fds.Tables.Add(t1);
@@ -23,7 +23,7 @@ namespace UnitTests.Data
             Assert.AreEqual(2, ds.Tables.Count);
             Assert.AreEqual(1, fds.Tables.Count);
 
-            Assert.DoesNotThrow( () => fds.Relations.Add(t1.Columns[0], t2.Columns[0]));
+            Assert.DoesNotThrow(() => fds.Relations.Add(t1.Columns[0], t2.Columns[0]));
 
         }
 
@@ -43,7 +43,7 @@ namespace UnitTests.Data
             var t2 = new DataTable(name);
             t2.Columns.Add("oid", typeof(uint));
             t2.Columns.Add("P1", typeof(string));
-            if (pk) t2.PrimaryKey = new [] { t2.Columns[0] };
+            if (pk) t2.PrimaryKey = new[] { t2.Columns[0] };
             return t2;
         }
 
@@ -54,12 +54,12 @@ namespace UnitTests.Data
             var ds = (DataSet)fds;
 
             for (var i = 0; i < 10; i++)
-                ds.Tables.Add(i%2 == 0 ? CreateFeatureDataTable("T" + i) : CreateDataTable("T" + i, true));
+                ds.Tables.Add(i % 2 == 0 ? CreateFeatureDataTable("T" + i) : CreateDataTable("T" + i, true));
 
             Assert.AreEqual(10, ds.Tables.Count);
             Assert.AreEqual(5, fds.Tables.Count);
             for (var i = 0; i < 5; i++)
-                Assert.IsTrue(ReferenceEquals(ds.Tables[2*i], fds.Tables[i]));
+                Assert.IsTrue(ReferenceEquals(ds.Tables[2 * i], fds.Tables[i]));
         }
 
         [Test]
@@ -83,9 +83,9 @@ namespace UnitTests.Data
             var l3 = CreateFeatureDataTable("layer 3");
 
             fds.Tables.Add(l3);
-            
+
             fds.Relations.Add(l2.Columns["oid"], l3.Columns["oid"]);
-            
+
             FeatureDataSet deserializedFds = null;
 
             Assert.DoesNotThrow(() => deserializedFds = SandD(fds, GetFormatter()));
@@ -117,7 +117,7 @@ namespace UnitTests.Data
         [Test]
         public void TestSerialization()
         {
-            var fds = new FeatureDataSet { DataSetName = "Serialization", Namespace = "ns"};
+            var fds = new FeatureDataSet { DataSetName = "Serialization", Namespace = "ns" };
             using (var p = Serialization.ProviderTest.CreateProvider("managedspatialite"))
             {
                 p.Open();
@@ -126,7 +126,7 @@ namespace UnitTests.Data
             }
 
             FeatureDataTable deserializedFds = null;
-            Assert.DoesNotThrow( () => deserializedFds = SandD(fds.Tables[0], GetFormatter()));
+            Assert.DoesNotThrow(() => deserializedFds = SandD(fds.Tables[0], GetFormatter()));
 
             //Assert.IsNotNull(deserializedFds);
             //Assert.AreEqual(fds.DataSetName, deserializedFds.DataSetName);

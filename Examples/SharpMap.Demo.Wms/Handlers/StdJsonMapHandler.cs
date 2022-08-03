@@ -1,23 +1,21 @@
 namespace SharpMap.Demo.Wms.Handlers
 {
+    using NetTopologySuite;
+    using NetTopologySuite.CoordinateSystems.Transformations;
+    using NetTopologySuite.Geometries;
+    using ProjNet.CoordinateSystems.Transformations;
+    using SharpMap.Converters.GeoJSON;
+    using SharpMap.Data;
+    using SharpMap.Layers;
+    using SharpMap.Web.Wms;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Web;
-
-    using NetTopologySuite.Geometries;
-
-    using NetTopologySuite.CoordinateSystems.Transformations;
-
-    using SharpMap.Converters.GeoJSON;
-    using SharpMap.Data;
-    using SharpMap.Layers;
-    using SharpMap.Web.Wms;
-
-    using Geometry = NetTopologySuite.Geometries.Geometry;
     using BoundingBox = NetTopologySuite.Geometries.Envelope;
+    using Geometry = NetTopologySuite.Geometries.Geometry;
 
     public class StdJsonMapHandler : AbstractStdMapHandler
     {
@@ -47,10 +45,10 @@ namespace SharpMap.Demo.Wms.Handlers
                     string[] layers = ls.Split(',');
                     foreach (ILayer layer in map.Layers)
                         if (!layers.Contains(layer.LayerName))
-                             layer.Enabled = false;
+                            layer.Enabled = false;
                 }
 
-                IEnumerable<GeoJSON> items = GetData(map, bbox);                
+                IEnumerable<GeoJSON> items = GetData(map, bbox);
                 StringWriter writer = new StringWriter();
                 GeoJSONWriter.Write(items, writer);
                 string buffer = writer.ToString();
@@ -75,11 +73,11 @@ namespace SharpMap.Demo.Wms.Handlers
         {
             if (map == null)
                 throw new ArgumentNullException("map");
-            
+
             // Only queryable data!
             IQueryable<ICanQueryLayer> coll = map.Layers
                 .AsQueryable()
-                .Where(l => l.Enabled) 
+                .Where(l => l.Enabled)
                 .OfType<ICanQueryLayer>()
                 .Where(l => l.IsQueryEnabled);
 
@@ -111,10 +109,9 @@ namespace SharpMap.Demo.Wms.Handlers
             }
             if (transform != null)
             {
-                GeometryFactory gf = new GeometryFactory();
                 data = data.Select(d =>
                     {
-                        Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform, gf);
+                        Geometry converted = GeometryTransform.TransformGeometry(d.Geometry, transform, d.Geometry.Factory);
                         d.SetGeometry(converted);
                         return d;
                     });

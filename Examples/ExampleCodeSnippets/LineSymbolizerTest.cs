@@ -1,134 +1,129 @@
 ﻿namespace ExampleCodeSnippets
 {
 
-/// <summary>
-/// A (simple) street direction symbolizer
-/// </summary>
-public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbolizer,
+    /// <summary>
+    /// A (simple) street direction symbolizer
+    /// </summary>
+    public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbolizer,
     SharpMap.Rendering.Symbolizer.ILineSymbolizer
-{
-    /// <summary>
-    /// Creates an instance of this class
-    /// </summary>
-    public StreetDirectionSymbolizer()
     {
-        RepeatInterval = 500;
-        ArrowLength = 100;
-        ArrowPen = new System.Drawing.Pen(System.Drawing.Color.Black, 2)
+        /// <summary>
+        /// Creates an instance of this class
+        /// </summary>
+        public StreetDirectionSymbolizer()
         {
-            EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor
-        };
-    }
-
-    /// <summary>
-    /// Method to place the street direction symbols
-    /// </summary>
-    /// <param name="map"></param>
-    /// <param name="lineString"></param>
-    /// <param name="graphics"></param>
-    private void OnRenderInternal(SharpMap.MapViewport map, NetTopologySuite.Geometries.LineString lineString,
-        System.Drawing.Graphics graphics)
-    {
-
-        var length = lineString.Length;
-        var lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(lineString);
-        if (length < RepeatInterval + ArrowLength)
-        {
-            var start = System.Math.Max(0, (length - ArrowLength)/2);
-            var end = System.Math.Min(length, (length + ArrowLength)/2);
-            var arrow = (NetTopologySuite.Geometries.LineString) lil.ExtractLine(start, end);
-
-            RenderArrow(map, graphics, arrow);
-
-            return;
-        }
-
-        var numArrows = (int) ((lineString.Length - ArrowLength)/RepeatInterval);
-        var offset = (lineString.Length - numArrows*RepeatInterval - ArrowLength)*0.5;
-
-        while (offset + ArrowLength < lineString.Length)
-        {
-            var arrow = (NetTopologySuite.Geometries.LineString) lil.ExtractLine(offset, offset + ArrowLength);
-            RenderArrow(map, graphics, arrow);
-            offset += RepeatInterval;
-        }
-
-    }
-
-    /// <summary>
-    /// Method to render the arrow
-    /// </summary>
-    /// <param name="map">The map</param>
-    /// <param name="graphics">The graphics object</param>
-    /// <param name="arrow">The arrow</param>
-    private void RenderArrow(SharpMap.MapViewport map, System.Drawing.Graphics graphics, NetTopologySuite.Geometries.LineString arrow)
-    {
-        var pts = new System.Drawing.PointF[arrow.Coordinates.Length];
-        for (var i = 0; i < pts.Length; i++)
-            pts[i] = map.WorldToImage(arrow.GetCoordinateN(i));
-        graphics.DrawLines(ArrowPen, pts);
-    }
-
-    /// <summary>
-    /// Gets or sets a value indicating at which distances a street direction marker should be drawn.
-    /// </summary>
-    public double RepeatInterval { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating the length of the street direction arrow.
-    /// </summary>
-    public double ArrowLength { get; set; }
-
-    /// <summary>
-    /// Gets or sets a value indicating the pen to use when drawing the marker
-    /// </summary>
-    public System.Drawing.Pen ArrowPen { get; set; }
-
-    public override void Begin(System.Drawing.Graphics g, SharpMap.MapViewport map, int aproximateNumberOfGeometries)
-    {
-        base.Begin(g, map, aproximateNumberOfGeometries);
-
-        //Adjust Arrow cap
-        var size = (float) (ArrowLength/5/map.PixelWidth);
-        ArrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(size, size);
-    }
-
-    public void Render(SharpMap.MapViewport map, NetTopologySuite.Geometries.ILineal geometry, System.Drawing.Graphics graphics)
-    {
-        if (geometry is NetTopologySuite.Geometries.MultiLineString)
-        {
-            var mls = (NetTopologySuite.Geometries.MultiLineString) geometry;
-            for (var i = 0; i < mls.Count; i++)
+            RepeatInterval = 500;
+            ArrowLength = 100;
+            ArrowPen = new System.Drawing.Pen(System.Drawing.Color.Black, 2)
             {
-                OnRenderInternal(map, (NetTopologySuite.Geometries.LineString) mls.GetGeometryN(i), graphics);
-            }
-            return;
+                EndCap = System.Drawing.Drawing2D.LineCap.ArrowAnchor
+            };
         }
-        OnRenderInternal(map, (NetTopologySuite.Geometries.LineString) geometry, graphics);
-    }
 
-    protected override void ReleaseManagedResources()
-    {
-        base.ReleaseManagedResources();
-        ArrowPen.Dispose();
-    }
+        /// <summary>
+        /// Method to place the street direction symbols
+        /// </summary>
+        /// <param name="map"></param>
+        /// <param name="lineString"></param>
+        /// <param name="graphics"></param>
+        private void OnRenderInternal(SharpMap.MapViewport map, NetTopologySuite.Geometries.LineString lineString,
+            System.Drawing.Graphics graphics)
+        {
 
-    public override object Clone()
-    {
-        var res = (StreetDirectionSymbolizer) MemberwiseClone();
-        res.ArrowPen = new System.Drawing.Pen(((System.Drawing.SolidBrush) ArrowPen.Brush).Color, ArrowPen.Width);
-        return res;
+            var length = lineString.Length;
+            var lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(lineString);
+            if (length < RepeatInterval + ArrowLength)
+            {
+                var start = System.Math.Max(0, (length - ArrowLength) / 2);
+                var end = System.Math.Min(length, (length + ArrowLength) / 2);
+                var arrow = (NetTopologySuite.Geometries.LineString)lil.ExtractLine(start, end);
+
+                RenderArrow(map, graphics, arrow);
+
+                return;
+            }
+
+            var numArrows = (int)((lineString.Length - ArrowLength) / RepeatInterval);
+            var offset = (lineString.Length - numArrows * RepeatInterval - ArrowLength) * 0.5;
+
+            while (offset + ArrowLength < lineString.Length)
+            {
+                var arrow = (NetTopologySuite.Geometries.LineString)lil.ExtractLine(offset, offset + ArrowLength);
+                RenderArrow(map, graphics, arrow);
+                offset += RepeatInterval;
+            }
+
+        }
+
+        /// <summary>
+        /// Method to render the arrow
+        /// </summary>
+        /// <param name="map">The map</param>
+        /// <param name="graphics">The graphics object</param>
+        /// <param name="arrow">The arrow</param>
+        private void RenderArrow(SharpMap.MapViewport map, System.Drawing.Graphics graphics, NetTopologySuite.Geometries.LineString arrow)
+        {
+            var pts = new System.Drawing.PointF[arrow.Coordinates.Length];
+            for (var i = 0; i < pts.Length; i++)
+                pts[i] = map.WorldToImage(arrow.GetCoordinateN(i));
+            graphics.DrawLines(ArrowPen, pts);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating at which distances a street direction marker should be drawn.
+        /// </summary>
+        public double RepeatInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the length of the street direction arrow.
+        /// </summary>
+        public double ArrowLength { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating the pen to use when drawing the marker
+        /// </summary>
+        public System.Drawing.Pen ArrowPen { get; set; }
+
+        public override void Begin(System.Drawing.Graphics g, SharpMap.MapViewport map, int aproximateNumberOfGeometries)
+        {
+            base.Begin(g, map, aproximateNumberOfGeometries);
+
+            //Adjust Arrow cap
+            var size = (float)(ArrowLength / 5 / map.PixelWidth);
+            ArrowPen.CustomEndCap = new System.Drawing.Drawing2D.AdjustableArrowCap(size, size);
+        }
+
+        public void Render(SharpMap.MapViewport map, NetTopologySuite.Geometries.ILineal geometry, System.Drawing.Graphics graphics)
+        {
+            if (geometry is NetTopologySuite.Geometries.MultiLineString)
+            {
+                var mls = (NetTopologySuite.Geometries.MultiLineString)geometry;
+                for (var i = 0; i < mls.Count; i++)
+                {
+                    OnRenderInternal(map, (NetTopologySuite.Geometries.LineString)mls.GetGeometryN(i), graphics);
+                }
+                return;
+            }
+            OnRenderInternal(map, (NetTopologySuite.Geometries.LineString)geometry, graphics);
+        }
+
+        protected override void ReleaseManagedResources()
+        {
+            base.ReleaseManagedResources();
+            ArrowPen.Dispose();
+        }
+
+        public override object Clone()
+        {
+            var res = (StreetDirectionSymbolizer)MemberwiseClone();
+            res.ArrowPen = new System.Drawing.Pen(((System.Drawing.SolidBrush)ArrowPen.Brush).Color, ArrowPen.Width);
+            return res;
+        }
     }
-}
 
     public class LineSymbolizerTest
     {
-        [NUnit.Framework.OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            NetTopologySuite.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
-        }
-        [NUnit.Framework.Test] 
+        [NUnit.Framework.Test]
         public void TestBasicLineSymbolizer()
         {
             if (!System.IO.File.Exists("d:\\daten\\GeoFabrik\\roads.shp"))
@@ -139,7 +134,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
             //l.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 5);
             l.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 1);
             l.Style.EnableOutline = false;
-            var m = new SharpMap.Map(new System.Drawing.Size(1440,1080)) {BackColor = System.Drawing.Color.Cornsilk};
+            var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
 
             m.ZoomToExtents();
@@ -184,7 +179,8 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
             l.Style.EnableOutline = true;
             var sd = new SharpMap.Layers.Symbolizer.LinealVectorLayer("streetd", p, new StreetDirectionSymbolizer()
             {
-                ArrowLength = 100, RepeatInterval = 500
+                ArrowLength = 100,
+                RepeatInterval = 500
             });
             var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
@@ -210,23 +206,24 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
             var p = new SharpMap.Data.Providers.ShapeFile(@"d:\\daten\\GeoFabrik\\Aurich\\roads.shp", false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
-            
+
             var cls = new SharpMap.Rendering.Symbolizer.CachedLineSymbolizer();
             cls.LineSymbolizeHandlers.Add(new SharpMap.Rendering.Symbolizer.PlainLineSymbolizeHandler
-                                              {Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 2)});
+            { Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 2) });
 
             var wls = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
-                          {
-                              Pattern =
+            {
+                Pattern =
                                   SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.
                                   GetGreaterSeries(3, 3),
-                              Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1)
-                              , Interval = 20
-                          };
+                Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1)
+                              ,
+                Interval = 20
+            };
             cls.LineSymbolizeHandlers.Add(wls);
             l.Style.LineSymbolizer = cls;
 
-            var m = new SharpMap.Map(new System.Drawing.Size(720, 540)) {BackColor = System.Drawing.Color.Cornsilk};
+            var m = new SharpMap.Map(new System.Drawing.Size(720, 540)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
 
             m.ZoomToExtents();
@@ -240,14 +237,15 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
             bmp.Save("AurichRoads1.bmp");
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
-                                               {
-                                                   Pattern =
+            {
+                Pattern =
                                                        SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.
                                                        GetTriangle(4, 0),
-                                                   Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
-                                                   Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
-                                                   ,Interval = 10
-                                               };
+                Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
+                Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
+                                                   ,
+                Interval = 10
+            };
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
@@ -304,12 +302,12 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
 
             //cls.LineSymbolizeHandlers[0] = cls.LineSymbolizeHandlers[1];
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
-                                               {
-                                                   Pattern =
+            {
+                Pattern =
                                                        SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.GetZigZag(4, 4),
-                                                   Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
-                                                   //Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
-                                               };
+                Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
+                //Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
+            };
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
@@ -373,7 +371,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
                     Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1)
                     ,
                     Interval = 20
-                    
+
                 };
                 cls.LineSymbolizeHandlers.Add(wls);
                 cls.ImmediateMode = true;
@@ -399,7 +397,7 @@ public class StreetDirectionSymbolizer : SharpMap.Rendering.Symbolizer.BaseSymbo
             l.CoordinateTransformation = ctFact.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84, ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
             l.ReverseCoordinateTransformation = ctFact.CreateFromCoordinateSystems(ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator, ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
 
-            m.Layers.Add(new SharpMap.Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(),"b"));
+            m.Layers.Add(new SharpMap.Layers.TileLayer(BruTile.Predefined.KnownTileSources.Create(), "b"));
             m.Layers.Add(l);
 
             var e = new NetTopologySuite.Geometries.Envelope(-0.02, 0.02, 51.478885 - 0.01, 51.478885 + 0.01);

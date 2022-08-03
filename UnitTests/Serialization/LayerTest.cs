@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Drawing.Imaging;
-using System.IO;
+﻿using BruTile.Predefined;
 using NUnit.Framework;
-using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering.Symbolizer;
-using UnitTests.Properties;
-using BruTile.Predefined;
+using System.Collections.Generic;
+using System.Drawing.Imaging;
+using System.IO;
 using Assembly = System.Reflection.Assembly;
 
 namespace UnitTests.Serialization
@@ -14,8 +12,8 @@ namespace UnitTests.Serialization
     [TestFixture]
     public class LayerTest : BaseSerializationTest
     {
-       
-        [Test] 
+
+        [Test]
         public void TestVectorLayer()
         {
             var vlayerS = new VectorLayer("Test", ProviderTest.CreateProvider());
@@ -23,7 +21,7 @@ namespace UnitTests.Serialization
 
             Assert.DoesNotThrow(() => vlayerD = SandD(vlayerS, GetFormatter()), "Exception");
             Assert.IsNotNull(vlayerD, "Deserialized VectorLayer is null");
-            
+
             var vlec = new VectorLayerEqualityComparer();
             Assert.IsTrue(vlec.Equals(vlayerS, vlayerD), vlec.ToString());
         }
@@ -31,7 +29,7 @@ namespace UnitTests.Serialization
         [Test]
         public void TestLabelLayer()
         {
-            var vlayerS = new LabelLayer("Test") {DataSource = ProviderTest.CreateProvider() };
+            var vlayerS = new LabelLayer("Test") { DataSource = ProviderTest.CreateProvider() };
 
             LabelLayer vlayerD = null;
 
@@ -70,15 +68,15 @@ namespace UnitTests.Serialization
             var lcS = new LayerCollection();
             LayerCollection lcD = null;
             Assert.DoesNotThrow(() => lcD = SandD(lcS, GetFormatter()));
-            
-            TestLayerCollections(lcS,lcD);
+
+            TestLayerCollections(lcS, lcD);
         }
 
         [Test]
         public void TestPuntalLayer()
         {
             var lS = new SharpMap.Layers.Symbolizer.PuntalVectorLayer("PuntalTest", ProviderTest.CreateProvider());
-            var rsS = (RasterPointSymbolizer) lS.Symbolizer;
+            var rsS = (RasterPointSymbolizer)lS.Symbolizer;
             rsS.Transparency = 0.2f;
 
             SharpMap.Layers.Symbolizer.PuntalVectorLayer lD = null;
@@ -95,7 +93,7 @@ namespace UnitTests.Serialization
         public void TestTileLayer()
         {
             var tlS =
-                new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging, string.Empty), 
+                new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging, string.Empty),
                     "Name", System.Drawing.Color.MediumTurquoise, true, Path.Combine(Path.GetTempPath(), "Bing", "Hybrid"));
 
             TileLayer tlD = null;
@@ -183,7 +181,7 @@ namespace UnitTests.Serialization
             }
         }
 
-        internal class LayerEqualityComparer<T> : ILayerEqualityComparer<T> where T:Layer
+        internal class LayerEqualityComparer<T> : ILayerEqualityComparer<T> where T : Layer
         {
             public override bool Equals(T lhs, T rhs)
             {
@@ -220,7 +218,7 @@ namespace UnitTests.Serialization
             public override bool Equals(VectorLayer lhs, VectorLayer rhs)
             {
                 var result = base.Equals(lhs, rhs);
-                
+
                 if (lhs.ClippingEnabled != rhs.ClippingEnabled)
                 {
                     DifferAt.Add("ClippingEnabled");

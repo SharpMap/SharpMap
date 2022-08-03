@@ -1,16 +1,16 @@
 ﻿// code adapted from: https://github.com/awcoats/mapstache
 namespace Mapstache
 {
+    using NetTopologySuite.Geometries;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using Point = System.Drawing.Point;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.Globalization;
     using System.Runtime.InteropServices;
     using System.Text;
-
-    using NetTopologySuite.Geometries;
 
     public class Utf8GridResults
     {
@@ -29,11 +29,11 @@ namespace Mapstache
     }
 
     public class Utf8Grid : IDisposable
-    {        
+    {
         private Bitmap bitmap;
         private Graphics graphics;
 
-        private readonly Utf8GridResults results;        
+        private readonly Utf8GridResults results;
         private readonly GraphicsPathBuilder graphicsPathBuilder;
 
         public Utf8Grid(int utfGridResolution, int tileX, int tileY, int zoom)
@@ -42,7 +42,7 @@ namespace Mapstache
             this.bitmap = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppRgb);
             this.graphics = Graphics.FromImage(this.bitmap);
             RectangleF bbox = this.GetBoundingBoxInLatLngWithMargin(tileX, tileY, zoom);
-            this.graphicsPathBuilder = new GraphicsPathBuilder(SphericalMercator.FromLonLat(bbox), size);            
+            this.graphicsPathBuilder = new GraphicsPathBuilder(SphericalMercator.FromLonLat(bbox), size);
             this.results = new Utf8GridResults();
         }
 
@@ -65,7 +65,7 @@ namespace Mapstache
         public Utf8GridResults CreateUtfGridJson()
         {
             BitmapData bitmapData = this.bitmap.LockBits(
-                new Rectangle(0, 0, this.bitmap.Width, this.bitmap.Height), 
+                new Rectangle(0, 0, this.bitmap.Width, this.bitmap.Height),
                 ImageLockMode.ReadOnly, this.bitmap.PixelFormat);
             IntPtr ptr = bitmapData.Scan0;
             int bytes = Math.Abs(bitmapData.Stride) * this.bitmap.Height;

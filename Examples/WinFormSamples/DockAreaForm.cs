@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WinFormSamples
@@ -25,7 +20,7 @@ namespace WinFormSamples
             Form2 form = new Form2();
             form.MdiParent = this;
             form.Show();
-            
+
         }
 
         private void toolStripButton2_Click(object sender, EventArgs e)
@@ -36,7 +31,7 @@ namespace WinFormSamples
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
             this.LayoutMdi(MdiLayout.TileHorizontal);
-            
+
         }
 
     }

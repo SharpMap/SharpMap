@@ -18,14 +18,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using Oracle.ManagedDataAccess.Client;
+using SharpMap.Converters.WellKnownBinary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
-using NetTopologySuite.Geometries;
-using Oracle.ManagedDataAccess.Client;
-using SharpMap.Converters.WellKnownBinary;
 using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
@@ -66,7 +66,7 @@ namespace SharpMap.Data.Providers
         /// <param name="geometryColumnName">Name of geometry column</param>
         /// /// <param name="oidColumnName">Name of column with unique identifier</param>
         public Oracle(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
-            :base(-2)
+            : base(-2)
         {
             ConnectionString = connectionStr;
             Table = tablename;
@@ -182,7 +182,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                Geometry geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
+                                Geometry geom = GeometryFromWKB.Parse((byte[])dr[0], Factory);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -199,7 +199,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override  Geometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
             Geometry geom = null;
             using (var conn = new OracleConnection(ConnectionString))
@@ -214,7 +214,7 @@ namespace SharpMap.Data.Providers
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
-                                geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
+                                geom = GeometryFromWKB.Parse((byte[])dr[0], Factory);
                         }
                     }
                 }
@@ -253,7 +253,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var id = (uint) (decimal) dr[0];
+                                var id = (uint)(decimal)dr[0];
                                 objectlist.Add(id);
                             }
                         }
@@ -305,7 +305,7 @@ namespace SharpMap.Data.Providers
                             foreach (DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -328,7 +328,7 @@ namespace SharpMap.Data.Providers
                 using (var command = new OracleCommand(strSql, conn))
                 {
                     conn.Open();
-                    return (int) command.ExecuteScalar();
+                    return (int)command.ExecuteScalar();
                 }
             }
         }
@@ -397,7 +397,7 @@ namespace SharpMap.Data.Providers
                             foreach (DataColumn col in ds.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             return fdr;
                         }
                         else
@@ -427,7 +427,7 @@ namespace SharpMap.Data.Providers
                     conn.Close();
                     if (result == DBNull.Value)
                         return null;
-                    var strBox = (string) result;
+                    var strBox = (string)result;
                     if (strBox.StartsWith("POLYGON", StringComparison.InvariantCultureIgnoreCase))
                     {
                         strBox = strBox.Replace("POLYGON", "");
@@ -522,7 +522,7 @@ namespace SharpMap.Data.Providers
                             foreach (DataColumn col in ds2.Tables[0].Columns)
                                 if (col.ColumnName != GeometryColumn && col.ColumnName != "sharpmap_tempgeometry")
                                     fdr[col.ColumnName] = dr[col];
-                            fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
+                            fdr.Geometry = GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -588,7 +588,7 @@ namespace SharpMap.Data.Providers
                 conn.Close();
                 if (columnname == DBNull.Value)
                     throw new ApplicationException("Table '" + Table + "' does not contain a geometry column");
-                return (string) columnname;
+                return (string)columnname;
             }
         }
 

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Configuration;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace WinFormSamples
@@ -24,8 +18,8 @@ namespace WinFormSamples
         {
             lblFolder.Text = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "tiles");
             var asr = new AppSettingsReader();
-            txtGoogleMapsApiKey.Text = (string) asr.GetValue("GoogleMapsApiKey", typeof(string));
-            
+            txtGoogleMapsApiKey.Text = (string)asr.GetValue("GoogleMapsApiKey", typeof(string));
+
             base.OnLoad(e);
         }
 

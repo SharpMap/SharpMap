@@ -55,7 +55,7 @@ namespace WinFormSamples.Samples
         private static void FillRealDataTable(SharpMap.Data.FeatureDataTable table)
         {
             table.BeginLoadData();
-            var factory = NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+            var factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
             uint id = 0;
             foreach (var datas in PointData())

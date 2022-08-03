@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using System;
+using System.Collections.Generic;
 
 namespace UnitTests.Serialization
 {
@@ -18,16 +18,16 @@ namespace UnitTests.Serialization
 
             return res;
         }
-        
+
         [Test]
         public void TestUniqueValueThemeInt()
         {
             var ds = VectorStyle.CreateRandomLinealStyle();
-            
-            var tS = new UniqueValuesTheme<int>("Attribute", CreateStylesDictionary(new[] {1, 2, 3, 4}), ds);
+
+            var tS = new UniqueValuesTheme<int>("Attribute", CreateStylesDictionary(new[] { 1, 2, 3, 4 }), ds);
             UniqueValuesTheme<int> tD = null;
             Assert.DoesNotThrow(() => tD = SandD(tS, GetFormatter()));
-            
+
             Assert.IsNotNull(tD, "Desrialization returned null");
 
             TestUniqueValuesThemesEqual(tS, tD);
@@ -65,7 +65,7 @@ namespace UnitTests.Serialization
         [Test]
         public void TestGradientTheme()
         {
-            var tS = new GradientTheme("AttributeName", 10, 50, 
+            var tS = new GradientTheme("AttributeName", 10, 50,
                 VectorStyle.CreateRandomLinealStyle(),
                 VectorStyle.CreateRandomLinealStyle());
             GradientTheme tD = null;
@@ -74,9 +74,9 @@ namespace UnitTests.Serialization
 
             Assert.AreEqual(tS.ColumnName, tD.ColumnName);
             Assert.AreEqual(tS.Min, tD.Min, "Min");
-            StylesTest.AreVectorStylesEqual((VectorStyle) tS.MinStyle, (VectorStyle) tS.MinStyle);
+            StylesTest.AreVectorStylesEqual((VectorStyle)tS.MinStyle, (VectorStyle)tS.MinStyle);
             Assert.AreEqual(tS.Max, tD.Max, "Max");
-            StylesTest.AreVectorStylesEqual((VectorStyle) tS.MaxStyle, (VectorStyle) tD.MaxStyle);
+            StylesTest.AreVectorStylesEqual((VectorStyle)tS.MaxStyle, (VectorStyle)tD.MaxStyle);
         }
 
         private static void TestUniqueValuesThemesEqual<T>(UniqueValuesTheme<T> lhs, UniqueValuesTheme<T> rhs)
@@ -88,7 +88,7 @@ namespace UnitTests.Serialization
             for (var i = 0; i < uvS.Length; i++)
                 Assert.AreEqual(uvS[i], uvD[i], "Unique values differ at index {0} [{1}:{2}]", i, uvS[i], uvD[i]);
 
-            Assert.IsTrue(StylesTest.AreVectorStylesEqual((VectorStyle)lhs.DefaultStyle, 
+            Assert.IsTrue(StylesTest.AreVectorStylesEqual((VectorStyle)lhs.DefaultStyle,
                 (VectorStyle)rhs.DefaultStyle), "DefaultStyle differs");
 
             for (var i = 0; i < uvS.Length; i++)

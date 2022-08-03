@@ -15,12 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
-using NetTopologySuite.Geometries;
-using Geometry = NetTopologySuite.Geometries.Geometry;
 using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -94,13 +94,13 @@ namespace SharpMap.Data.Providers
                 resc.Caption = c.Caption;
                 resc.ColumnMapping = c.ColumnMapping;
                 resc.Expression = c.Expression;
-                
+
                 res.Columns.Add(resc);
             }
             return res;
         }
 
-        
+
 
         /// <summary>
         /// Name of column that contains X coordinate
@@ -181,7 +181,7 @@ namespace SharpMap.Data.Providers
 
             foreach (DataRow dr in drow)
             {
-                features.Add(Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn])));
+                features.Add(Factory.CreatePoint(new Coordinate((double)dr[XColumn], (double)dr[YColumn])));
             }
 
             return features;
@@ -238,7 +238,7 @@ namespace SharpMap.Data.Providers
 
             foreach (DataRow dr in rows)
             {
-                geom = Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
+                geom = Factory.CreatePoint(new Coordinate((double)dr[XColumn], (double)dr[YColumn]));
             }
 
             return geom;
@@ -276,7 +276,7 @@ namespace SharpMap.Data.Providers
             {
                 fdt.ImportRow(dr);
                 FeatureDataRow fdr = fdt.Rows[fdt.Rows.Count - 1] as FeatureDataRow;
-                fdr.Geometry = Factory.CreatePoint(new Coordinate((double) dr[XColumn], (double) dr[YColumn]));
+                fdr.Geometry = Factory.CreatePoint(new Coordinate((double)dr[XColumn], (double)dr[YColumn]));
             }
 
             ds.Tables.Add(fdt);
@@ -306,7 +306,7 @@ namespace SharpMap.Data.Providers
                 throw new InvalidOperationException("Primary key not set to object id column");
 
             var row = _table.Rows.Find(rowId);
-        
+
             if (row == null) return null;
 
             var fdr = FeatureDataTable.NewRow();
@@ -325,7 +325,7 @@ namespace SharpMap.Data.Providers
         {
             return Factory.CreatePoint(
                 new Coordinate(
-                    Convert.ToDouble(row[XColumn]), 
+                    Convert.ToDouble(row[XColumn]),
                     Convert.ToDouble(row[YColumn])));
         }
 
@@ -353,10 +353,10 @@ namespace SharpMap.Data.Providers
 
             foreach (DataRowView dr in Table.DefaultView)
             {
-                if (minX > (double) dr[XColumn]) minX = (double) dr[XColumn];
-                if (maxX < (double) dr[XColumn]) maxX = (double) dr[XColumn];
-                if (minY > (double) dr[YColumn]) minY = (double) dr[YColumn];
-                if (maxY < (double) dr[YColumn]) maxY = (double) dr[YColumn];
+                if (minX > (double)dr[XColumn]) minX = (double)dr[XColumn];
+                if (maxX < (double)dr[XColumn]) maxX = (double)dr[XColumn];
+                if (minY > (double)dr[YColumn]) minY = (double)dr[YColumn];
+                if (maxY < (double)dr[YColumn]) maxY = (double)dr[YColumn];
             }
 
             box = new BoundingBox(minX, maxX, minY, maxY);

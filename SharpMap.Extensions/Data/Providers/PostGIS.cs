@@ -21,16 +21,16 @@
 // PostGIS v2.0 manual   : http://postgis.net/docs/manual-2.0/
 //              reference: http://postgis.net/docs/manual-2.0/reference.html
 
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Common;
 using Common.Logging;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Npgsql;
-using System.Globalization;
 using NpgsqlTypes;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Common;
+using System.Globalization;
 
 namespace SharpMap.Data.Providers
 {
@@ -44,7 +44,7 @@ namespace SharpMap.Data.Providers
         /// <para>This is the standard way</para>
         /// </summary>
         Geometry,
-        
+
         /// <summary>
         /// Spatial object stored in WGS84, calculations performed on the sphere.
         /// </summary>
@@ -75,7 +75,7 @@ namespace SharpMap.Data.Providers
         private string _objectIdColumn;
         private string _schema = "public";
         private string _table;
-        
+
         private readonly double _postGisVersion;
         private readonly bool _supportSTIntersects;
         private readonly bool _supportSTMakeBox2d;
@@ -129,7 +129,7 @@ namespace SharpMap.Data.Providers
                 _postGisSpatialObject = GetSpatialObjectType();
                 SRID = GetGeometrySrid();
             }
-            
+
         }
 
         /// <summary>
@@ -147,13 +147,13 @@ namespace SharpMap.Data.Providers
             {
                 conn.Open();
                 using (var dr = new NpgsqlCommand(string.Format(
-                    "SELECT \"column_name\" FROM \"information_schema\".\"columns\" "+
+                    "SELECT \"column_name\" FROM \"information_schema\".\"columns\" " +
                     "WHERE \"table_schema\"='{0}' AND \"table_name\"='{1}';", Schema, Table), conn).ExecuteReader())
                 {
                     if (!dr.HasRows)
                         throw new InvalidOperationException("Provider configuration incomplete or wrong!");
 
-                    var columns = new List<string>{ "\"" + ObjectIdColumn + "\"" };
+                    var columns = new List<string> { "\"" + ObjectIdColumn + "\"" };
                     while (dr.Read())
                     {
                         var column = dr.GetString(0);
@@ -322,9 +322,9 @@ namespace SharpMap.Data.Providers
                         var reader = new PostGisReader(Factory);
                         while (dr.Read())
                         {
-                            if (dr.IsDBNull(0)) 
+                            if (dr.IsDBNull(0))
                                 continue;
-                            
+
                             var geom = reader.Read((byte[])dr.GetValue(0));
                             if (geom != null)
                                 features.Add(geom);
@@ -361,7 +361,7 @@ namespace SharpMap.Data.Providers
                         while (dr.Read())
                         {
                             if (!dr.IsDBNull(0))
-                                geom = reader.Read((byte[]) dr[0]);
+                                geom = reader.Read((byte[])dr[0]);
                         }
                     }
                 }
@@ -401,9 +401,9 @@ namespace SharpMap.Data.Providers
                 {
                     while (dr.Read())
                     {
-                        if (dr[0] == DBNull.Value) 
+                        if (dr[0] == DBNull.Value)
                             continue;
-                        var id = (uint) (int) dr[0];
+                        var id = (uint)(int)dr[0];
                         objectlist.Add(id);
                     }
                 }
@@ -451,10 +451,10 @@ namespace SharpMap.Data.Providers
                 }
                 else
                 {
-                    strSql += "\"" + GeometryColumn + "\" && @PGeo AND " + 
+                    strSql += "\"" + GeometryColumn + "\" && @PGeo AND " +
                               _prefixFunction + "distance(\"" + GeometryColumn + "\", @PGeo)<0";
                 }
-                
+
                 /*
                 string strGeom = _prefixFunction + "GeomFromText('" + geom.AsText() + "')";
                 if (SRID > 0)
@@ -487,7 +487,7 @@ namespace SharpMap.Data.Providers
 
                         var dataTransfer = new object[geomIndex];
                         var geoReader = new PostGisReader(Factory.CoordinateSequenceFactory, Factory.PrecisionModel);
-                        
+
                         fdt.BeginLoadData();
                         while (reader.Read())
                         {
@@ -544,7 +544,7 @@ namespace SharpMap.Data.Providers
             {
                 conn.Open();
                 var strSql = "SELECT " + _columns + ", \"" + GeometryColumn + "\"" + _geometryCast + "::bytea AS \"_smtmp_\" ";
-                strSql += "FROM " + QualifiedTable + " WHERE \"" + ObjectIdColumn +"\" = " + rowId;
+                strSql += "FROM " + QualifiedTable + " WHERE \"" + ObjectIdColumn + "\" = " + rowId;
 
                 using (var cmd = new NpgsqlCommand(strSql, conn))
                 {
@@ -562,7 +562,7 @@ namespace SharpMap.Data.Providers
                             {
                                 Geometry g = null;
                                 if (!reader.IsDBNull(geomIndex))
-                                    g = geoReader.Read((byte[]) reader.GetValue(geomIndex));
+                                    g = geoReader.Read((byte[])reader.GetValue(geomIndex));
 
                                 //No geometry, no feature!
                                 if (g == null)
@@ -572,11 +572,11 @@ namespace SharpMap.Data.Providers
                                 var count = reader.GetValues(dataTransfer);
                                 System.Diagnostics.Debug.Assert(count == dataTransfer.Length);
 
-                                var fdr = (FeatureDataRow) fdt.LoadDataRow(dataTransfer, true);
+                                var fdr = (FeatureDataRow)fdt.LoadDataRow(dataTransfer, true);
                                 fdr.Geometry = g;
                             }
                             fdt.EndLoadData();
-                            return (FeatureDataRow) fdt.Rows[0];
+                            return (FeatureDataRow)fdt.Rows[0];
                         }
                         return null;
                     }
@@ -592,7 +592,7 @@ namespace SharpMap.Data.Providers
         {
             if (_cachedExtents != null)
                 return new Envelope(_cachedExtents);
-            
+
             // PostGIS geography are *always* stored in WGS84
             if (_postGisSpatialObject == PostGisSpatialObjectType.Geography)
             {
@@ -612,11 +612,11 @@ namespace SharpMap.Data.Providers
                     var result = command.ExecuteScalar();
                     if (result == DBNull.Value)
                         return new Envelope();
-                    
-                    var strBox = (string) result;
+
+                    var strBox = (string)result;
                     if (strBox.StartsWith("BOX("))
                     {
-                        var vals = strBox.Substring(4, strBox.IndexOf(")", StringComparison.InvariantCultureIgnoreCase) - 4).Split(new [] {',', ' '});
+                        var vals = strBox.Substring(4, strBox.IndexOf(")", StringComparison.InvariantCultureIgnoreCase) - 4).Split(new[] { ',', ' ' });
                         return new Envelope(
                             double.Parse(vals[0], NumberFormatInfo.InvariantInfo),
                             double.Parse(vals[2], NumberFormatInfo.InvariantInfo),
@@ -669,7 +669,7 @@ namespace SharpMap.Data.Providers
 
                         var dataTransfer = new object[geomIndex];
                         var geoReader = new PostGisReader(Factory.CoordinateSequenceFactory, Factory.PrecisionModel);
-                        
+
                         fdt.BeginLoadData();
                         while (reader.Read())
                         {
@@ -726,7 +726,7 @@ namespace SharpMap.Data.Providers
         {
             string strSQL = "SELECT \"f_geometry_column\", \"srid\" from public.\"geometry_columns\" WHERE \"f_table_schema\"='" + _schema +
                             "' and \"f_table_name\"='" + _table + "'";
-            
+
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 conn.Open();
@@ -820,7 +820,7 @@ namespace SharpMap.Data.Providers
                 return 4326;
 
             var strSQL = "SELECT \"srid\" FROM public.\"geometry_columns\" WHERE \"f_table_schema\"='" + _schema +
-                            "' and \"f_table_name\"='" + _table + "' AND \"f_geometry_column\"='"+ GeometryColumn +"';";
+                            "' and \"f_table_name\"='" + _table + "' AND \"f_geometry_column\"='" + GeometryColumn + "';";
 
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
@@ -834,7 +834,7 @@ namespace SharpMap.Data.Providers
                     }
                 }
             }
-            throw new ApplicationException("Table '" + Table + "' does not contain a geometry column named '"+ GeometryColumn + "')");
+            throw new ApplicationException("Table '" + Table + "' does not contain a geometry column named '" + GeometryColumn + "')");
         }
 
         /// <summary>

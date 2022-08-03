@@ -1,5 +1,6 @@
-﻿using System;
-using BruTile.Predefined;
+﻿using BruTile.Predefined;
+using NetTopologySuite;
+using System;
 
 namespace WinFormSamples.Samples
 {
@@ -30,19 +31,19 @@ namespace WinFormSamples.Samples
                     return InitializeMapBing(KnownTileSource.BingAerialStaging);
                 case 6:
                     return InitializeMapBing(KnownTileSource.BingHybridStaging);
-                /*
-                case 7:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
-                case 8:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite);
-                case 9:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels);
-                case 10:
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleTerrain);
-                case 11:
-                    _num = 0;
-                    return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleLabels);
-                 */
+                    /*
+                    case 7:
+                        return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleMap);
+                    case 8:
+                        return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite);
+                    case 9:
+                        return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels);
+                    case 10:
+                        return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleTerrain);
+                    case 11:
+                        _num = 0;
+                        return InitializeMapGoogle(BruTile.Web.GoogleMapType.GoogleLabels);
+                     */
             }
             return InitializeMapOsm();
         }
@@ -55,7 +56,7 @@ namespace WinFormSamples.Samples
                 KnownTileSources.Create(KnownTileSource.OpenStreetMap, userAgent: DefaultUserAgent), "TileLayer - OSM");
             map.BackgroundLayer.Add(tileLayer);
             map.ZoomToBox(tileLayer.Envelope);
-            
+
             return map;
         }
 
@@ -88,37 +89,37 @@ namespace WinFormSamples.Samples
             foreach (System.Data.DataRow row in ds.Tables[0].Rows)
             {
                 if (row["X"] == DBNull.Value || row["Y"] == DBNull.Value) continue;
-                var coords = new[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"])};
+                var coords = new[] { Convert.ToDouble(row["X"]), Convert.ToDouble(row["Y"]) };
                 coords = ct.MathTransform.Transform(coords);
                 row["X"] = coords[0];
                 row["Y"] = coords[1];
             }
 
             //Add Rotation Column
-            ds.Tables[0].Columns.Add("Rotation", typeof (float));
+            ds.Tables[0].Columns.Add("Rotation", typeof(float));
             foreach (System.Data.DataRow row in ds.Tables[0].Rows)
                 row["Rotation"] = -angle;
 
             //Set up provider
             var xlsProvider = new SharpMap.Data.Providers.DataTablePoint(ds.Tables[0], "OID", "X", "Y");
             var xlsLayer = new SharpMap.Layers.VectorLayer("XLS", xlsProvider)
-                               {Style = {Symbol = SharpMap.Styles.VectorStyle.DefaultSymbol}};
+            { Style = { Symbol = SharpMap.Styles.VectorStyle.DefaultSymbol } };
 
             //Add layer to map
             map.Layers.Add(xlsLayer);
             var xlsLabelLayer = new SharpMap.Layers.LabelLayer("XLSLabel")
-                                    {
-                                        DataSource = xlsProvider,
-                                        LabelColumn = "Name",
-                                        PriorityColumn = "Population",
-                                        Style =
+            {
+                DataSource = xlsProvider,
+                LabelColumn = "Name",
+                PriorityColumn = "Population",
+                Style =
                                             {
                                                 CollisionBuffer = new System.Drawing.SizeF(2f, 2f),
                                                 CollisionDetection = true
                                             },
-                                        LabelFilter =
+                LabelFilter =
                                             SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection
-                                    };
+            };
             xlsLabelLayer.Theme = new SharpMap.Rendering.Thematics.FontSizeTheme(xlsLabelLayer, map) { FontSizeScale = 1000f };
 
             map.Layers.Add(xlsLabelLayer);
@@ -138,13 +139,13 @@ namespace WinFormSamples.Samples
             var tileLayer = new SharpMap.Layers.TileAsyncLayer(tileSource, "TileLayer - OSM with VLC");
             map.BackgroundLayer.Add(tileLayer);
 
-            var vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Bus", 
+            var vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Bus",
                 new VilniusTransportData(VilniusTransportData.TransportType.Bus));
             var pttBus = new PublicTransportTheme(System.Drawing.Brushes.DarkGreen);
             vl.Theme = new SharpMap.Rendering.Thematics.CustomTheme(pttBus.GetStyle);
             vl.CoordinateTransformation = GetCoordinateTransformation();
             map.VariableLayers.Add(vl);
-            vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Trolley", 
+            vl = new SharpMap.Layers.VectorLayer("Vilnius Transport Data - Trolley",
                 new VilniusTransportData(VilniusTransportData.TransportType.TrolleyBus));
             var pttTrolley = new PublicTransportTheme(System.Drawing.Brushes.Red);
             vl.Theme = new SharpMap.Rendering.Thematics.CustomTheme(pttTrolley.GetStyle);
@@ -157,7 +158,7 @@ namespace WinFormSamples.Samples
             return map;
         }
 
-        private static NetTopologySuite.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
+        private static ProjNet.CoordinateSystems.Transformations.ICoordinateTransformation GetCoordinateTransformation()
         {
 
             //The SRS for this datasource is EPSG:4326, therefore we need to transfrom it to OSM projection
@@ -180,37 +181,37 @@ namespace WinFormSamples.Samples
         }
 
 
-/*
-        private static SharpMap.Map InitializeMapGoogle(BruTile.Web.GoogleMapType mt)
-        {
-            var map = new SharpMap.Map();
+        /*
+                private static SharpMap.Map InitializeMapGoogle(BruTile.Web.GoogleMapType mt)
+                {
+                    var map = new SharpMap.Map();
 
-            BruTile.Web.GoogleRequest req;
-            BruTile.ITileSource tileSource;
-            SharpMap.Layers.TileLayer tileLayer;
+                    BruTile.Web.GoogleRequest req;
+                    BruTile.ITileSource tileSource;
+                    SharpMap.Layers.TileLayer tileLayer;
 
-            if (mt == (BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels))
-            {
-                req = new BruTile.Web.GoogleRequest(BruTile.Web.GoogleMapType.GoogleSatellite);
-                tileSource = new BruTile.Web.GoogleTileSource(req);
-                tileLayer = new SharpMap.Layers.TileLayer(tileSource, "TileLayer - " + BruTile.Web.GoogleMapType.GoogleSatellite);
-                map.Layers.Add(tileLayer);
-                req = new BruTile.Web.GoogleRequest(BruTile.Web.GoogleMapType.GoogleLabels);
-                tileSource = new BruTile.Web.GoogleTileSource(req);
-                mt = BruTile.Web.GoogleMapType.GoogleLabels;
-            }
-            else
-            {
-                req = new BruTile.Web.GoogleRequest(mt);
-                tileSource = new BruTile.Web.GoogleTileSource(req);
-            }
+                    if (mt == (BruTile.Web.GoogleMapType.GoogleSatellite | BruTile.Web.GoogleMapType.GoogleLabels))
+                    {
+                        req = new BruTile.Web.GoogleRequest(BruTile.Web.GoogleMapType.GoogleSatellite);
+                        tileSource = new BruTile.Web.GoogleTileSource(req);
+                        tileLayer = new SharpMap.Layers.TileLayer(tileSource, "TileLayer - " + BruTile.Web.GoogleMapType.GoogleSatellite);
+                        map.Layers.Add(tileLayer);
+                        req = new BruTile.Web.GoogleRequest(BruTile.Web.GoogleMapType.GoogleLabels);
+                        tileSource = new BruTile.Web.GoogleTileSource(req);
+                        mt = BruTile.Web.GoogleMapType.GoogleLabels;
+                    }
+                    else
+                    {
+                        req = new BruTile.Web.GoogleRequest(mt);
+                        tileSource = new BruTile.Web.GoogleTileSource(req);
+                    }
 
-            tileLayer = new SharpMap.Layers.TileLayer(tileSource, "TileLayer - " + mt);
-            map.Layers.Add(tileLayer);
-            map.ZoomToBox(tileLayer.Envelope);
-            return map;
-        }
-        */
+                    tileLayer = new SharpMap.Layers.TileLayer(tileSource, "TileLayer - " + mt);
+                    map.Layers.Add(tileLayer);
+                    map.ZoomToBox(tileLayer.Envelope);
+                    return map;
+                }
+                */
 
         private class PublicTransportTheme
         {
@@ -258,10 +259,10 @@ namespace WinFormSamples.Samples
                                      System.Drawing.Brushes.Yellow,
                                      new System.Drawing.RectangleF(2, 2, 34, 34),
                                      new System.Drawing.StringFormat
-                                         {
-                                             Alignment = System.Drawing.StringAlignment.Center,
-                                             LineAlignment = System.Drawing.StringAlignment.Center
-                                         });
+                                     {
+                                         Alignment = System.Drawing.StringAlignment.Center,
+                                         LineAlignment = System.Drawing.StringAlignment.Center
+                                     });
                     }
                     bmp.MakeTransparent(System.Drawing.Color.Wheat);
                     retval.Symbol = bmp;
@@ -269,7 +270,7 @@ namespace WinFormSamples.Samples
                 else
                 {
                     retval.Symbol = ColoredArrow(_brush);
-                    var rot =  (Single)(Double)fdr["Bearing"];
+                    var rot = (Single)(Double)fdr["Bearing"];
                     retval.SymbolRotation = rot % 360f;
                 }
                 return retval;
@@ -301,13 +302,13 @@ namespace WinFormSamples.Samples
                                       new System.Data.DataColumn("Id", typeof(int)), 
                                       //new System.Data.DataColumn("Lat", typeof(double)), 
                                       //new System.Data.DataColumn("Lng", typeof(double)), 
-                                      new System.Data.DataColumn("Line", typeof(string)), 
-                                      new System.Data.DataColumn("LastStop", typeof(string)), 
-                                      new System.Data.DataColumn("TrackType", typeof(string)), 
-                                      new System.Data.DataColumn("AreaName", typeof(string)), 
-                                      new System.Data.DataColumn("StreetName", typeof(string)), 
-                                      new System.Data.DataColumn("Time", typeof(string)), 
-                                      new System.Data.DataColumn("Bearing", typeof(double)) 
+                                      new System.Data.DataColumn("Line", typeof(string)),
+                                      new System.Data.DataColumn("LastStop", typeof(string)),
+                                      new System.Data.DataColumn("TrackType", typeof(string)),
+                                      new System.Data.DataColumn("AreaName", typeof(string)),
+                                      new System.Data.DataColumn("StreetName", typeof(string)),
+                                      new System.Data.DataColumn("Time", typeof(string)),
+                                      new System.Data.DataColumn("Bearing", typeof(double))
                                   });
                 return dt;
             }
@@ -315,7 +316,7 @@ namespace WinFormSamples.Samples
             private readonly TransportType _transportType;
 
             public VilniusTransportData(TransportType transportType)
-                :base(VehicleDataTable())
+                : base(VehicleDataTable())
             {
                 _transportType = transportType;
                 _reQuery.Elapsed += HandleTimerElapsed;
@@ -331,10 +332,10 @@ namespace WinFormSamples.Samples
             /// <summary>
             /// timeout for map connections
             /// </summary>
-            private const int Timeout = 30*1000;
+            private const int Timeout = 30 * 1000;
 
             private readonly NetTopologySuite.Geometries.GeometryFactory _factory =
-                NetTopologySuite.GeometryServiceProvider.Instance.CreateGeometryFactory(4326);
+                NtsGeometryServices.Instance.CreateGeometryFactory(4326);
 
             /// <summary>
             /// gets realtime data from public transport in city vilnius of lithuania

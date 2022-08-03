@@ -1,17 +1,13 @@
 ﻿namespace SharpMap.Demo.Wms.Helpers
 {
+    using ProjNet.CoordinateSystems;
+    using ProjNet.CoordinateSystems.Transformations;
+    using SharpMap.Layers;
+    using SharpMap.Rendering;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
-
-    using NetTopologySuite.CoordinateSystems;
-    using ProjNet.CoordinateSystems;
-    using NetTopologySuite.CoordinateSystems.Transformations;
-    using ProjNet.CoordinateSystems.Transformations;
-
-    using SharpMap.Layers;
-    using SharpMap.Rendering;
 
     public static class ProjHelper
     {
@@ -19,7 +15,7 @@
         {
             CoordinateSystemFactory csFac = new CoordinateSystemFactory();
             CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
-            IGeographicCoordinateSystem sourceCs = csFac.CreateGeographicCoordinateSystem(
+            GeographicCoordinateSystem sourceCs = csFac.CreateGeographicCoordinateSystem(
                 "WGS 84",
                 AngularUnit.Degrees,
                 HorizontalDatum.WGS84,
@@ -38,7 +34,7 @@
                 new ProjectionParameter("false_northing", 0.0)
             };
             IProjection projection = csFac.CreateProjection("Google Mercator", "mercator_1sp", parameters);
-            IProjectedCoordinateSystem targetCs = csFac.CreateProjectedCoordinateSystem(
+            ProjectedCoordinateSystem targetCs = csFac.CreateProjectedCoordinateSystem(
                 "Google Mercator",
                 sourceCs,
                 projection,
@@ -56,14 +52,14 @@
         {
             string name = String.Format("{0}:Labels", src.LayerName);
             LabelLayer layer = new LabelLayer(name)
-                {
-                    DataSource = src.DataSource,
-                    LabelColumn = column,
-                    LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
-                    MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.CommonCenter,
-                    MaxVisible = src.MaxVisible,
-                    MinVisible = src.MinVisible,
-                    Style =
+            {
+                DataSource = src.DataSource,
+                LabelColumn = column,
+                LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection,
+                MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.CommonCenter,
+                MaxVisible = src.MaxVisible,
+                MinVisible = src.MinVisible,
+                Style =
                         {
                             CollisionDetection = true,
                             CollisionBuffer = new SizeF(10F, 10F),
@@ -71,9 +67,9 @@
                             Font = new Font(FontFamily.GenericSansSerif, 12),
                             Halo = new Pen(Color.White, 2)
                         },
-                    SmoothingMode = SmoothingMode.HighQuality,
-                    CoordinateTransformation = src.CoordinateTransformation
-                };
+                SmoothingMode = SmoothingMode.HighQuality,
+                CoordinateTransformation = src.CoordinateTransformation
+            };
             return layer;
         }
     }

@@ -1,8 +1,8 @@
-﻿using System;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
+using System;
 
 namespace UnitTests.Data.Providers
 {
@@ -11,9 +11,8 @@ namespace UnitTests.Data.Providers
     {
         private System.Data.Common.DbConnection _connection; // Keep connection active; when closed, the in-memory database is dropped
 
-        public override void OneTimeSetUp()
+        public DbPointProviderTest()
         {
-            base.OneTimeSetUp();
             _connection = WriteSqlLite();
         }
 
@@ -131,7 +130,7 @@ namespace UnitTests.Data.Providers
         {
             using (var p = CreateProvider())
             {
-                var ext =p.GetExtents();
+                var ext = p.GetExtents();
                 var fds = new FeatureDataSet();
                 Assert.DoesNotThrow(() => p.ExecuteIntersectionQuery(ext, fds));
                 Assert.AreEqual(1, fds.Tables.Count);

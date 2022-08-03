@@ -1,22 +1,19 @@
 // code adapted from: https://github.com/awcoats/mapstache
 namespace SharpMap.Demo.Wms.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Drawing;
-    using System.Linq;
-    using System.Web.Mvc;
-
-    using NetTopologySuite.Geometries;
-
     using Mapstache;
-
-    using NetTopologySuite.CoordinateSystems.Transformations;
-
+    using NetTopologySuite.Geometries;
+    using ProjNet.CoordinateSystems.Transformations;
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;
     using SharpMap.Demo.Wms.Helpers;
     using SharpMap.Layers;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using Point = System.Drawing.Point;
+    using System.Linq;
+    using System.Web.Mvc;
 
     public class UtfGridController : Controller
     {

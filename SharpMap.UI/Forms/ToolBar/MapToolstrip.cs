@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Common.Logging;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using Common.Logging;
 
 namespace SharpMap.Forms
 {
-    
+
     /// <summary>
     /// Map tool
     /// </summary>
@@ -69,7 +69,7 @@ namespace SharpMap.Forms
                     var cea = new CancelEventArgs();
                     OnMapControlChanging(cea);
                     if (cea.Cancel) return;
-                    
+
                     _mapBox = value;
                     OnMapControlChanged(EventArgs.Empty);
                 }
@@ -91,7 +91,7 @@ namespace SharpMap.Forms
 
             _logger.Info("MapControlChanging");
             MapControlChanging?.Invoke(this, e);
-            
+
             if (e.Cancel)
             {
                 _logger.Info("Canceled");
@@ -107,7 +107,7 @@ namespace SharpMap.Forms
         /// <param name="e">The event arguments. If removing MapControl is not possible <see cref="CancelEventArgs.Cancel"/> must be set to <c>true</c>.</param>
         protected virtual void OnMapControlChangingInternal(CancelEventArgs e)
         {
-            
+
             //_mapBox.MapQueried -= OnMapQueried;
             //_mapBox.MapRefreshed -= OnMapRefreshed;
             //_mapBox.MapZoomChanged -= OnMapZoomChanged;
@@ -189,7 +189,7 @@ namespace SharpMap.Forms
 
         }
 
-        
+
         #endregion
 
         /*

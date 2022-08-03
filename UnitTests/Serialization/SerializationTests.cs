@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using BruTile;
+﻿using BruTile;
 using BruTile.Cache;
 using BruTile.MbTiles;
 using BruTile.Predefined;
@@ -15,6 +6,14 @@ using BruTile.Web;
 using BruTile.Wmts;
 using NUnit.Framework;
 using SharpMap.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace UnitTests.Serialization
 {
@@ -35,9 +34,9 @@ namespace UnitTests.Serialization
         [Test]
         public void TestResolution()
         {
-            var r1 = new Resolution("XXX", 1245, 999,999, 5, 5, 4, 4, 0.1);
+            var r1 = new Resolution(0/*"XXX"*/, 1245, 999, 999, 5, 5, 4, 4, 0.1);
             var r2 = SandD(r1);
-            Assert.AreEqual(r1.Id, r2.Id);
+            Assert.AreEqual(r1.Level, r2.Level);
             Assert.AreEqual(r1.UnitsPerPixel, r2.UnitsPerPixel);
             Assert.AreEqual(r1.TileWidth, r2.TileWidth);
             Assert.AreEqual(r1.TileHeight, r2.TileHeight);
@@ -94,7 +93,7 @@ namespace UnitTests.Serialization
 
         }
 
-        
+
         [Test]
         public void TestMemoryCacheBitmap()
         {
@@ -109,7 +108,7 @@ namespace UnitTests.Serialization
             //Assert.IsTrue(c1.EqualSetup(c2));
 #endif
         }
-        
+
         [Test]
         public void FileCache()
         {
@@ -151,7 +150,7 @@ namespace UnitTests.Serialization
             {
                 throw new IgnoreException("Getting the response stream failed", ex);
             }
-            
+
             if (sources == null)
                 throw new IgnoreException("Failed to get capabilities");
 
@@ -227,7 +226,7 @@ namespace UnitTests.Serialization
         [Test]
         public void TestHttpTileProvider()
         {
-            var srcS = new HttpTileProvider(new BasicRequest("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png", new [] {"a", "b"}), userAgent: "HUHU");
+            var srcS = new HttpTileProvider(new BasicRequest("http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png", new[] { "a", "b" }), userAgent: "HUHU");
             var srcD = SandD(srcS);
             Assert.IsNotNull(srcD);
         }
@@ -272,7 +271,7 @@ namespace UnitTests.Serialization
                 if (!EqualTileProviders(ts1.Schema, (ITileProvider)ts1, (ITileProvider)ts2, out message))
                     return false;
             }
-            
+
             message = "Tile sources seem to be equal";
             return true;
         }
@@ -299,15 +298,15 @@ namespace UnitTests.Serialization
                 }
 
                 var keys = schema.Resolutions.Keys.ToArray();
-                var minkey = GetIndex(keys[0]);
-                var maxKey = GetIndex(keys[keys.Length - 1]);
-                var prefix = GetPrefix(keys[0]);
+                var minkey = keys[0];
+                var maxKey = keys[keys.Length - 1];
+                //var prefix = GetPrefix(keys[0]);
                 for (var i = 0; i < 3; i++)
                 {
                     TileInfo ti = null;
                     try
                     {
-                        ti = RandomTileInfo(prefix + "{0}", minkey, Math.Min(maxKey, 12));
+                        ti = RandomTileInfo(/*prefix + */"{0}", minkey, Math.Min(maxKey, 12));
                         var req1 = tp1 as IRequest;
                         var req2 = tp2 as IRequest;
                         if (req1 != null && req2 != null)
@@ -332,16 +331,16 @@ namespace UnitTests.Serialization
                     catch (TimeoutException ex)
                     {
                         System.Diagnostics.Trace.WriteLine(string.Format(
-                            "TileInfo({4}): {0}, {1}, {2}\n{3}", 
+                            "TileInfo({4}): {0}, {1}, {2}\n{3}",
                             ti.Index.Level, ti.Index.Col, ti.Index.Row, ex.Message, i));
                     }
-                    catch(WebException ex)
+                    catch (WebException ex)
                     {
                         if (ti == null)
                             System.Diagnostics.Trace.WriteLine("No tile info!");
                         else
                             System.Diagnostics.Trace.WriteLine(string.Format(
-                                "TileInfo({5}): {0}, {1}, {2}\n{3}\n{4}", 
+                                "TileInfo({5}): {0}, {1}, {2}\n{3}\n{4}",
                                 ti.Index.Level, ti.Index.Col, ti.Index.Row,
                                 ex.Message, ex.Response.ResponseUri, i));
                     }
@@ -366,7 +365,7 @@ namespace UnitTests.Serialization
             if (pos == -1)
                 return string.Empty;
 
-            return s.Substring(0, pos+1);
+            return s.Substring(0, pos + 1);
 
         }
 
@@ -427,7 +426,7 @@ namespace UnitTests.Serialization
             return new TileInfo
             {
                 Extent = new Extent(),
-                Index = new TileIndex(Rnd.Next(0, max), Rnd.Next(0, max), string.Format(CultureInfo.InvariantCulture, format, level))
+                Index = new TileIndex(Rnd.Next(0, max), Rnd.Next(0, max), level)
             };
         }
 
@@ -479,16 +478,16 @@ namespace UnitTests.Serialization
                     return false;
                 }
 
-                foreach(var res1 in tts1.Resolutions.Values)
+                foreach (var res1 in tts1.Resolutions.Values)
                 {
-                    var res2 = tts2.Resolutions[res1.Id];
-                    if (tts1.GetTileHeight(res1.Id)  != tts2.GetTileHeight(res2.Id))
+                    var res2 = tts2.Resolutions[res1.Level];
+                    if (tts1.GetTileHeight(res1.Level) != tts2.GetTileHeight(res2.Level))
                     {
                         message = "Heights don't match";
                         return false;
                     }
 
-                    if (tts1.GetTileWidth(res1.Id) != tts2.GetTileWidth(res2.Id))
+                    if (tts1.GetTileWidth(res1.Level) != tts2.GetTileWidth(res2.Level))
                     {
                         message = "Widths don't match";
                         return false;
@@ -535,8 +534,8 @@ namespace UnitTests.Serialization
                 var r2 = ts2.Resolutions[key];
 
                 //!!! compare other resultion parameters.
-                
-                if (r1.Id != r2.Id || r1.UnitsPerPixel != r2.UnitsPerPixel)
+
+                if (r1.Level != r2.Level || r1.UnitsPerPixel != r2.UnitsPerPixel)
                 {
                     message = string.Format("Resolution doesn't match at index {0}", key);
                     return false;

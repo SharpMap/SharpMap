@@ -1,11 +1,9 @@
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
+using System.IO;
+using System.Text;
 
 namespace UnitTests.Converters.WKB
 {
@@ -13,7 +11,7 @@ namespace UnitTests.Converters.WKB
     public class WKBTests
     {
         private static readonly GeometryFactory Factory = new GeometryFactory();
-        
+
         private string point = "POINT (20.564 346.3493254)";
         private string multipoint = "MULTIPOINT (20.564 346.3493254, 45 32, 23 54)";
         private string linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
@@ -98,7 +96,7 @@ namespace UnitTests.Converters.WKB
                     sb.AppendLine(sr.ReadLine());
                 }
                 var wkb = System.Convert.FromBase64String(sb.ToString());
-                Assert.DoesNotThrow( () => geom = GeometryFromWKB.Parse(wkb, new GeometryFactory()));
+                Assert.DoesNotThrow(() => geom = GeometryFromWKB.Parse(wkb, new GeometryFactory()));
             }
             Assert.IsTrue(geom.OgcGeometryType == OgcGeometryType.GeometryCollection);
         }

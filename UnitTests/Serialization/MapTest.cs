@@ -1,17 +1,14 @@
 ﻿#if !LINUX
-using System;
-using System.Drawing;
-using System.IO;
 using BruTile.Predefined;
-using BruTile.Web;
 using NetTopologySuite.CoordinateSystems.Transformations;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Styles;
+using System.Drawing;
 
 namespace UnitTests.Serialization
 {
@@ -19,18 +16,18 @@ namespace UnitTests.Serialization
     {
         private readonly Size _mapSize = new Size(1200, 800);
 
-        [Test, Description("Just a line")] 
+        [Test, Description("Just a line")]
         public void TestMap1()
         {
             var m = new Map(_mapSize);
             m.Layers.Add(new VectorLayer("tmp", new GeometryProvider(
-                new LineString(new [] {new Coordinate(0, 0), new Coordinate(10, 10), }))));
+                new LineString(new[] { new Coordinate(0, 0), new Coordinate(10, 10), }))));
 
             m.ZoomToExtents();
 
             Map mD = null;
-            Assert.DoesNotThrow(()=>mD=SandD(m, GetFormatter()));
-            
+            Assert.DoesNotThrow(() => mD = SandD(m, GetFormatter()));
+
             TestMaps("Test1", m, mD);
         }
 
@@ -43,8 +40,8 @@ namespace UnitTests.Serialization
             var c = new LayerTest.VectorLayerEqualityComparer();
             for (var i = 0; i < m.Layers.Count; i++)
             {
-                Assert.IsTrue(c.Equals((VectorLayer)m.Layers[i], 
-                                       (VectorLayer)mD.Layers[i]), 
+                Assert.IsTrue(c.Equals((VectorLayer)m.Layers[i],
+                                       (VectorLayer)mD.Layers[i]),
                                        "Layer {0}, '{1}' Differs at {2}",
                                        i, m.Layers[i].LayerName, string.Join(", ", c.DifferAt));
             }
@@ -74,9 +71,9 @@ namespace UnitTests.Serialization
         {
             var m = new Map(_mapSize);
             m.BackgroundLayer.Add(new TileLayer(KnownTileSources.Create(KnownTileSource.BingHybridStaging), "BingHybridStaging"));
-            
+
             string cn = $"Data Source={TestUtility.GetPathToTestFile("osm_aurich.sqlite")};";
-            
+
             var ct = Wgs84ToWebMercator;
             //Env[7,45731445821406 : 7,53454260528903, 53,4342695512313 : 53,478793942147]
             var box = new Envelope(7.45731445821406, 7.53454260528903, 53.4342695512313, 53.478793942147);
