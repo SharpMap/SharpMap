@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace ExampleCodeSnippets
 {
     /// <summary>
@@ -107,8 +109,12 @@ namespace ExampleCodeSnippets
                 CreatingData.GetRandomOrdinates(50, -180, 180), CreatingData.GetRandomOrdinates(50, -90, 90), null);
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
+            var stylePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\DemoWinForm\\Resources\\women.png"));
             var rps =
-                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer { Symbol = new System.Drawing.Bitmap("women.png") };
+                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer { Symbol = new System.Drawing.Bitmap(stylePath) };
 
             layer.Style.PointSymbolizer = rps;
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));

@@ -1,6 +1,5 @@
 ﻿namespace UnitTests
 {
-    [NUnit.Framework.SetUpFixture]
     public class UnitTestsFixture
     {
         private System.Diagnostics.Stopwatch _stopWatch;

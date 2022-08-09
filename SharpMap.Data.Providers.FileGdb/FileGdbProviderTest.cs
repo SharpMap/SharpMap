@@ -53,7 +53,7 @@ namespace SharpMap.Data.Providers
         public void TestSampleSources()
         {
             var di = new DirectoryInfo(@"D:\GIS\FileGDB\samples\data");
-
+            Assert.IsTrue(di.Exists);
             foreach (var tmp in di.EnumerateDirectories())
             {
                 var p = new FileGdbProvider(tmp.FullName);
@@ -86,6 +86,7 @@ namespace SharpMap.Data.Providers
         {
             var m = new Map(new Size(1024, 786)) { BackColor = Color.FloralWhite };
             const string samplePath = @"D:\GIS\FileGDB\samples\data\Topo.gdb";
+            Assert.IsTrue(Directory.Exists(samplePath));
 
             var p = new FileGdbProvider(samplePath);
 

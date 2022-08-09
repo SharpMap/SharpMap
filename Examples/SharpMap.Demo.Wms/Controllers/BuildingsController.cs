@@ -15,7 +15,7 @@ namespace SharpMap.Demo.Wms.Controllers
         private const int TileSize = 256;
         private const int MaxZoom = 18;
 
-        public BuildingsController()        {                    }
+        public BuildingsController() { }
 
         private Point GeoToPixel(double lat, double lon, int zoom)
         {

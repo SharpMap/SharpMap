@@ -13,7 +13,7 @@ namespace UnitTests.Data.Providers
         {
             if (System.IntPtr.Size == 8)
                 Assert.Ignore("Only run in 32bit mode, because most Excel installations are 32bit.");
-            
+
             try
             {
                 // Check if the OLE DB provider is available

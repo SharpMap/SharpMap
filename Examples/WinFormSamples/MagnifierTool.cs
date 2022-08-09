@@ -4,9 +4,9 @@ using SharpMap.Forms;
 using SharpMap.Forms.Tools;
 using System;
 using System.Drawing;
-using Point = System.Drawing.Point;
 using System.Reflection;
 using System.Windows.Forms;
+using Point = System.Drawing.Point;
 
 namespace WinFormSamples
 {

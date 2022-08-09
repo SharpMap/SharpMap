@@ -11,9 +11,9 @@ namespace SharpMap.Demo.Wms.Controllers
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using Point = System.Drawing.Point;
     using System.Linq;
     using System.Web.Mvc;
+    using Point = System.Drawing.Point;
 
     public class UtfGridController : Controller
     {

@@ -4,10 +4,10 @@ using SharpMap;
 using SharpMap.Layers;
 using System;
 using System.Drawing;
-using Point = System.Drawing.Point;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
+using Point = System.Drawing.Point;
 
 namespace UnitTests.Layers
 {

@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace ExampleCodeSnippets
 {
     [NUnit.Framework.TestFixture]
@@ -28,13 +30,26 @@ namespace ExampleCodeSnippets
 
         [NUnit.Framework.OneTimeSetUp]
         public void OneTimeSetUp()
-        { }
+        {
+            var gss = NetTopologySuite.NtsGeometryServices.Instance;
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+                new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
+                new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+        }
 
         [NUnit.Framework.Test]
         public void TestPlainPolygonSymbolizer()
         {
-            var provider = new SharpMap.Data.Providers.ShapeFile(
-                "..\\..\\..\\WinFormSamples\\GeoData\\World\\countries.shp", true);
+            var shapePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\WinFormSamples\\GeoData\\World\\countries.shp"));
+            var provider = new SharpMap.Data.Providers.ShapeFile(shapePath, true);
             var l = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer("Countries", provider);
             l.Symbolizer = new ModifiedBasicPolygonSymbolizer
             {

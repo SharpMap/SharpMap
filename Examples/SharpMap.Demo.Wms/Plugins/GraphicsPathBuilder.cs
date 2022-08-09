@@ -5,9 +5,9 @@ namespace Mapstache
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using Point = System.Drawing.Point;
     using System.Drawing.Drawing2D;
     using System.Linq;
+    using Point = System.Drawing.Point;
 
     public class GraphicsPathBuilder
     {

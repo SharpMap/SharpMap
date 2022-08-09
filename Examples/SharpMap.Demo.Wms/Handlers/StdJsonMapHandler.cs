@@ -1,8 +1,6 @@
 namespace SharpMap.Demo.Wms.Handlers
 {
-    using NetTopologySuite;
     using NetTopologySuite.CoordinateSystems.Transformations;
-    using NetTopologySuite.Geometries;
     using ProjNet.CoordinateSystems.Transformations;
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;

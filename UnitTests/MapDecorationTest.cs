@@ -8,8 +8,8 @@ using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.ScaleBar;
 using System.Collections.Generic;
 using System.Drawing;
-using Point = System.Drawing.Point;
 using GeoPoint = NetTopologySuite.Geometries.Coordinate;
+using Point = System.Drawing.Point;
 
 namespace UnitTests
 {

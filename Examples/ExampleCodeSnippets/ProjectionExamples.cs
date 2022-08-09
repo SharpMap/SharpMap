@@ -386,13 +386,13 @@ namespace ExampleCodeSnippets
             map.Layers.Add(new SharpMap.Layers.VectorLayer("L1",
                                                            new SharpMap.Data.Providers.GeometryFeatureProvider(fdt1)));
             ((SharpMap.Layers.VectorLayer) map.Layers[0]).Style.Symbol =
-                new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
+                new System.Drawing.Bitmap("Examples\\DemoWinForm\\Resources\\flag.png");
 
             //Add transformed layer
             map.Layers.Add(new SharpMap.Layers.VectorLayer("L2",
                                                            new SharpMap.Data.Providers.GeometryFeatureProvider(fdt2)));
             ((SharpMap.Layers.VectorLayer) map.Layers[1]).Style.Symbol =
-                new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\women.png");
+                new System.Drawing.Bitmap("Examples\DemoWinForm\\Resources\\women.png");
 
             //Render map
             map.ZoomToExtents();

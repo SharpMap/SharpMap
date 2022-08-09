@@ -1,5 +1,6 @@
 namespace ExampleCodeSnippets
 {
+    using System.IO;
     using cd = CreatingData;
 
     public class SymbolRotationTheming
@@ -180,7 +181,11 @@ namespace ExampleCodeSnippets
 
             //Create default style
             SharpMap.Styles.VectorStyle defaultStyle = new SharpMap.Styles.VectorStyle();
-            defaultStyle.Symbol = new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
+            var stylePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\DemoWinForm\\Resources\\flag.png"));
+            defaultStyle.Symbol = new System.Drawing.Bitmap(stylePath);
             defaultStyle.SymbolScale = 0.5f;
 
             //Create theming class and apply to layer
@@ -232,7 +237,11 @@ namespace ExampleCodeSnippets
 
             //Create default style
             SharpMap.Styles.VectorStyle defaultStyle = new SharpMap.Styles.VectorStyle();
-            defaultStyle.Symbol = new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
+            var resPath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\DemoWinForm\\Resources\\flag.png"));
+            defaultStyle.Symbol = new System.Drawing.Bitmap(resPath);
             defaultStyle.SymbolScale = 0.5f;
 
             //Create theming class and apply to layer

@@ -5,12 +5,12 @@ namespace Mapstache
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using Point = System.Drawing.Point;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.Globalization;
     using System.Runtime.InteropServices;
     using System.Text;
+    using Point = System.Drawing.Point;
 
     public class Utf8GridResults
     {

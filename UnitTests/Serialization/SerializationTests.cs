@@ -50,30 +50,27 @@ namespace UnitTests.Serialization
         [Test]
         public void TestGlobalMercatorSchema()
         {
-            string message;
             var s1 = new GlobalMercator("png", 2, 11);
             var s2 = SandD(s1);
-            var equal = EqualTileSchemas(s1, s2, out message);
+            var equal = EqualTileSchemas(s1, s2, out string message);
             Assert.IsTrue(equal, message);
         }
 
         [Test]
         public void TestGlobalSphericalMercatorSchema()
         {
-            string message;
             var s1 = new GlobalSphericalMercator("png", YAxis.OSM, 2, 11);
             var s2 = SandD(s1);
-            var equal = EqualTileSchemas(s1, s2, out message);
+            var equal = EqualTileSchemas(s1, s2, out string message);
             Assert.IsTrue(equal, message);
         }
 
         [Test]
         public void TestWkstNederlandSchema()
         {
-            string message;
             var s1 = new WkstNederlandSchema();
             var s2 = SandD(s1);
-            var equal = EqualTileSchemas(s1, s2, out message);
+            var equal = EqualTileSchemas(s1, s2, out string message);
             Assert.IsTrue(equal, message);
         }
 
@@ -163,8 +160,7 @@ namespace UnitTests.Serialization
                 Assert.NotNull(srcD);
                 System.Diagnostics.Trace.WriteLine($"{srcS}");
 
-                string message;
-                if (!EqualTileSources(srcS, srcD, out message))
+                if (!EqualTileSources(srcS, srcD, out string message))
                 {
                     messages.Add(message);
                     equal = false;
@@ -180,8 +176,7 @@ namespace UnitTests.Serialization
             var ts2 = SandD(ts1);
 
             Assert.NotNull(ts2);
-            string message;
-            var equal = EqualTileSources(ts1, ts2, out message);
+            var equal = EqualTileSources(ts1, ts2, out string message);
             Assert.IsTrue(equal, message);
         }
 
@@ -198,8 +193,7 @@ namespace UnitTests.Serialization
             Assert.IsNotNull(p2);
             //Assert.AreEqual(p1.Format, p2.Format, "MbTiles Format not equal");
             Assert.AreEqual(p1.Type, p2.Type, "MbTiles Type not equal");
-            string msg;
-            Assert.IsTrue(EqualTileSources(p1, p2, out msg), msg);
+            Assert.IsTrue(EqualTileSources(p1, p2, out string msg), msg);
             //Assert.IsTrue(EqualTileSchemas(p1.Schema, p2.Schema, out msg), msg);
         }
 
@@ -213,8 +207,7 @@ namespace UnitTests.Serialization
                     var srcS = KnownTileSources.Create(kts);
                     var srcD = SandD(srcS);
                     Assert.IsNotNull(srcD);
-                    string message;
-                    Assert.IsTrue(EqualTileSources(srcS, srcD, out message));
+                    Assert.IsTrue(EqualTileSources(srcS, srcD, out string message));
                 }
                 catch
                 {
@@ -268,7 +261,7 @@ namespace UnitTests.Serialization
                 if (!EqualTileSchemas(ts1.Schema, ts2.Schema, out message))
                     return false;
 
-                if (!EqualTileProviders(ts1.Schema, (ITileProvider)ts1, (ITileProvider)ts2, out message))
+                if (!EqualTileProviders(ts1.Schema, ts1, ts2, out message))
                     return false;
             }
 

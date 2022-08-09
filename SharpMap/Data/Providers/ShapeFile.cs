@@ -1261,26 +1261,41 @@ namespace SharpMap.Data.Providers
 
             if (shapeType == ShapeType.Point || shapeType == ShapeType.PointM || shapeType == ShapeType.PointZ)
             {
-                var point = factory.CreatePoint(new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble()));
-                if (shapeType == ShapeType.PointZ)
-                {
-                    point.Z = brGeometryStream.ReadDouble();
-                }
+                var hasZ = shapeType == ShapeType.PointZ;
+                var coordinate = hasZ
+                    ? new CoordinateZ(
+                        brGeometryStream.ReadDouble(),
+                        brGeometryStream.ReadDouble(),
+                        brGeometryStream.ReadDouble())
+                    : new Coordinate(
+                        brGeometryStream.ReadDouble(),
+                        brGeometryStream.ReadDouble());
+                var point = factory.CreatePoint(coordinate);
                 return point;
             }
 
             if (shapeType == ShapeType.Multipoint || shapeType == ShapeType.MultiPointM ||
                 shapeType == ShapeType.MultiPointZ)
             {
+                var hasZ = shapeType == ShapeType.MultiPointZ;
                 brGeometryStream.BaseStream.Seek(32, SeekOrigin.Current); //skip min/max box
                 var nPoints = brGeometryStream.ReadInt32(); // get the number of points
                 if (nPoints == 0)
                     return null;
+
                 var feature = new Coordinate[nPoints];
                 for (var i = 0; i < nPoints; i++)
-                    feature[i] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
-
-                if (shapeType == ShapeType.MultiPointZ)
+                {
+                    feature[i] = hasZ
+                        ? new CoordinateZ(
+                            brGeometryStream.ReadDouble(),
+                            brGeometryStream.ReadDouble(),
+                            double.NaN)
+                        : new Coordinate(
+                            brGeometryStream.ReadDouble(),
+                            brGeometryStream.ReadDouble());
+                }
+                if (hasZ)
                 {
                     brGeometryStream.ReadDouble();
                     brGeometryStream.ReadDouble();
@@ -1294,8 +1309,8 @@ namespace SharpMap.Data.Providers
                 shapeType == ShapeType.PolyLineM || shapeType == ShapeType.PolygonM ||
                 shapeType == ShapeType.PolyLineZ || shapeType == ShapeType.PolygonZ)
             {
+                var hasZ = shapeType == ShapeType.PolyLineZ || shapeType == ShapeType.PolygonZ;
                 brGeometryStream.BaseStream.Seek(32, SeekOrigin.Current); //skip min/max box
-
                 var nParts = brGeometryStream.ReadInt32(); // get number of parts (segments)
                 if (nParts == 0 || nParts < 0)
                     return null;
@@ -1316,14 +1331,24 @@ namespace SharpMap.Data.Providers
                         var line = new Coordinate[segments[lineID + 1] - segments[lineID]];
                         var offset = segments[lineID];
                         for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
-                            line[i - offset] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
-
-                        if (shapeType == ShapeType.PolyLineZ)
+                        {
+                            line[i - offset] = hasZ
+                                ? new CoordinateZ(
+                                    brGeometryStream.ReadDouble(),
+                                    brGeometryStream.ReadDouble(),
+                                    double.NaN)
+                                : new Coordinate(
+                                    brGeometryStream.ReadDouble(),
+                                    brGeometryStream.ReadDouble());
+                        }
+                        if (hasZ)
                         {
                             brGeometryStream.ReadDouble();
                             brGeometryStream.ReadDouble();
                             for (var i = segments[lineID]; i < segments[lineID + 1]; i++)
+                            {
                                 line[i - offset].Z = brGeometryStream.ReadDouble();
+                            }
                         }
                         lineStrings[lineID] = factory.CreateLineString(line);
                     }
@@ -1341,8 +1366,17 @@ namespace SharpMap.Data.Providers
                     var ring = new Coordinate[segments[ringID + 1] - segments[ringID]];
                     var offset = segments[ringID];
                     for (var i = segments[ringID]; i < segments[ringID + 1]; i++)
-                        ring[i - offset] = new Coordinate(brGeometryStream.ReadDouble(), brGeometryStream.ReadDouble());
-                    if (shapeType == ShapeType.PolygonZ)
+                    {
+                        ring[i - offset] = hasZ
+                            ? new CoordinateZ(
+                                brGeometryStream.ReadDouble(), 
+                                brGeometryStream.ReadDouble(), 
+                                double.NaN)
+                            : new Coordinate(
+                                brGeometryStream.ReadDouble(), 
+                                brGeometryStream.ReadDouble());
+                    }
+                    if (hasZ)
                     {
                         brGeometryStream.ReadDouble();
                         brGeometryStream.ReadDouble();
@@ -1393,7 +1427,7 @@ namespace SharpMap.Data.Providers
                 return factory.CreateMultiPolygon(polygons.ToArray());
             }
 
-            throw (new ApplicationException("Shapefile type " + shapeType + " not supported"));
+            throw new ApplicationException("Shapefile type " + shapeType + " not supported");
         }
 
         /// <summary>

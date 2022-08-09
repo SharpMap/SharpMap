@@ -1,6 +1,9 @@
 using Microsoft.SqlServer.Types;
+using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
 using SharpMap.Data.Providers;
@@ -29,6 +32,15 @@ namespace UnitTests.Converters
         public void SetupFixture()
         {
             //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+            var gss = NtsGeometryServices.Instance;
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+                new CoordinateSystemFactory(),
+                new CoordinateTransformationFactory(),
+                SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
         }
 
 

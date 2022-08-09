@@ -33,6 +33,7 @@ namespace UnitTests.Data.Providers
             foreach (var item in featsInView)
             {
                 NUnit.Framework.Assert.IsNotNull(item.Coordinate.Z);
+                NUnit.Framework.Assert.IsFalse(double.IsNaN(item.Coordinate.Z));
             }
             NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinate.Z, 146.473);
             NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinate.Z, 181.374);
@@ -58,6 +59,7 @@ namespace UnitTests.Data.Providers
             foreach (var item in featsInView)
             {
                 NUnit.Framework.Assert.IsNotNull(item.Coordinate.Z);
+                NUnit.Framework.Assert.IsFalse(double.IsNaN(item.Coordinate.Z));
             }
             NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinates[0].Z, 35.865);
             NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinates[1].Z, 35.743);
