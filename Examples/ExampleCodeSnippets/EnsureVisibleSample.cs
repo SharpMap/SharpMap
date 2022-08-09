@@ -1,6 +1,11 @@
 
+using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap;
+using SharpMap.CoordinateSystems;
 using System;
 using System.Drawing;
 using System.IO;
@@ -11,6 +16,20 @@ namespace ExampleCodeSnippets
     [NUnit.Framework.TestFixture]
     public class EnsureVisibleSample
     {
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            var gss = NtsGeometryServices.Instance;
+            var css = new CoordinateSystemServices(
+                new CoordinateSystemFactory(),
+                new CoordinateTransformationFactory(),
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+        }
+
         public static void EnsureVisible(SharpMap.Map map, NetTopologySuite.Geometries.Coordinate pt)
         {
             const double ensureVisibleRatio = 0.1d;

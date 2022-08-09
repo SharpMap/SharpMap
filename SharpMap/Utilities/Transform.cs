@@ -141,11 +141,27 @@ namespace SharpMap.Utilities
                     coords[i] = new Coordinate(0, 0);
             else
             {
-                var ul = new Coordinate(worldCenter.X - mapZoom * .5, worldCenter.Y + mapHeight * .5);
+                var ulX = worldCenter.X - (mapZoom * .5);
+                var ulY = worldCenter.Y + (mapHeight * .5);
                 for (var i = 0; i < points.Length; i++)
-                    coords[i] = new Coordinate(ul.X + points[i].X * pixelWidth, ul.Y - points[i].Y * pixelHeight);
+                {
+                    /*
+                     * DGuidi: beware! unknown rounding issues here...
+                     * 'MapTest.ImageToWorld' fails (at least on my machine) 
+                     * and expose rounding issues (cx and cy are "XXX^10-15" instead of "0"),
+                     * but this happens ONLY if ALL tests are executed! 
+                     * Executing the single test, or even all "MapTest" tests, does not show the behaviour.
+                     * Assigning variables for ALL the computation steps seems to fix the problem...
+                     */
+                    var px = points[i].X;
+                    var py = points[i].Y;
+                    var wx = px * pixelWidth;
+                    var wy = py * pixelHeight;
+                    var cx = ulX + wx;                    
+                    var cy = ulY - wy;
+                    coords[i] = new Coordinate(cx, cy);
+                }
             }
-
             return coords;
         }
 

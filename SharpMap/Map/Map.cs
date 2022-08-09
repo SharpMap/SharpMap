@@ -186,7 +186,7 @@ namespace SharpMap
 
             if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
             {
-                Factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(_srid);
+                Factory = Session.Instance.GeometryServices.CreateGeometryFactory(_srid);
             }
             _layers = new LayerCollection();
             _layersPerGroup.Add(_layers, new List<ILayer>());
