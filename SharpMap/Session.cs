@@ -1,6 +1,6 @@
 ﻿using Common.Logging;
 using NetTopologySuite;
-using ProjNet;
+using SharpMap.CoordinateSystems;
 using System;
 
 namespace SharpMap
@@ -10,7 +10,7 @@ namespace SharpMap
     /// </summary>
     public class Session : ISession
     {
-        private static ICoordinateSystemRepository _repository;
+        private ICoordinateSystemRepository _repository;
         private CoordinateSystemServices _coordinateSystemServices;
 
         /// <summary>

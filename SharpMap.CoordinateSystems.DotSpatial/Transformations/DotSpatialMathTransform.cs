@@ -35,7 +35,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// Tests whether this transform does not move any points.
         /// </summary>
         /// <returns></returns>
-        public bool Identity()
+        public override bool Identity()
         {
             return _source.Matches(_target);
         }
@@ -54,7 +54,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public double[,] Derivative(double[] point)
+        public override double[,] Derivative(double[] point)
         {
             throw new NotSupportedException();
         }
@@ -78,7 +78,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </remarks>
         /// <param name="points"></param>
         /// <returns></returns>
-        public List<double> GetCodomainConvexHull(List<double> points)
+        public override List<double> GetCodomainConvexHull(List<double> points)
         {
             throw new NotSupportedException();
         }
@@ -96,7 +96,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </remarks>
         /// <param name="points"></param>
         /// <returns></returns>
-        public DomainFlags GetDomainFlags(List<double> points)
+        public override DomainFlags GetDomainFlags(List<double> points)
         {
             throw new NotSupportedException();
         }
@@ -173,7 +173,7 @@ namespace SharpMap.CoordinateSystems.Transformations
         /// </remarks>
         /// <param name="points"></param>
         /// <returns></returns>
-        public IList<double[]> TransformList(IList<double[]> points)
+        public new IList<double[]> TransformList(IList<double[]> points)
         {
             var xy = new double[points.Count * 2];
             var numOrdinates = points[0].Length;

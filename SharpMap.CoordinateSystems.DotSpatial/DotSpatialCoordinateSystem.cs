@@ -47,10 +47,7 @@ namespace SharpMap.CoordinateSystems
         /// <param name="projectionInfo">The projection info</param>
         public DotSpatialCoordinateSystem(ProjectionInfo projectionInfo)
         {
-            if (projectionInfo == null)
-                throw new ArgumentNullException("projecionInfo");
-
-            _projectionInfo = projectionInfo;
+            _projectionInfo = projectionInfo ?? throw new ArgumentNullException("projectionInfo");
         }
 
         /// <summary>
@@ -89,10 +86,10 @@ namespace SharpMap.CoordinateSystems
         /// <returns></returns>
         public bool EqualParams(object obj)
         {
-            if (obj is DotSpatialCoordinateSystem)
-                return _projectionInfo.Matches(((DotSpatialCoordinateSystem)obj)._projectionInfo);
-            if (obj is ProjectionInfo)
-                return _projectionInfo.Matches((ProjectionInfo)obj);
+            if (obj is DotSpatialCoordinateSystem dcs)
+                return _projectionInfo.Matches(dcs._projectionInfo);
+            if (obj is ProjectionInfo pi)
+                return _projectionInfo.Matches(pi);
             return false;
         }
 
@@ -191,9 +188,9 @@ namespace SharpMap.CoordinateSystems
 
         private abstract class UnitWrapper : IUnit
         {
-            protected readonly IProjDescriptor Descriptor;
+            protected readonly ProjDescriptor Descriptor;
 
-            protected UnitWrapper(IProjDescriptor descriptor)
+            protected UnitWrapper(ProjDescriptor descriptor)
             {
                 Descriptor = descriptor;
             }
@@ -231,8 +228,8 @@ namespace SharpMap.CoordinateSystems
             public override bool EqualParams(object obj)
             {
                 if (obj == null) return false;
-                if (obj is AngularUnitWrapper)
-                    return ((AngularUnitWrapper)obj).RadiansPerUnit == RadiansPerUnit;
+                if (obj is AngularUnitWrapper auw)
+                    return auw.RadiansPerUnit == RadiansPerUnit;
                 return false;
             }
 
@@ -263,8 +260,8 @@ namespace SharpMap.CoordinateSystems
             public override bool EqualParams(object obj)
             {
                 if (obj == null) return false;
-                if (obj is LinearUnitWrapper)
-                    return ((LinearUnitWrapper)obj).MetersPerUnit == MetersPerUnit;
+                if (obj is LinearUnitWrapper luw)
+                    return luw.MetersPerUnit == MetersPerUnit;
                 return false;
             }
 

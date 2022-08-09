@@ -18,7 +18,6 @@
 using Common.Logging;
 using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems;
-using SharpMap.CoordinateSystems;
 using SharpMap.Utilities.Indexing;
 using SharpMap.Utilities.SpatialIndexing;
 using System;
@@ -931,7 +930,7 @@ namespace SharpMap.Data.Providers
                 try
                 {
                     var wkt = File.ReadAllText(projfile);
-                    var css = (CoordinateSystemServices)Session.Instance.CoordinateSystemServices;
+                    var css = Session.Instance.CoordinateSystemServices;
                     _coordinateSystem = css.CreateCoordinateSystem(wkt);
                     SRID = (int)_coordinateSystem.AuthorityCode;
                     _coordsysReadFromFile = true;
@@ -1369,11 +1368,11 @@ namespace SharpMap.Data.Providers
                     {
                         ring[i - offset] = hasZ
                             ? new CoordinateZ(
-                                brGeometryStream.ReadDouble(), 
-                                brGeometryStream.ReadDouble(), 
+                                brGeometryStream.ReadDouble(),
+                                brGeometryStream.ReadDouble(),
                                 double.NaN)
                             : new Coordinate(
-                                brGeometryStream.ReadDouble(), 
+                                brGeometryStream.ReadDouble(),
                                 brGeometryStream.ReadDouble());
                     }
                     if (hasZ)

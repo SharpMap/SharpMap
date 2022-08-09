@@ -1,4 +1,6 @@
-﻿namespace UnitTests
+﻿using SharpMap.CoordinateSystems;
+
+namespace UnitTests
 {
     public class UnitTestsFixture
     {
@@ -9,7 +11,7 @@
         public void RunBeforeAnyTests()
         {
             var gss = NetTopologySuite.NtsGeometryServices.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var css = new CoordinateSystemServices(
                 new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
                 new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
@@ -20,8 +22,8 @@
                 .SetCoordinateSystemRepository(css);
 
             // plug-in WebMercator so that correct spherical definition is directly available to Layer Transformations using SRID
-            var pcs = (ProjNet.CoordinateSystems.ProjectedCoordinateSystem)ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator;
-            css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
+            var pcs = ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator;
+            ((ICoordinateSystemRepository)css).AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
 
             _stopWatch = new System.Diagnostics.Stopwatch();
             System.Diagnostics.Trace.WriteLine("Starting tests");

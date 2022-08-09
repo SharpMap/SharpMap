@@ -6,6 +6,7 @@ using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
+using SharpMap.CoordinateSystems;
 using SharpMap.Data.Providers;
 using SharpMap.Geometries;
 using System;
@@ -33,7 +34,7 @@ namespace UnitTests.Converters
         {
             //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
             var gss = NtsGeometryServices.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var css = new CoordinateSystemServices(
                 new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SpatialReference.GetAllReferenceSystems());

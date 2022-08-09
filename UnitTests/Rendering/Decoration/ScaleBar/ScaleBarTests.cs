@@ -5,6 +5,7 @@ using NUnit.Framework;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 using SharpMap;
+using SharpMap.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
@@ -36,14 +37,14 @@ namespace UnitTests.Rendering.Decoration.ScaleBar
             //                System.IO.File.Delete(file);
 
             var gss = NtsGeometryServices.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var css = new CoordinateSystemServices(
                 new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
             // plug-in WebMercator so that correct spherical definition is directly available to Layer Transformations using SRID
             var pcs = (ProjectedCoordinateSystem)ProjectedCoordinateSystem.WebMercator;
-            css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
+            ((ICoordinateSystemRepository)css).AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
 
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)

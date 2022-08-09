@@ -3,7 +3,6 @@ using NetTopologySuite.Geometries;
 using ProjNet.CoordinateSystems;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace SharpMap.CoordinateSystems
@@ -17,7 +16,7 @@ namespace SharpMap.CoordinateSystems
 
         //private static Dictionary<int, string> _sridDefinition;
 
-        private static readonly Dictionary<int, CoordinateSystem> _sridCoordinateSystem = new Dictionary<int, CoordinateSystem>();
+        //private static readonly Dictionary<int, CoordinateSystem> _sridCoordinateSystem = new Dictionary<int, CoordinateSystem>();
 
         /// <summary>
         /// Gets a coordinate system for the map based on the <see cref="Map.SRID"/> property

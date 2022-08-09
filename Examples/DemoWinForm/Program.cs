@@ -18,6 +18,7 @@
 using NetTopologySuite;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
 using System;
 using System.Windows.Forms;
 
@@ -32,7 +33,7 @@ namespace DemoWinForm
         private static void Main()
         {
             var gss = NtsGeometryServices.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var css = new CoordinateSystemServices(
                 new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());

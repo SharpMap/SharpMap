@@ -1,6 +1,7 @@
 ﻿using NetTopologySuite;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
 using System;
 using System.Windows.Forms;
 
@@ -15,14 +16,14 @@ namespace WinFormSamples
         private static void Main()
         {
             var gss = NtsGeometryServices.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var css = new CoordinateSystemServices(
                 new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
 
             // plug-in WebMercator so that correct spherical definition is directly available to Layer Transformations using SRID
-            var pcs = (ProjectedCoordinateSystem)ProjectedCoordinateSystem.WebMercator;
-            css.AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
+            var pcs = ProjectedCoordinateSystem.WebMercator;
+            ((ICoordinateSystemRepository)css).AddCoordinateSystem((int)pcs.AuthorityCode, pcs);
 
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)

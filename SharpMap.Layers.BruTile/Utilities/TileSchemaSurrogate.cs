@@ -132,8 +132,7 @@ namespace SharpMap.Utilities
                 Utility.SetPropertyValue(ref obj, "Style", BindingFlags.Instance | BindingFlags.Public, info.GetString("style"));
                 Utility.SetPropertyValue(ref obj, "TileMatrixSet", BindingFlags.Instance | BindingFlags.Public, info.GetString("tileMatrixSet"));
 
-                CrsIdentifier tmp;
-                if (CrsIdentifier.TryParse(info.GetString("supportedSRS"), out tmp))
+                if (CrsIdentifier.TryParse(info.GetString("supportedSRS"), out CrsIdentifier tmp))
                     Utility.SetPropertyValue(ref obj, "SupportedSRS", BindingFlags.Instance | BindingFlags.Public, tmp);
 
                 return ts;

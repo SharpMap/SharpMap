@@ -1,4 +1,5 @@
 ﻿using NetTopologySuite.Geometries;
+using SharpMap.CoordinateSystems;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -18,7 +19,7 @@ namespace WPFSamples
             InitializeComponent();
 
             var gss = NetTopologySuite.NtsGeometryServices.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var css = new CoordinateSystemServices(
                 new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
                 new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());

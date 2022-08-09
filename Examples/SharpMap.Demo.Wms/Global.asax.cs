@@ -1,5 +1,6 @@
 ﻿namespace SharpMap.Demo.Wms
 {
+    using SharpMap.CoordinateSystems;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Routing;
@@ -15,11 +16,15 @@
 
         protected void Application_Start()
         {
+            var gss = NetTopologySuite.NtsGeometryServices.Instance;
+            var css = new CoordinateSystemServices(
+                new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
+                new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+                Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
             SharpMap.Session.Instance
-                .SetGeometryServices(NetTopologySuite.NtsGeometryServices.Instance)
-                .SetCoordinateSystemServices(CoordinateSystems.CoordinateSystemServices
-                    .FromSpatialRefSys(new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
-                        new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory()));
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
 
             AreaRegistration.RegisterAllAreas();
             RegisterRoutes(RouteTable.Routes);

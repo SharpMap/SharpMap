@@ -1,6 +1,4 @@
-﻿using ProjNet.CoordinateSystems;
-using ProjNet.CoordinateSystems.Transformations;
-using SharpMap;
+﻿using SharpMap;
 using SharpMap.CoordinateSystems;
 using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Data;
@@ -33,12 +31,7 @@ namespace WinFormSamples
                 if (value == UseDotSpatial) return;
 
                 var s = (Session)Session.Instance;
-                var css = !value
-                    ? new CoordinateSystemServices(
-                        new CoordinateSystemFactory(),
-                        new CoordinateTransformationFactory(),
-                        SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems())
-                    : new CoordinateSystemServices(
+                var css = new CoordinateSystemServices(
                         new DotSpatialCoordinateSystemFactory(),
                         new DotSpatialCoordinateTransformationFactory(),
                         SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());

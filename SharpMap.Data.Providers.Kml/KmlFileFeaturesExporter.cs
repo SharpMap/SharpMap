@@ -177,7 +177,7 @@ namespace SharpMap.Data.Providers
         public string Snippet { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating a delegate function to get <see cref="StyleSelector"/> for an <see cref="ExportContext"/>.
+        /// Gets or sets a value indicating a delegate function to get <see cref="SharpKml.Dom.StyleSelector"/> for an <see cref="ExportContext"/>.
         /// </summary>
         public Func<ExportContext, SharpKml.Dom.StyleSelector> GetStyle { get; set; }
 

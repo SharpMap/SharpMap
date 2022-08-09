@@ -1,5 +1,5 @@
 ﻿using NetTopologySuite;
-using ProjNet;
+using SharpMap.CoordinateSystems;
 
 namespace SharpMap
 {

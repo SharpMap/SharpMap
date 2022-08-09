@@ -56,7 +56,7 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Static constructor. Needed to get <see cref="NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance"/> set.
+        /// Static constructor. Needed to get <see cref="NetTopologySuite.NtsGeometryServices.Instance"/> set.
         /// </summary>
         static Map()
         {
