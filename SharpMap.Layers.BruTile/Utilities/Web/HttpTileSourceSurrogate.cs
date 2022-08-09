@@ -26,12 +26,13 @@ namespace SharpMap.Utilities.Web
                 // Attribution
                 var attribution = new Attribution(info.GetString("attText"), info.GetString("attUrl"));
 
-                // Provider
-                var tp = (HttpTileProvider)info.GetValue("provider", typeof(HttpTileProvider));
+                // Request
+                var tr = (BasicRequest)info.GetValue("request", typeof(BasicRequest));
+                var urlFormatter = Utility.GetFieldValue(tr, "_urlFormatter", BindingFlags.NonPublic | BindingFlags.Instance, "http://localhost");
 
-                _httpTileSource = new HttpTileSource(schema, "http://localhost", attribution: attribution) { Name = name };
+                _httpTileSource = new HttpTileSource(schema, urlFormatter, attribution: attribution) { Name = name };
                 object obj = _httpTileSource;
-                Utility.SetFieldValue(ref obj, "_provider", BindingFlags.NonPublic | BindingFlags.Instance, tp);
+                Utility.SetFieldValue(ref obj, "_request", BindingFlags.NonPublic | BindingFlags.Instance, tr);
             }
 
             void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
@@ -61,9 +62,9 @@ namespace SharpMap.Utilities.Web
             info.AddValue("attText", ts.Attribution?.Text ?? string.Empty);
             info.AddValue("attUrl", ts.Attribution?.Url ?? string.Empty);
 
-            //Provider
-            var p = Utility.GetFieldValue<HttpTileProvider>(ts, "_provider");
-            info.AddValue("provider", p, typeof(HttpTileProvider));
+            //Request
+            var br = Utility.GetFieldValue<BasicRequest>(ts, "_request");
+            info.AddValue("request", br, typeof(BasicRequest));
         }
 
         public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
