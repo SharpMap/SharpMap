@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+using NetTopologySuite.Geometries;
+using SharpMap.Data.Providers.Converter;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,9 +23,6 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using GeoAPI.Geometries;
-using SharpMap.Data.Providers.Converter;
-
 using EsriGdb = Esri.FileGDB.Geodatabase;
 using EsriTable = Esri.FileGDB.Table;
 
@@ -196,9 +195,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="Envelope"/></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var res = new Collection<IGeometry>();
+            var res = new Collection<Geometry>();
             foreach (var row in _esriTable.Search("*", string.Empty, FileGdbGeometryConverter.ToEsriExtent(bbox), Esri.FileGDB.RowInstance.Recycle))
             {
                 using (var buffer = row.GetGeometry())
@@ -233,7 +232,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public IGeometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
             var fdt = CreateTable(_esriTable);
             var where = string.Format(CultureInfo.InvariantCulture, "{0}={1}", fdt.PrimaryKey[0].ColumnName, oid);
@@ -249,7 +248,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
         }

@@ -1,11 +1,11 @@
-using System;
-using Oracle.DataAccess.Types;
 using Oracle.DataAccess.Client;
+using Oracle.DataAccess.Types;
+using System;
 
 #pragma warning disable 1591
 
 namespace SharpMap.Data.Providers.OracleUDT
-{   
+{
     [Serializable]
     public abstract class OracleCustomTypeBase<T> : INullable, IOracleCustomType, IOracleCustomTypeFactory
     where T : OracleCustomTypeBase<T>, new()

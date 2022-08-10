@@ -15,27 +15,27 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.ObjectModel;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Extensions.Data;
+using System;
+using System.Collections.ObjectModel;
 //using SharpMap.Geometries;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry=GeoAPI.Geometries.IGeometry;
-using OgrOgr = OSGeo.OGR.Ogr;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using OgrDataSource = OSGeo.OGR.DataSource;
-using OgrLayer = OSGeo.OGR.Layer;
-using OgrGeometry = OSGeo.OGR.Geometry;
 using OgrEnvelope = OSGeo.OGR.Envelope;
 using OgrFeature = OSGeo.OGR.Feature;
-using OgrFeatureDefn = OSGeo.OGR.FeatureDefn;
 using OgrFieldDefn = OSGeo.OGR.FieldDefn;
 using OgrFieldType = OSGeo.OGR.FieldType;
-using OsrSpatialReference = OSGeo.OSR.SpatialReference;
+using OgrGeometry = OSGeo.OGR.Geometry;
 using OgrGeometryType = OSGeo.OGR.wkbGeometryType;
+using OgrLayer = OSGeo.OGR.Layer;
+using OgrOgr = OSGeo.OGR.Ogr;
+using OsrSpatialReference = OSGeo.OSR.SpatialReference;
 
 namespace SharpMap.Data.Providers
 {
@@ -205,8 +205,8 @@ namespace SharpMap.Data.Providers
         {
             get
             {
-                using(var ogrLayer = GetLayer(LayerIndex))
-                using(var ogrLayerDefn = ogrLayer.GetLayerDefn())
+                using (var ogrLayer = GetLayer(LayerIndex))
+                using (var ogrLayerDefn = ogrLayer.GetLayerDefn())
                     return ogrLayerDefn.GetName();
             }
             set
@@ -382,7 +382,7 @@ namespace SharpMap.Data.Providers
         /// <returns>number of features</returns>
         public override int GetFeatureCount()
         {
-            using(var ogrLayer = GetLayer(_layerIndex))
+            using (var ogrLayer = GetLayer(_layerIndex))
                 return (int)ogrLayer.GetFeatureCount(1);
         }
 
@@ -399,7 +399,7 @@ namespace SharpMap.Data.Providers
             {
                 var fdt = ReadColumnDefinition(ogrLayer);
                 fdt.BeginLoadData();
-                using (var feature = ogrLayer.GetFeature((int) rowId))
+                using (var feature = ogrLayer.GetFeature((int)rowId))
                 {
                     //res = LoadOgrFeatureToFeatureDataRow(fdt, feature, Factory);
                     res = LoadOgrFeatureToFeatureDataRow(fdt, feature, reader);
@@ -425,7 +425,7 @@ namespace SharpMap.Data.Providers
                 OgrFeature ogrFeature;
                 while ((ogrFeature = ogrLayer.GetNextFeature()) != null)
                 {
-                    objectIDs.Add((uint) ogrFeature.GetFID());
+                    objectIDs.Add((uint)ogrFeature.GetFID());
                     ogrFeature.Dispose();
                 }
                 ogrDataSource.Dispose();
@@ -445,7 +445,7 @@ namespace SharpMap.Data.Providers
             {
                 using (var gr = ogrFeature.GetGeometryRef())
                 {
-                    var g = new OgrGeometryReader(Factory).Read(gr) ;
+                    var g = new OgrGeometryReader(Factory).Read(gr);
                     return g;
                 }
             }
@@ -557,7 +557,7 @@ namespace SharpMap.Data.Providers
         {
             if (_ogrDataSource != null)
                 _ogrDataSource.Dispose();
-            
+
             base.ReleaseManagedResources();
         }
 
@@ -585,7 +585,7 @@ namespace SharpMap.Data.Providers
                 {
                     using (var ogrFldDef = ogrFeatureDefn.GetFieldDefn(iField))
                     {
-                        var type= ogrFldDef.GetFieldType();
+                        var type = ogrFldDef.GetFieldType();
                         switch (type)
                         {
                             case OgrFieldType.OFTInteger:
@@ -634,11 +634,11 @@ namespace SharpMap.Data.Providers
         }
 
         //private static Geometry ParseOgrGeometry(OgrGeometry ogrGeometry, WKBReader reader)
-        ////private static Geometry ParseOgrGeometry(OgrGeometry ogrGeometry, IGeometryFactory factory)
+        ////private static Geometry ParseOgrGeometry(OgrGeometry ogrGeometry, GeometryFactory factory)
         //{
         //    if (ogrGeometry != null)
         //    {
-                
+
         //        //Just in case it isn't 2D
         //        ogrGeometry.FlattenTo2D();
         //        var wkbBuffer = new byte[ogrGeometry.WkbSize()];
@@ -654,11 +654,11 @@ namespace SharpMap.Data.Providers
         //    return null;
         //}
 
-        //private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, GeoAPI.Geometries.IGeometryFactory factory)
+        //private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, NetTopologySuite.Geometries.GeometryFactory factory)
         private static FeatureDataRow LoadOgrFeatureToFeatureDataRow(FeatureDataTable table, OSGeo.OGR.Feature ogrFeature, OgrGeometryReader reader)
         {
             var values = new object[ogrFeature.GetFieldCount()];
-            
+
             for (var iField = 0; iField < ogrFeature.GetFieldCount(); iField++)
             {
                 // No need to get field value if there's no value available...
@@ -709,10 +709,10 @@ namespace SharpMap.Data.Providers
                             else
                                 values[iField] = new DateTime(y, m, d, h, mi, (int)s);
                         }
-// ReSharper disable once EmptyGeneralCatchClause
+                        // ReSharper disable once EmptyGeneralCatchClause
                         catch { }
                         break;
-                    
+
                     default:
                         var iTmpField = iField;
                         _log.Debug(t => t("Cannot handle Ogr DataType '{0}'", ogrFeature.GetFieldType(iTmpField)));
@@ -829,7 +829,7 @@ namespace SharpMap.Data.Providers
         /// <param name="connection">The connection string</param>
         /// <param name="driverOptions">The options for the driver</param>
         /// <param name="layerOptions">The options for the layer</param>
-        public static void CreateFromFeatureDataTable(FeatureDataTable table, 
+        public static void CreateFromFeatureDataTable(FeatureDataTable table,
             OgcGeometryType geometryType, int srid, string driver, string connection, string[] driverOptions = null, string[] layerOptions = null)
         {
             if (table == null)
@@ -1001,8 +1001,8 @@ namespace SharpMap.Data.Providers
 
                 case "System.DateTime":
                     return OgrFieldType.OFTDateTime;
-                    //return OgrFieldType.OFTDate;
-                    //return OgrFieldType.OFTTime;
+                //return OgrFieldType.OFTDate;
+                //return OgrFieldType.OFTTime;
 
                 case "System.Byte[]":
                     return OgrFieldType.OFTBinary;
@@ -1040,14 +1040,14 @@ namespace SharpMap.Data.Providers
 
         private class OgrGeometryReader
         {
-            private readonly IGeometryFactory _factory;
+            private readonly GeometryFactory _factory;
             private WKBReader _reader;
 
             /// <summary>
             /// Creates a n instance of this class
             /// </summary>
             /// <param name="factory">The factory to use</param>
-            public OgrGeometryReader(IGeometryFactory factory)
+            public OgrGeometryReader(GeometryFactory factory)
             {
                 _factory = factory;
             }
@@ -1055,7 +1055,7 @@ namespace SharpMap.Data.Providers
             /// <summary>
             /// A WKB reader
             /// </summary>
-            private WKBReader Reader { get { return _reader ?? (_reader = new WKBReader(_factory)); } }
+            private WKBReader Reader { get { return _reader ?? (_reader = new WKBReader(NtsGeometryServices.Instance)); } }
 #pragma warning restore 612
 
             /// <summary>
@@ -1063,7 +1063,7 @@ namespace SharpMap.Data.Providers
             /// </summary>
             /// <param name="geom"></param>
             /// <returns></returns>
-            public IGeometry Read(OgrGeometry geom)
+            public Geometry Read(OgrGeometry geom)
             {
                 if (geom == null)
                     return null;
@@ -1084,14 +1084,14 @@ namespace SharpMap.Data.Providers
                 }
             }
 
-            private IGeometry ReadWkb(OgrGeometryType type, OgrGeometry geom)
+            private Geometry ReadWkb(OgrGeometryType type, OgrGeometry geom)
             {
                 var b = new byte[geom.WkbSize()];
                 geom.ExportToWkb(b);
                 return Reader.Read(b);
             }
 
-            private IGeometry ReadLineString(OgrGeometryType type, OgrGeometry geom)
+            private Geometry ReadLineString(OgrGeometryType type, OgrGeometry geom)
             {
                 var count = geom.GetPointCount();
                 var dimension = geom.GetCoordinateDimension();
@@ -1114,7 +1114,7 @@ namespace SharpMap.Data.Providers
                 return _factory.CreateLineString(cs);
             }
 
-            private IGeometry ReadPoint(OgrGeometryType type, OgrGeometry geom)
+            private Geometry ReadPoint(OgrGeometryType type, OgrGeometry geom)
             {
                 var c = new Coordinate(geom.GetX(0), geom.GetY(0));
                 if ((int)type > 0x1000000) c.Z = geom.GetZ(0);

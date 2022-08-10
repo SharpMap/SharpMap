@@ -1,6 +1,6 @@
-﻿using System;
-using BruTile;
+﻿using BruTile;
 using BruTile.Cache;
+using System;
 
 namespace UnitTests.Serialization
 {

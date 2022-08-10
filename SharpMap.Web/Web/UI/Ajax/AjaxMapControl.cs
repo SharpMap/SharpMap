@@ -23,8 +23,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
-using Image=System.Web.UI.WebControls.Image;
-using Point=GeoAPI.Geometries.Coordinate;
+using Image = System.Web.UI.WebControls.Image;
+using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace SharpMap.Web.UI.Ajax
 {
@@ -53,7 +53,7 @@ namespace SharpMap.Web.UI.Ajax
     /// </remarks>
     [DefaultProperty("Map")]
     [ToolboxData("<{0}:AjaxMapControl runat=\"server\"></{0}:AjaxMapControl>")]
-    [Designer(typeof (AjaxMapControlDesigner))]
+    [Designer(typeof(AjaxMapControlDesigner))]
     public class AjaxMapControl : WebControl, INamingContainer, ICallbackEventHandler
     {
         internal static NumberFormatInfo numberFormat_EnUS = new CultureInfo("en-US", false).NumberFormat;
@@ -273,7 +273,7 @@ namespace SharpMap.Web.UI.Ajax
         {
             EnsureChildControls();
             if (callbackArg.Trim() == "") return String.Empty;
-            string[] vals = callbackArg.Split(new char[] {';'});
+            string[] vals = callbackArg.Split(new char[] { ';' });
             try
             {
                 map.Zoom = double.Parse(vals[2], numberFormat_EnUS);

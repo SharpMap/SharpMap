@@ -10,7 +10,7 @@
 
     public class FeatureEditorTool : MapTool
     {
-        public FeatureEditorTool() 
+        public FeatureEditorTool()
             : base("FeatureEditorTool", "A tool to edit features")
         {
         }

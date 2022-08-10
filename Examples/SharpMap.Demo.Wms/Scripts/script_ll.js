@@ -3,9 +3,8 @@
         map = new L.Map('map'), center, url, cloudmade;
 
     map.on('load', function (e) {
-        var bounds, jsurl, options, layer;
-        bounds = e.target.getBounds();
-        jsurl = [
+        var bounds = e.target.getBounds();
+        var jsurl = [
             '/json.ashx?MAP_TYPE=DEF&BBOX=',
             bounds._southWest.lat, ',',
             bounds._southWest.lng, ',',
@@ -13,7 +12,7 @@
             bounds._northEast.lng
         ].join('');
 
-        options = {
+        var options = {
             radius: 8,
             fillColor: "#FF7800",
             color: "#000000",
@@ -21,7 +20,7 @@
             opacity: 1,
             fillOpacity: 0.8
         };
-        layer = new L.GeoJSON(null, {
+        var layer = new L.GeoJSON(null, {
             pointToLayer: function (f) {
                 var raw = f.geometry.coordinates;
                 var ll = new L.LatLng(raw[1], raw[0]);
@@ -50,15 +49,11 @@
         });
     });
 
-    center = new L.LatLng(lat, lon);
+    var center = new L.LatLng(lat, lon);
     map.setView(center, zoom);
 
-    url = ['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/998/256/{z}/{x}/{y}.png'].join('');
-    cloudmade = new L.TileLayer(url, {
-        maxZoom: 18,
-        subdomains: ['a.', 'b.', 'c.', '']
-    });
-    map.addLayer(cloudmade);
-
-
+    var osm = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    })
+    map.addLayer(osm);
 });

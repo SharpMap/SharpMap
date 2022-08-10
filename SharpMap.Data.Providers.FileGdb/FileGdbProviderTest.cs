@@ -16,6 +16,8 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 #if DEBUG
 
+using NUnit.Framework;
+using SharpMap.Layers;
 using System;
 //using System.Configuration;
 using System.Data;
@@ -23,8 +25,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Globalization;
 using System.IO;
-using NUnit.Framework;
-using SharpMap.Layers;
 
 #pragma warning disable 1591
 
@@ -50,10 +50,11 @@ namespace SharpMap.Data.Providers
         */
 
         [Test]
+        [Ignore("Only run if you have the test geodatabase properly configured")]
         public void TestSampleSources()
         {
             var di = new DirectoryInfo(@"D:\GIS\FileGDB\samples\data");
-
+            Assert.IsTrue(di.Exists);
             foreach (var tmp in di.EnumerateDirectories())
             {
                 var p = new FileGdbProvider(tmp.FullName);
@@ -68,7 +69,7 @@ namespace SharpMap.Data.Providers
         private static readonly Random Rnd = new Random();
         private static Color RandomColor()
         {
-            return Color.FromArgb(Rnd.Next(31,128), Rnd.Next(256), Rnd.Next(256), Rnd.Next(256));
+            return Color.FromArgb(Rnd.Next(31, 128), Rnd.Next(256), Rnd.Next(256), Rnd.Next(256));
         }
 
         private static Brush RandomBrush()
@@ -82,10 +83,12 @@ namespace SharpMap.Data.Providers
         }
 
         [Test]
+        [Ignore("Only run if you have the test geodatabase properly configured")]
         public void TestMap()
         {
-            var m = new Map(new Size(1024, 786)) {BackColor = Color.FloralWhite};
+            var m = new Map(new Size(1024, 786)) { BackColor = Color.FloralWhite };
             const string samplePath = @"D:\GIS\FileGDB\samples\data\Topo.gdb";
+            Assert.IsTrue(Directory.Exists(samplePath));
 
             var p = new FileGdbProvider(samplePath);
 
@@ -97,10 +100,10 @@ namespace SharpMap.Data.Providers
                 Console.WriteLine(fc);
                 var pUse = new FileGdbProvider(samplePath) { Table = fc };
                 var vl = new VectorLayer("Layer:" + fc, pUse)
-                             {
-                                 SmoothingMode = SmoothingMode.HighQuality,
-                                 Style = {Fill = RandomBrush(), Line = RandomPen()}
-                             };
+                {
+                    SmoothingMode = SmoothingMode.HighQuality,
+                    Style = { Fill = RandomBrush(), Line = RandomPen() }
+                };
                 m.Layers.Add(vl);
 
                 var fds = new FeatureDataSet();
@@ -127,12 +130,12 @@ namespace SharpMap.Data.Providers
             Console.WriteLine();
 
             p.Dispose();
-            
+
 
             m.ZoomToExtents();
             var b = m.GetMap();
             b.Save("fgdb-usa-states.png");
-            
+
             //var fds = new FeatureDataSet();
             //lc.ExecuteIntersectionQuery(m.GetExtents().GetCentroid(), fds);
             //fds.Tables[0].TableName = lc.LayerName;

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Reflection;
+﻿using BruTile.Cache;
+using System;
 using System.Runtime.Serialization;
-using BruTile.Cache;
 
 namespace SharpMap.Utilities.Cache
 {
@@ -32,7 +31,7 @@ namespace SharpMap.Utilities.Cache
 
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            var fileCache = (FileCache) obj;
+            var fileCache = (FileCache)obj;
             info.SetType(typeof(FileCacheRef));
             info.AddValue("dir", Utility.GetFieldValue<string>(fileCache, "_directory"));
             info.AddValue("fmt", Utility.GetFieldValue<string>(fileCache, "_format"));

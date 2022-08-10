@@ -87,7 +87,7 @@ namespace SharpMap.Data.Providers
         {
             var sb = new StringBuilder(512);
             sb.AppendFormat("DataSource={0};version=3;", filename);
-            
+
             // the pool size
             var poolSize = MaxPoolSize;
             if (poolSize > 1)
@@ -145,9 +145,9 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private const string CreateSpatialRefSys = 
+        private const string CreateSpatialRefSys =
             @"CREATE TABLE gpkg_spatial_ref_sys (srs_name TEXT NOT NULL, srs_id INTEGER NOT NULL PRIMARY KEY, organization TEXT NOT NULL, organization_coordsys_id INTEGER NOT NULL, definition  TEXT NOT NULL, description TEXT);";
-        private const string CreateContents = 
+        private const string CreateContents =
             @"CREATE TABLE gpkg_contents (table_name TEXT NOT NULL PRIMARY KEY, data_type TEXT NOT NULL, identifier TEXT UNIQUE, description TEXT DEFAULT '', last_change DATETIME NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')), min_x DOUBLE, min_y DOUBLE, max_x DOUBLE, max_y DOUBLE, srs_id INTEGER, CONSTRAINT fk_gc_r_srs_id FOREIGN KEY (srs_id) REFERENCES gpkg_spatial_ref_sys(srs_id));";
         private const string CreateGeometryColumns =
             @"CREATE TABLE gpkg_geometry_columns (table_name TEXT NOT NULL, column_name TEXT NOT NULL, geometry_type_name TEXT NOT NULL, srs_id INTEGER NOT NULL, z TINYINT NOT NULL, m TINYINT NOT NULL, CONSTRAINT pk_geom_cols PRIMARY KEY (table_name, column_name), CONSTRAINT uk_gc_table_name UNIQUE (table_name), CONSTRAINT fk_gc_tn FOREIGN KEY (table_name) REFERENCES gpkg_contents(table_name), CONSTRAINT fk_gc_srs FOREIGN KEY (srs_id) REFERENCES gpkg_spatial_ref_sys (srs_id));";
@@ -418,11 +418,11 @@ END;";
             switch (dataTypeString)
             {
                 case "tinyint":
-                    return typeof (byte);
+                    return typeof(byte);
 
                 case "int4":
                 case "smallint":
-                    return typeof (short);
+                    return typeof(short);
 
                 case "integer":
                 case "int":
@@ -431,17 +431,17 @@ END;";
 
                 case "int8":
                 case "bigint":
-                    return typeof (long);
+                    return typeof(long);
 
                 case "unsigned big int":
-                    return typeof (ulong);
+                    return typeof(ulong);
 
                 case "text":
                 case "clob":
-                    return typeof (string);
+                    return typeof(string);
 
                 case "blob":
-                    return typeof (byte[]);
+                    return typeof(byte[]);
 
                 case "double":
                 case "double precision":
@@ -456,10 +456,10 @@ END;";
                     return typeof(DateTime);
 
                 case "numeric":
-                    return typeof (decimal);
+                    return typeof(decimal);
 
                 case "boolean":
-                    return typeof (bool);
+                    return typeof(bool);
 
                 default:
                     if (dataTypeString.StartsWith("character(") ||
@@ -469,9 +469,9 @@ END;";
                         dataTypeString.StartsWith("native character(") ||
                         dataTypeString.StartsWith("nvarchar(")
                         )
-                        return typeof (string);
+                        return typeof(string);
                     if (dataTypeString.StartsWith("decimal("))
-                        return typeof (decimal);
+                        return typeof(decimal);
                     break;
             }
 

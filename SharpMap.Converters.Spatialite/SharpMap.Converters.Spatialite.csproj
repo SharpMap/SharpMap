@@ -13,11 +13,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
+        <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

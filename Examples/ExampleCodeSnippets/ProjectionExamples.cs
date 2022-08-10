@@ -1,8 +1,11 @@
 //#define alglib
 
+using NetTopologySuite;
+using ProjNet.CoordinateSystems;
+
 namespace ExampleCodeSnippets
 {
-    
+
     [NUnit.Framework.TestFixture]
     public class ProjectionExamples
     {
@@ -33,7 +36,7 @@ namespace ExampleCodeSnippets
     /// X' = _a*X + _b*Y + _c
     /// Y' = _d*X + _e*Y + _f
     /// </summary>
-    public class AffineCoordinateTransformation2D : ProjNet.CoordinateSystems.Transformations.MathTransform, GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation
+    public class AffineCoordinateTransformation2D : ProjNet.CoordinateSystems.Transformations.MathTransform, NetTopologySuite.CoordinateSystems.Transformations.ICoordinateTransformation
     {
         private readonly double _a, _b, _c, _d, _e, _f;
         private readonly double _ainv, _binv, _cinv, _dinv, _einv, _finv;
@@ -110,7 +113,7 @@ namespace ExampleCodeSnippets
 
         #region Overrides of MathTransform
 
-        public override GeoAPI.CoordinateSystems.Transformations.IMathTransform Inverse()
+        public override NetTopologySuite.CoordinateSystems.Transformations.MathTransform Inverse()
         {
             //#warning(System.Drawing.Drawing2D.Matrix uses single precision floating point numbers. This involves reduction of precision, not at all accurate!)
 
@@ -201,7 +204,7 @@ namespace ExampleCodeSnippets
             get { throw new System.NotImplementedException(); }
         }
 
-        public GeoAPI.CoordinateSystems.Transformations.IMathTransform MathTransform
+        public NetTopologySuite.CoordinateSystems.Transformations.MathTransform MathTransform
         {
             get { return this; }
         }
@@ -216,19 +219,19 @@ namespace ExampleCodeSnippets
             get { return ""; }
         }
 
-        public GeoAPI.CoordinateSystems.ICoordinateSystem SourceCS
+        public NetTopologySuite.CoordinateSystems.ICoordinateSystem SourceCS
         {
             get { return null; }
         }
 
-        public GeoAPI.CoordinateSystems.ICoordinateSystem TargetCS
+        public NetTopologySuite.CoordinateSystems.ICoordinateSystem TargetCS
         {
             get { return null; }
         }
 
-        public GeoAPI.CoordinateSystems.Transformations.TransformType TransformType
+        public NetTopologySuite.CoordinateSystems.Transformations.TransformType TransformType
         {
-            get { return GeoAPI.CoordinateSystems.Transformations.TransformType.Transformation; }
+            get { return NetTopologySuite.CoordinateSystems.Transformations.TransformType.Transformation; }
         }
 
         #endregion
@@ -262,7 +265,7 @@ namespace ExampleCodeSnippets
                 for (System.Int32 i = 0; i < fdtClone.Columns.Count; i++)
                     newRow[i] = row[i];
 
-                GeoAPI.Geometries.IPoint smpt = (GeoAPI.Geometries.IPoint)row.Geometry;
+                NetTopologySuite.Geometries.Point smpt = (NetTopologySuite.Geometries.Point)row.Geometry;
                 System.Drawing.PointF[] pts = new System.Drawing.PointF[] 
                     { new System.Drawing.PointF((float)smpt.X, (float)smpt.Y) };
                 matrix.TransformPoints(pts);
@@ -369,8 +372,8 @@ namespace ExampleCodeSnippets
             //Get affine transformation calculates mean points to improve accuaracy
             //Unfortunately the result is not very good, so, since I know better I manually set these
             //mean points.
-            lst.SetMeanPoints(new GeoAPI.Geometries.IPoint(0, 0), 
-                              new GeoAPI.Geometries.IPoint(matrix.OffsetX, matrix.OffsetY));
+            lst.SetMeanPoints(new NetTopologySuite.Geometries.Point(0, 0), 
+                              new NetTopologySuite.Geometries.Point(matrix.OffsetX, matrix.OffsetY));
              */
 
             //Create Affine
@@ -383,13 +386,13 @@ namespace ExampleCodeSnippets
             map.Layers.Add(new SharpMap.Layers.VectorLayer("L1",
                                                            new SharpMap.Data.Providers.GeometryFeatureProvider(fdt1)));
             ((SharpMap.Layers.VectorLayer) map.Layers[0]).Style.Symbol =
-                new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
+                new System.Drawing.Bitmap("Examples\\DemoWinForm\\Resources\\flag.png");
 
             //Add transformed layer
             map.Layers.Add(new SharpMap.Layers.VectorLayer("L2",
                                                            new SharpMap.Data.Providers.GeometryFeatureProvider(fdt2)));
             ((SharpMap.Layers.VectorLayer) map.Layers[1]).Style.Symbol =
-                new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\women.png");
+                new System.Drawing.Bitmap("Examples\DemoWinForm\\Resources\\women.png");
 
             //Render map
             map.ZoomToExtents();
@@ -412,7 +415,7 @@ namespace ExampleCodeSnippets
         }
     }
     
-    #endif
+#endif
 
         [NUnit.Framework.Test]
         public void TestGdalRasterLayer()
@@ -428,7 +431,7 @@ namespace ExampleCodeSnippets
             var p1 = ecw1.GetProjection();
             ecw2.ReprojectToCoordinateSystem(p1);
 
-            var m = new SharpMap.Map(new System.Drawing.Size( 1024, 768));
+            var m = new SharpMap.Map(new System.Drawing.Size(1024, 768));
             m.Layers.Add(ecw1);
             m.Layers.Add(ecw2);
 
@@ -439,34 +442,34 @@ namespace ExampleCodeSnippets
             }
         }
 
-public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
-    GeoAPI.CoordinateSystems.ICoordinateSystem target)
-{
-    for (var i = 0; i < fds.Tables.Count; i ++)
-    {
-        var fdt = fds.Tables[i];
-        ReprojectFeatureDataTable(fdt, target);
-    }
+        public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
+            CoordinateSystem target)
+        {
+            for (var i = 0; i < fds.Tables.Count; i++)
+            {
+                var fdt = fds.Tables[i];
+                ReprojectFeatureDataTable(fdt, target);
+            }
 
-}
+        }
 
-public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
-    GeoAPI.CoordinateSystems.ICoordinateSystem target)
-{
-    var source = SharpMap.CoordinateSystems.CoordinateSystemExtensions.GetCoordinateSystem(fdt[0].Geometry);
+        public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
+            CoordinateSystem target)
+        {
+            var source = SharpMap.CoordinateSystems.CoordinateSystemExtensions.GetCoordinateSystem(fdt[0].Geometry);
 
-    var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
-    var ct = ctFactory.CreateFromCoordinateSystems(source, target);
-            
-    var geomFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory((int)target.AuthorityCode);
+            var ctFactory = new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
+            var ct = ctFactory.CreateFromCoordinateSystems(source, target);
 
-    for (var i = 0; i < fdt.Rows.Count; i++)
-    {
-        var fdr = fdt[i];
-        fdr.Geometry =
-            GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
-                ct.MathTransform, geomFactory);
-    }
-}
+            var geomFactory = NtsGeometryServices.Instance.CreateGeometryFactory((int)target.AuthorityCode);
+
+            for (var i = 0; i < fdt.Rows.Count; i++)
+            {
+                var fdr = fdt[i];
+                fdr.Geometry =
+                    NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
+                        ct.MathTransform, geomFactory);
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace SharpMap.Drawing
             foreach (KnownColor knownColor in System.Enum.GetValues(typeof(KnownColor)))
             {
                 var fldInfo = type.GetField(knownColor.ToString());
-                var argb = (ArgbValueAttribute) fldInfo.GetCustomAttribute(typeof(ArgbValueAttribute));
+                var argb = (ArgbValueAttribute)fldInfo.GetCustomAttribute(typeof(ArgbValueAttribute));
                 KnownColorLookup.Add(knownColor, argb.Argb);
 
             }

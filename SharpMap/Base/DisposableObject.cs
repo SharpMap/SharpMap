@@ -2,7 +2,7 @@
 
 namespace SharpMap.Base
 {
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -56,14 +56,14 @@ namespace SharpMap.Base
         /// Releases unmanaged resources
         /// </summary>
         protected virtual void ReleaseUnmanagedResources()
-        {}
+        { }
 
         /// <summary>
         /// Releases managed resources
         /// </summary>
         protected virtual void ReleaseManagedResources()
-        {}
-        
+        { }
+
         #endregion
 
         /// <summary>

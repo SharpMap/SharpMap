@@ -1,4 +1,4 @@
-﻿using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
@@ -9,11 +9,10 @@ namespace UnitTests.Data.Providers
     {
         private string _tableName;
 
-        public override void OneTimeSetUp()
+        public OleDbPointProviderTest()
         {
             if (System.IntPtr.Size == 8)
                 Assert.Ignore("Only run in 32bit mode, because most Excel installations are 32bit.");
-            base.OneTimeSetUp();
 
             try
             {
@@ -117,7 +116,7 @@ namespace UnitTests.Data.Providers
         {
             using (var p = CreateProvider())
             {
-                IGeometry feature = null;
+                Geometry feature = null;
                 Assert.DoesNotThrow(() => feature = p.GetGeometryByID(3));
                 Assert.IsNotNull(feature);
                 Assert.AreEqual(feature.Centroid.Coordinate,

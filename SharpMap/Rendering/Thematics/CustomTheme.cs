@@ -15,10 +15,10 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Runtime.Serialization;
 using SharpMap.Data;
 using SharpMap.Styles;
+using System;
+using System.Runtime.Serialization;
 
 namespace SharpMap.Rendering.Thematics
 {
@@ -84,7 +84,7 @@ namespace SharpMap.Rendering.Thematics
         {
             _getStyleDelegate = getStyleMethod;
         }
-             
+
         /// <summary>
         /// Gets or sets the default style when an attribute isn't found in any bucket
         /// </summary>

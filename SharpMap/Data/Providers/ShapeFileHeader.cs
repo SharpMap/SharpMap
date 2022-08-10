@@ -1,7 +1,7 @@
+using NetTopologySuite.DataStructures;
+using NetTopologySuite.Geometries;
 using System;
 using System.IO;
-using GeoAPI.DataStructures;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -37,13 +37,13 @@ namespace SharpMap.Data.Providers
         }
 
         private readonly Envelope _envelope;
-        
+
         /// <summary>
         /// Creates an instance of this class using the provided <paramref name="header"/> buffer
         /// </summary>
         /// <param name="header">The buffer holding the header information</param>
         public ShapeFileHeader(byte[] header)
-            :this(new MemoryStream(header))
+            : this(new MemoryStream(header))
         {
         }
 
@@ -52,7 +52,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="header">The stream holding the header information</param>
         public ShapeFileHeader(Stream header)
-            :this(new BinaryReader(header))
+            : this(new BinaryReader(header))
         {
         }
 
@@ -81,7 +81,7 @@ namespace SharpMap.Data.Providers
 
             // Get file length
             headerReader.BaseStream.Seek(20, SeekOrigin.Current);
-            FileLength = 2*ShapeFile.SwapByteOrder(headerReader.ReadInt32());
+            FileLength = 2 * ShapeFile.SwapByteOrder(headerReader.ReadInt32());
 
             // Check file Version
             if (headerReader.ReadInt32() != ShapeFileVersion)
@@ -90,7 +90,7 @@ namespace SharpMap.Data.Providers
             }
 
             // Get the shape type
-            ShapeType = (ShapeType) headerReader.ReadInt32();
+            ShapeType = (ShapeType)headerReader.ReadInt32();
 
             // Get the bounding box
             _envelope = new Envelope(new Coordinate(headerReader.ReadDouble(), headerReader.ReadDouble()),
@@ -118,7 +118,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets the extent of the shape file
         /// </summary>
-        public Envelope BoundingBox { get { return new Envelope(_envelope);} }
+        public Envelope BoundingBox { get { return new Envelope(_envelope); } }
 
         /// <summary>
         /// Gets the range of Z-Values in the shape file, if there are any

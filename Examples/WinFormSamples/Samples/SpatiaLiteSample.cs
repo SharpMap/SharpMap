@@ -12,8 +12,8 @@ namespace WinFormSamples.Samples
         {
             get { return @"Data Source=GeoData\SpatiaLite\sample.sqlite"; }
         }
-        
-        
+
+
         public static SharpMap.Map InitializeMap(float angle)
         {
             //Initialize a new map of size 'imagesize'
@@ -52,7 +52,7 @@ namespace WinFormSamples.Samples
             layCities.MaxVisible = 40;
 
             //Set up a country label layer
-            SharpMap.Layers.LabelLayer layLabel = new SharpMap.Layers.LabelLayer("Country labels") 
+            SharpMap.Layers.LabelLayer layLabel = new SharpMap.Layers.LabelLayer("Country labels")
             {
                 DataSource = layCountries.DataSource,
                 LabelColumn = "NAME",
@@ -77,10 +77,10 @@ namespace WinFormSamples.Samples
                 DataSource = layCities.DataSource,
                 LabelColumn = "name",
                 PriorityColumn = "population",
-                PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr) 
-                { 
-                    System.Int32 retVal = 10000000 * ( (System.String)fdr["capital"] == "Y" ? 1 : 0 );
-                    return  retVal + System.Convert.ToInt32(fdr["population"]);
+                PriorityDelegate = delegate (SharpMap.Data.FeatureDataRow fdr)
+                {
+                    System.Int32 retVal = 10000000 * ((System.String)fdr["capital"] == "Y" ? 1 : 0);
+                    return retVal + System.Convert.ToInt32(fdr["population"]);
                 },
                 TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias,
                 SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias,
@@ -103,15 +103,15 @@ namespace WinFormSamples.Samples
             layRiverLabels.LabelColumn = "Name";
             layRiverLabels.PriorityDelegate = GetRiverLength;
             layRiverLabels.Style = new SharpMap.Styles.LabelStyle
-                                       {
-                                           Font = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold),
-                                           Halo = new System.Drawing.Pen(System.Drawing.Color.Azure, 2),
-                                           ForeColor = System.Drawing.Color.DarkCyan,
-                                           IgnoreLength = false,
-                                           Enabled = true,
-                                           CollisionDetection = true,
-                                          
-                                       };
+            {
+                Font = new System.Drawing.Font("Arial", 10, System.Drawing.FontStyle.Bold),
+                Halo = new System.Drawing.Pen(System.Drawing.Color.Azure, 2),
+                ForeColor = System.Drawing.Color.DarkCyan,
+                IgnoreLength = false,
+                Enabled = true,
+                CollisionDetection = true,
+
+            };
             layRiverLabels.LabelFilter = SharpMap.Rendering.LabelCollisionDetection.ThoroughCollisionDetection;
 
             //Add the layers to the map object.
@@ -152,7 +152,8 @@ namespace WinFormSamples.Samples
                     {
                         map.Layers.Add(
                             new SharpMap.Layers.VectorLayer(
-                                string.Format("{0} - {1}", provider.Table, provider.GeometryColumn), provider) { Style = LayerTools.GetRandomVectorStyle() });
+                                string.Format("{0} - {1}", provider.Table, provider.GeometryColumn), provider)
+                            { Style = LayerTools.GetRandomVectorStyle() });
                     }
                 }
                 if (map.Layers.Count > 0)
@@ -178,11 +179,11 @@ namespace WinFormSamples.Samples
             if (row == null) return 0;
             if (row.Geometry == null)
                 return 0;
-            var ml = row.Geometry as GeoAPI.Geometries.IMultiLineString;
+            var ml = row.Geometry as NetTopologySuite.Geometries.MultiLineString;
             if (ml != null)
                 return System.Convert.ToInt32(ml.Length);
 
-            var l = row.Geometry as GeoAPI.Geometries.ILineString;
+            var l = row.Geometry as NetTopologySuite.Geometries.LineString;
             if (l != null)
                 return System.Convert.ToInt32(l.Length);
             return 0;

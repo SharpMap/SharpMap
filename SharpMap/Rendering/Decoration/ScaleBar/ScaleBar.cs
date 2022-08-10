@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SharpMap.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
-using SharpMap.Utilities;
 
 namespace SharpMap.Rendering.Decoration.ScaleBar
 {
@@ -134,7 +134,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         protected override void OnRender(Graphics g, MapViewport mvp)
         {
             var rectF = g.ClipBounds;
-            
+
             if (MapUnit == (int)Unit.Degree)
             {
                 // do not use map.Envelope as this is not apparent width on rotated viewports
@@ -149,7 +149,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
 
             switch (mvp.SRID)
             {
-                case 3857: 
+                case 3857:
                     //other spherical variations (all of which are deprecated except 900913): 900913 54004 41001 102113 102100 3785 
 
                     // constrain to 85deg N/S
@@ -464,8 +464,8 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
             }
         }
 
-private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
-            out int pixelsPerTic, out double scaleBarUnitsPerTic)
+        private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, double mapScale, double fBarUnitFactor,
+                    out int pixelsPerTic, out double scaleBarUnitsPerTic)
         {
             if (_forceRecalc)
             {
@@ -668,7 +668,7 @@ private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, doubl
                 fScale = ScaleCalculations.CalculateScaleNonLatLong(_mapWidth, _pageWidth, _mapUnitFactor, dpi);
             Scale = fScale;
         }
-        
+
         private void SetScaleD(int dpi, double lon1, double lon2, double lat, int widthInPixel)
         {
             _lon1 = lon1;
@@ -977,7 +977,7 @@ private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, doubl
             private set
             {
                 if (_scale == value) return;
-                    
+
                 _scale = value;
                 OnViewChanged();
             }
@@ -996,7 +996,7 @@ private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, doubl
             if (factor <= 0.0) //factor should be >0
                 factor = 1.0;
 
-            ScaleBar.Units[(int)Unit.Custom] =  new UnitInfo((int)Unit.Custom, factor, name, shortName);
+            ScaleBar.Units[(int)Unit.Custom] = new UnitInfo((int)Unit.Custom, factor, name, shortName);
             MapUnit = (int)Unit.Custom;
 
             _barUnitLargeScale = (int)Unit.Custom;
@@ -1030,7 +1030,7 @@ private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, doubl
         }
         */
 
-        
+
 
         /// <summary>
         /// Gets or sets the number of ticks
@@ -1148,7 +1148,7 @@ private void CalcLargeOrSmallUnit(int dpi, int widthOnDevice, int numTics, doubl
         }
 
         #region Private static helpers
-        
+
         //for multipliers ranging from .00001 to 10000000000
 
         //  Candidates are 1, 2, 2.5, and 5 * multiplier

@@ -144,7 +144,7 @@ namespace SharpMap.Rendering
         /// <returns>An array of <see cref="RectangleF"/>s</returns>
         public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, GraphicsPath graphicsPath)
         {
-            DrawString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, 0, graphicsPath,false);
+            DrawString(graphics, s, font, brush, textPathAlign, textPathPosition, 100, 0, graphicsPath, false);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace SharpMap.Rendering
         public static void DrawString(Graphics graphics, string s, Font font, Brush brush, TextPathAlign textPathAlign, TextPathPosition textPathPosition, int letterSpace, float rotateDegree, GraphicsPath graphicsPath, bool showPath)
         {
             var top = TextOnPath.TextOnPathInstance;
-            
+
             top.Text = s;
             top.Font = font;
             top.FillColorTop = brush;
@@ -233,7 +233,7 @@ namespace SharpMap.Rendering
 
         private bool _measureString;
         private Font _font;
-        private Pen _colorHalo = new Pen(Color.Black,1);
+        private Pen _colorHalo = new Pen(Color.Black, 1);
         private Brush _fillBrush = new SolidBrush(Color.Black);
         private TextPathAlign _pathalign = TextPathAlign.Center;
         private double _letterspacepercentage = 1;
@@ -244,12 +244,12 @@ namespace SharpMap.Rendering
         private List<PointF> _pointText = new List<PointF>();
         private List<Point> _pointTextUp = new List<Point>();
         private readonly List<float> _angles = new List<float>();
-        
+
         /// <summary>
         /// The last catched exception is stored here
         /// </summary>
         public Exception LastError;
-        
+
 
         /// <summary>
         /// Gets or sets the <see cref="Graphics"/> object
@@ -260,7 +260,7 @@ namespace SharpMap.Rendering
         /// Gets or sets a value indicating the <see cref="GraphicsPath"/> used to render text along
         /// </summary>
         public GraphicsPath GraphicsPath { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether the string should be measured
         /// </summary>
@@ -269,7 +269,7 @@ namespace SharpMap.Rendering
             get { return _measureString; }
             set { _measureString = value; }
         }
-        
+
 
         /// <summary>
         /// Gets or sets a list of regions
@@ -288,7 +288,7 @@ namespace SharpMap.Rendering
             get { return _pointText; }
             set { _pointText = value; }
         }
-        
+
         /// <summary>
         /// Gets or sets a list of <see cref="PointF"/>s
         /// </summary>
@@ -309,7 +309,7 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Gets or sets a value indicating the rotation
         /// </summary>
-        public float RotateDegree { get; set; } 
+        public float RotateDegree { get; set; }
 
         /// <summary>
         /// Creates an instance of this class
@@ -391,7 +391,7 @@ namespace SharpMap.Rendering
         public int LetterSpacePercentage
         {
             get { return (int)(100 * _letterspacepercentage); }
-            set { _letterspacepercentage = value/100d; }
+            set { _letterspacepercentage = value / 100d; }
         }
 
         /// <summary>
@@ -414,7 +414,7 @@ namespace SharpMap.Rendering
             _pathdata = pathdata;
             Text = text;
             _font = font;
-            _colorHalo= haloPen;
+            _colorHalo = haloPen;
             _fillBrush = fillcolor;
             _letterspacepercentage = letterspacepercentage / 100d;
 
@@ -435,8 +435,8 @@ namespace SharpMap.Rendering
         /// <returns>The area covered by the rendering process</returns>
         public RectangleF DrawTextOnPathEx()
         {
-            var  affectedArea = new RectangleF();
-            
+            var affectedArea = new RectangleF();
+
             var points = new PointF[25001];
             var count = 0;
             var gp = new GraphicsPath(_pathdata.Points, _pathdata.Types) { FillMode = FillMode.Winding };
@@ -498,7 +498,7 @@ namespace SharpMap.Rendering
         {
             if (points == null)
                 return null;
-            if (points.Length == 0) 
+            if (points.Length == 0)
                 return new PointF[0];
             var tmpPoints = new List<PointF>(points.Length);
             tmpPoints.Add(points[0]);
@@ -524,8 +524,8 @@ namespace SharpMap.Rendering
         public bool IsVisible(PointF[] points, int maxPoints)
         {
             var result = true;
-            var g = Graphics;           
-            var count = 0;     
+            var g = Graphics;
+            var count = 0;
             var maxWidthText = default(double);
             int i;
             for (i = 0; i <= Text.Length - 1; i++)
@@ -534,14 +534,14 @@ namespace SharpMap.Rendering
             }
             switch (_pathalign)
             {
-                case TextPathAlign.Left:                  
+                case TextPathAlign.Left:
                     count = 0;
                     break;
                 case TextPathAlign.Center:
-                    count = (int)((maxPoints - maxWidthText) / 2);                    
+                    count = (int)((maxPoints - maxWidthText) / 2);
                     break;
                 case TextPathAlign.Right:
-                    count = (int)(maxPoints - maxWidthText - (double)StringRegion(g, Text.Length - 1) * LetterSpacePercentage / 100);                  
+                    count = (int)(maxPoints - maxWidthText - (double)StringRegion(g, Text.Length - 1) * LetterSpacePercentage / 100);
                     break;
             }
             var lStrWidth = (int)(StringRegion(g, 0) * LetterSpacePercentage / 100);
@@ -550,10 +550,10 @@ namespace SharpMap.Rendering
                 count = -(lStrWidth / 2);
             }
             double currentWidthText = 0;
-            for (int j =count+lStrWidth/2; j <= Text.Length - 1; j++)
+            for (int j = count + lStrWidth / 2; j <= Text.Length - 1; j++)
             {
                 currentWidthText += StringRegion(g, j) * LetterSpacePercentage / 100;
-            }          
+            }
             if ((int)currentWidthText >= maxPoints)
             {
                 result = false;
@@ -621,14 +621,14 @@ namespace SharpMap.Rendering
                     count += lStrWidth;
                     var point2 = points[count];
                     //PointF point = points[count - lStrWidth / 2];
-                    var point = new PointF((point2.X+point1.X)/2,(point2.Y+point1.Y)/2);
+                    var point = new PointF((point2.X + point1.X) / 2, (point2.Y + point1.Y) / 2);
                     var angle = GetAngle(point1, point2);
                     DrawRotatedText(g, Text[charStep].ToString(CultureInfo.InvariantCulture), (float)angle, point);
                     point1 = points[count];
                 }
                 else
                 {
-                    count += lStrWidth;                  
+                    count += lStrWidth;
                 }
                 charStep += 1;
             }
@@ -671,7 +671,7 @@ namespace SharpMap.Rendering
         /// <returns>An angle in degrees</returns>
         private static double GetAngle(PointF point1, PointF point2)
         {
-            const double rad2Deg = 180d/Math.PI;
+            const double rad2Deg = 180d / Math.PI;
 
             var c = Math.Sqrt(Math.Pow((point2.X - point1.X), 2) + Math.Pow((point2.Y - point1.Y), 2));
             if (c == 0d)
@@ -679,7 +679,7 @@ namespace SharpMap.Rendering
                 return 0;
             }
 
-            var res = Math.Asin((point2.Y - point1.Y)/c)*rad2Deg;
+            var res = Math.Asin((point2.Y - point1.Y) / c) * rad2Deg;
             return point1.X > point2.X
                        ? res - 180
                        : res;
@@ -695,31 +695,31 @@ namespace SharpMap.Rendering
         private void DrawRotatedText(Graphics gr, string text, float angle, PointF pointCenter)
         {
             angle -= RotateDegree;
-            var stringFormat =  new StringFormat { Alignment = StringAlignment.Center };
+            var stringFormat = new StringFormat { Alignment = StringAlignment.Center };
 
             //gr.SmoothingMode = SmoothingMode.HighQuality;
             //gr.CompositingQuality = CompositingQuality.HighQuality;
             //gr.TextRenderingHint = TextRenderingHint.AntiAlias;
             using (var graphicsPath = new GraphicsPath())
             {
-                var x = (int) pointCenter.X;
-                var y = (int) pointCenter.Y;
+                var x = (int)pointCenter.X;
+                var y = (int)pointCenter.Y;
                 var pOrigin = new Point();
                 switch (TextPathPathPosition)
                 {
                     case TextPathPosition.OverPath:
-                        pOrigin = new Point(x, (int) (y - _font.Size));
-                        graphicsPath.AddString(text, _font.FontFamily, (int) _font.Style, _font.Size,
-                                               new Point(x, (int) (y - _font.Size)), stringFormat);
+                        pOrigin = new Point(x, (int)(y - _font.Size));
+                        graphicsPath.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size,
+                                               new Point(x, (int)(y - _font.Size)), stringFormat);
                         break;
                     case TextPathPosition.CenterPath:
-                        pOrigin = new Point(x, (int) (y - _font.Size/2));
-                        graphicsPath.AddString(text, _font.FontFamily, (int) _font.Style, _font.Size,
-                                               new Point(x, (int) (y - _font.Size/2)), stringFormat);
+                        pOrigin = new Point(x, (int)(y - _font.Size / 2));
+                        graphicsPath.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size,
+                                               new Point(x, (int)(y - _font.Size / 2)), stringFormat);
                         break;
                     case TextPathPosition.UnderPath:
                         pOrigin = new Point(x, y);
-                        graphicsPath.AddString(text, _font.FontFamily, (int) _font.Style, _font.Size, new Point(x, y),
+                        graphicsPath.AddString(text, _font.FontFamily, (int)_font.Style, _font.Size, new Point(x, y),
                                                stringFormat);
                         break;
                 }

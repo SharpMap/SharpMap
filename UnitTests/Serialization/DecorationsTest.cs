@@ -1,8 +1,7 @@
-﻿using System;
+﻿using NUnit.Framework;
+using SharpMap.Rendering.Decoration;
 using System.Collections.Generic;
 using System.Drawing;
-using NUnit.Framework;
-using SharpMap.Rendering.Decoration;
 
 namespace UnitTests.Serialization
 {
@@ -13,7 +12,7 @@ namespace UnitTests.Serialization
         {
             var northArrowS = new NorthArrow();
             NorthArrow northArrowD = null;
-            
+
             Assert.DoesNotThrow(() => northArrowD = SandD(northArrowS, GetFormatter()));
             Assert.IsNotNull(northArrowD);
 
@@ -50,10 +49,10 @@ namespace UnitTests.Serialization
 
         }
 
-        private class DecorationEqualityComparer<T> : EqualityComparer<T> 
-            where T:MapDecoration
+        private class DecorationEqualityComparer<T> : EqualityComparer<T>
+            where T : MapDecoration
         {
-            
+
             protected readonly List<string> DifferAt = new List<string>();
 
             public override bool Equals(T lhs, T rhs)
@@ -140,7 +139,7 @@ namespace UnitTests.Serialization
             }
         }
 
-        private class NorthArrowEqualityComparer : DecorationEqualityComparer<NorthArrow> 
+        private class NorthArrowEqualityComparer : DecorationEqualityComparer<NorthArrow>
         {
             public override bool Equals(NorthArrow x, NorthArrow y)
             {
@@ -160,7 +159,7 @@ namespace UnitTests.Serialization
                 if (x.NorthArrowImage != null && x.GetHashCode() != y.GetHashCode())
                 {
                     if (x.GetHashCode() != y.GetHashCode())
-                    DifferAt.Add("NorthArrowImage (GetHashCode)");
+                        DifferAt.Add("NorthArrowImage (GetHashCode)");
                     result = false;
                 }
 
@@ -179,9 +178,9 @@ namespace UnitTests.Serialization
             public override bool Equals(Disclaimer lhs, Disclaimer rhs)
             {
                 var result = base.Equals(lhs, rhs);
-                
+
                 var feq = new FontEqualityComparer();
-                if (!feq.Equals(lhs.Font,rhs.Font))
+                if (!feq.Equals(lhs.Font, rhs.Font))
                 {
                     DifferAt.Add("Font");
                     result = false;
@@ -226,7 +225,7 @@ namespace UnitTests.Serialization
                 if (lhs.DigitSubstitutionLanguage != rhs.DigitSubstitutionLanguage) return false;
                 if (lhs.DigitSubstitutionMethod != rhs.DigitSubstitutionMethod) return false;
                 if (lhs.FormatFlags != rhs.FormatFlags) return false;
-                if (lhs.HotkeyPrefix!= rhs.HotkeyPrefix) return false;
+                if (lhs.HotkeyPrefix != rhs.HotkeyPrefix) return false;
                 if (lhs.LineAlignment != rhs.LineAlignment) return false;
                 if (lhs.Trimming != rhs.Trimming) return false;
 

@@ -1,18 +1,18 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
-using System.Windows.Forms;
-using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Forms;
 using SharpMap.Forms.Tools;
+using System;
+using System.Drawing;
+using System.Reflection;
+using System.Windows.Forms;
+using Point = System.Drawing.Point;
 
 namespace WinFormSamples
 {
     public class MagnifierTool : MapTool
     {
-        
+
         private readonly MapBox _parentMapBox;
         private readonly PictureBox _magnified;
         private Map _map;
@@ -22,7 +22,7 @@ namespace WinFormSamples
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
-        public MagnifierTool(MapBox parentMapBox) 
+        public MagnifierTool(MapBox parentMapBox)
             : base("Magnifier", "A tool to magnify the portion of the map below the cursor")
         {
             _parentMapBox = parentMapBox;
@@ -31,7 +31,7 @@ namespace WinFormSamples
 
             MagnificationFactor = 1.10;
 
-            Offset = new Size(5,5);
+            Offset = new Size(5, 5);
 
             _magnified = new PictureBox();
             _magnified.Size = new Size(75, 75);
@@ -43,7 +43,7 @@ namespace WinFormSamples
             Map = _parentMapBox.Map;
             _map = Map.Clone();
             _map.Size = _magnified.Size;
-            _map.Zoom = _map.Size.Width*(Map.Envelope.Width/Map.Size.Width) / _magnification;
+            _map.Zoom = _map.Size.Width * (Map.Envelope.Width / Map.Size.Width) / _magnification;
             _map.Center = _map.Center;
             _magnified.Image = _map.GetMap();
 
@@ -105,14 +105,14 @@ namespace WinFormSamples
         public override bool DoMouseWheel(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             var factor = 1d;
-            if (Math.Sign(_parentMapBox.WheelZoomMagnitude)*mouseEventArgs.Delta > 0)
+            if (Math.Sign(_parentMapBox.WheelZoomMagnitude) * mouseEventArgs.Delta > 0)
                 factor = MagnificationFactor;
             else
-                factor = 1/MagnificationFactor;
+                factor = 1 / MagnificationFactor;
             Magnification *= factor;
             //_map.Zoom *= Math.Sign(mouseEventArgs.Delta)*MagnificationFactor * Math.Sign(_parentMapBox.WheelZoomMagnitude);
             //_magnified.Image = _map.GetMap();
-            
+
             return base.DoMouseWheel(mapPosition, mouseEventArgs);
         }
 
@@ -135,10 +135,10 @@ namespace WinFormSamples
 
                 var old = _magnification;
                 _magnification = value;
-                OnMagnificationChanged(_magnification/old);
+                OnMagnificationChanged(_magnification / old);
             }
         }
-        
+
         /// <summary>
         /// Event raised when the magnification factor has changed
         /// </summary>
@@ -151,17 +151,17 @@ namespace WinFormSamples
         private void OnMagnificationChanged(double change)
         {
             _map.Zoom /= change;
-            
+
             var h = MagnificationChanged;
             if (h != null) h(this, EventArgs.Empty);
         }
 
-        
+
         /// <summary>
         /// Gets or sets a value indicating by which factor the magnification has to change on scroll or key
         /// </summary>
         public double MagnificationFactor { get; set; }
-        
+
         public override bool DoMouseMove(Coordinate mapPosition, MouseEventArgs mouseEventArgs)
         {
             if (!Enabled) return false;
@@ -169,7 +169,7 @@ namespace WinFormSamples
             _map.Center = mapPosition;
             _magnified.Image = _map.GetMap();
             _magnified.Visible = true;
-            
+
             var newLocation = Point.Add(mouseEventArgs.Location, Offset);
             if (newLocation.X + _magnified.Size.Width > _parentMapBox.ClientSize.Width)
                 newLocation.X = mouseEventArgs.Location.X - Offset.Width - _magnified.Size.Width;
@@ -188,7 +188,7 @@ namespace WinFormSamples
             {
                 if (value.Width < 0 || value.Height < 0)
                     throw new ArgumentException("value");
-                
+
                 if (value == _offset)
                     return;
 

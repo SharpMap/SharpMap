@@ -14,10 +14,10 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
-    
+
+using NetTopologySuite.Geometries;
 using System;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Forms.Tools
 {
@@ -55,7 +55,7 @@ namespace SharpMap.Forms.Tools
         /// </summary>
         public virtual void Cancel()
         {
-            
+
         }
 
         /// <summary>

@@ -1,13 +1,11 @@
-﻿using System;
+﻿using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.Layers;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using SharpMap.Layers;
-using System.Drawing;
-using GeoAPI.CoordinateSystems.Transformations;
-using ProjNet.CoordinateSystems.Transformations;
-using GeoAPI.CoordinateSystems;
-using ProjNet.CoordinateSystems;
 
 namespace WinFormSamples
 {
@@ -31,7 +29,7 @@ namespace WinFormSamples
                     CoordinateSystemFactory csFac = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
                     CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
 
-                    IGeographicCoordinateSystem wgs84 = csFac.CreateGeographicCoordinateSystem(
+                    GeographicCoordinateSystem wgs84 = csFac.CreateGeographicCoordinateSystem(
                       "WGS 84", AngularUnit.Degrees, HorizontalDatum.WGS84, PrimeMeridian.Greenwich,
                       new AxisInfo("north", AxisOrientationEnum.North), new AxisInfo("east", AxisOrientationEnum.East));
 
@@ -45,11 +43,11 @@ namespace WinFormSamples
                     parameters.Add(new ProjectionParameter("false_northing", 0.0));
                     IProjection projection = csFac.CreateProjection("Google Mercator", "mercator_1sp", parameters);
 
-                    IProjectedCoordinateSystem epsg900913 = csFac.CreateProjectedCoordinateSystem(
+                    ProjectedCoordinateSystem epsg900913 = csFac.CreateProjectedCoordinateSystem(
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
-                    ((CoordinateSystem)epsg900913).DefaultEnvelope = new [] { -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789 };
+                    ((CoordinateSystem)epsg900913).DefaultEnvelope = new[] { -20037508.342789, -20037508.342789, 20037508.342789, 20037508.342789 };
 
                     _wgs84ToGoogle = ctFac.CreateFromCoordinateSystems(wgs84, epsg900913);
                 }
@@ -73,7 +71,7 @@ namespace WinFormSamples
                     CoordinateSystemFactory csFac = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
                     CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
 
-                    IGeographicCoordinateSystem wgs84 = csFac.CreateGeographicCoordinateSystem(
+                    GeographicCoordinateSystem wgs84 = csFac.CreateGeographicCoordinateSystem(
                       "WGS 84", AngularUnit.Degrees, HorizontalDatum.WGS84, PrimeMeridian.Greenwich,
                       new AxisInfo("north", AxisOrientationEnum.North), new AxisInfo("east", AxisOrientationEnum.East));
 
@@ -87,7 +85,7 @@ namespace WinFormSamples
                     parameters.Add(new ProjectionParameter("false_northing", 0.0));
                     IProjection projection = csFac.CreateProjection("Google Mercator", "mercator_1sp", parameters);
 
-                    IProjectedCoordinateSystem epsg900913 = csFac.CreateProjectedCoordinateSystem(
+                    ProjectedCoordinateSystem epsg900913 = csFac.CreateProjectedCoordinateSystem(
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
@@ -110,7 +108,7 @@ namespace WinFormSamples
                     CoordinateSystemFactory csFac = new ProjNet.CoordinateSystems.CoordinateSystemFactory();
                     CoordinateTransformationFactory ctFac = new CoordinateTransformationFactory();
 
-                    IGeographicCoordinateSystem wgs84 = csFac.CreateGeographicCoordinateSystem(
+                    GeographicCoordinateSystem wgs84 = csFac.CreateGeographicCoordinateSystem(
                       "WGS 84", AngularUnit.Degrees, HorizontalDatum.WGS84, PrimeMeridian.Greenwich,
                       new AxisInfo("north", AxisOrientationEnum.North), new AxisInfo("east", AxisOrientationEnum.East));
 
@@ -124,7 +122,7 @@ namespace WinFormSamples
                     parameters.Add(new ProjectionParameter("false_northing", 0.0));
                     IProjection projection = csFac.CreateProjection("Google Mercator", "mercator_1sp", parameters);
 
-                    IProjectedCoordinateSystem epsg900913 = csFac.CreateProjectedCoordinateSystem(
+                    ProjectedCoordinateSystem epsg900913 = csFac.CreateProjectedCoordinateSystem(
                       "Google Mercator", wgs84, projection, LinearUnit.Metre, new AxisInfo("East", AxisOrientationEnum.East),
                       new AxisInfo("North", AxisOrientationEnum.North));
 
@@ -158,7 +156,7 @@ namespace WinFormSamples
         private static readonly Random Rnd = new Random();
         public static Color GetRandomColor()
         {
-            return  Color.FromArgb(Rnd.Next(0, 127), Rnd.Next(0, 255), Rnd.Next(0,255), Rnd.Next(0,255));
+            return Color.FromArgb(Rnd.Next(0, 127), Rnd.Next(0, 255), Rnd.Next(0, 255), Rnd.Next(0, 255));
         }
 
         public static Boolean GetRandomBoolean()
@@ -183,14 +181,14 @@ namespace WinFormSamples
         public static Bitmap GetRandomSymbol()
         {
             var s = Rnd.Next(4, 12);
-            var f = new Font("WingDings", 2*s, GraphicsUnit.Pixel);
-            var bmp = new Bitmap(2*s + 2, 2*s + 2, PixelFormat.Format32bppArgb);
+            var f = new Font("WingDings", 2 * s, GraphicsUnit.Pixel);
+            var bmp = new Bitmap(2 * s + 2, 2 * s + 2, PixelFormat.Format32bppArgb);
             using (var g = Graphics.FromImage(bmp))
             {
                 g.Clear(Color.Transparent);
-                g.DrawString(new string(Convert.ToChar((byte) Rnd.Next(15, 127)), 1), f, GetRandomBrush(), new PointF(s, s) ,
+                g.DrawString(new string(Convert.ToChar((byte)Rnd.Next(15, 127)), 1), f, GetRandomBrush(), new PointF(s, s),
                              new StringFormat
-                                 {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center});
+                             { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
 
             return bmp;
@@ -199,14 +197,14 @@ namespace WinFormSamples
         public static SharpMap.Styles.VectorStyle GetRandomVectorStyle()
         {
             return new SharpMap.Styles.VectorStyle
-                       {
-                           EnableOutline = GetRandomBoolean(),
-                           Outline = GetRandomPen(3, 7),
-                           Line = GetRandomPen(1, 4),
-                           Fill = GetRandomBrush(),
-                           Symbol = GetRandomSymbol(),
-                           //SymbolRotation = Rnd.Next(0, 359),
-                       };
+            {
+                EnableOutline = GetRandomBoolean(),
+                Outline = GetRandomPen(3, 7),
+                Line = GetRandomPen(1, 4),
+                Fill = GetRandomBrush(),
+                Symbol = GetRandomSymbol(),
+                //SymbolRotation = Rnd.Next(0, 359),
+            };
         }
 
         private static Pen GetRandomPen(int min, int max)
@@ -223,31 +221,31 @@ namespace WinFormSamples
             foreach (var provider in providers)
             {
                 var l = new VectorLayer(provider.ConnectionID, provider)
-                            {
-                                Style = GetRandomVectorStyle(),
-                                IsQueryEnabled = true
-                                
-                            };
+                {
+                    Style = GetRandomVectorStyle(),
+                    IsQueryEnabled = true
+
+                };
                 if (provider.GetFeatureCount() > 50000)
                     m.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(l, new Size(256, 128)));
-                else    
-                m.Layers.Add(l);
+                else
+                    m.Layers.Add(l);
 
                 if (provider.GetFeatureCount() < 50000)
                 {
-                var ll = new LabelLayer("Label " + provider.ConnectionID);
-                ll.DataSource = provider;
-                
-                provider.Open();
-                var f = provider.GetFeature(1);
-                provider.Close();
+                    var ll = new LabelLayer("Label " + provider.ConnectionID);
+                    ll.DataSource = provider;
+
+                    provider.Open();
+                    var f = provider.GetFeature(1);
+                    provider.Close();
 
                     ll.LabelColumn = f.Table.Columns[0].ColumnName;
-                ll.Style.CollisionDetection = false;
-                ll.Style.IgnoreLength = true;
-                
-                m.Layers.Add(ll);
-            }
+                    ll.Style.CollisionDetection = false;
+                    ll.Style.IgnoreLength = true;
+
+                    m.Layers.Add(ll);
+                }
             }
             m.ZoomToExtents();
             return m;

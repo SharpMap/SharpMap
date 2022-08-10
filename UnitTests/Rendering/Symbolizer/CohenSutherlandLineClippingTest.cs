@@ -1,16 +1,12 @@
-﻿using System.Collections.Concurrent;
-using System.Data;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-using SharpMap.Data.Providers;
 
 namespace UnitTests.Rendering.Symbolizer
 {
     [TestFixture]
     public class CohenSutherlandLineClippingTest
     {
-        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly GeometryFactory Factory = new GeometryFactory();
 
         [Test]
         public void SimpleTest()
@@ -42,7 +38,7 @@ namespace UnitTests.Rendering.Symbolizer
             var l = Factory.CreateLineString(new[] { new Coordinate(-5, 4), new Coordinate(15, 4), new Coordinate(15, 6), new Coordinate(-5, 6), });
             var res = lc.ClipLineString(l);
             Assert.IsNotNull(res);
-            Assert.IsTrue(res is  MultiLineString);
+            Assert.IsTrue(res is MultiLineString);
             Assert.AreEqual("MULTILINESTRING ((0 4, 10 4), (10 6, 0 6))", res.ToString());
         }
 

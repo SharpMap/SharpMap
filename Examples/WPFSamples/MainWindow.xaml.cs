@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
+using SharpMap.CoordinateSystems;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
 using Application = System.Windows.Application;
 using MenuItem = System.Windows.Controls.MenuItem;
 
@@ -16,20 +16,17 @@ namespace WPFSamples
     {
         public MainWindow()
         {
-            InitializeComponent();
-
-            var gss = GeoAPI.GeometryServiceProvider.Instance;
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var gss = NetTopologySuite.NtsGeometryServices.Instance;
+            var css = new CoordinateSystemServices(
                 new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
                 new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
-
-            GeoAPI.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
 
+            InitializeComponent();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)
@@ -77,7 +74,7 @@ namespace WPFSamples
                 var lay = new SharpMap.Layers.VectorLayer(System.IO.Path.GetFileNameWithoutExtension(ofd.FileName), ds);
                 if (ds.CoordinateSystem != null)
                 {
-                    GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformationFactory fact =
+                    ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory fact =
                         new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory();
 
                     lay.CoordinateTransformation = fact.CreateFromCoordinateSystems(ds.CoordinateSystem,

@@ -1,7 +1,7 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
-using System.Runtime.Serialization;
 using BruTile;
+using System.Runtime.Serialization;
 
 namespace SharpMap.Utilities
 {
@@ -19,7 +19,7 @@ namespace SharpMap.Utilities
             public ResolutionRef(SerializationInfo info, StreamingContext context)
             {
                 _resolution = new Resolution(
-                    info.GetString("id"), info.GetDouble("upp"),
+                    info.GetInt32("level"), info.GetDouble("upp"),
                     info.GetInt32("th"), info.GetInt32("tw"),
                     info.GetDouble("t"), info.GetDouble("l"),
                     info.GetInt32("mw"), info.GetInt32("mh"),
@@ -38,7 +38,7 @@ namespace SharpMap.Utilities
             }
         }
 
-        
+
 
         #region Implementation of ISerializationSurrogate
 
@@ -46,7 +46,7 @@ namespace SharpMap.Utilities
         {
             var res = (Resolution)obj;
             info.SetType(typeof(ResolutionRef));
-            info.AddValue("id", res.Id);
+            info.AddValue("level", res.Level);
             info.AddValue("upp", res.UnitsPerPixel);
             info.AddValue("th", res.TileHeight);
             info.AddValue("tw", res.TileWidth);

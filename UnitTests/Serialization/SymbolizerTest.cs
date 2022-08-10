@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Drawing;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SharpMap.Rendering.Symbolizer;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace UnitTests.Serialization
 {
@@ -12,7 +12,7 @@ namespace UnitTests.Serialization
         public void TestCharacterPointSymbolizer()
         {
             var cps = new CharacterPointSymbolizer();
-            cps.CharacterIndex = (int) 'q';
+            cps.CharacterIndex = (int)'q';
             cps.Font = new Font(FontFamily.GenericSansSerif, 12f, FontStyle.Bold);
             cps.Foreground = new SolidBrush(Color.BlueViolet);
             cps.Halo = 2;
@@ -45,7 +45,7 @@ namespace UnitTests.Serialization
     }
 
     internal class PointSymbolizerEqualityComparer<T> : SymbolizerEqualityComparer<T>
-        where T: PointSymbolizer
+        where T : PointSymbolizer
     {
         public override bool Equals(T lhs, T rhs)
         {
@@ -87,7 +87,7 @@ namespace UnitTests.Serialization
 
             if (lhs.HaloBrush != null)
             {
-                if (((SolidBrush) lhs.HaloBrush).Color != ((SolidBrush) rhs.HaloBrush).Color)
+                if (((SolidBrush)lhs.HaloBrush).Color != ((SolidBrush)rhs.HaloBrush).Color)
                     return false;
             }
 

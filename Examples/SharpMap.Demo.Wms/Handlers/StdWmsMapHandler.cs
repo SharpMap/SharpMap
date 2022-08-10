@@ -1,10 +1,9 @@
 ﻿namespace SharpMap.Demo.Wms.Handlers
 {
+    using SharpMap.Web.Wms;
     using System;
     using System.Diagnostics;
     using System.Web;
-
-    using SharpMap.Web.Wms;
 
     public class StdWmsMapHandler : AbstractStdMapHandler
     {

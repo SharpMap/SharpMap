@@ -15,6 +15,7 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.ComponentModel;
 using System.Drawing;
@@ -23,7 +24,6 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Forms
 {
@@ -91,7 +91,7 @@ namespace SharpMap.Forms
         private int _framePenWidth = 2;
         private float _opacity;
         private Color _frameHaloColor;
-        private Point _translate;
+        private System.Drawing.Point _translate;
         private Cursor _oldCursor;
         private HitResult _hitResult;
         private Guid _mapId = Guid.NewGuid();
@@ -497,12 +497,12 @@ namespace SharpMap.Forms
 
             if (_hitResult == HitResult.None)
             {
-                _translate = Point.Empty;
+                _translate = System.Drawing.Point.Empty;
                 _frame = CalculateNewFrame(e.X, e.Y);
             }
             else
             {
-                _translate = new Point(Convert.ToInt32(e.X - (_frame.X + _frame.Width * 0.5)),
+                _translate = new System.Drawing.Point(Convert.ToInt32(e.X - (_frame.X + _frame.Width * 0.5)),
                     Convert.ToInt32(e.Y - (_frame.Y + _frame.Height * 0.5)));
             }
 
@@ -781,8 +781,8 @@ namespace SharpMap.Forms
             try
             {
                 _isRenderingThread = true;
-                
-                var map = (Map) args[1];
+
+                var map = (Map)args[1];
 
                 Image img = null;
                 Rectangle frame;
@@ -793,11 +793,11 @@ namespace SharpMap.Forms
                     var originalWidth = map.Zoom;
                     var originalHeight = map.MapHeight;
 
-                    var wx1 = originalCenter.X - originalWidth*0.5;
-                    var wy1 = originalCenter.Y - originalHeight*0.5;
+                    var wx1 = originalCenter.X - originalWidth * 0.5;
+                    var wy1 = originalCenter.Y - originalHeight * 0.5;
 
-                    var wx2 = originalCenter.X + originalWidth*0.5;
-                    var wy2 = originalCenter.Y + originalHeight*0.5;
+                    var wx2 = originalCenter.X + originalWidth * 0.5;
+                    var wy2 = originalCenter.Y + originalHeight * 0.5;
 
                     map.Size = Size;
                     map.ZoomToExtents();

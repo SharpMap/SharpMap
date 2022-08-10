@@ -6,9 +6,9 @@
     {
         public DemoItem(string name, string url)
         {
-            if (name == null) 
+            if (name == null)
                 throw new ArgumentNullException("name");
-            if (url == null) 
+            if (url == null)
                 throw new ArgumentNullException("url");
             this.Name = name;
             this.Url = url;
@@ -25,20 +25,20 @@
 
         public bool Equals(DemoItem other)
         {
-            if (ReferenceEquals(null, other)) 
+            if (ReferenceEquals(null, other))
                 return false;
-            if (ReferenceEquals(this, other)) 
+            if (ReferenceEquals(this, other))
                 return true;
             return Equals(other.Name, this.Name) && Equals(other.Url, this.Url);
         }
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) 
+            if (ReferenceEquals(null, obj))
                 return false;
-            if (ReferenceEquals(this, obj)) 
+            if (ReferenceEquals(this, obj))
                 return true;
-            if (obj.GetType() != typeof(DemoItem)) 
+            if (obj.GetType() != typeof(DemoItem))
                 return false;
             return this.Equals((DemoItem)obj);
         }
@@ -49,6 +49,6 @@
             {
                 return (this.Name.GetHashCode() * 397) ^ this.Url.GetHashCode();
             }
-        }    
+        }
     }
 }

@@ -15,18 +15,17 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+using Common.Logging;
+using NetTopologySuite.Geometries;
+using SharpMap.Converters.WellKnownBinary;
+using SharpMap.Converters.WellKnownText;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Configuration;
 using System.Data;
 //using System.Diagnostics;
 using System.Data.SQLite;
 using System.Globalization;
-using Common.Logging;
-using GeoAPI.Geometries;
-using SharpMap.Converters.WellKnownBinary;
-using SharpMap.Converters.WellKnownText;
 
 namespace SharpMap.Data.Providers
 {
@@ -140,7 +139,7 @@ namespace SharpMap.Data.Providers
         /// <param name="geometryColumnName">Name of the desired geometry column</param>
         /// <param name="oidColumnName">Name of the object Id column</param>
         public SpatiaLite(string connectionStr, string tablename, string geometryColumnName, string oidColumnName)
-            :base(-2)
+            : base(-2)
         {
             ConnectionString = connectionStr;
             Table = tablename;
@@ -163,10 +162,10 @@ namespace SharpMap.Data.Providers
                         dr.Read();
                         SRID = dr.GetInt32(0);
 
-                        var coordDim = dr.GetFieldType(1) == typeof(long) 
-                            ? dr.GetInt64(1).ToString(NumberFormatInfo.InvariantInfo) 
+                        var coordDim = dr.GetFieldType(1) == typeof(long)
+                            ? dr.GetInt64(1).ToString(NumberFormatInfo.InvariantInfo)
                             : dr.GetString(1);
-                        
+
                         switch (coordDim)
                         {
                             case "2":
@@ -221,7 +220,7 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Gets or sets the extent for this data source
         /// </summary>
-        public Envelope CachedExtent 
+        public Envelope CachedExtent
         {
             get
             {
@@ -276,7 +275,7 @@ namespace SharpMap.Data.Providers
         public bool UseSpatiaLiteIndex
         {
             get { return _useSpatialIndex && _spatiaLiteIndex != SpatiaLiteIndex.None; }
-            set 
+            set
             {
                 if (_spatiaLiteIndex != SpatiaLiteIndex.None)
                     _useSpatialIndex = value;
@@ -292,8 +291,8 @@ namespace SharpMap.Data.Providers
             {
                 return _spatiaLiteIndex.ToString();
             }
-            set 
-            { 
+            set
+            {
                 System.Diagnostics.Debug.WriteLine("SpatialIndex is obsolete, use UseSpatiaLiteIndex property");
                 //_spatialIndex = value;
             }
@@ -312,9 +311,9 @@ namespace SharpMap.Data.Providers
         }
 
         /// <inheritdoc cref="BaseProvider.GetGeometriesInView"/>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var features = new Collection<IGeometry>();
+            var features = new Collection<Geometry>();
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
                 var boxIntersect = GetBoxClause(bbox);
@@ -333,7 +332,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
+                                var geom = GeometryFromWKB.Parse((byte[])dr[0], Factory);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -365,7 +364,7 @@ namespace SharpMap.Data.Providers
                     {
                         while (dr.Read())
                         {
-                            if (dr[0] == DBNull.Value) 
+                            if (dr[0] == DBNull.Value)
                                 continue;
                             var id = Convert.ToUInt32(dr[0]);
                             objectlist.Add(id);
@@ -378,9 +377,9 @@ namespace SharpMap.Data.Providers
         }
 
         /// <inheritdoc cref="BaseProvider{T}.GetGeometryByID"/>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
-            IGeometry geom = null;
+            Geometry geom = null;
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
                 string strSql = "SELECT AsBinary(" + GeometryColumn + ") AS Geom FROM " + Table + " WHERE " +
@@ -393,7 +392,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                geom = GeometryFromWKB.Parse((byte[]) dr[0], Factory);
+                                geom = GeometryFromWKB.Parse((byte[])dr[0], Factory);
                             }
                         }
                     }
@@ -404,7 +403,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <inheritdoc cref="BaseProvider.OnExecuteIntersectionQuery"/>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             using (var conn = SpatiaLiteConnection(ConnectionString))
             {
@@ -442,7 +441,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -488,7 +487,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -534,7 +533,7 @@ namespace SharpMap.Data.Providers
                 if (string.Compare(ObjectIdColumn, "rowid", true) == 0)
                     cols = "rowid,*";
 
-                string strSQL = "SELECT " +cols + ", AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry FROM " + Table +
+                string strSQL = "SELECT " + cols + ", AsBinary(" + GeometryColumn + ") AS sharpmap_tempgeometry FROM " + Table +
                                 " WHERE " + ObjectIdColumn + "='" + rowId + "'";
                 using (SQLiteDataAdapter adapter = new SQLiteDataAdapter(strSQL, conn))
                 {
@@ -557,7 +556,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKB.Parse((byte[]) dr["sharpmap_tempgeometry"], Factory);
+                                fdr.Geometry = GeometryFromWKB.Parse((byte[])dr["sharpmap_tempgeometry"], Factory);
                             return fdr;
                         }
                         return null;
@@ -628,7 +627,7 @@ namespace SharpMap.Data.Providers
                 XMax = Entries[0].XMax;
                 YMin = Entries[0].YMin;
                 YMax = Entries[0].YMax;
-                
+
                 var offset = 28;
                 for (var i = 1; i < NodesCount; i++)
                 {
@@ -639,7 +638,7 @@ namespace SharpMap.Data.Providers
                     if (Entries[i].XMax > XMax) XMax = Entries[i].XMax;
                     if (Entries[i].YMin < YMin) YMin = Entries[i].YMin;
                     if (Entries[i].YMax > YMax) YMax = Entries[i].YMax;
-                    
+
                     offset += 24;
                 }
             }
@@ -656,18 +655,18 @@ namespace SharpMap.Data.Providers
             if (_spatiaLiteIndex == SpatiaLiteIndex.RTree)
             {
                 using (var conn = new SQLiteConnection(ConnectionString))
-                {   
+                {
                     conn.Open();
-                    var strSQL = string.Format("SELECT \"data\" FROM \"idx_{0}_{1}_node\" WHERE \"nodeno\"=1;", 
+                    var strSQL = string.Format("SELECT \"data\" FROM \"idx_{0}_{1}_node\" WHERE \"nodeno\"=1;",
                                                 _table, _geometryColumn);
-                    
+
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = strSQL;
                         var result = cmd.ExecuteScalar();
                         if (result != null && result != DBNull.Value)
                         {
-                            var buffer = (byte[]) result;
+                            var buffer = (byte[])result;
                             var node = new RTreeNode(buffer);
 
                             _cachedExtents = float.IsNaN(node.XMin)
@@ -714,11 +713,11 @@ namespace SharpMap.Data.Providers
                         if (dr.Read())
                         {
                             if (dr.IsDBNull(0))
-                                return new Envelope(0,0,0,0);
+                                return new Envelope(0, 0, 0, 0);
 
                             box = new Envelope(
-                                (double) dr["minx"], (double) dr["maxx"], 
-                                (double) dr["miny"], (double) dr["maxy"]);
+                                (double)dr["minx"], (double)dr["maxx"],
+                                (double)dr["miny"], (double)dr["maxy"]);
                         }
                     conn.Close();
                 }
@@ -758,15 +757,15 @@ namespace SharpMap.Data.Providers
             return "MBRIntersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";
         }
 
-        private IGeometry LineFromBbox(Envelope bbox)
+        private Geometry LineFromBbox(Envelope bbox)
         {
-            var pointColl = new[] {bbox.Min(), bbox.Max()};
+            var pointColl = new[] { bbox.Min(), bbox.Max() };
             return Factory.CreateLineString(pointColl);
         }
 
 #pragma warning disable 1591
         [Obsolete("Will be made private!")]
-        public string GetOverlapsClause(IGeometry geom)
+        public string GetOverlapsClause(Geometry geom)
         {
             string wkt = GeometryToWKT.Write(geom);
             string retval = "Intersects(GeomFromText('" + wkt + "')," + _geometryColumn + ")=1";

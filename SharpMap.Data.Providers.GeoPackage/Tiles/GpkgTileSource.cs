@@ -1,5 +1,5 @@
-using System.Data.SQLite;
 using BruTile;
+using System.Data.SQLite;
 
 namespace SharpMap.Data.Providers.Tiles
 {
@@ -10,7 +10,7 @@ namespace SharpMap.Data.Providers.Tiles
     {
         private const string SelectTemplate =
             "SELECT \"tile_data\" FROM \"{0}\" WHERE \"zoom_level\"=? AND \"tile_column\"=? AND \"tile_row\"=?;";
-        
+
         private readonly GpkgContent _content;
         private readonly GpkgTileSchema _schema;
         private readonly string _selectSql;
@@ -27,8 +27,8 @@ namespace SharpMap.Data.Providers.Tiles
             using (var cn = new SQLiteConnection(_content.ConnectionString).OpenAndReturn())
             {
                 var cmd = new SQLiteCommand(_selectSql, cn);
-                cmd.Parameters.AddRange(new object[] { int.Parse(tileInfo.Index.Level), tileInfo.Index.Col, tileInfo.Index.Row });
-                return (byte[]) cmd.ExecuteScalar();
+                cmd.Parameters.AddRange(new object[] { tileInfo.Index.Level, tileInfo.Index.Col, tileInfo.Index.Row });
+                return (byte[])cmd.ExecuteScalar();
             }
         }
 

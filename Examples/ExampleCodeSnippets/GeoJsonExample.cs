@@ -30,7 +30,7 @@ namespace ExampleCodeSnippets
         {
             var gjr = new NetTopologySuite.IO.GeoJsonReader();
 
-            var geom = jsons.Select(json => gjr.Read<GeoAPI.Geometries.IGeometry>(json)).ToList();
+            var geom = jsons.Select(json => gjr.Read<NetTopologySuite.Geometries.Geometry>(json)).ToList();
 
             var fp = new SharpMap.Data.Providers.GeometryFeatureProvider(geom);
             var l = new SharpMap.Layers.VectorLayer("geojson", fp);

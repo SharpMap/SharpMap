@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
-using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Utilities.Indexing;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace UnitTests.Data.Providers
 {
     public class ShapeFileWithMemoryCacheThreadingTest : ThreadingTest
     {
-        private static string TestDataPath 
+        private static string TestDataPath
         {
             get => TestUtility.GetPathToTestFile("roads_ugl.shp");
         }
@@ -130,12 +128,6 @@ namespace UnitTests.Data.Providers
     public abstract class ThreadingTest
     {
         //private static readonly ILog Logger = LogManager.GetLogger(typeof(ThreadingTest));
-        
-        static ThreadingTest ()
-        {
-            GeoAPI.GeometryServiceProvider.Instance =
-                NetTopologySuite.NtsGeometryServices.Instance;
-        }
 
         private const int NumberOfTests = 200;
         private readonly IProvider _provider;
@@ -171,7 +163,7 @@ namespace UnitTests.Data.Providers
         private double NextRandom(double min, double max, double start, double amount)
         {
             var d = max - min;
-            return start + min * amount + d*amount*_rnd.NextDouble();
+            return start + min * amount + d * amount * _rnd.NextDouble();
         }
 
         [Test]
@@ -304,7 +296,7 @@ namespace UnitTests.Data.Providers
                     "Thread {0}: {1}. failed:\n{2}", Thread.CurrentThread.ManagedThreadId, arguments, ex.Message));
                 _testsFailed[(int)arguments] = ex;
             }
-            
+
             SignalRun((int)arguments);
         }
         private void ExecuteExecuteFeatureQueryEnvelope(object arguments)

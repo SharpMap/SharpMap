@@ -15,30 +15,26 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using GeoAPI.Geometries;
-using NetTopologySuite;
+using Common.Logging;
+using NetTopologySuite.Geometries;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Styles;
 using SharpMap.Utilities;
-using Point = GeoAPI.Geometries.Coordinate;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using Common.Logging;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Reflection;
+using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace SharpMap
 {
@@ -60,14 +56,14 @@ namespace SharpMap
         }
 
         /// <summary>
-        /// Static constructor. Needed to get <see cref="GeoAPI.GeometryServiceProvider.Instance"/> set.
+        /// Static constructor. Needed to get <see cref="NetTopologySuite.NtsGeometryServices.Instance"/> set.
         /// </summary>
         static Map()
         {
             try
             {
-                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
-                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                _logger.Debug("Trying to get NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
+                var instance = NetTopologySuite.NtsGeometryServices.Instance;
                 if (instance == null)
                 {
                     _logger.Debug("Returned null");
@@ -79,8 +75,8 @@ namespace SharpMap
                 _logger.Debug("Loading NetTopologySuite");
                 Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
-                _logger.Debug("Trying to get GeoAPI.GeometryServiceProvider.Instance");
-                var instance = GeoAPI.GeometryServiceProvider.Instance;
+                _logger.Debug("Trying to get NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
+                var instance = NetTopologySuite.NtsGeometryServices.Instance;
                 if (instance == null)
                 {
                     _logger.Debug("Returned null");
@@ -94,23 +90,23 @@ namespace SharpMap
             {
                 _logger.Debug("In design mode");
                 Trace.WriteLine("In design mode");
-                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of GeoAPI and redirection 
+                // We have to do this initialization with reflection due to the fact that NTS can reference an older version of NetTopologySuite and redirection 
                 // is not available at design time..
                 var ntsAssembly = Assembly.Load("NetTopologySuite");
                 _logger.Debug("Loaded NetTopologySuite");
                 Trace.WriteLine("Loaded NetTopologySuite");
                 try
                 {
-                    _logger.Debug("Trying to access GeoAPI.GeometryServiceProvider.Instance");
-                    Trace.WriteLine("Trying to access GeoAPI.GeometryServiceProvider.Instance");
-                    if (GeoAPI.GeometryServiceProvider.Instance == null)
+                    _logger.Debug("Trying to access NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
+                    Trace.WriteLine("Trying to access NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance");
+                    if (NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance == null)
                     {
                         _logger.Debug("Returned null, setting it to default");
                         Trace.WriteLine("Returned null, setting it to default");
                         var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                        GeoAPI.GeometryServiceProvider.Instance =
+                        NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance =
                             ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                                GeoAPI.IGeometryServices;
+                                NetTopologySuite.IGeometryServices;
                     }
                 }
 
@@ -119,9 +115,9 @@ namespace SharpMap
                     _logger.Debug("InvalidOperationException thrown, setting it to default");
                     Trace.WriteLine("InvalidOperationException thrown, setting it to default");
                     var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
-                    GeoAPI.GeometryServiceProvider.Instance =
+                    NetTopologySuite.NetTopologySuite.NtsGeometryServices.Instance =
                         ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                            GeoAPI.IGeometryServices;
+                            NetTopologySuite.IGeometryServices;
                 }
                 _logger.Debug("Exiting design mode handling");
                 Trace.WriteLine("Exiting design mode handling");
@@ -148,14 +144,14 @@ namespace SharpMap
         private readonly VariableLayerCollection _variableLayers;
 #pragma warning disable 169
         // both fields redundant, but unable to remove without violating serialization
-        private Matrix _mapTransform; 
+        private Matrix _mapTransform;
         private Matrix _mapTransformInverted;
 #pragma warning restore 169
         private readonly object _lockMapTransform = new object();
         private readonly object _lockMapTransformInverted = new object();
-        private float[] _mapTransformElements; 
+        private float[] _mapTransformElements;
         private float[] _mapTransformInvertedElements;
-        
+
         private readonly MapViewPortGuard _mapViewportGuard;
         private readonly Dictionary<object, List<ILayer>> _layersPerGroup = new Dictionary<object, List<ILayer>>();
         private ObservableCollection<ILayer> _replacingCollection;
@@ -190,7 +186,7 @@ namespace SharpMap
 
             if (LicenseManager.UsageMode != LicenseUsageMode.Designtime)
             {
-                Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+                Factory = Session.Instance.GeometryServices.CreateGeometryFactory(_srid);
             }
             _layers = new LayerCollection();
             _layersPerGroup.Add(_layers, new List<ILayer>());
@@ -611,8 +607,8 @@ namespace SharpMap
                 throw new InvalidOperationException("No layers to render");
 
             g.Transform = MapTransform;
-            
-            var mvp = (MapViewport) this;
+
+            var mvp = (MapViewport)this;
 
             g.Clear(BackColor);
             g.PageUnit = GraphicsUnit.Pixel;
@@ -661,7 +657,7 @@ namespace SharpMap
                     OnLayerRendering(layer, LayerCollectionType.Static);
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         LayerCollectionRenderer.RenderLayer(layer, g, mvp);
-                        
+
                     OnLayerRendered(layer, LayerCollectionType.Static);
                 }
             }
@@ -679,7 +675,7 @@ namespace SharpMap
                     double visibleLevel = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? zoom : scale;
                     if (layer.Enabled && layer.MaxVisible >= visibleLevel && layer.MinVisible < visibleLevel)
                         LayerCollectionRenderer.RenderLayer(layer, g, mvp);
-                    
+
                     OnLayerRendered(layer, LayerCollectionType.Variable);
                 }
             }
@@ -815,7 +811,7 @@ namespace SharpMap
 
             g.Transform = MapTransform;
 
-            var mvp = (MapViewport) this;
+            var mvp = (MapViewport)this;
 
             if (!drawTransparent)
                 g.Clear(BackColor);
@@ -1027,7 +1023,7 @@ namespace SharpMap
                     bbox.Centre.Y - newHeight * 0.5,
                     bbox.Centre.Y + newHeight * 0.5);
             }
-            
+
             //Ensure aspect ratio
             var resX = Size.Width == 0 ? double.MaxValue : bbox.Width / Size.Width;
             var resY = Size.Height == 0 ? double.MaxValue : bbox.Height / Size.Height;
@@ -1068,8 +1064,8 @@ namespace SharpMap
             if (MapTransformRotation.Equals(0f))
             {
                 // simple case is non-rotated views (ie MapTransform does NOT need to be applied)
-                var left = Center.X - Zoom * 0.5;   
-                var top = Center.Y + MapHeight * 0.5; 
+                var left = Center.X - Zoom * 0.5;
+                var top = Center.Y + MapHeight * 0.5;
                 return Transform.WorldToMap(coordinates, left, top, PixelWidth, PixelHeight);
             }
 
@@ -1082,7 +1078,7 @@ namespace SharpMap
                 Center, PixelWidth, PixelHeight, MapTransformRotation, Size, careAboutMapTransform);
             return Transform.WorldToMap(coordinates, matrix);
         }
-        
+
         /// <summary>
         /// Converts a point in world coordinates to image coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
         /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
@@ -1093,7 +1089,7 @@ namespace SharpMap
         /// <returns>PointF in image coordinates</returns>
         public PointF WorldToImage(Coordinate p, bool careAboutMapTransform = false)
         {
-            var points = WorldToImage(new Coordinate[] {p}, careAboutMapTransform);
+            var points = WorldToImage(new Coordinate[] { p }, careAboutMapTransform);
             return points[0];
         }
 
@@ -1113,7 +1109,7 @@ namespace SharpMap
 
             return Transform.MapToWorld(points, this);
         }
-        
+
         /// <summary>
         /// Converts a point from image coordinates to world coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
         /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
@@ -1152,14 +1148,14 @@ namespace SharpMap
                 if (_srid == value)
                     return;
                 _srid = value;
-                Factory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(_srid);
+                Factory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(_srid);
             }
         }
 
         /// <summary>
         /// Factory used to create geometries
         /// </summary>
-        public IGeometryFactory Factory { get; private set; }
+        public GeometryFactory Factory { get; private set; }
 
         /// <summary>
         /// List of all map decorations
@@ -1190,26 +1186,26 @@ namespace SharpMap
                 var ur = new Coordinate(Center.X + Zoom * .5, Center.Y + height * .5);
 
                 // simple, non-rotated view
-               if (MapTransformRotation.Equals(0f))
+                if (MapTransformRotation.Equals(0f))
                     return new Envelope(ll, ur);
 
-               // otherwise derive envelope containing rotated view (required for layers to select data)
-               if (Size.Width == 0 || Size.Height == 0)
-                   return new Envelope(0, 0, 0, 0);
+                // otherwise derive envelope containing rotated view (required for layers to select data)
+                if (Size.Width == 0 || Size.Height == 0)
+                    return new Envelope(0, 0, 0, 0);
 
-               var rad = (double) -MapTransformRotation * Math.PI / 180.0;
-               var newWidth = (ur.X - ll.X) * Math.Abs(Math.Cos(rad)) +
-                              (ur.Y - ll.Y) * Math.Abs(Math.Sin(rad));
-               var newHeight = (ur.X - ll.X) * Math.Abs(Math.Sin(rad)) +
-                               (ur.Y - ll.Y) * Math.Abs(Math.Cos(rad));
+                var rad = (double)-MapTransformRotation * Math.PI / 180.0;
+                var newWidth = (ur.X - ll.X) * Math.Abs(Math.Cos(rad)) +
+                               (ur.Y - ll.Y) * Math.Abs(Math.Sin(rad));
+                var newHeight = (ur.X - ll.X) * Math.Abs(Math.Sin(rad)) +
+                                (ur.Y - ll.Y) * Math.Abs(Math.Cos(rad));
 
-               ll = new Coordinate(Center.X - newWidth * .5, Center.Y - newHeight * .5);
-               ur = new Coordinate(Center.X + newWidth * .5, Center.Y + newHeight * .5);
+                ll = new Coordinate(Center.X - newWidth * .5, Center.Y - newHeight * .5);
+                ur = new Coordinate(Center.X + newWidth * .5, Center.Y + newHeight * .5);
 
-               return new Envelope(ll, ur);
-           }
+                return new Envelope(ll, ur);
+            }
         }
-        
+
         /// <summary>
         /// Using the <see cref="MapTransform"/> you can alter the coordinate system of the map rendering.
         /// This makes it possible to rotate the image, for instance to have another direction than north upwards.
@@ -1254,7 +1250,7 @@ namespace SharpMap
                         inverted.Invert();
                         _mapTransformInvertedElements = inverted.Elements;
                     }
-                    
+
                     if (value.IsIdentity)
                         MapTransformRotation = 0f;
                     else
@@ -1287,7 +1283,7 @@ namespace SharpMap
                         _mapTransformInvertedElements[5]);
             }
         }
-        
+
         /// <summary>
         /// MapTransform Rotation in degrees. Facilitates determining if map is rotated without locking MapTransform.
         /// Positive rotation is applied anti-clockwise, with the apparent effect of north arrow rotating clockwise. 

@@ -1,8 +1,8 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile.Web;
 using System;
 using System.Runtime.Serialization;
-using BruTile.Web;
 
 namespace SharpMap.Utilities.Web
 {

@@ -39,7 +39,7 @@ namespace SharpMap.Utilities.Wfs
             /// Or junctor
             /// </summary>
             Or
-        } ;
+        };
 
         #endregion
 
@@ -162,7 +162,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsEqualToFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsEqualToFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -199,7 +199,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsNotEqualToFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsNotEqualToFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -236,7 +236,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsLessThanFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsLessThanFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -273,7 +273,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsGreaterThanFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsGreaterThanFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -310,7 +310,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsLessThanOrEqualToFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsLessThanOrEqualToFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -347,7 +347,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsGreaterThanOrEqualToFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsGreaterThanOrEqualToFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -384,7 +384,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsBetweenFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsBetweenFilter_FE1_1_0(string propertyName, string lowerBoundary, string upperBoundary)
-            : base(new[] {propertyName, lowerBoundary, upperBoundary})
+            : base(new[] { propertyName, lowerBoundary, upperBoundary })
         {
         }
 
@@ -423,7 +423,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="PropertyIsLikeFilter_FE1_1_0"/> class.
         /// </summary>
         public PropertyIsLikeFilter_FE1_1_0(string propertyName, string arg)
-            : base(new[] {propertyName, arg})
+            : base(new[] { propertyName, arg })
         {
         }
 
@@ -461,7 +461,7 @@ namespace SharpMap.Utilities.Wfs
         /// Initializes a new instance of the <see cref="FeatureIdFilter_FE1_1_0 "/> class.
         /// </summary>
         public FeatureIdFilter_FE1_1_0(string id)
-            : base(new[] {id})
+            : base(new[] { id })
         {
         }
 

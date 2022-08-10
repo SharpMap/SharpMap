@@ -1,7 +1,7 @@
-﻿using System;
-using System.ComponentModel;
-using Common.Logging;
+﻿using Common.Logging;
 using SharpMap.Forms.ImageGenerator;
+using System;
+using System.ComponentModel;
 
 namespace SharpMap.Forms.ToolBar
 {

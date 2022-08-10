@@ -19,14 +19,14 @@ namespace SharpMap.Utilities.Wfs
         /// <param name="prefix">The prefix used to identify the namespace</param>
         /// <param name="ns">The full namespace qualifier</param>
         void AddNamespace(string prefix, string ns);
-        
+
         /// <summary>
         /// Method to compile a <paramref name="xPath"/> to a <see cref="XPathExpression"/>
         /// </summary>
         /// <param name="xPath">The xpath to compile</param>
         /// <returns>The compiled <see cref="XPathExpression"/></returns>
         XPathExpression Compile(string xPath);
-        
+
         /// <summary>
         /// Function to create a deep-copy clone of this <see cref="IXPathQueryManager"/>
         /// </summary>
@@ -112,7 +112,7 @@ namespace SharpMap.Utilities.Wfs
         /// Method to reset/delete the current namespace context
         /// </summary>
         void ResetNamespaces();
-        
+
         /// <summary>
         /// Method to reset the inherent <see cref="XPathNavigator"/>.
         /// </summary>

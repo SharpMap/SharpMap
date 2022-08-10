@@ -12,9 +12,9 @@
 // You should have received a copy of the GNU Lesser General Public License
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
-using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
 {
@@ -23,7 +23,7 @@ namespace SharpMap.Rendering.Thematics
     /// </summary>
     /// <typeparam name="T">Type of the featureattribute to match</typeparam>
     [Serializable]
-    public class UniqueValuesTheme<T>  : ITheme, ICloneable
+    public class UniqueValuesTheme<T> : ITheme, ICloneable
     {
         readonly IStyle _default;
 
@@ -68,7 +68,7 @@ namespace SharpMap.Rendering.Thematics
 
             var val = attribute[_attributeName].ToString();
             if (_styleMap.ContainsKey(val))
-                return _styleMap[val];          
+                return _styleMap[val];
 
             return _default;
         }
@@ -112,10 +112,10 @@ namespace SharpMap.Rendering.Thematics
         /// <inheritdoc cref="ICloneable.Clone()"/>
         public object Clone()
         {
-            var defStyle = (_default is ICloneable) ? (IStyle) ((ICloneable) _default).Clone() : _default;
+            var defStyle = (_default is ICloneable) ? (IStyle)((ICloneable)_default).Clone() : _default;
             var styleMap = new Dictionary<T, IStyle>(_styleMap.Count);
             foreach (var style in _styleMap)
-                styleMap.Add(_originalValue[style.Key], style.Value is ICloneable ? (IStyle) ((ICloneable) style.Value).Clone() : style.Value);
+                styleMap.Add(_originalValue[style.Key], style.Value is ICloneable ? (IStyle)((ICloneable)style.Value).Clone() : style.Value);
 
             return new UniqueValuesTheme<T>(_attributeName, styleMap, defStyle);
         }

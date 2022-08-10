@@ -15,10 +15,10 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Utilities;
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries.Utilities;
 
 namespace SharpMap.Utilities
 {
@@ -53,7 +53,7 @@ namespace SharpMap.Utilities
                 {
                     double x = (coord.X - worldLeft) / pixelWidth;
                     double y = (worldTop - coord.Y) / pixelHeight;
-                    points[i] = new PointF((float) x, (float) y);
+                    points[i] = new PointF((float)x, (float)y);
                 }
             }
             return points;
@@ -90,7 +90,7 @@ namespace SharpMap.Utilities
         /// <param name="imageSize">Map Size when rendered</param>
         /// <param name="careAboutTransform">True for coordinate calculations, False if Graphics object will apply MapTransform</param>
         /// <returns>Affine Transformation</returns>
-        public static AffineTransformation WorldToMapMatrix(Coordinate worldCenter, 
+        public static AffineTransformation WorldToMapMatrix(Coordinate worldCenter,
             double pixelWidth, double pixelHeight, float mapTransformRotation, Size imageSize,
             bool careAboutTransform)
         {
@@ -141,11 +141,27 @@ namespace SharpMap.Utilities
                     coords[i] = new Coordinate(0, 0);
             else
             {
-                var ul = new Coordinate(worldCenter.X - mapZoom * .5,worldCenter.Y + mapHeight * .5);
+                var ulX = worldCenter.X - (mapZoom * .5);
+                var ulY = worldCenter.Y + (mapHeight * .5);
                 for (var i = 0; i < points.Length; i++)
-                    coords[i] = new Coordinate(ul.X + points[i].X * pixelWidth,ul.Y - points[i].Y * pixelHeight);
+                {
+                    /*
+                     * DGuidi: beware! unknown rounding issues here...
+                     * 'MapTest.ImageToWorld' fails (at least on my machine) 
+                     * and expose rounding issues (cx and cy are "XXX^10-15" instead of "0"),
+                     * but this happens ONLY if ALL tests are executed! 
+                     * Executing the single test, or even all "MapTest" tests, does not show the behaviour.
+                     * Assigning variables for ALL the computation steps seems to fix the problem...
+                     */
+                    var px = points[i].X;
+                    var py = points[i].Y;
+                    var wx = px * pixelWidth;
+                    var wy = py * pixelHeight;
+                    var cx = ulX + wx;                    
+                    var cy = ulY - wy;
+                    coords[i] = new Coordinate(cx, cy);
+                }
             }
-
             return coords;
         }
 
@@ -161,7 +177,7 @@ namespace SharpMap.Utilities
         {
             var left = map.Center.X - map.Zoom * 0.5;
             var top = map.Center.Y + map.MapHeight * 0.5;
-            var points = WorldToMap(new [] {p}, left, top, map.PixelWidth, map.PixelHeight);
+            var points = WorldToMap(new[] { p }, left, top, map.PixelWidth, map.PixelHeight);
             return points[0];
         }
 
@@ -175,10 +191,10 @@ namespace SharpMap.Utilities
         [Obsolete("Use MapToWorld(PointF[], Map)")]
         public static Coordinate MapToWorld(PointF p, Map map)
         {
-            var coords = MapToWorld(new [] {p}, map);
+            var coords = MapToWorld(new[] { p }, map);
             return coords[0];
         }
-        
+
         /// <summary>
         /// Transforms from image coordinates to world coordinate system (WCS).
         /// NOTE: This method is only applicable when MapTransformRotation = 0.
@@ -189,7 +205,7 @@ namespace SharpMap.Utilities
         [Obsolete("Use MapToWorld(PointF[], MapViewport)")]
         public static Coordinate MapToWorld(PointF p, MapViewport map)
         {
-            var coords = MapToWorld(new [] {p}, map.Center, map.Zoom, map.MapHeight, map.PixelWidth, map.PixelHeight);
+            var coords = MapToWorld(new[] { p }, map.Center, map.Zoom, map.MapHeight, map.PixelWidth, map.PixelHeight);
             return coords[0];
         }
     }

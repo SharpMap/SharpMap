@@ -1,13 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using SharpMap;
+﻿using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Styles;
-using Point=GeoAPI.Geometries.Coordinate;
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {
@@ -41,7 +41,7 @@ namespace WinFormSamples.Samples
             Ogr provider;
             try
             {
-                provider = new Ogr("GeoData/SampleDXF.dxf",0);
+                provider = new Ogr("GeoData/SampleDXF.dxf", 0);
             }
             catch (TypeInitializationException ex)
             {
@@ -121,9 +121,9 @@ namespace WinFormSamples.Samples
                 {
                     lay.Style.Line =
                         new Pen(
-                            Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble()*255),
-                                           Convert.ToInt32(rnd.NextDouble()*255), Convert.ToInt32(rnd.NextDouble()*255)),
-                            Convert.ToInt32(rnd.NextDouble()*3));
+                            Color.FromArgb(150, Convert.ToInt32(rnd.NextDouble() * 255),
+                                           Convert.ToInt32(rnd.NextDouble() * 255), Convert.ToInt32(rnd.NextDouble() * 255)),
+                            Convert.ToInt32(rnd.NextDouble() * 3));
                 }
                 map.Layers.Add(lay);
             }

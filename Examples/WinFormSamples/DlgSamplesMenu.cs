@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
+﻿using SharpMap.Forms;
+using System;
 using System.Windows.Forms;
-using SharpMap.Forms;
 
 namespace WinFormSamples
 {
@@ -28,25 +23,25 @@ namespace WinFormSamples
 
         private void button4_Click(object sender, EventArgs e)
         {
-            using(var f = new  DockAreaForm())
+            using (var f = new DockAreaForm())
                 f.ShowDialog();
         }
 
         private void button5_Click(object sender, EventArgs e)
         {
-            using(var f = new FormDemoDrawGeometries())
+            using (var f = new FormDemoDrawGeometries())
                 f.ShowDialog();
         }
 
         private void button6_Click(object sender, EventArgs e)
         {
-            using(var f = new FormAnimation())
+            using (var f = new FormAnimation())
                 f.ShowDialog();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using(var f = new FormMovingObjectOverTileLayer())
+            using (var f = new FormMovingObjectOverTileLayer())
                 f.ShowDialog();
         }
 
@@ -59,7 +54,7 @@ namespace WinFormSamples
         {
             if (checkBox1.Checked)
                 MapBox.MapImageGeneratorFunction = null;
-            else 
+            else
                 MapBox.MapImageGeneratorFunction = MapBox.LayerListImageGenerator;
         }
 

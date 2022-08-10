@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace SharpMap.Data.Providers
@@ -68,7 +67,7 @@ namespace SharpMap.Data.Providers
         /// The name of the function to apply to <see cref="Column"/>
         /// </summary>
         public string Function { get; set; }
-        
+
         /// <summary>
         /// The additional parameters
         /// </summary>
@@ -89,7 +88,7 @@ namespace SharpMap.Data.Providers
             {
                 if (!string.IsNullOrEmpty(value))
                 {
-                    if (!(value.Equals("ASC", StringComparison.InvariantCultureIgnoreCase)) || 
+                    if (!(value.Equals("ASC", StringComparison.InvariantCultureIgnoreCase)) ||
                         value.Equals("DESC", StringComparison.InvariantCultureIgnoreCase))
                         return;
                 }

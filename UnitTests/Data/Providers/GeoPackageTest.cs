@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using GeoAPI.Geometries;
-using NetTopologySuite;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
+using System.Collections.ObjectModel;
+using System.IO;
 
 namespace UnitTests.Data.Providers
 {
     public class GeoPackageTest
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-        }
-
         [TestCase(@"geonames_belgium.gpkg")]
         [TestCase(@"gdal_sample.gpkg")]
         [TestCase(@"haiti-vectors-split.gpkg")]
@@ -30,7 +22,7 @@ namespace UnitTests.Data.Providers
 
             if (!File.Exists(filePath))
                 throw new IgnoreException(string.Format("Test data not present: '{0}'!", filePath));
-            
+
             GeoPackage gpkg = null;
             Assert.DoesNotThrow(() => gpkg = GeoPackage.Open(filePath), "Opened did not prove to be a valid geo package");
 
@@ -42,7 +34,7 @@ namespace UnitTests.Data.Providers
                 Assert.DoesNotThrow(() => p = gpkg.GetFeatureProvider(feature));
 
                 TestProvider(p, feature);
-                
+
                 ILayer l = null;
                 Assert.DoesNotThrow(() => l = gpkg.GetFeatureLayer(feature));
 
@@ -71,7 +63,7 @@ namespace UnitTests.Data.Providers
             {
                 if (tmpFeatures > 50) break;
 
-                IGeometry geom = null;
+                Geometry geom = null;
                 Assert.DoesNotThrow(() => geom = provider.GetGeometryByID(oid),
                     "GetGeometryByID threw exception:\n\tConnection{0}\n\t{1}",
                     provider.ConnectionID, content.TableName);
@@ -86,7 +78,7 @@ namespace UnitTests.Data.Providers
                 tmpFeatures++;
             }
 
-            Collection<IGeometry> geoms = null;
+            Collection<Geometry> geoms = null;
             Assert.DoesNotThrow(() => geoms = provider.GetGeometriesInView(extent),
                 "GetGeometriesInView threw exception:\n\tConnection{0}\n\t{1}",
                 provider.ConnectionID, content.TableName);
@@ -97,7 +89,7 @@ namespace UnitTests.Data.Providers
                     "GetGeometriesInView with full extent did not return 90% of the geometries:\n\tConnection{0}\n\t{1}",
                     provider.ConnectionID, content.TableName);
             }
-        
+
 
             var fds = new FeatureDataSet();
             Assert.DoesNotThrow(() => provider.ExecuteIntersectionQuery(extent, fds),

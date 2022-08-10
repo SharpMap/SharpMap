@@ -1,9 +1,9 @@
 // Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile.Web;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile.Web;
 
 namespace SharpMap.Utilities.Web
 {
@@ -21,7 +21,7 @@ namespace SharpMap.Utilities.Web
         {
             var br = (BasicRequest)obj;
             Utility.SetFieldValue(ref obj, "_urlFormatter", BindingFlags.NonPublic | BindingFlags.Instance, info.GetString("urlFormatter"));
-            Utility.SetFieldValue(ref obj, "_serverNodes", newValue:(List<string>)info.GetValue("serverNodes", typeof(List<string>)));
+            Utility.SetFieldValue(ref obj, "_serverNodes", newValue: (List<string>)info.GetValue("serverNodes", typeof(List<string>)));
             Utility.SetFieldValue(ref obj, "_nodeCounterLock", newValue: new object());
             return br;
         }

@@ -1,10 +1,10 @@
 // Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile;
+using BruTile.Web;
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile;
-using BruTile.Web;
 
 namespace SharpMap.Utilities.Web
 {
@@ -26,12 +26,13 @@ namespace SharpMap.Utilities.Web
                 // Attribution
                 var attribution = new Attribution(info.GetString("attText"), info.GetString("attUrl"));
 
-                // Provider
-                var tp = (HttpTileProvider)info.GetValue("provider", typeof(HttpTileProvider));
+                // Request
+                var tr = (BasicRequest)info.GetValue("request", typeof(BasicRequest));
+                var urlFormatter = Utility.GetFieldValue(tr, "_urlFormatter", BindingFlags.NonPublic | BindingFlags.Instance, "http://localhost");
 
-                _httpTileSource = new HttpTileSource(schema, "http://localhost", attribution: attribution) {Name = name};
+                _httpTileSource = new HttpTileSource(schema, urlFormatter, attribution: attribution) { Name = name };
                 object obj = _httpTileSource;
-                Utility.SetFieldValue(ref obj, "_provider", BindingFlags.NonPublic | BindingFlags.Instance, tp);
+                Utility.SetFieldValue(ref obj, "_request", BindingFlags.NonPublic | BindingFlags.Instance, tr);
             }
 
             void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
@@ -48,7 +49,7 @@ namespace SharpMap.Utilities.Web
 
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            var ts = (HttpTileSource) obj;
+            var ts = (HttpTileSource)obj;
             info.SetType(typeof(HttpTileSourceRef));
             info.AddValue("name", ts.Name, typeof(string));
 
@@ -56,14 +57,14 @@ namespace SharpMap.Utilities.Web
             var type = ts.Schema.GetType();
             info.AddValue("schemaType", type);
             info.AddValue("schema", ts.Schema, type);
-            
+
             // Attribution
             info.AddValue("attText", ts.Attribution?.Text ?? string.Empty);
-            info.AddValue("attUrl", ts.Attribution?.Url?? string.Empty);
+            info.AddValue("attUrl", ts.Attribution?.Url ?? string.Empty);
 
-            //Provider
-            var p = Utility.GetFieldValue<HttpTileProvider>(ts, "_provider");
-            info.AddValue("provider", p, typeof(HttpTileProvider));
+            //Request
+            var br = Utility.GetFieldValue<BasicRequest>(ts, "_request");
+            info.AddValue("request", br, typeof(BasicRequest));
         }
 
         public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)

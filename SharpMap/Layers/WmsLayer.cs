@@ -15,19 +15,19 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using Common.Logging;
+using NetTopologySuite.Geometries;
+using SharpMap.CoordinateSystems;
+using SharpMap.Rendering.Exceptions;
+using SharpMap.Web.Wms;
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Net;
 using System.Text;
-using GeoAPI.Geometries;
-using SharpMap.CoordinateSystems;
-using SharpMap.Rendering.Exceptions;
-using SharpMap.Web.Wms;
-using Common.Logging;
 
 namespace SharpMap.Layers
 {
@@ -53,7 +53,7 @@ namespace SharpMap.Layers
     /// myLayer.SetImageFormat(layWms.OutputFormats[0]);
     /// myLayer.SRID = 4326;	
     /// myMap.Layers.Add(myLayer);
-    /// myMap.Center = new GeoAPI.Geometries.Coordinate(0, 0);
+    /// myMap.Center = new NetTopologySuite.Geometries.Coordinate(0, 0);
     /// myMap.Zoom = 360;
     /// myMap.MaximumZoom = 360;
     /// myMap.MinimumZoom = 0.1;
@@ -137,7 +137,7 @@ namespace SharpMap.Layers
         /// <param name="credentials"></param>
         public WmsLayer(string layername, string url, TimeSpan cachetime, IWebProxy proxy,
             ICredentials credentials)
-            :this(layername, GetClient(url, proxy, credentials, cachetime))
+            : this(layername, GetClient(url, proxy, credentials, cachetime))
         {
         }
 
@@ -207,7 +207,7 @@ namespace SharpMap.Layers
             for (int i = 0; i < _wmsClient.GetMapRequests.Length; i++)
             {
                 _wmsClient.GetMapRequests[i].OnlineResource = url;
-            }        
+            }
         }
 
 
@@ -369,7 +369,7 @@ namespace SharpMap.Layers
         /// Returns the extent of the layer
         /// </summary>
         /// <returns>Bounding box corresponding to the extent of the features in the layer</returns>
-        public override Envelope Envelope 
+        public override Envelope Envelope
         {
             get { return _envelope ?? (_envelope = GetEnvelope()); }
         }
@@ -608,7 +608,7 @@ namespace SharpMap.Layers
                 if (Logger.IsDebugEnabled)
                     Logger.Debug("Beginning request");
 
-                using(var myWebResponse = (HttpWebResponse)myWebRequest.GetResponse())
+                using (var myWebResponse = (HttpWebResponse)myWebRequest.GetResponse())
                 {
                     if (Logger.IsDebugEnabled)
                         Logger.Debug("Got response");
@@ -620,7 +620,7 @@ namespace SharpMap.Layers
                             if (Logger.IsDebugEnabled)
                                 Logger.Debug("Reading image from stream");
 
-                            var cLength = (int) myWebResponse.ContentLength;
+                            var cLength = (int)myWebResponse.ContentLength;
 
                             if (Logger.IsDebugEnabled)
                                 Logger.Debug("Content-Length: " + cLength);

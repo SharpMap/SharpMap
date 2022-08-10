@@ -1,10 +1,9 @@
+using SharpMap;
+using SharpMap.Layers;
+using SharpMap.Styles;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap;
-using SharpMap.Layers;
-using SharpMap.Data.Providers;
-using SharpMap.Styles;
 
 namespace WinFormSamples.Samples
 {
@@ -71,7 +70,7 @@ namespace WinFormSamples.Samples
                 Enabled = true,
                 LabelColumn = "NAME",
                 PriorityColumn = "POPULATION",
-                PriorityDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
+                PriorityDelegate = delegate (SharpMap.Data.FeatureDataRow fdr)
                 {
                     Int32 retVal = 10000000 * ((String)fdr["capital"] == "Y" ? 1 : 0);
                     return retVal + Convert.ToInt32(fdr["population"]);

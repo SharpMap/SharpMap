@@ -22,16 +22,16 @@
 //
 // *******************************************************************************
 
+using NetTopologySuite.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
+using SharpMap.Data;
+using SharpMap.Data.Providers;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
-using SharpMap.Data;
-using SharpMap.Data.Providers;
 using ColorBlend = SharpMap.Rendering.Thematics.ColorBlend;
 
 namespace SharpMap.Layers
@@ -55,12 +55,12 @@ namespace SharpMap.Layers
         /// <seealso cref="Color.A"/> value of 0.</para>
         /// </summary>
         public ColorBlend HeatColorBlend { get; set; }
-        
+
         /// <summary>
         /// A list of dots, that are used as heat value markers
         /// </summary>
         private readonly Bitmap[] _bitmaps = new Bitmap[32];
-        private readonly float [] _opacity = new float[32];
+        private readonly float[] _opacity = new float[32];
 
         private double _opacityMin;
         private double _opacityMax;
@@ -102,7 +102,7 @@ namespace SharpMap.Layers
         /// <param name="heatValueColumn">The name of the column that contains the heat value</param>
         /// <param name="heatValueScale">A value that is responsible to scale the heat value to the range &#x211d;[0, 1f]</param>
         public HeatLayer(IProvider provider, string heatValueColumn, float heatValueScale = 1f)
-            :this()
+            : this()
         {
             DataSource = provider;
             LayerName = "heat_" + provider.ConnectionID + heatValueColumn;
@@ -152,7 +152,7 @@ namespace SharpMap.Layers
         /// Gets the base layer
         /// </summary>
         public VectorLayer BaseLayer { get; private set; }
-        
+
         /// <summary>
         /// Gets the provider that serves the heat value features
         /// </summary>
@@ -169,11 +169,11 @@ namespace SharpMap.Layers
             {
                 BaseLayer.Render(g, map);
             }
-            
+
             var fds = new FeatureDataSet();
             var box = map.Envelope;
             ExecuteIntersectionQuery(box, fds);
-            
+
             if (fds.Tables.Count == 0 || fds.Tables[0].Rows.Count == 0)
             {
                 //base.Render(g, map);
@@ -193,8 +193,8 @@ namespace SharpMap.Layers
 
                 DrawPoints(map, fds.Tables[0].Select(), dot, image);
                 Colorize(image, HeatColorBlend, opacity);
-                
-                g.DrawImage(image, -dot.Width/2, -dot.Height/2);
+
+                g.DrawImage(image, -dot.Width / 2, -dot.Height / 2);
             }
             dot.Dispose();
 
@@ -225,8 +225,8 @@ namespace SharpMap.Layers
             get
             {
                 return new ColorBlend(
-                    new[] { Color.FromArgb(0, Color.White), Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Indigo},
-                    new[] { 0f,                             0.125f,    0.25f,        0.375f,       0.5f,        0.75f,      0.9f,       1 });
+                    new[] { Color.FromArgb(0, Color.White), Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Cyan, Color.Blue, Color.Indigo },
+                    new[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.75f, 0.9f, 1 });
             }
         }
 
@@ -275,7 +275,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             if (CoordinateTransformation != null)
             {
@@ -357,7 +357,7 @@ namespace SharpMap.Layers
             }
 
             var ext = DataSource.GetExtents();
-            ZoomMin = ext.MaxExtent*portion;
+            ZoomMin = ext.MaxExtent * portion;
             ZoomMax = ext.MaxExtent - ZoomMin;
         }
 
@@ -379,13 +379,13 @@ namespace SharpMap.Layers
                     g.Clear(Color.White);
                     using (var path = new GraphicsPath())
                     {
-                        path.AddEllipse(0, 0, size-1, size-1);
+                        path.AddEllipse(0, 0, size - 1, size - 1);
                         var brush = new PathGradientBrush(path)
                         {
                             CenterColor = Color.Gray,
                             SurroundColors = new[] { Color.White },
                         };
-                        g.FillEllipse(brush, 0, 0, size-1, size-1);
+                        g.FillEllipse(brush, 0, 0, size - 1, size - 1);
                     }
                 }
                 res[i] = bmp;
@@ -484,9 +484,9 @@ namespace SharpMap.Layers
 
                 for (var x = 0; x < image.Width * 4; x += 4)
                 {
-                    var colorIndex = (255 - buffer[x+2]) / 255f;
+                    var colorIndex = (255 - buffer[x + 2]) / 255f;
                     var color = heatPalette.GetColor(colorIndex);
-                    var alpha = Convert.ToInt32(255f * (color.A / 255f) * (buffer[x+3] / 255f) * f);
+                    var alpha = Convert.ToInt32(255f * (color.A / 255f) * (buffer[x + 3] / 255f) * f);
                     color = Color.FromArgb(alpha, color);
                     buffer[x + 3] = color.A;
                     buffer[x + 2] = color.R;
@@ -517,7 +517,7 @@ namespace SharpMap.Layers
                     c = GeometryTransform.TransformCoordinate(c, CoordinateTransformation.MathTransform);
                 }
                 var posF = map.WorldToImage(c);
-                var pos = Point.Round(posF);
+                var pos = System.Drawing.Point.Round(posF);
                 //var pos = Point.Round(PointF.Subtract(posF, halfSize));
 
                 using (var tmpDot = ApplyHeatValueToImage(dot, heatValue))
@@ -531,7 +531,7 @@ namespace SharpMap.Layers
         private void InterpolateOpacityValues()
         {
             _opacity[0] = (float)_opacityMax;
-            var dOpacity = (float)(_opacityMin - _opacityMax)/31f;
+            var dOpacity = (float)(_opacityMin - _opacityMax) / 31f;
             for (var i = 1; i < 31; i++)
                 _opacity[i] = _opacity[i - 1] + dOpacity;
             _opacity[31] = (float)_opacityMin;

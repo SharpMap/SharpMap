@@ -15,13 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Data;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
+using System;
+using System.Data;
 
 namespace UnitTests.Data.Providers
 {
@@ -45,11 +44,11 @@ namespace UnitTests.Data.Providers
                 DataRow row = source.NewRow();
                 row["oid"] = i;
                 row["name"] = "Feature #" + i;
-                row["x"] = rnd.NextDouble()*1000;
-                row["y"] = rnd.NextDouble()*1000;
+                row["x"] = rnd.NextDouble() * 1000;
+                row["y"] = rnd.NextDouble() * 1000;
                 source.Rows.Add(row);
             }
-            source.PrimaryKey = new[] {pk};
+            source.PrimaryKey = new[] { pk };
 
             return source;
         }
@@ -84,7 +83,7 @@ namespace UnitTests.Data.Providers
 
             foreach (DataRowView rowView in source.DefaultView)
             {
-                if (query.Contains(new Coordinate((double) rowView["x"], (double) rowView["y"])))
+                if (query.Contains(new Coordinate((double)rowView["x"], (double)rowView["y"])))
                 {
                     expected.ImportRow(rowView.Row);
                 }
@@ -123,10 +122,10 @@ namespace UnitTests.Data.Providers
 
             foreach (DataRowView rowView in source.DefaultView)
             {
-                if (minX > (double) rowView["x"]) minX = (double) rowView["x"];
-                if (minY > (double) rowView["y"]) minY = (double) rowView["y"];
-                if (maxX < (double) rowView["x"]) maxX = (double) rowView["x"];
-                if (maxY < (double) rowView["y"]) maxY = (double) rowView["y"];
+                if (minX > (double)rowView["x"]) minX = (double)rowView["x"];
+                if (minY > (double)rowView["y"]) minY = (double)rowView["y"];
+                if (maxX < (double)rowView["x"]) maxX = (double)rowView["x"];
+                if (maxY < (double)rowView["y"]) maxY = (double)rowView["y"];
             }
 
             Envelope expectedBounds = new Envelope(minX, maxX, minY, maxY);
@@ -142,9 +141,9 @@ namespace UnitTests.Data.Providers
             DataTablePoint provider = new DataTablePoint(source, "oid", "x", "y");
 
             DataRow row = source.Select("oid = 43")[0];
-            Point expected = new Point((double) row["x"], (double) row["y"]);
+            Point expected = new Point((double)row["x"], (double)row["y"]);
 
-            IGeometry actual = provider.GetGeometryByID(43);
+            Geometry actual = provider.GetGeometryByID(43);
 
             Assert.IsNotNull(actual);
             Assert.IsTrue(actual is Point);

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 
 namespace SharpMap.Serialization.Model
 {
@@ -23,7 +19,7 @@ namespace SharpMap.Serialization.Model
         public double Xmax { get; set; }
         public double Ymax { get; set; }
     }
-    
+
     public partial class MapLayer
     {
         public string Name { get; set; }
@@ -86,7 +82,7 @@ namespace SharpMap.Serialization.Model
         public string WmsLayers { get; set; }
     }
 
-    public class SpatiaLiteLayer : StyledLayer 
+    public class SpatiaLiteLayer : StyledLayer
     {
         public string FileName { get; set; }
         public string TableName { get; set; }

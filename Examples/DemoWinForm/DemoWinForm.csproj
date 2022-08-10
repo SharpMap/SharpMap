@@ -23,10 +23,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ProjNet4GeoAPI" Version="1.4.1" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\..\SharpMap\SharpMap.csproj" />
         <ProjectReference Include="..\..\SharpMap.UI\SharpMap.UI.csproj" />
     </ItemGroup>
@@ -35,6 +31,10 @@
         <None Update="Data\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

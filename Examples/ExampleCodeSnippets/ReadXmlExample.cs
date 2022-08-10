@@ -3,13 +3,13 @@
     public class ReadXmlExample
     {
         /// <summary>
-        /// Creates an enumeration of <see cref="GeoAPI.Geometries.Coordinate"/>s from an xml string
+        /// Creates an enumeration of <see cref="NetTopologySuite.Geometries.Coordinate"/>s from an xml string
         /// </summary>
         /// <param name="factory"></param>
         /// <param name="xml">the xml string</param>
         /// <returns>Coordinates</returns>
-        public static System.Collections.Generic.IEnumerable<GeoAPI.Geometries.IGeometry> PointsFromXml(
-            GeoAPI.Geometries.IGeometryFactory factory,
+        public static System.Collections.Generic.IEnumerable<NetTopologySuite.Geometries.Geometry> PointsFromXml(
+            NetTopologySuite.Geometries.GeometryFactory factory,
             System.IO.Stream xml)
         {
             foreach (var coordinate in CoordinatesFromXml(xml))
@@ -17,11 +17,11 @@
         }
 
         /// <summary>
-        /// Creates an enumeration of <see cref="GeoAPI.Geometries.Coordinate"/>s from an xml string
+        /// Creates an enumeration of <see cref="NetTopologySuite.Geometries.Coordinate"/>s from an xml string
         /// </summary>
         /// <param name="xml">the xml string</param>
         /// <returns>Coordinates</returns>
-        public static System.Collections.Generic.IEnumerable<GeoAPI.Geometries.Coordinate> CoordinatesFromXml(System.IO.Stream xml)
+        public static System.Collections.Generic.IEnumerable<NetTopologySuite.Geometries.Coordinate> CoordinatesFromXml(System.IO.Stream xml)
         {
             var reader = System.Xml.XmlReader.Create(xml);
             var doc = System.Xml.Linq.XDocument.Load(reader);
@@ -47,11 +47,11 @@
                     var y = double.Parse(element.Value,
                                          System.Globalization.NumberFormatInfo.InvariantInfo);
 
-                    yield return new GeoAPI.Geometries.Coordinate(x, y);
+                    yield return new NetTopologySuite.Geometries.Coordinate(x, y);
                 }
             }
         }
-        
+
         [NUnit.Framework.Test]
         public void TestXml1()
         {
@@ -65,7 +65,7 @@
   </Points>
 </root>";
             var xmlFileName = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), "xml");
-            
+
             using (var sw = new System.IO.StreamWriter(System.IO.File.OpenWrite(xmlFileName)))
                 sw.Write(xml);
 

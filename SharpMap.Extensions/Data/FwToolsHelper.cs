@@ -18,8 +18,6 @@
 #pragma warning disable 1591
 
 using System;
-using System.Configuration;
-using System.IO;
 
 namespace SharpMap.Extensions.Data
 {

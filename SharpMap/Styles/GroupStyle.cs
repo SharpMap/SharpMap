@@ -61,6 +61,6 @@ namespace SharpMap.Styles
         {
             _styles.Add(style);
         }
-    
+
     }
 }

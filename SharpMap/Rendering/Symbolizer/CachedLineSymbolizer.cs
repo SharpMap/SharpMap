@@ -1,9 +1,9 @@
+using NetTopologySuite.Geometries;
+using SharpMap.Base;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
-using SharpMap.Base;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -71,7 +71,7 @@ namespace SharpMap.Rendering.Symbolizer
                 Fill.Dispose();
             if (Pattern != null)
                 Pattern.Dispose();
-            
+
             base.ReleaseManagedResources();
         }
 
@@ -106,7 +106,7 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 var clonedPattern = (GraphicsPath)Pattern.Clone();
                 var warpedPath = WarpPathToPath.Warp(graphicsPath, clonedPattern, true, Interval);
-                
+
                 if (warpedPath == null) continue;
 
                 if (Fill != null)
@@ -125,7 +125,7 @@ namespace SharpMap.Rendering.Symbolizer
     {
         private List<GraphicsPath> _graphicsPaths;
         private readonly List<ILineSymbolizeHandler> _lineSymbolizeHandlers;
-        private readonly ILineSymbolizeHandler _fallback = new PlainLineSymbolizeHandler {Line = new Pen(Color.Black)};
+        private readonly ILineSymbolizeHandler _fallback = new PlainLineSymbolizeHandler { Line = new Pen(Color.Black) };
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -156,7 +156,7 @@ namespace SharpMap.Rendering.Symbolizer
 
             if (_fallback != null)
                 _fallback.Dispose();
-            
+
             base.ReleaseManagedResources();
         }
 
@@ -200,13 +200,13 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map"></param>
         /// <param name="lineString"></param>
         /// <param name="graphics"></param>
-        protected override void OnRenderInternal(MapViewport map, ILineString lineString, Graphics graphics)
+        protected override void OnRenderInternal(MapViewport map, LineString lineString, Graphics graphics)
         {
             var gp = new GraphicsPath();
             gp.AddLines(VectorRenderer.LimitValues(lineString.TransformToImage(map), VectorRenderer.ExtremeValueLimit));
             if (ImmediateMode)
             {
-                var tmp = new List<GraphicsPath>(new[] {gp});
+                var tmp = new List<GraphicsPath>(new[] { gp });
                 Symbolize(graphics, map, tmp);
             }
             else

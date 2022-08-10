@@ -25,7 +25,7 @@ namespace SharpMap.Forms.ToolBar
         /// </summary>
         /// <param name="container">A container to add components to</param>
         public MapQueryToolStrip(IContainer container)
-            :base(container)
+            : base(container)
         {
             InitializeComponent();
         }
@@ -43,7 +43,7 @@ namespace SharpMap.Forms.ToolBar
         private Layers.VectorLayer _layer;
 
         private readonly Dictionary<string, int> _dictLayerNameToIndex
-            = new Dictionary<string,int>();
+            = new Dictionary<string, int>();
 
         /// <summary>
         /// Method to initialize the tool strip
@@ -112,9 +112,9 @@ namespace SharpMap.Forms.ToolBar
         }
 
         /// <inheritdoc cref="MapToolStrip.OnMapControlChangingInternal"/>
-        protected override void  OnMapControlChangingInternal(CancelEventArgs e)
+        protected override void OnMapControlChangingInternal(CancelEventArgs e)
         {
- 	        base.OnMapControlChangingInternal(e);
+            base.OnMapControlChangingInternal(e);
             if (MapControl == null) return;
 
             OnClear();
@@ -127,13 +127,13 @@ namespace SharpMap.Forms.ToolBar
         }
 
         /// <inheritdoc cref="MapToolStrip.OnMapControlChangedInternal"/>
-        protected override void  OnMapControlChangedInternal(EventArgs e)
+        protected override void OnMapControlChangedInternal(EventArgs e)
         {
- 	        base.OnMapControlChangedInternal(e);
+            base.OnMapControlChangedInternal(e);
 
             if (MapControl == null)
             {
-                Enabled =false;
+                Enabled = false;
                 return;
             }
             MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
@@ -204,7 +204,7 @@ namespace SharpMap.Forms.ToolBar
             int i = 0;
             int j = 0;
             int k = -1;
-            foreach(var lyr in MapControl.Map.Layers)
+            foreach (var lyr in MapControl.Map.Layers)
             {
                 if (lyr.LayerName == "QueriedFeatures") continue;
 
@@ -247,7 +247,7 @@ namespace SharpMap.Forms.ToolBar
             _geometryProvider = new Data.Providers.GeometryFeatureProvider(features);
             _layer = new Layers.VectorLayer("QueriedFeatures", _geometryProvider);
             _layer.IsQueryEnabled = false;
-            
+
             var map = MapControl.Map;
             map.Layers.Add(_layer);
 
@@ -258,7 +258,7 @@ namespace SharpMap.Forms.ToolBar
         private void OnCheckedChanged(object sender, EventArgs e)
         {
             if (MapControl == null) return;
-            
+
             if (_queryLayerPicker.SelectedItem == null)
             {
                 MessageBox.Show(@"No layer to query selected");
@@ -279,7 +279,7 @@ namespace SharpMap.Forms.ToolBar
                 return;
             }
             TrySetActiveTool(checkedButton, newTool);
-            
+
         }
     }
 }

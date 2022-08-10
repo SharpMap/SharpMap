@@ -4,12 +4,7 @@ namespace UnitTests.Rendering.Symbolizer
 {
     public class LineSymbolizerTest
     {
-        static LineSymbolizerTest()
-        {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
-        }
-
-        [NUnit.Framework.Test] 
+        [NUnit.Framework.Test]
         public void TestBasicLineSymbolizer()
         {
             var p = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_aur.shp"), false);
@@ -17,7 +12,7 @@ namespace UnitTests.Rendering.Symbolizer
             //l.Style.Outline = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 5);
             l.Style.Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 1);
             l.Style.EnableOutline = false;
-            var m = new SharpMap.Map(new System.Drawing.Size(1440,1080)) {BackColor = System.Drawing.Color.Cornsilk};
+            var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
 
             m.ZoomToExtents();
@@ -55,23 +50,24 @@ namespace UnitTests.Rendering.Symbolizer
             var p = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_aur.shp"), false);
 
             var l = new SharpMap.Layers.VectorLayer("roads", p);
-            
+
             var cls = new SharpMap.Rendering.Symbolizer.CachedLineSymbolizer();
             cls.LineSymbolizeHandlers.Add(new SharpMap.Rendering.Symbolizer.PlainLineSymbolizeHandler
-                                              {Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 2)});
+            { Line = new System.Drawing.Pen(System.Drawing.Color.Gold, 2) });
 
             var wls = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
-                          {
-                              Pattern =
+            {
+                Pattern =
                                   SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.
                                   GetGreaterSeries(3, 3),
-                              Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1)
-                              , Interval = 20
-                          };
+                Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1)
+                              ,
+                Interval = 20
+            };
             cls.LineSymbolizeHandlers.Add(wls);
             l.Style.LineSymbolizer = cls;
 
-            var m = new SharpMap.Map(new System.Drawing.Size(720, 540)) {BackColor = System.Drawing.Color.Cornsilk};
+            var m = new SharpMap.Map(new System.Drawing.Size(720, 540)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
 
             m.ZoomToExtents();
@@ -85,14 +81,15 @@ namespace UnitTests.Rendering.Symbolizer
             bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads2.bmp"));
 
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
-                                               {
-                                                   Pattern =
+            {
+                Pattern =
                                                        SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.
                                                        GetTriangle(4, 0),
-                                                   Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
-                                                   Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
-                                                   ,Interval = 10
-                                               };
+                Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
+                Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
+                                                   ,
+                Interval = 10
+            };
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
@@ -113,7 +110,7 @@ namespace UnitTests.Rendering.Symbolizer
             bmp = m.GetMap();
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method: {0}ms", sw.ElapsedMilliseconds));
-            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this),"AurichRoads2-1.bmp"));
+            bmp.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "AurichRoads2-1.bmp"));
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
             {
                 Pattern =
@@ -149,12 +146,12 @@ namespace UnitTests.Rendering.Symbolizer
 
             //cls.LineSymbolizeHandlers[0] = cls.LineSymbolizeHandlers[1];
             cls.LineSymbolizeHandlers[1] = new SharpMap.Rendering.Symbolizer.WarpedLineSymbolizeHander
-                                               {
-                                                   Pattern =
+            {
+                Pattern =
                                                        SharpMap.Rendering.Symbolizer.WarpedLineSymbolizer.GetZigZag(4, 4),
-                                                   Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
-                                                   //Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
-                                               };
+                Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1),
+                //Fill = new System.Drawing.SolidBrush(System.Drawing.Color.Firebrick)
+            };
             sw.Reset(); sw.Start();
             bmp = m.GetMap();
             sw.Stop();
@@ -216,7 +213,7 @@ namespace UnitTests.Rendering.Symbolizer
                     Line = new System.Drawing.Pen(System.Drawing.Color.Firebrick, 1)
                     ,
                     Interval = 20
-                    
+
                 };
                 cls.LineSymbolizeHandlers.Add(wls);
                 cls.ImmediateMode = true;

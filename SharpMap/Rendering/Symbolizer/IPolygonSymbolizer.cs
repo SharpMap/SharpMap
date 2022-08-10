@@ -1,4 +1,4 @@
-﻿using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -6,6 +6,6 @@ namespace SharpMap.Rendering.Symbolizer
     /// Interface for classes that can symbolize polygons
     /// </summary>
     public interface IPolygonSymbolizer : ISymbolizer<IPolygonal>
-    { 
+    {
     }
 }

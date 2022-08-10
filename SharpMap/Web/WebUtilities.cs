@@ -37,14 +37,14 @@ namespace SharpMap.Web
 
                     try
                     {
-                        var httpContextType = 
+                        var httpContextType =
                             assembly.GetType("System.Web.HttpContext");
-                         var httpContextPropertyInfo = 
-                            httpContextType.GetProperty("Current",
-                                                        BindingFlags.Public | BindingFlags.Static);
+                        var httpContextPropertyInfo =
+                           httpContextType.GetProperty("Current",
+                                                       BindingFlags.Public | BindingFlags.Static);
                         _context = httpContextPropertyInfo.GetValue(null, null);
 
-                        var cachePropertyInfo = 
+                        var cachePropertyInfo =
                             httpContextType.GetProperty("Cache",
                                                         BindingFlags.Public | BindingFlags.Instance);
                         if (_context != null)
@@ -99,9 +99,9 @@ namespace SharpMap.Web
         {
             if (!_systemWebTested)
             {
-                lock(LockContext)
+                lock (LockContext)
                 {
-                    if (!_systemWebTested) 
+                    if (!_systemWebTested)
                         TestSystemWeb();
                 }
             }
@@ -114,7 +114,7 @@ namespace SharpMap.Web
 
         [MethodImpl(MethodImplOptions.Synchronized)]
         internal static bool TryGetValue<T>(string key, out T instance)
-            where T: class
+            where T : class
         {
             var cache = GetCurrentCache();
             if (cache == null)
@@ -123,7 +123,7 @@ namespace SharpMap.Web
                 return false;
             }
 
-            instance = (T)_getMethodInfo.Invoke(cache, new object[] {key});
+            instance = (T)_getMethodInfo.Invoke(cache, new object[] { key });
             return instance != null;
         }
 
@@ -140,7 +140,7 @@ namespace SharpMap.Web
         /// <param name="instance"></param>
         /// <returns></returns>
         internal static bool TryAddValue<T>(string key, T instance)
-            where T: class
+            where T : class
         {
             return TryAddValue(key, instance, TimeSpan.FromDays(1));
         }
@@ -157,7 +157,7 @@ namespace SharpMap.Web
             return true;
         }
     }
-    
+
     class WebUtilities
     {
         #region Reusable XML Parsing

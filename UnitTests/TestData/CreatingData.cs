@@ -31,7 +31,7 @@
             return arr;
         }
 
-        
+
         /// <summary>
         /// Creates a FeatureDataTable from arrays of x, y and z components
         /// </summary>
@@ -39,7 +39,7 @@
         /// <param name="ycomponents">an array of doubles representing the y ordinate values</param>
         /// <param name="zcomponents">an array of doubles representing the z ordinate values</param>
         /// <returns></returns>
-        public static SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents, 
+        public static SharpMap.Data.FeatureDataTable CreatePointFeatureDataTableFromArrays(double[] xcomponents,
                                                                  double[] ycomponents,
                                                                  double[] zcomponents)
         {
@@ -59,14 +59,14 @@
             }
 
             var fdt = new SharpMap.Data.FeatureDataTable();
-            fdt.Columns.Add("TimeStamp", typeof (System.DateTime)); // add example timestamp attribute
+            fdt.Columns.Add("TimeStamp", typeof(System.DateTime)); // add example timestamp attribute
             for (var i = 0; i < xcomponents.Length; i++)
             {
                 SharpMap.Data.FeatureDataRow fdr = fdt.NewRow();
 
                 fdr.Geometry = factory.CreatePoint(threedee
-                                   ? new GeoAPI.Geometries.Coordinate(xcomponents[i], ycomponents[i], zcomponents[i])
-                                   : new GeoAPI.Geometries.Coordinate(xcomponents[i], ycomponents[i]));
+                                   ? new NetTopologySuite.Geometries.CoordinateZ(xcomponents[i], ycomponents[i], zcomponents[i])
+                                   : new NetTopologySuite.Geometries.Coordinate(xcomponents[i], ycomponents[i]));
 
                 fdr["TimeStamp"] = System.DateTime.Now; //set the timestamp property
                 fdt.AddRow(fdr);
@@ -78,48 +78,48 @@
 
     public static class ShapeFactory
     {
-        public static GeoAPI.Geometries.ILinearRing CreateRectangle(GeoAPI.Geometries.IGeometryFactory factory, 
-            GeoAPI.Geometries.Coordinate leftTop, GeoAPI.Geometries.Coordinate rightBottom)
+        public static NetTopologySuite.Geometries.LinearRing CreateRectangle(NetTopologySuite.Geometries.GeometryFactory factory,
+            NetTopologySuite.Geometries.Coordinate leftTop, NetTopologySuite.Geometries.Coordinate rightBottom)
         {
             var pts = new[]
                             {
-                                leftTop, 
-                                new GeoAPI.Geometries.Coordinate(rightBottom.X, leftTop.Y), 
+                                leftTop,
+                                new NetTopologySuite.Geometries.Coordinate(rightBottom.X, leftTop.Y),
                                 rightBottom,
-                                new GeoAPI.Geometries.Coordinate(leftTop.X, rightBottom.Y), 
+                                new NetTopologySuite.Geometries.Coordinate(leftTop.X, rightBottom.Y),
                                 leftTop
                             };
             return factory.CreateLinearRing(pts);
         }
 
-        public static GeoAPI.Geometries.ILinearRing CreateRectangle(GeoAPI.Geometries.IGeometryFactory factory,
-            GeoAPI.Geometries.Coordinate center, System.Drawing.SizeF size)
+        public static NetTopologySuite.Geometries.LinearRing CreateRectangle(NetTopologySuite.Geometries.GeometryFactory factory,
+            NetTopologySuite.Geometries.Coordinate center, System.Drawing.SizeF size)
         {
             var wh = new System.Drawing.SizeF(size.Width * 0.5f, size.Height * 0.5f);
-            var lt = new GeoAPI.Geometries.Coordinate(center.X - wh.Width, center.Y + wh.Height);
-            var rb = new GeoAPI.Geometries.Coordinate(center.X + wh.Width, center.Y - wh.Height);
+            var lt = new NetTopologySuite.Geometries.Coordinate(center.X - wh.Width, center.Y + wh.Height);
+            var rb = new NetTopologySuite.Geometries.Coordinate(center.X + wh.Width, center.Y - wh.Height);
 
             return CreateRectangle(factory, lt, rb);
         }
 
-        public static GeoAPI.Geometries.ILinearRing CreateEllipse(GeoAPI.Geometries.IGeometryFactory factory,
-            GeoAPI.Geometries.Coordinate center, System.Drawing.SizeF size)
+        public static NetTopologySuite.Geometries.LinearRing CreateEllipse(NetTopologySuite.Geometries.GeometryFactory factory,
+            NetTopologySuite.Geometries.Coordinate center, System.Drawing.SizeF size)
         {
             return CreateEllipse(factory, center, size, 12);
         }
 
-        public static GeoAPI.Geometries.ILinearRing CreateEllipse(GeoAPI.Geometries.IGeometryFactory factory,
-            GeoAPI.Geometries.Coordinate center, System.Drawing.SizeF size, int segmentsPerQuadrant)
+        public static NetTopologySuite.Geometries.LinearRing CreateEllipse(NetTopologySuite.Geometries.GeometryFactory factory,
+            NetTopologySuite.Geometries.Coordinate center, System.Drawing.SizeF size, int segmentsPerQuadrant)
         {
             const double piHalf = System.Math.PI * 0.5d;
 
             var step = piHalf / segmentsPerQuadrant;
 
-            var pts = new GeoAPI.Geometries.Coordinate[4 * segmentsPerQuadrant + 1];
+            var pts = new NetTopologySuite.Geometries.Coordinate[4 * segmentsPerQuadrant + 1];
             var angle = 0d;
             for (var i = 0; i < 4 * segmentsPerQuadrant; i++)
             {
-                pts[i] = new GeoAPI.Geometries.Coordinate(center.X + System.Math.Cos(angle) * size.Width,
+                pts[i] = new NetTopologySuite.Geometries.Coordinate(center.X + System.Math.Cos(angle) * size.Width,
                                                           center.Y + System.Math.Sin(angle) * size.Height);
                 angle += step;
             }
@@ -130,17 +130,17 @@
 
     public class TestShapeFactory
     {
-        public static readonly GeoAPI.Geometries.IGeometryFactory Factory =
+        public static readonly NetTopologySuite.Geometries.GeometryFactory Factory =
             new NetTopologySuite.Geometries.GeometryFactory(new NetTopologySuite.Geometries.PrecisionModel(0.01));
-        
+
         [NUnit.Framework.Test]
         public void TestRectangle()
         {
-            var rect = ShapeFactory.CreateRectangle(Factory, new GeoAPI.Geometries.Coordinate(1, 2), new GeoAPI.Geometries.Coordinate(2, 1));
+            var rect = ShapeFactory.CreateRectangle(Factory, new NetTopologySuite.Geometries.Coordinate(1, 2), new NetTopologySuite.Geometries.Coordinate(2, 1));
             NUnit.Framework.Assert.AreEqual(rect.StartPoint, rect.EndPoint);
             NUnit.Framework.Assert.AreEqual(4, rect.Length);
 
-            var rect2 = ShapeFactory.CreateRectangle(Factory, new GeoAPI.Geometries.Coordinate(1.5, 1.5), new System.Drawing.SizeF(1f, 1f));
+            var rect2 = ShapeFactory.CreateRectangle(Factory, new NetTopologySuite.Geometries.Coordinate(1.5, 1.5), new System.Drawing.SizeF(1f, 1f));
             NUnit.Framework.Assert.AreEqual(rect, rect2);
 
             NUnit.Framework.Assert.AreEqual("LINEARRING (1 2, 2 2, 2 1, 1 1, 1 2)", rect.ToString());
@@ -148,13 +148,13 @@
         [NUnit.Framework.Test]
         public void TestEllipse()
         {
-            var ell = ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(1, 1), new System.Drawing.SizeF(1, 1), 1);
+            var ell = ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(1, 1), new System.Drawing.SizeF(1, 1), 1);
             NUnit.Framework.Assert.AreEqual(ell.StartPoint, ell.EndPoint);
             NUnit.Framework.Assert.LessOrEqual(System.Math.Abs(4 * System.Math.Sqrt(2) - ell.Length), 0.00001d);
 
 
             NUnit.Framework.Assert.AreEqual("LINEARRING (2 1, 1 2, 0 1, 1 0, 2 1)", ell.ToString());
-            var ell2 = ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(1, 1), new System.Drawing.SizeF(1, 1));
+            var ell2 = ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(1, 1), new System.Drawing.SizeF(1, 1));
             System.Diagnostics.Trace.WriteLine(ell2.ToString());
         }
 
@@ -166,17 +166,17 @@
                 new[]
                     {
                         Factory.CreatePolygon(
-                            ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(0, 0),
+                            ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(0, 0),
                                                        new System.Drawing.SizeF(40, 30)),
                             new[]
                                 {
-                                    ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(90, 55),
+                                    ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(90, 55),
                                                                new System.Drawing.SizeF(40, 30)),
-                                    ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(77, 24),
+                                    ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(77, 24),
                                                                new System.Drawing.SizeF(40, 30)),
-                                    ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(-80, 41),
+                                    ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(-80, 41),
                                                                new System.Drawing.SizeF(40, 30)),
-                                    ShapeFactory.CreateEllipse(Factory, new GeoAPI.Geometries.Coordinate(-45, -36),
+                                    ShapeFactory.CreateEllipse(Factory, new NetTopologySuite.Geometries.Coordinate(-45, -36),
                                                                new System.Drawing.SizeF(40, 30)),
                                 })
                     });

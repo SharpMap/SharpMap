@@ -1,10 +1,10 @@
+using SharpMap.Data.Providers.Tiles;
+using SharpMap.Layers;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
-using SharpMap.Data.Providers.Tiles;
-using SharpMap.Layers;
-using SharpMap.Styles;
 
 namespace SharpMap.Data.Providers
 {

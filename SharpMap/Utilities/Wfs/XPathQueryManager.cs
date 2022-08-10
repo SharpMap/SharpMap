@@ -247,7 +247,7 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         public bool GetContextOfNextNode()
         {
-            return GetContextOfNode((uint) _NavDiff + 1);
+            return GetContextOfNode((uint)_NavDiff + 1);
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace SharpMap.Utilities.Wfs
         private void InitializeCustomContext(CustomQueryContext paramContext)
         {
             IDictionary<string, string> namespaces = paramContext.GetNamespacesInScope(XmlNamespaceScope.ExcludeXml);
-            _ParamContext = new CustomQueryContext((NameTable) paramContext.NameTable);
+            _ParamContext = new CustomQueryContext((NameTable)paramContext.NameTable);
             _ParamContext.AddNamespace(namespaces);
         }
 
@@ -697,8 +697,8 @@ namespace SharpMap.Utilities.Wfs
                 if (arg is string)
                     return arg.ToString();
                 else if (arg is XPathNodeIterator)
-                    if (((XPathNodeIterator) arg).MoveNext() == true)
-                        return ((XPathNodeIterator) arg).Current.Value;
+                    if (((XPathNodeIterator)arg).MoveNext() == true)
+                        return ((XPathNodeIterator)arg).Current.Value;
                 return string.Empty;
             }
 
@@ -774,8 +774,8 @@ namespace SharpMap.Utilities.Wfs
             /// <returns>A boolean value indicating whether the argument strings are identical</returns>
             public override object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
             {
-                return ((string) ((string) args[1] + ResolveArgument(args[2]))).Equals(
-                    ResolveNsPrefix(ResolveArgument(args[0]), (string) args[1], docContext), StringComparison.Ordinal);
+                return ((string)((string)args[1] + ResolveArgument(args[2]))).Equals(
+                    ResolveNsPrefix(ResolveArgument(args[0]), (string)args[1], docContext), StringComparison.Ordinal);
             }
 
             #endregion

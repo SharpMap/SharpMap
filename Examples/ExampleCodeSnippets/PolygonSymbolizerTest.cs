@@ -1,3 +1,6 @@
+using SharpMap.CoordinateSystems;
+using System.IO;
+
 namespace ExampleCodeSnippets
 {
     [NUnit.Framework.TestFixture]
@@ -12,10 +15,10 @@ namespace ExampleCodeSnippets
                 base.Begin(g, map, aproximateNumberOfGeometries);
                 _oldRenderOrigin = g.RenderingOrigin;
             }
-            protected override void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.IPolygon polygon, System.Drawing.Graphics g)
+            protected override void OnRenderInternal(SharpMap.MapViewport map, NetTopologySuite.Geometries.Polygon polygon, System.Drawing.Graphics g)
             {
                 var pt = polygon.Centroid;
-                g.RenderingOrigin = 
+                g.RenderingOrigin =
                     System.Drawing.Point.Truncate(map.WorldToImage(pt.Coordinate));
                 base.OnRenderInternal(map, polygon, g);
             }
@@ -28,23 +31,36 @@ namespace ExampleCodeSnippets
 
         [NUnit.Framework.OneTimeSetUp]
         public void OneTimeSetUp()
-        { }
+        {
+            var gss = NetTopologySuite.NtsGeometryServices.Instance;
+            var css = new CoordinateSystemServices(
+                new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
+                new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
+                SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
+        }
 
         [NUnit.Framework.Test]
         public void TestPlainPolygonSymbolizer()
         {
-            var provider = new SharpMap.Data.Providers.ShapeFile(
-                "..\\..\\..\\WinFormSamples\\GeoData\\World\\countries.shp", true);
+            var shapePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\WinFormSamples\\GeoData\\World\\countries.shp"));
+            var provider = new SharpMap.Data.Providers.ShapeFile(shapePath, true);
             var l = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer("Countries", provider);
             l.Symbolizer = new ModifiedBasicPolygonSymbolizer
-                {
-                    Fill = new System.Drawing.Drawing2D.HatchBrush(
-                            System.Drawing.Drawing2D.HatchStyle.WideDownwardDiagonal, 
+            {
+                Fill = new System.Drawing.Drawing2D.HatchBrush(
+                            System.Drawing.Drawing2D.HatchStyle.WideDownwardDiagonal,
                             System.Drawing.Color.Red /*,
                             System.Drawing.Color.LightPink*/),
-                    UseClipping = false,
-                    //Outline = System.Drawing.Pens.AliceBlue
-                };
+                UseClipping = false,
+                //Outline = System.Drawing.Pens.AliceBlue
+            };
 
             var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
@@ -53,7 +69,7 @@ namespace ExampleCodeSnippets
 
             var sw = new System.Diagnostics.Stopwatch();
             var img = m.GetMap();
-            
+
             sw.Start();
             img = m.GetMap();
             img.Save("PolygonSymbolizer-1.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
@@ -75,7 +91,7 @@ namespace ExampleCodeSnippets
             img.Save("PolygonSymbolizer-2.bmp", System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();
             System.Console.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
-        
+
         }
     }
 

@@ -15,15 +15,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using SharpMap.Base;
 using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
-using SharpMap.Base;
-using Point = GeoAPI.Geometries.IPoint;
 
-namespace SharpMap.Rendering.Symbolizer    
+namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// ListPointSymbolizer class
@@ -132,7 +131,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Gets or sets the scale 
         /// </summary>
-        public float  Scale
+        public float Scale
         {
             get => 1;
             set { }

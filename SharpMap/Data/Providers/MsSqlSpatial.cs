@@ -19,13 +19,13 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using SharpMap.Converters.WellKnownBinary;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using SharpMap.Converters.WellKnownBinary;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -83,17 +83,17 @@ namespace SharpMap.Data.Providers
 
         private static string GetSchemaName(string qualifiedTable)
         {
-            var tmp = qualifiedTable.Split(new [] {'.'}, 2);
-            return tmp.Length == 1 
-                ? "dbo" 
+            var tmp = qualifiedTable.Split(new[] { '.' }, 2);
+            return tmp.Length == 1
+                ? "dbo"
                 : tmp[0].Replace("\"", "");
         }
 
         private static string GetTableName(string qualifiedTable)
         {
             var tmp = qualifiedTable.Split(new[] { '.' }, 2);
-            return tmp.Length == 1 
-                ? tmp[0].Replace("\"", "") 
+            return tmp.Length == 1
+                ? tmp[0].Replace("\"", "")
                 : tmp[1].Replace("\"", "");
         }
 
@@ -157,7 +157,7 @@ namespace SharpMap.Data.Providers
                 //                        col.DataType = typeof(bool);
                 //                        break;
                 //                    case "geometry":
-                //                        col.DataType = typeof(GeoAPI.Geometries.IGeometry);
+                //                        col.DataType = typeof(NetTopologySuite.Geometries.Geometry);
                 //                        break;
                 //                    default:
                 //                        col.DataType = typeof(object);
@@ -180,7 +180,7 @@ namespace SharpMap.Data.Providers
         /// <returns>An open connection to the database backend.</returns>
         protected override DbConnection CreateOpenDbConnection()
         {
- 	        var conn = new SqlConnection(ConnectionString);
+            var conn = new SqlConnection(ConnectionString);
             conn.Open();
             return conn;
         }
@@ -191,7 +191,7 @@ namespace SharpMap.Data.Providers
         /// <returns>An open connection to the database backend.</returns>
         protected override DbDataAdapter CreateDataAdapter()
         {
- 	        return new SqlDataAdapter();
+            return new SqlDataAdapter();
         }
 
         ///// <summary>
@@ -199,9 +199,9 @@ namespace SharpMap.Data.Providers
         ///// </summary>
         ///// <param name="bbox"></param>
         ///// <returns></returns>
-        //protected override Collection<IGeometry> GetGeometriesInViewInternal(Envelope bbox)
+        //protected override Collection<Geometry> GetGeometriesInViewInternal(Envelope bbox)
         //{
-        //    var features = new Collection<IGeometry>();
+        //    var features = new Collection<Geometry>();
         //    using (var conn = CreateOpenDbConnection())
         //    {
         //        var strSQL = "SELECT ST.AsBinary(" + BuildGeometryExpression() + ") ";
@@ -239,7 +239,7 @@ namespace SharpMap.Data.Providers
         ///// </summary>
         ///// <param name="oid">Object ID</param>
         ///// <returns>geometry</returns>
-        //protected override IGeometry GetGeometryByIDInternal(uint oid)
+        //protected override Geometry GetGeometryByIDInternal(uint oid)
         //{
         //    using (var conn = CreateOpenDbConnection())
         //    {
@@ -263,7 +263,7 @@ namespace SharpMap.Data.Providers
 
 
         /// <summary>
-        /// Gets the object of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the object of features that lie within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
         /// <returns>A collection of object ids</returns>
@@ -276,7 +276,7 @@ namespace SharpMap.Data.Providers
                 {
 #pragma warning disable 612,618
                     var @where = !string.IsNullOrEmpty(DefinitionQuery)
-                        ? DefinitionQuery 
+                        ? DefinitionQuery
                         : FeatureColumns.GetWhereClause(null);
 #pragma warning restore 612,618
                     var strSQL = string.Format("SELECT _sm_.{4} FROM ST.FilterQueryWhere('{0}','{1}',{3},'{2}') AS _sm_;",
@@ -311,9 +311,9 @@ namespace SharpMap.Data.Providers
         ///// </summary>
         ///// <param name="geom"></param>
         ///// <param name="ds">FeatureDataSet to fill data into</param>
-        //protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        //protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         //{
-        //    var features = new List<IGeometry>();
+        //    var features = new List<Geometry>();
         //    using (var conn = CreateOpenDbConnection())
         //    {
         //        string strGeom;
@@ -473,13 +473,13 @@ namespace SharpMap.Data.Providers
 
                 var strSQL = string.Format("SELECT ST.AsBinary(ST.EnvelopeQueryWhere('{0}', '{1}', '{2}'))", /*DbUtility.DecorateTable(Schema, Table)*/ /* Schema, */Table,
                                               GeometryColumn, where);
-                
+
                 using (var command = new SqlCommand(strSQL, conn))
                 {
                     var result = command.ExecuteScalar();
-                    return result == DBNull.Value 
-                        ? null : 
-                        GeometryFromWKB.Parse((byte[]) result, Factory).EnvelopeInternal;
+                    return result == DBNull.Value
+                        ? null :
+                        GeometryFromWKB.Parse((byte[])result, Factory).EnvelopeInternal;
                 }
             }
         }
@@ -564,7 +564,7 @@ namespace SharpMap.Data.Providers
                     var columnname = command.ExecuteScalar();
                     if (columnname == DBNull.Value)
                         throw new ApplicationException("Table '" + Table + "' does not contain a geometry column");
-                    return (string) columnname;
+                    return (string)columnname;
                 }
             }
         }
@@ -587,7 +587,7 @@ namespace SharpMap.Data.Providers
         /// <returns>The spatial component of a SQL where clause</returns>
         protected override string GetSpatialWhere(Envelope bbox, DbCommand command)
         {
-            var sqlCommand = (SqlCommand) command;
+            var sqlCommand = (SqlCommand)command;
 
 #pragma warning disable 612,618
             var pwhere = new SqlParameter("@PWhere", !string.IsNullOrEmpty(DefinitionQuery)
@@ -624,7 +624,7 @@ namespace SharpMap.Data.Providers
             return res;
         }
 
-        private string BuildGeometry(IGeometry geometry, SqlCommand command)
+        private string BuildGeometry(Geometry geometry, SqlCommand command)
         {
             var res = "ST.GeomFromWKB(@PGeom,@PTargetSrid)";
 
@@ -651,7 +651,7 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">The geometry</param>
         /// <param name="command">The command object, that is supposed to execute the query.</param>
         /// <returns>The spatial component of a SQL where clause</returns>
-        protected override string GetSpatialWhere(IGeometry bbox, DbCommand command)
+        protected override string GetSpatialWhere(Geometry bbox, DbCommand command)
         {
             var sqlCommand = (SqlCommand)command;
 

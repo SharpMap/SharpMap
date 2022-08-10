@@ -1,22 +1,22 @@
-﻿using System.IO;
-using GeoAPI;
-using GeoAPI.Geometries;
+﻿using NetTopologySuite;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using SharpMap.Data.Providers.Geometry;
+using System.IO;
 
 namespace SharpMap.Data.Providers.IO
 {
     internal class GpkgStandardBinaryReader
     {
-        
+
         private readonly WKBReader _wkbReader;
 
         internal GpkgStandardBinaryReader()
-            :this(GeometryServiceProvider.Instance)
+            : this(NtsGeometryServices.Instance)
         {
         }
 
-        internal GpkgStandardBinaryReader(IGeometryServices services)
+        internal GpkgStandardBinaryReader(NtsGeometryServices services)
         {
             _wkbReader = new WKBReader(services);
         }

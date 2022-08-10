@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Common.Logging;
-using GeoAPI.Geometries;
+﻿using Common.Logging;
+using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Forms;
 using SharpMap.Forms.Tools;
 using SharpMap.Layers;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace WinFormSamples
 {
@@ -23,7 +22,7 @@ namespace WinFormSamples
 
         public SampleTool() : base("Sample", "A sample tool that does nothing really useful")
         {
-            Logger.Debug(fmh => fmh("Created \"{0}\"-Tool, {1}", Name,Description));
+            Logger.Debug(fmh => fmh("Created \"{0}\"-Tool, {1}", Name, Description));
             Enabled = true;
         }
 
@@ -92,7 +91,7 @@ namespace WinFormSamples
 
             _cts = new CancellationTokenSource();
             _cts.Token.Register(HandleCancel);
-            
+
             var t = new Task<FeatureDataRow>(FindGeoNearPoint, mapPosition, _cts.Token);
             t.Start();
             t.ContinueWith(res => ShowToolTip(res.Result));
@@ -119,13 +118,13 @@ namespace WinFormSamples
         {
             if (fdr != null)
             {
-                
+
                 MapControl.BeginInvoke(new Action(() =>
                 {
                     var _t = new ToolTip();
                     _toolTip = _t;
                     _t/*oolTip*/.ToolTipTitle = fdr.Table.TableName;
-                    
+
                     _t/*oolTip*/.Show(ToText(fdr), MapControl);
                 }));
             }
@@ -140,7 +139,7 @@ namespace WinFormSamples
             var sb = new StringBuilder();
             if (fdr.Geometry != null)
             {
-                sb.AppendFormat("Geometry:\n  Type: {0}\n  SRID: {1}\n", 
+                sb.AppendFormat("Geometry:\n  Type: {0}\n  SRID: {1}\n",
                     fdr.Geometry.GeometryType, fdr.Geometry.SRID);
                 switch (fdr.Geometry.Dimension)
                 {
@@ -160,14 +159,14 @@ namespace WinFormSamples
             foreach (DataColumn col in fdr.Table.Columns)
                 sb.AppendFormat("  {0}: {1}\n", col.Caption, fdr[col] == DBNull.Value ? "NULL" : fdr[col]);
 
-            Logger.Debug(fmh => fmh("\n{0}\n{1}", fdr.Table.TableName,  sb.ToString(0, sb.Length-1)));
+            Logger.Debug(fmh => fmh("\n{0}\n{1}", fdr.Table.TableName, sb.ToString(0, sb.Length - 1)));
 
             return sb.ToString(0, sb.Length - 1);
         }
 
         private FeatureDataRow FindGeoNearPoint(object/*Coordinate*/ coord)
         {
-            var mapPosition = (Coordinate) coord;
+            var mapPosition = (Coordinate)coord;
             var env = new Envelope(mapPosition);
             env.ExpandBy(5 * Map.PixelWidth);
             var g = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(Map.Factory.ToGeometry(env));
@@ -197,12 +196,12 @@ namespace WinFormSamples
                         var fdt = fds.Tables[j];
                         for (var k = 0; k < fdt.Rows.Count; k++)
                         {
-                            var fdr = (FeatureDataRow) fdt.Rows[k];
+                            var fdr = (FeatureDataRow)fdt.Rows[k];
                             if (g.Intersects(fdr.Geometry))
                             {
                                 var distance = g.Geometry.InteriorPoint.Distance(fdr.Geometry);
                                 if (fdr.Geometry.Dimension == Dimension.Surface)
-                                    distance += 5* Map.PixelWidth;
+                                    distance += 5 * Map.PixelWidth;
                                 fdrs.Add(Tuple.Create(distance, fdr));
                             }
                         }

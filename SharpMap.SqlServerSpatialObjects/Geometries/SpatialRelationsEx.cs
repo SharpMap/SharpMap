@@ -16,11 +16,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using System;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Geometries
 {
@@ -33,7 +33,7 @@ namespace SharpMap.Geometries
         {
             SqlServer2008Ex.LoadSqlServerTypes();
         }
-        
+
         /// <summary>
         /// Returns true if otherGeometry is wholly contained within the source geometry. This is the same as
         /// reversing the primary and comparison shapes of the Within operation.
@@ -104,7 +104,7 @@ namespace SharpMap.Geometries
             }
             else
             {
-               throw new ArgumentOutOfRangeException ("Geography does not support STCrosses. You must first convert Geography to Geometry using WKB");
+                throw new ArgumentOutOfRangeException("Geography does not support STCrosses. You must first convert Geography to Geometry using WKB");
             }
         }
 
@@ -300,19 +300,19 @@ namespace SharpMap.Geometries
         /// <returns></returns>
         public static bool Within(Geometry g1, Geometry g2, SqlServerSpatialObjectType spatialMode)
         {
-        if (spatialMode == SqlServerSpatialObjectType.Geometry)
+            if (spatialMode == SqlServerSpatialObjectType.Geometry)
             {
                 SqlGeometry sg1 = SqlGeometryConverter.ToSqlGeometry(g1);
                 SqlGeometry sg2 = SqlGeometryConverter.ToSqlGeometry(g2);
                 return (bool)sg1.STWithin(sg2);
             }
-        else
+            else
             {
                 SqlGeography sg1 = SqlGeographyConverter.ToSqlGeography(g1);
                 SqlGeography sg2 = SqlGeographyConverter.ToSqlGeography(g2);
                 return (bool)sg1.STWithin(sg2);
             }
-            
+
         }
 
         /// <summary>

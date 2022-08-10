@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using System.Drawing;
-using System.Xml.Serialization;
-using SharpMap.Serialization;
+﻿using NUnit.Framework;
+using System;
 using System.IO;
 using System.Net;
-using System.Resources;
-using SharpMap.Layers;
+using System.Text;
 
 namespace UnitTests.Serialization
 {
@@ -153,7 +146,7 @@ namespace UnitTests.Serialization
             Assert.AreEqual("http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer?SERVICE=WMS&REQUEST=GetCapabilities&", (m.Layers[0] as SharpMap.Layers.WmsLayer).CapabilitiesUrl, "m.Layers[0].CapabilitiesUrl");
             Assert.IsNotNull((m.Layers[0] as SharpMap.Layers.WmsLayer).Credentials, "m.Layers[0].Credentials != null");
             ICredentials c = null;
-            Assert.DoesNotThrow(() => c = ((SharpMap.Layers.WmsLayer) m.Layers[0]).Credentials);
+            Assert.DoesNotThrow(() => c = ((SharpMap.Layers.WmsLayer)m.Layers[0]).Credentials);
             Assert.IsTrue(c is NetworkCredential);
             var nc = (NetworkCredential)c;
             Assert.AreEqual("test", nc.UserName, "nc.UserName");
@@ -169,7 +162,7 @@ namespace UnitTests.Serialization
         public void TestSerializeWmsLayerWithCredentials()
         {
             SharpMap.Map m = new SharpMap.Map();
-            SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", TimeSpan.MaxValue, 
+            SharpMap.Layers.WmsLayer l = new SharpMap.Layers.WmsLayer("testwms", "http://sampleserver1.arcgisonline.com/ArcGIS/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/WMSServer", TimeSpan.MaxValue,
                 System.Net.WebRequest.DefaultWebProxy, new NetworkCredential("test", "pw"));
             l.AddChildLayers(l.RootLayer, false);
             m.Layers.Add(l);

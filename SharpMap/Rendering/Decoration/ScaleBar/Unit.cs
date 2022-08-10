@@ -35,7 +35,7 @@ namespace SharpMap.Rendering.Decoration.ScaleBar
         /// Kilometer
         /// </summary>
         Kilometer,
-        
+
         /// <summary>
         /// Degree
         /// </summary>

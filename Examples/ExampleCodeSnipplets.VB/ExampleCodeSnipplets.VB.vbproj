@@ -21,8 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ProjNet4GeoAPI" Version="1.4.1" />
-        <PackageReference Include="NUnit" Version="3.12.0" />
+        <PackageReference Include="NUnit" Version="3.13.3" />
     </ItemGroup>
 
     <ItemGroup>
@@ -34,6 +33,10 @@
       <None Update="My Project\Settings.settings">
         <Generator>SettingsSingleFileGenerator</Generator>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 

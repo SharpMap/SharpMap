@@ -15,12 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
 
 namespace SharpMap.Rendering
-{      
+{
     /// <summary>
     /// Class defining delegate for label collision detection and static predefined methods
     /// </summary>

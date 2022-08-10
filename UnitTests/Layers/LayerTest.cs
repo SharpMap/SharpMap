@@ -1,8 +1,8 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
+using NUnit.Framework;
+using System;
 using System.ComponentModel;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
-using NUnit.Framework;
 
 namespace UnitTests.Layers
 {
@@ -16,7 +16,7 @@ namespace UnitTests.Layers
             {
                 get { throw new NotImplementedException(); }
             }
-        } 
+        }
         #endregion
 
         #region BindableComponent class
@@ -42,7 +42,7 @@ namespace UnitTests.Layers
             public BindingContext BindingContext { get; set; }
 
             public int IntProperty { get; set; }
-        } 
+        }
         #endregion
 
 
@@ -55,7 +55,7 @@ namespace UnitTests.Layers
             layer.SRID = 0;
 
             var binding = new Binding("IntProperty", layer, "SRID");
-            
+
             var targetComponent = new BindableComponent();
             targetComponent.Disposed += (sender, args) => _bcDisposed = true;
             targetComponent.DataBindings.Add(binding);

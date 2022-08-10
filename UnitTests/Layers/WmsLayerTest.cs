@@ -1,11 +1,11 @@
-﻿using System;
-using System.Drawing;
-using System.Linq;
-using System.Web;
-using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Layers;
 using SharpMap.Web.Wms;
+using System;
+using System.Drawing;
+using System.Linq;
+using System.Web;
 
 namespace UnitTests.Layers
 {
@@ -17,12 +17,12 @@ namespace UnitTests.Layers
         {
             var client = CreateClientFromXmlResult("wms.atlantedesertificazione.xml");
 
-            var layer = new WmsLayer("wms", client) {BgColor = Color.Red, SRID = 0, Transparent = false};
+            var layer = new WmsLayer("wms", client) { BgColor = Color.Red, SRID = 0, Transparent = false };
 
             var url = layer.GetRequestUrl(new Envelope(1, 1, 1, 1), new Size(1, 1));
             var queryString = HttpUtility.ParseQueryString(url);
 
-            Assert.That(queryString["BGCOLOR"], Is.EqualTo("FF0000"), 
+            Assert.That(queryString["BGCOLOR"], Is.EqualTo("FF0000"),
                 "Layer.BgColor does not produce a valid Url");
         }
 
@@ -54,7 +54,7 @@ namespace UnitTests.Layers
 
         private Client CreateClientFromXmlResult(string xmlFilename)
         {
-            var resourceName = typeof (WmsLayerTest).Namespace + "." + xmlFilename;
+            var resourceName = typeof(WmsLayerTest).Namespace + "." + xmlFilename;
             var resourceStream = typeof(WmsLayerTest).Assembly.GetManifestResourceStream(resourceName);
             Assert.That(resourceStream, Is.Not.Null, "Wrong test: Invalid resource name");
 

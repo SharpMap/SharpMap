@@ -1,25 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using GeoAPI.Geometries;
+﻿using BruTile.Predefined;
 using NetTopologySuite.Geometries;
 using SharpMap.Layers;
-using BruTile.Predefined;
-
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using WinFormSamples.Properties;
-
-using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
+using GeometryTransform = NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform;
 
 namespace WinFormSamples
 {
     public partial class FormMovingObjectOverTileLayer : Form
     {
 
-        private List<IGeometry> geos = new List<IGeometry>();
+        private List<Geometry> geos = new List<Geometry>();
 
         private bool movingUp = true;
         private bool movingLeft = true;
-        GeoAPI.Geometries.Coordinate position;
+        NetTopologySuite.Geometries.Coordinate position;
 
         public FormMovingObjectOverTileLayer()
         {
@@ -34,7 +31,7 @@ namespace WinFormSamples
 
             //Lisbon...
             var mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
-            GeoAPI.Geometries.Envelope geom = GeometryTransform.TransformBox(
+            NetTopologySuite.Geometries.Envelope geom = GeometryTransform.TransformBox(
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
 
@@ -48,7 +45,7 @@ namespace WinFormSamples
             //Adds a static layer
             var staticLayer = new VectorLayer("Fixed Marker");
             //position = geom.GetCentroid();
-            var aux = new List<IGeometry>();
+            var aux = new List<Geometry>();
             aux.Add(gf.CreatePoint(geom.Centre));
             staticLayer.Style.Symbol = Resources.PumpSmall;
             var geoProviderFixed = new SharpMap.Data.Providers.GeometryProvider(aux);
@@ -77,7 +74,7 @@ namespace WinFormSamples
         private void timer1_Tick(object sender, EventArgs e)
         {
             const double step = 25;
-            
+
             double dx, dy;
             if (movingLeft)
                 dx = -step;

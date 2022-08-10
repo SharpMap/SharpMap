@@ -15,16 +15,16 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using OSGeo.GDAL;
 using SharpMap.Base;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 
 namespace SharpMap.Layers
 {
@@ -53,7 +53,7 @@ namespace SharpMap.Layers
 
         }
 
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (GdalTileIndexRasterLayer));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(GdalTileIndexRasterLayer));
 
         private readonly ShapeFile _shapeFile;
         private readonly string _fieldName;
@@ -126,7 +126,8 @@ namespace SharpMap.Layers
                         if (!_openDatasets.ContainsKey(file))
                         {
                             OpenDataset(file);
-                            _openDatasets.Add(file, new CacheHolder(){
+                            _openDatasets.Add(file, new CacheHolder()
+                            {
                                 Bands = Bands,
                                 Dataset = _gdalDataset,
                                 Envelope = _envelope,
@@ -155,7 +156,7 @@ namespace SharpMap.Layers
             }
             catch (Exception)
             {
-                
+
                 _shapeFile.Close();
             }
         }
@@ -167,12 +168,12 @@ namespace SharpMap.Layers
 
             foreach (var kvp in _openDatasets)
             {
-                if (kvp.Value  != null)
+                if (kvp.Value != null)
                 {
                     kvp.Value.Dataset.Dispose();
                 }
             }
-            
+
             base.ReleaseManagedResources();
         }
     }

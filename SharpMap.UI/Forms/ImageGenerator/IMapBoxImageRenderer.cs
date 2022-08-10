@@ -18,9 +18,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  *
  */
+using NetTopologySuite.Geometries;
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Forms.ImageGenerator
 {

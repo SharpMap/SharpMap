@@ -1,25 +1,19 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.Net;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SharpKml.Dom;
 using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
+using System;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.Net;
 
 namespace UnitTests.Data.Providers
 {
     [TestFixture]
     public class KmlProviderTests
     {
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            GeoAPI.GeometryServiceProvider.Instance = NetTopologySuite.NtsGeometryServices.Instance;
-        }
-
         [Test]
         public void TestConstruction()
         {
@@ -39,7 +33,7 @@ namespace UnitTests.Data.Providers
             var p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml"));
             var l = new VectorLayer(p.ConnectionID, p);
             l.Theme = p.GetKmlTheme();
-            
+
             m.Layers.Add(l);
             m.ZoomToExtents();
             m.Zoom *= 1.1;
@@ -47,42 +41,42 @@ namespace UnitTests.Data.Providers
             using (var img = m.GetMap())
                 img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "KmlProviderImage.png"), ImageFormat.Png);
         }
-        
-//        [Test]
-//        public void TestKmlInternalStyle()
-//        {
-//            var m = new Map(new Size(500, 300));
-//            m.BackColor = Color.White;
-//
-//            var p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml"));
-//            var l = new VectorLayer(p.ConnectionID, p);
-//            l.Theme = p.GetKmlTheme();
-//            
-//            m.Layers.Add(l);
-//            m.ZoomToExtents();
-//            m.Zoom *= 1.1;
-//
-//            using (var img = m.GetMap())
-//                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "KmlProviderImage.png"), ImageFormat.Png);
-//        }
-//
-//        [Test]
-//        public void TestKmzInternalStyle()
-//        {
-//            var m = new Map(new Size(500, 300));
-//            m.BackColor = Color.White;
-//
-//            var p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml"));
-//            var l = new VectorLayer(p.ConnectionID, p);
-//            l.Theme = p.GetKmlTheme();
-//            
-//            m.Layers.Add(l);
-//            m.ZoomToExtents();
-//            m.Zoom *= 1.1;
-//
-//            using (var img = m.GetMap())
-//                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "KmlProviderImage.png"), ImageFormat.Png);
-//        }
+
+        //        [Test]
+        //        public void TestKmlInternalStyle()
+        //        {
+        //            var m = new Map(new Size(500, 300));
+        //            m.BackColor = Color.White;
+        //
+        //            var p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml"));
+        //            var l = new VectorLayer(p.ConnectionID, p);
+        //            l.Theme = p.GetKmlTheme();
+        //            
+        //            m.Layers.Add(l);
+        //            m.ZoomToExtents();
+        //            m.Zoom *= 1.1;
+        //
+        //            using (var img = m.GetMap())
+        //                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "KmlProviderImage.png"), ImageFormat.Png);
+        //        }
+        //
+        //        [Test]
+        //        public void TestKmzInternalStyle()
+        //        {
+        //            var m = new Map(new Size(500, 300));
+        //            m.BackColor = Color.White;
+        //
+        //            var p = KmlProvider.FromKml(TestUtility.GetPathToTestFile("KML_Samples.kml"));
+        //            var l = new VectorLayer(p.ConnectionID, p);
+        //            l.Theme = p.GetKmlTheme();
+        //            
+        //            m.Layers.Add(l);
+        //            m.ZoomToExtents();
+        //            m.Zoom *= 1.1;
+        //
+        //            using (var img = m.GetMap())
+        //                img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "KmlProviderImage.png"), ImageFormat.Png);
+        //        }
 
         [TestCase("KML_geom_internal_styleurl.kml", "KML file with styles defined internally (see also KMZ equivalent)")]
         [TestCase("KML_geom_external_styleurl_file.kml", "KML file with styles defined in KML_styles.kml (see also KMZ equivalent)")]
@@ -101,15 +95,15 @@ namespace UnitTests.Data.Providers
                 p = KmlProvider.FromKml(TestUtility.GetPathToTestFile(testDataFile));
             else
                 p = KmlProvider.FromKmz(TestUtility.GetPathToTestFile(testDataFile));
-            
+
             var l = new VectorLayer(p.ConnectionID, p);
             l.Theme = p.GetKmlTheme();
-            
+
             m.Layers.Add(l);
-            
+
             var labelLayer = new LabelLayer("Labels");
             labelLayer.DataSource = p;
-            labelLayer.LabelStringDelegate = (fdr) => ((Placemark) fdr["Object"]).Name;
+            labelLayer.LabelStringDelegate = (fdr) => ((Placemark)fdr["Object"]).Name;
             labelLayer.Style.Font = new Font(labelLayer.Style.Font.FontFamily, 8f);
             m.Layers.Add(labelLayer);
 
@@ -119,7 +113,7 @@ namespace UnitTests.Data.Providers
             disclaimer.Text = $"{description} \nOpen **{testDataFile}** in GoogleEarth for comparison";
             disclaimer.Anchor = MapDecorationAnchor.LeftTop;
             m.Decorations.Add(disclaimer);
-            
+
             using (var img = m.GetMap())
                 img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), testDataFile + ".png"), ImageFormat.Png);
         }
@@ -132,7 +126,7 @@ namespace UnitTests.Data.Providers
             m.BackColor = Color.White;
 
             KmlProvider p = null;
-            
+
             var request = WebRequest.Create(kmlWebResource);
             try
             {
@@ -148,7 +142,7 @@ namespace UnitTests.Data.Providers
                         p = KmlProvider.FromKmz(response.GetResponseStream(), "doc.kml");
                 }
             }
-            catch (WebException ex) 
+            catch (WebException ex)
             {
                 Assert.Ignore(ex.Message);
             }
@@ -156,24 +150,24 @@ namespace UnitTests.Data.Providers
             {
                 Assert.Fail(ex.Message);
             }
-            
+
             var l = new VectorLayer(p.ConnectionID, p);
             l.Theme = p.GetKmlTheme();
             m.Layers.Add(l);
 
             // Takes ages to render
-//            var labelLayer = new LabelLayer("Labels");
-//            labelLayer.DataSource = p;
-//            labelLayer.LabelColumn = "Name";
-//            m.Layers.Add(labelLayer);
-         
+            //            var labelLayer = new LabelLayer("Labels");
+            //            labelLayer.DataSource = p;
+            //            labelLayer.LabelColumn = "Name";
+            //            m.Layers.Add(labelLayer);
+
             ZoomToExtentsWithMargin(m);
 
             var disclaimer = new Disclaimer();
             disclaimer.Text = kmlWebResource;
             disclaimer.Anchor = MapDecorationAnchor.LeftTop;
             m.Decorations.Add(disclaimer);
-            
+
             using (var img = m.GetMap())
                 img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), description + ".png"), ImageFormat.Png);
         }
@@ -190,7 +184,7 @@ namespace UnitTests.Data.Providers
             m.Zoom *= 1.1;
 
         }
-        
-        
+
+
     }
 }

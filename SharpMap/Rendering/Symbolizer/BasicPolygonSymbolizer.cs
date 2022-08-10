@@ -1,6 +1,6 @@
+using NetTopologySuite.Geometries;
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -49,12 +49,12 @@ namespace SharpMap.Rendering.Symbolizer
         public override object Clone()
         {
             return new BasicPolygonSymbolizer
-                       {
-                           Fill = (Brush) Fill.Clone(),
-                           Outline = (Pen) Outline.Clone(),
-                           RenderOrigin = RenderOrigin,
-                           UseClipping = UseClipping,
-                       };
+            {
+                Fill = (Brush)Fill.Clone(),
+                Outline = (Pen)Outline.Clone(),
+                RenderOrigin = RenderOrigin,
+                UseClipping = UseClipping,
+            };
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The feature</param>
         /// <param name="g">The graphics object</param>
-        protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
+        protected override void OnRenderInternal(MapViewport map, Polygon polygon, Graphics g)
         {
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map, UseClipping)/*)*/;
@@ -71,11 +71,11 @@ namespace SharpMap.Rendering.Symbolizer
             //// clip
             //if (UseClipping)
             //    pts = VectorRenderer.ClipPolygon(pts, map.Size.Width, map.Size.Height);
-            
+
             // fill the polygon
             if (Fill != null)
                 g.FillPath(Fill, pts);
-            
+
             // outline the polygon
             if (Outline != null)
                 g.DrawPath(Outline, pts);
@@ -126,12 +126,12 @@ namespace SharpMap.Rendering.Symbolizer
         public override object Clone()
         {
             return new PolygonSymbolizerUsingLineSymbolizer
-                       {
-                           Fill = (Brush) Fill.Clone(),
-                           Outline = (LineSymbolizer) Outline.Clone(),
-                           RenderOrigin = RenderOrigin,
-                           UseClipping = UseClipping
-                       };
+            {
+                Fill = (Brush)Fill.Clone(),
+                Outline = (LineSymbolizer)Outline.Clone(),
+                RenderOrigin = RenderOrigin,
+                UseClipping = UseClipping
+            };
         }
 
         /// <summary>
@@ -140,11 +140,11 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The polygon to render</param>
         /// <param name="g">The graphics object to use</param>
-        protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
+        protected override void OnRenderInternal(MapViewport map, Polygon polygon, Graphics g)
         {
             // convert points
             var pts = /*VectorRenderer.LimitValues*(*/polygon.TransformToImage(map)/*, VectorRenderer.ExtremeValueLimit))*/;
-            
+
             //// clip
             //if (UseClipping)
             //    pts = VectorRenderer.ClipPolygon(pts, map.Size.Width, map.Size.Height);
@@ -157,7 +157,7 @@ namespace SharpMap.Rendering.Symbolizer
             if (Outline != null)
             {
                 Outline.Render(map, polygon.ExteriorRing, g);
-                foreach( var ls in polygon.InteriorRings )
+                foreach (var ls in polygon.InteriorRings)
                     Outline.Render(map, ls, g);
             }
         }

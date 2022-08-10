@@ -16,14 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
 
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Text;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -49,14 +49,14 @@ namespace SharpMap.Data.Providers
 
         private static bool _isSqlTypesLoaded;
         private static readonly object _loadLock = new object();
-        
+
         /// <summary>
         /// Ensure SqlServerTypes (x32 or x64) are loaded at runtime
         /// </summary>
-        static  SqlServer2008Ex()
+        static SqlServer2008Ex()
         {
             if (!_isSqlTypesLoaded)
-                lock(_loadLock)
+                lock (_loadLock)
                     if (!_isSqlTypesLoaded)
                     {
                         try
@@ -75,8 +75,8 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// placeholder method to be called by related classes causing static ctor to load types
         /// </summary>
-        public static void LoadSqlServerTypes() {}
-        
+        public static void LoadSqlServerTypes() { }
+
         /// <summary>
         /// Always <code>true</code>. Both queries and client-side conversion will always attempt to repair invalid spatial objects 
         /// </summary>

@@ -49,7 +49,7 @@ namespace SharpMap.Utilities
             private class SolidBrushRef : IObjectReference, ISerializable
             {
                 private SolidBrush _brush;
-                
+
                 /// <summary>
                 /// Serialization constructor
                 /// </summary>
@@ -296,7 +296,7 @@ namespace SharpMap.Utilities
             public class LinearGradientBrushRef : IObjectReference, ISerializable
             {
                 private /*readonly*/ LinearGradientBrush _lgBrush;
-                
+
                 /// <summary>
                 /// Serialization constructor
                 /// </summary>
@@ -314,7 +314,7 @@ namespace SharpMap.Utilities
                     if (hasIC)
                     {
                         lgBrush.InterpolationColors =
-                            (ColorBlend) info.GetValue("InterpolationColors", typeof (ColorBlend));
+                            (ColorBlend)info.GetValue("InterpolationColors", typeof(ColorBlend));
                     }
                     else
                     {
@@ -356,7 +356,7 @@ namespace SharpMap.Utilities
                 info.AddValue("Transform", brush.Transform);
                 ColorBlend cb = null;
                 try { cb = brush.InterpolationColors; } catch { }
-                info.AddValue("HasIC", cb!= null);
+                info.AddValue("HasIC", cb != null);
                 if (cb != null)
                     info.AddValue("InterpolationColors", brush.InterpolationColors);
             }

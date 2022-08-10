@@ -1,15 +1,14 @@
+using Common.Logging;
+using NetTopologySuite.Geometries;
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
-using GeoAPI.Geometries;
-using Common.Logging;
 
 namespace SharpMap.Web.Wms
 {
@@ -235,7 +234,7 @@ namespace SharpMap.Web.Wms
 
         ///<summary>
         ///</summary>
-        [Obsolete("Deprecated, use Version property instead.")]  
+        [Obsolete("Deprecated, use Version property instead.")]
         public string WmsVersion
         {
             get { return _version; }
@@ -383,8 +382,8 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public IWebProxy Proxy
         {
-            get { return _proxy;}
-            set {_proxy = value;}
+            get { return _proxy; }
+            set { _proxy = value; }
         }
 
         /// <summary>
@@ -392,7 +391,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public string BaseUrl
         {
-            get{return _baseUrl;}
+            get { return _baseUrl; }
             set
             {
                 _capabilitiesUrl = CreateCapabilitiesUrl(_baseUrl);
@@ -413,7 +412,7 @@ namespace SharpMap.Web.Wms
         /// </summary>
         public string GetXmlAsText
         {
-            get 
+            get
             {
                 StringWriter sw = new StringWriter();
                 XmlTextWriter xw = new XmlTextWriter(sw);
@@ -451,13 +450,13 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Just instantiate, no parameters
         /// </summary>
-        public Client() {}
+        public Client() { }
 
         /// <summary>
         /// Initializes WMS server and parses the Capabilities request
         /// </summary>
         /// <param name="url">URL of wms server</param>
-        public Client(string url) 
+        public Client(string url)
             : this(url, null, 10000, null, "") { }
 
         /// <summary>
@@ -576,7 +575,7 @@ namespace SharpMap.Web.Wms
                 myRequest.Credentials = _credentials ?? CredentialCache.DefaultCredentials;
                 myRequest.Timeout = _timeOut;
                 if (_proxy != null) myRequest.Proxy = _proxy;
-                
+
                 var myResponse = myRequest.GetResponse();
 
                 if (myResponse.ContentLength == 0)
@@ -785,7 +784,7 @@ namespace SharpMap.Web.Wms
         /// <summary>
         /// Parses GetMap request nodes
         /// </summary>
-        private void ParseRequestTypeBlock(XmlNode requestNodes, ref WmsOnlineResource[] requestResources, ref Collection<string> outputFormats )
+        private void ParseRequestTypeBlock(XmlNode requestNodes, ref WmsOnlineResource[] requestResources, ref Collection<string> outputFormats)
         {
             if (requestNodes != null)
             {
@@ -851,7 +850,7 @@ namespace SharpMap.Web.Wms
             }
 
             XmlNodeList xnlCrs = null;
-            if(_version == "1.1.0" || _version == "1.1.1")
+            if (_version == "1.1.0" || _version == "1.1.1")
                 xnlCrs = xmlLayer.SelectNodes("sm:SRS", _nsmgr); // <--I think this needs to be version specific
             else
                 xnlCrs = xmlLayer.SelectNodes("sm:CRS", _nsmgr);
@@ -949,8 +948,8 @@ namespace SharpMap.Web.Wms
                 if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["miny"], out miny)) continue;
                 if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["maxx"], out maxx)) continue;
                 if (!WebUtilities.TryParseNodeAsDouble(bbox.Attributes["maxy"], out maxy)) continue;
-                if (!WebUtilities.TryParseNodeAsEpsg(WebUtilities.FindEpsgNode(bbox), out epsg)) continue; 
-           
+                if (!WebUtilities.TryParseNodeAsEpsg(WebUtilities.FindEpsgNode(bbox), out epsg)) continue;
+
                 layer.SRIDBoundingBoxes.Add(new SpatialReferencedBoundingBox(minx, miny, maxx, maxy, epsg));
             }
             return layer;
@@ -963,7 +962,7 @@ namespace SharpMap.Web.Wms
         {
             try
             {
-                  // Now create StringWriter object to get data from xml document.
+                // Now create StringWriter object to get data from xml document.
                 var sw = new StringWriter();
                 var xw = new XmlTextWriter(sw);
                 _xmlDoc.WriteTo(xw);
@@ -993,22 +992,22 @@ namespace SharpMap.Web.Wms
                 }
 
                 settings.ValidationFlags = XmlSchemaValidationFlags.ReportValidationWarnings;
-                settings.ValidationEventHandler += new ValidationEventHandler(delegate(object sender, ValidationEventArgs args)
+                settings.ValidationEventHandler += new ValidationEventHandler(delegate (object sender, ValidationEventArgs args)
                        {
                            throw new ApplicationException("Could not validate the WMS capabilities file completely. Here is the validation error message..." + args.Message);
                        });
 
-				//TextReader, XMLReader, URL, Stream
+                //TextReader, XMLReader, URL, Stream
                 var xmlStream = (TextReader)new StringReader(sw.ToString());
                 var reader = XmlReader.Create(xmlStream, settings);
-                while (reader.Read());
+                while (reader.Read()) ;
             }
             catch (Exception ex)
             {
                 throw new ApplicationException("Could not validate the WMS capabilities file for this version of the capabilities file. Here is the validation error message..." + ex.Message, ex);
             }
         }
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -1026,8 +1025,8 @@ namespace SharpMap.Web.Wms
             if (!url.ToLower().Contains("request=getcapabilities"))
                 strReq.AppendFormat("REQUEST=GetCapabilities&");
 
-			//If version is NOT set at this point then add to query string
-            if(_version != "")
+            //If version is NOT set at this point then add to query string
+            if (_version != "")
                 strReq.AppendFormat("VERSION=" + _version + "&");
 
 
@@ -1042,14 +1041,14 @@ namespace SharpMap.Web.Wms
         {
             if (_xmlDoc.DocumentElement != null)
             {
-            if (_xmlDoc.DocumentElement.Attributes["version"] != null)
-            {
-                _version = _xmlDoc.DocumentElement.Attributes["version"].Value;
-                if (_version != "1.0.0" && _version != "1.1.0" && _version != "1.1.1" && _version != "1.3.0")
-                    throw new ApplicationException("WMS Version " + _version + " is not currently supported");
-            }
-            else
-                throw (new ApplicationException("No service version number was found in the capabilities XML file!"));
+                if (_xmlDoc.DocumentElement.Attributes["version"] != null)
+                {
+                    _version = _xmlDoc.DocumentElement.Attributes["version"].Value;
+                    if (_version != "1.0.0" && _version != "1.1.0" && _version != "1.1.1" && _version != "1.3.0")
+                        throw new ApplicationException("WMS Version " + _version + " is not currently supported");
+                }
+                else
+                    throw (new ApplicationException("No service version number was found in the capabilities XML file!"));
             }
         }
 

@@ -1,14 +1,13 @@
-﻿﻿using System;
+﻿using ProjNet.CoordinateSystems;
 using System.Collections.Generic;
-using GeoAPI.CoordinateSystems;
 
-namespace GeoAPI
+namespace SharpMap.CoordinateSystems
 {
     /// <summary>
-   /// An interface for classes that offer access to coordinate system creating facillities.
+    /// An interface for classes that offer access to coordinate system creating facillities.
     /// </summary>
-    //public interface ICoordinateSystemServicesRepository : ICoordinateSystemServices, IEnumerable<KeyValuePair<int, ICoordinateSystem>>
-    public interface ICoordinateSystemRepository : IEnumerable<KeyValuePair<int, ICoordinateSystem>>
+    //public interface ICoordinateSystemServicesRepository : CoordinateSystemServices, IEnumerable<KeyValuePair<int, CoordinateSystem>>
+    public interface ICoordinateSystemRepository : IEnumerable<KeyValuePair<int, CoordinateSystem>>
     {
         /// <summary>
         /// Gets a value indicating the number of unique coordinate systems in the repository
@@ -25,7 +24,7 @@ namespace GeoAPI
         /// </summary>
         /// <param name="srid">The identifier for the <paramref name="coordinateSystem"/> in the store.</param>
         /// <param name="coordinateSystem">The coordinate system.</param>
-        void AddCoordinateSystem(int srid, ICoordinateSystem coordinateSystem);
+        void AddCoordinateSystem(int srid, CoordinateSystem coordinateSystem);
 
         /// <summary>
         /// Method to remove all coordinate systems from the service

@@ -60,7 +60,7 @@ namespace SharpMap.Forms.ToolBar
             _clear.ToolTipText += @"Removes all geometries from the geometry layer";
 
             _sep1 = new ToolStripSeparator();
-            _sep1.Size = new System.Drawing.Size(6,6);
+            _sep1.Size = new System.Drawing.Size(6, 6);
 
             _addPoint = new ToolStripButton();
             _addPoint.Name = "_addPoint";
@@ -107,7 +107,7 @@ namespace SharpMap.Forms.ToolBar
         {
             Debug.WriteLine(string.Format("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name));
             if (_logger.IsDebugEnabled)
-                _logger.DebugFormat("\nButtonClicked '{0}'",((ToolStripButton)sender).Name);
+                _logger.DebugFormat("\nButtonClicked '{0}'", ((ToolStripButton)sender).Name);
         }
 
         /// <inheritdoc/>
@@ -134,14 +134,14 @@ namespace SharpMap.Forms.ToolBar
                 return;
             }
 
-            _geometryProvider = new Data.Providers.GeometryProvider((GeoAPI.Geometries.IGeometry)null);
+            _geometryProvider = new Data.Providers.GeometryProvider((NetTopologySuite.Geometries.Geometry)null);
             _layer = new Layers.VectorLayer("_tmp_Geometries", _geometryProvider);
 
             MapControl.ActiveToolChanged += OnMapControlActiveToolChanged;
             MapControl.GeometryDefined += OnGeometryDefined;
 
 
-            
+
         }
 
         private void OnRemoveFeatures(object sender, EventArgs e)
@@ -155,7 +155,7 @@ namespace SharpMap.Forms.ToolBar
             if (MapControl == null) return;
 
             var checkedButton = (ToolStripButton)sender;
-            
+
             MapBox.Tools newTool;
             if (sender == _addPoint)
                 newTool = MapBox.Tools.DrawPoint;
@@ -201,7 +201,7 @@ namespace SharpMap.Forms.ToolBar
             }
         }
 
-        private void OnGeometryDefined(GeoAPI.Geometries.IGeometry geometry)
+        private void OnGeometryDefined(NetTopologySuite.Geometries.Geometry geometry)
         {
             if (geometry == null)
                 return;
@@ -214,9 +214,9 @@ namespace SharpMap.Forms.ToolBar
         /// A handler that is invoked when a new geometry was defined.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public MapBox.GeometryDefinedHandler GeometryDefinedHandler{ get; set; }
+        public MapBox.GeometryDefinedHandler GeometryDefinedHandler { get; set; }
 
-        private void DefaultGeometryDefinedMethod(GeoAPI.Geometries.IGeometry geom)
+        private void DefaultGeometryDefinedMethod(NetTopologySuite.Geometries.Geometry geom)
         {
             using (var frm = new WktGeometryCreator())
             {

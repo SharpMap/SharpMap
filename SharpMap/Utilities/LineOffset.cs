@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
 
 namespace SharpMap.Utilities
@@ -11,7 +9,7 @@ namespace SharpMap.Utilities
     /// </summary>
     public class LineOffset
     {
-        
+
         /// <summary>
         /// Offset a Linestring the given amount perpendicular to the line
         /// For example if a line should be drawn 10px to the right of its original position

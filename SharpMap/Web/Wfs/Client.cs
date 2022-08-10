@@ -60,8 +60,8 @@ namespace SharpMap.Web.Wfs
         /// </summary>
         public IWebProxy Proxy
         {
-            get{return _proxy;}
-            set{_proxy = value;}
+            get { return _proxy; }
+            set { _proxy = value; }
         }
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace SharpMap.Web.Wfs
                 }
 
                 if (stream == null)
-                        throw new ApplicationException("No response stream");
+                    throw new ApplicationException("No response stream");
             }
             catch (Exception ex)
             {
@@ -362,7 +362,7 @@ namespace SharpMap.Web.Wfs
             var doc = XmlDoc.DocumentElement;
             if (doc == null)
                 throw new InvalidOperationException("Could not get DocumentElement");
-            
+
             if (doc.Attributes["version"] != null)
             {
                 _version = doc.Attributes["version"].Value;
@@ -379,9 +379,9 @@ namespace SharpMap.Web.Wfs
         /// </summary>
         public void ParseCapabilities()
         {
-            if(_xmlDoc == null)
+            if (_xmlDoc == null)
             {
-                throw (new ApplicationException("A valid WFS capabilities XML file was not loaded!"));   
+                throw (new ApplicationException("A valid WFS capabilities XML file was not loaded!"));
             }
 
             var documentElement = _xmlDoc.DocumentElement;
@@ -586,8 +586,8 @@ namespace SharpMap.Web.Wfs
             node = xnlServiceProvider.SelectSingleNode("ows:ProviderSite", _nsmgr);
             _serviceProvider.ProviderSite = (node != null ? node.InnerText : null);
             XmlNode nodeServiceContact = xnlServiceProvider.SelectSingleNode("ows:ServiceContact", _nsmgr);
-            
-            if(nodeServiceContact != null)
+
+            if (nodeServiceContact != null)
             {
                 XmlNode node2 = nodeServiceContact.SelectSingleNode("ows:IndividualName", _nsmgr);
                 _serviceProvider.ServiceContactDetail.IndividualName = (node2 != null ? node2.InnerText : null);
@@ -596,12 +596,12 @@ namespace SharpMap.Web.Wfs
 
                 XmlNode nodeContactInfo = xnlServiceProvider.SelectSingleNode("ows:ContactInfo", _nsmgr);
 
-                if(nodeContactInfo != null)
+                if (nodeContactInfo != null)
                 {
                     XmlNode nodePhone = nodeContactInfo.SelectSingleNode("ows:Phone", _nsmgr);
                     XmlNode nodeAddress = nodeContactInfo.SelectSingleNode("ows:Address", _nsmgr);
 
-                    if(nodePhone != null)
+                    if (nodePhone != null)
                     {
                         XmlNode node4 = nodePhone.SelectSingleNode("ows:Voice", _nsmgr);
                         _serviceProvider.ServiceContactDetail.ContactInformation.Telephone.Voice = (node4 != null ? node4.InnerText : null);
@@ -609,7 +609,7 @@ namespace SharpMap.Web.Wfs
                         _serviceProvider.ServiceContactDetail.ContactInformation.Telephone.Facsimile = (node4 != null ? node4.InnerText : null);
                     }
 
-                    if(nodeAddress != null)
+                    if (nodeAddress != null)
                     {
                         XmlNode node5 = nodeAddress.SelectSingleNode("ows:DeliveryPoint", _nsmgr);
                         _serviceProvider.ServiceContactDetail.ContactInformation.AddressDetails.DeliveryPoint = (node5 != null ? node5.InnerText : null);
@@ -620,7 +620,7 @@ namespace SharpMap.Web.Wfs
                         node5 = nodeAddress.SelectSingleNode("ows:PostalCode", _nsmgr);
                         _serviceProvider.ServiceContactDetail.ContactInformation.AddressDetails.PostalCode = (node5 != null ? node5.InnerText : null);
                         node5 = nodeAddress.SelectSingleNode("ows:Country", _nsmgr);
-                        _serviceProvider.ServiceContactDetail.ContactInformation.AddressDetails.Country= (node5 != null ? node5.InnerText : null);
+                        _serviceProvider.ServiceContactDetail.ContactInformation.AddressDetails.Country = (node5 != null ? node5.InnerText : null);
                         node5 = nodeAddress.SelectSingleNode("ows:ElectronicMailAddress", _nsmgr);
                         _serviceProvider.ServiceContactDetail.ContactInformation.AddressDetails.ElectronicMailAddress = (node5 != null ? node5.InnerText : null);
                     }

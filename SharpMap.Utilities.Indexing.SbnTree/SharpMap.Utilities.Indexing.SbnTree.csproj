@@ -11,11 +11,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SharpSbn.GeoAPI" Version="1.2.0" />
+      <PackageReference Include="SharpSbn" Version="1.2.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

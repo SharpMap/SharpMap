@@ -11,10 +11,10 @@ namespace UnitTests.Rendering.Symbolizer
                 base.Begin(g, map, aproximateNumberOfGeometries);
                 _oldRenderOrigin = g.RenderingOrigin;
             }
-            protected override void OnRenderInternal(SharpMap.MapViewport map, GeoAPI.Geometries.IPolygon polygon, System.Drawing.Graphics g)
+            protected override void OnRenderInternal(SharpMap.MapViewport map, NetTopologySuite.Geometries.Polygon polygon, System.Drawing.Graphics g)
             {
                 var pt = polygon.Centroid;
-                g.RenderingOrigin = 
+                g.RenderingOrigin =
                     System.Drawing.Point.Truncate(map.WorldToImage(pt.Coordinate));
                 base.OnRenderInternal(map, polygon, g);
             }
@@ -35,14 +35,14 @@ namespace UnitTests.Rendering.Symbolizer
             var provider = new SharpMap.Data.Providers.ShapeFile(filePath, true);
             var l = new SharpMap.Layers.Symbolizer.PolygonalVectorLayer("Countries", provider);
             l.Symbolizer = new ModifiedBasicPolygonSymbolizer
-                {
-                    Fill = new System.Drawing.Drawing2D.HatchBrush(
-                            System.Drawing.Drawing2D.HatchStyle.WideDownwardDiagonal, 
+            {
+                Fill = new System.Drawing.Drawing2D.HatchBrush(
+                            System.Drawing.Drawing2D.HatchStyle.WideDownwardDiagonal,
                             System.Drawing.Color.Red /*,
                             System.Drawing.Color.LightPink*/),
-                    UseClipping = false,
-                    //Outline = System.Drawing.Pens.AliceBlue
-                };
+                UseClipping = false,
+                //Outline = System.Drawing.Pens.AliceBlue
+            };
 
             var m = new SharpMap.Map(new System.Drawing.Size(1440, 1080)) { BackColor = System.Drawing.Color.Cornsilk };
             m.Layers.Add(l);
@@ -51,7 +51,7 @@ namespace UnitTests.Rendering.Symbolizer
 
             var sw = new System.Diagnostics.Stopwatch();
             var img = m.GetMap();
-            
+
             sw.Start();
             img = m.GetMap();
             img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PolygonSymbolizer-1.bmp"), System.Drawing.Imaging.ImageFormat.Bmp);
@@ -70,10 +70,10 @@ namespace UnitTests.Rendering.Symbolizer
 
             sw.Reset(); sw.Start();
             img = m.GetMap();
-            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this),"PolygonSymbolizer-2.bmp"), System.Drawing.Imaging.ImageFormat.Bmp);
+            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "PolygonSymbolizer-2.bmp"), System.Drawing.Imaging.ImageFormat.Bmp);
             sw.Stop();
             System.Diagnostics.Trace.WriteLine(string.Format("Rendering new method:{0}ms", sw.ElapsedMilliseconds));
-        
+
         }
     }
 

@@ -15,17 +15,14 @@
 // along with NtsProvider; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
-using GeoAPI.Geometries;
-using NetTopologySuite.Features;
-using NetTopologySuite.Geometries;
-using NtsGeometry = NetTopologySuite.Geometries.Geometry;
-
-using Geometry = GeoAPI.Geometries.IGeometry;
-using BoundingBox = GeoAPI.Geometries.Envelope;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 
 namespace SharpMap.Data.Providers
@@ -97,7 +94,7 @@ namespace SharpMap.Data.Providers
         /// </param>
         /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>
         /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
-        protected internal NtsProvider(IPrecisionModel precisionModel)
+        protected internal NtsProvider(PrecisionModel precisionModel)
         {
             Factory = new GeometryFactory(precisionModel);
         }
@@ -114,7 +111,7 @@ namespace SharpMap.Data.Providers
         {
             BuildFromProvider(provider);
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NtsProvider"/> class 
         /// from another <see cref="SharpMap.Data.Providers.IProvider" />.
@@ -148,7 +145,7 @@ namespace SharpMap.Data.Providers
         /// <seealso cref="NetTopologySuite.Geometries.PrecisionModel"/>     
         /// <seealso cref="NetTopologySuite.Geometries.GeometryFactory"/>
         public NtsProvider(IProvider provider,
-            IPrecisionModel precisionModel) : this(precisionModel)
+            PrecisionModel precisionModel) : this(precisionModel)
         {
             BuildFromProvider(provider);
         }
@@ -268,7 +265,7 @@ namespace SharpMap.Data.Providers
                 dataTable.Columns.Add(new DataColumn(columnName, feature.Attributes.GetType(columnName)));
 
             var dataRow = dataTable.NewRow();
-            dataRow.Geometry = (Geometry) feature.Geometry.Clone();
+            dataRow.Geometry = feature.Geometry.Copy();
             foreach (var columnName in feature.Attributes.GetNames())
                 dataRow[columnName] = feature.Attributes[columnName];
             return dataRow;
@@ -390,7 +387,7 @@ namespace SharpMap.Data.Providers
         /// <param name="feature">Data to insert in the <see cref="SharpMap.Data.FeatureDataTable"/>.</param>
         private static void CreateNewRow(FeatureDataTable dataTable, Feature feature)
         {
-            var row = (FeatureDataRow) dataTable.LoadDataRow(feature.Attributes.GetValues(), true);
+            var row = (FeatureDataRow)dataTable.LoadDataRow(feature.Attributes.GetValues(), true);
             row.Geometry = feature.Geometry;
         }
 

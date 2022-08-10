@@ -15,17 +15,17 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using SharpMap.Rendering.Symbolizer;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Reflection;
-using GeoAPI.Geometries;
-using SharpMap.Rendering.Symbolizer;
-using SharpMap.Styles;
-using Point=GeoAPI.Geometries.Coordinate;
 using System.Runtime.CompilerServices;
+using Point = NetTopologySuite.Geometries.Point;
 
 namespace SharpMap.Rendering
 {
@@ -56,7 +56,7 @@ namespace SharpMap.Rendering
         /// <param name="map">Map reference</param>
         /// <param name="offset">Offset by which line will be moved to right</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiLineString(Graphics g, IMultiLineString lines, Pen pen, MapViewport map, float offset)
+        public static void DrawMultiLineString(Graphics g, MultiLineString lines, Pen pen, MapViewport map, float offset)
         {
             DrawMultiLineStringEx(g, lines, pen, map, offset);
         }
@@ -71,12 +71,12 @@ namespace SharpMap.Rendering
         /// <param name="offset">Offset by which line will be moved to right</param>
         /// <returns>The area of the map that was affected by the drawing operation</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawMultiLineStringEx(Graphics g, IMultiLineString lines, Pen pen, MapViewport map, float offset)
+        public static RectangleF DrawMultiLineStringEx(Graphics g, MultiLineString lines, Pen pen, MapViewport map, float offset)
         {
             var canvasArea = RectangleF.Empty;
-            for(int i = 0; i < lines.NumGeometries; i++)
+            for (int i = 0; i < lines.NumGeometries; i++)
             {
-                var line = (ILineString) lines[i];
+                var line = (LineString)lines[i];
                 var rect = DrawLineStringEx(g, line, pen, map, offset);
                 canvasArea = rect.ExpandToInclude(canvasArea);
             }
@@ -143,7 +143,7 @@ namespace SharpMap.Rendering
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
         [Obsolete("Not called, will be removed")]
-        public static void DrawLineString(Graphics g, ILineString line, Pen pen, MapViewport map)
+        public static void DrawLineString(Graphics g, LineString line, Pen pen, MapViewport map)
         {
             DrawLineString(g, line, pen, map, 0f);
         }
@@ -156,7 +156,7 @@ namespace SharpMap.Rendering
         /// <param name="pen">Pen style used for rendering</param>
         /// <param name="map">Map reference</param>
         /// <param name="offset">Offset by which line will be moved to right</param>
-        public static void DrawLineString(Graphics g, ILineString line, Pen pen, MapViewport map, float offset)
+        public static void DrawLineString(Graphics g, LineString line, Pen pen, MapViewport map, float offset)
         {
             DrawLineStringEx(g, line, pen, map, offset);
         }
@@ -170,7 +170,7 @@ namespace SharpMap.Rendering
         /// <param name="map">Map reference</param>
         /// <param name="offset">Offset by which line will be moved to right</param>
         /// <returns>The area of the map that was affected by the drawing of the geometry.</returns>
-        public static RectangleF DrawLineStringEx(Graphics g, ILineString line, Pen pen, MapViewport map, float offset)
+        public static RectangleF DrawLineStringEx(Graphics g, LineString line, Pen pen, MapViewport map, float offset)
         {
             var points = line.TransformToImage(map);
             if (points.Length < 2) return RectangleF.Empty;
@@ -199,7 +199,7 @@ namespace SharpMap.Rendering
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPolygon(Graphics g, IMultiPolygon multiPolygon, Brush brush, Pen pen, bool clip, MapViewport map)
+        public static void DrawMultiPolygon(Graphics g, MultiPolygon multiPolygon, Brush brush, Pen pen, bool clip, MapViewport map)
         {
             DrawMultiPolygonEx(g, multiPolygon, brush, pen, clip, map);
         }
@@ -215,12 +215,12 @@ namespace SharpMap.Rendering
         /// <param name="map">Map reference</param>
         /// <returns>The area of the map that was affected by the drawing of the geometry.</returns>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawMultiPolygonEx(Graphics g, IMultiPolygon multiPolygon, Brush brush, Pen pen, bool clip, MapViewport map)
+        public static RectangleF DrawMultiPolygonEx(Graphics g, MultiPolygon multiPolygon, Brush brush, Pen pen, bool clip, MapViewport map)
         {
             var canvasArea = RectangleF.Empty;
-            for (var i = 0; i < multiPolygon.NumGeometries;i++ )
+            for (var i = 0; i < multiPolygon.NumGeometries; i++)
             {
-                var p = (IPolygon)multiPolygon[i];
+                var p = (Polygon)multiPolygon[i];
                 var rect = DrawPolygonEx(g, p, brush, pen, clip, map);
                 canvasArea = rect.ExpandToInclude(canvasArea);
             }
@@ -237,7 +237,7 @@ namespace SharpMap.Rendering
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPolygon(Graphics g, IPolygon pol, Brush brush, Pen pen, bool clip, MapViewport map)
+        public static void DrawPolygon(Graphics g, Polygon pol, Brush brush, Pen pen, bool clip, MapViewport map)
         {
             DrawPolygonEx(g, pol, brush, pen, clip, map);
         }
@@ -252,7 +252,7 @@ namespace SharpMap.Rendering
         /// <param name="clip">Specifies whether polygon clipping should be applied</param>
         /// <param name="map">Map reference</param>
         /// <returns>The area of the map that was affected by the drawing of the geometry.</returns>
-        public static RectangleF DrawPolygonEx(Graphics g, IPolygon pol, Brush brush, Pen pen, bool clip, MapViewport map)
+        public static RectangleF DrawPolygonEx(Graphics g, Polygon pol, Brush brush, Pen pen, bool clip, MapViewport map)
         {
             if (pol.ExteriorRing == null)
                 return RectangleF.Empty;
@@ -272,7 +272,7 @@ namespace SharpMap.Rendering
                 //Add the interior polygons (holes)
                 if (pol.NumInteriorRings > 0)
                 {
-                    foreach (ILinearRing ring in pol.InteriorRings)
+                    foreach (LinearRing ring in pol.InteriorRings)
                     {
                         points = ring.TransformToImage(map);
                         if (!clip)
@@ -352,9 +352,9 @@ namespace SharpMap.Rendering
         public static SizeOfStringDelegate SizeOfString
         {
             get { return _sizeOfString ?? (_sizeOfString = SizeOfStringCeiling); }
-            set 
-            {  
-                if (value != null )
+            set
+            {
+                if (value != null)
                     _sizeOfString = value;
             }
         }
@@ -382,7 +382,7 @@ namespace SharpMap.Rendering
         public static SizeF SizeOfString74(Graphics g, string text, Font font)
         {
             var s = g.MeasureString(text, font);
-            return new SizeF(s.Width * 0.74f+1f, s.Height * 0.74f); 
+            return new SizeF(s.Width * 0.74f + 1f, s.Height * 0.74f);
         }
         /// <summary>
         /// Function to get the <see cref="SizeF"/> of a string when rendered with the given font.
@@ -472,7 +472,7 @@ namespace SharpMap.Rendering
                 rotationPoint = rotationPoint ?? labelPoint;
 
                 origTrans = g.Transform.Clone();
-                
+
                 g.TranslateTransform(rotationPoint.Value.X, rotationPoint.Value.Y);
                 g.RotateTransform(rotation);
 
@@ -489,9 +489,9 @@ namespace SharpMap.Rendering
 
             using (var path = new GraphicsPath())
             {
-                path.AddString(text, font.FontFamily, (int) font.Style, font.Size,
+                path.AddString(text, font.FontFamily, (int)font.Style, font.Size,
                     new RectangleF(labelPoint, labelSize),
-                    new StringFormat {Alignment = sAlign});
+                    new StringFormat { Alignment = sAlign });
 
                 if (halo != null)
                 {
@@ -509,9 +509,9 @@ namespace SharpMap.Rendering
                 origTrans.Dispose();
             }
 
-            if (symTrans == null) 
+            if (symTrans == null)
                 return background;
-            
+
             var pts = background.ToPointArray();
             symTrans.TransformPoints(pts);
             symTrans.Dispose();
@@ -679,7 +679,7 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPoint(Graphics g, IPoint point, Brush b, float size, PointF offset, MapViewport map)
+        public static void DrawPoint(Graphics g, Point point, Brush b, float size, PointF offset, MapViewport map)
         {
             DrawPointEx(g, point, b, size, offset, map);
         }
@@ -693,7 +693,7 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawPointEx(Graphics g, IPoint point, Brush b, float size, PointF offset, MapViewport map)
+        public static RectangleF DrawPointEx(Graphics g, Point point, Brush b, float size, PointF offset, MapViewport map)
         {
             if (point == null)
                 return RectangleF.Empty;
@@ -702,10 +702,10 @@ namespace SharpMap.Rendering
 
             var width = size;
             var height = size;
-            
+
             float minX = (int)pp.X - width / 2 + offset.X;
-            float minY = (int) pp.Y - height / 2 + offset.Y;
-            
+            float minY = (int)pp.Y - height / 2 + offset.Y;
+
             g.FillEllipse(b, minX, minY, width, height);
 
             return new RectangleF(minX, minY, width, height);
@@ -719,7 +719,7 @@ namespace SharpMap.Rendering
         /// <param name="symbolizer">Symbolizer to decorate point</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPoint(IPointSymbolizer symbolizer, Graphics g, IPoint point, MapViewport map) => DrawPointEx(symbolizer, g, point, map);
+        public static void DrawPoint(IPointSymbolizer symbolizer, Graphics g, Point point, MapViewport map) => DrawPointEx(symbolizer, g, point, map);
 
         /// <summary>
         /// Renders a point to the map.
@@ -729,13 +729,13 @@ namespace SharpMap.Rendering
         /// <param name="symbolizer">Symbolizer to decorate point</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawPointEx(IPointSymbolizer symbolizer, Graphics g, IPoint point, MapViewport map)
+        public static RectangleF DrawPointEx(IPointSymbolizer symbolizer, Graphics g, Point point, MapViewport map)
         {
             if (point == null)
-                return RectangleF.Empty; 
+                return RectangleF.Empty;
 
             symbolizer.Render(map, point, g);
-             return ((IPointSymbolizerEx)symbolizer).CanvasArea; 
+            return ((IPointSymbolizerEx)symbolizer).CanvasArea;
         }
 
         /// <summary>
@@ -749,7 +749,7 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawPoint(Graphics g, IPoint point, Image symbol, float symbolscale, PointF offset,
+        public static void DrawPoint(Graphics g, Point point, Image symbol, float symbolscale, PointF offset,
             float rotation, MapViewport map) => DrawPointEx(g, point, symbol, symbolscale, offset, rotation, map);
 
         /// <summary>
@@ -763,7 +763,7 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawPointEx(Graphics g, IPoint point, Image symbol, float symbolScale, PointF offset,
+        public static RectangleF DrawPointEx(Graphics g, Point point, Image symbol, float symbolScale, PointF offset,
             float rotation, MapViewport map)
         {
             if (point == null)
@@ -779,7 +779,7 @@ namespace SharpMap.Rendering
             float left = pp.X - width / 2 + offset.X * symbolScale;
             float top = pp.Y - height / 2 + offset.Y * symbolScale;
 
-            Matrix symTrans = null; 
+            Matrix symTrans = null;
             Matrix origTrans = null;
 
             if (rotation != 0 && !Single.IsNaN(rotation))
@@ -800,16 +800,16 @@ namespace SharpMap.Rendering
             {
                 g.DrawImage(symbol, left, top, width, height);
             }
-            
+
             if (origTrans != null)
             {
                 g.Transform = origTrans;
                 origTrans.Dispose();
             }
 
-            if (symTrans== null)
+            if (symTrans == null)
                 return new RectangleF(left, top, width, height);
-            
+
             var pts = new[]
             {
                 new PointF(left, top),
@@ -823,7 +823,7 @@ namespace SharpMap.Rendering
         }
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -833,11 +833,11 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPoint(Graphics g, IMultiPoint points, Image symbol, float symbolScale,
+        public static void DrawMultiPoint(Graphics g, MultiPoint points, Image symbol, float symbolScale,
             PointF offset, float rotation, MapViewport map) => DrawMultiPointEx(g, points, symbol, symbolScale, offset, rotation, map);
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -847,45 +847,45 @@ namespace SharpMap.Rendering
         /// <param name="rotation">Symbol rotation in degrees</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawMultiPointEx(Graphics g, IMultiPoint points, Image symbol, float symbolScale,
+        public static RectangleF DrawMultiPointEx(Graphics g, MultiPoint points, Image symbol, float symbolScale,
             PointF offset, float rotation, MapViewport map)
         {
             var canvasArea = RectangleF.Empty;
             for (var i = 0; i < points.NumGeometries; i++)
             {
-                var rect = DrawPointEx(g, (IPoint) points[i], symbol, symbolScale, offset, rotation, map);
-                canvasArea  = rect.ExpandToInclude(canvasArea);
+                var rect = DrawPointEx(g, (Point)points[i], symbol, symbolScale, offset, rotation, map);
+                canvasArea = rect.ExpandToInclude(canvasArea);
             }
             return canvasArea;
         }
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
         /// <param name="symbolizer">Symbolizer to decorate point</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPoint(IPointSymbolizer symbolizer, Graphics g, IMultiPoint points, MapViewport map)
+        public static void DrawMultiPoint(IPointSymbolizer symbolizer, Graphics g, MultiPoint points, MapViewport map)
             => DrawMultiPointEx(symbolizer, g, points, map);
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
         /// <param name="symbolizer">Symbolizer to decorate point</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawMultiPointEx(IPointSymbolizer symbolizer, Graphics g, IMultiPoint points, MapViewport map)
+        public static RectangleF DrawMultiPointEx(IPointSymbolizer symbolizer, Graphics g, MultiPoint points, MapViewport map)
         {
             symbolizer.Render(map, points, g);
             return ((IPointSymbolizerEx)symbolizer).CanvasArea;
         }
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -894,11 +894,11 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static void DrawMultiPoint(Graphics g, IMultiPoint points, Brush brush, float size, PointF offset, MapViewport map)
+        public static void DrawMultiPoint(Graphics g, MultiPoint points, Brush brush, float size, PointF offset, MapViewport map)
             => DrawMultiPointEx(g, points, brush, size, offset, map);
 
         /// <summary>
-        /// Renders a <see cref="GeoAPI.Geometries.IMultiPoint"/> to the map.
+        /// Renders a <see cref="NetTopologySuite.Geometries.MultiPoint"/> to the map.
         /// </summary>
         /// <param name="g">Graphics reference</param>
         /// <param name="points">MultiPoint to render</param>
@@ -907,12 +907,12 @@ namespace SharpMap.Rendering
         /// <param name="offset">Symbol offset af scale=1</param>
         /// <param name="map">Map reference</param>
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public static RectangleF DrawMultiPointEx(Graphics g, IMultiPoint points, Brush brush, float size, PointF offset, MapViewport map)
+        public static RectangleF DrawMultiPointEx(Graphics g, MultiPoint points, Brush brush, float size, PointF offset, MapViewport map)
         {
             var canvasArea = RectangleF.Empty;
             for (var i = 0; i < points.NumGeometries; i++)
             {
-                var point = (IPoint) points[i];
+                var point = (Point)points[i];
                 var rect = DrawPointEx(g, point, brush, size, offset, map);
                 canvasArea = rect.ExpandToInclude(canvasArea);
             }
@@ -1040,7 +1040,7 @@ namespace SharpMap.Rendering
         /// <returns></returns>
         internal static PointF[] ToPointArray(this RectangleF self)
         {
-            return new []
+            return new[]
             {
                 new PointF(self.X, self.Y),
                 new PointF(self.X + self.Width, self.Y),
@@ -1074,23 +1074,23 @@ namespace SharpMap.Rendering
         /// <remarks>Either of the arrays could be empty, so must return new array</remarks>
         internal static PointF[] Union(this PointF[] self, PointF[] other)
         {
-            if (other.Length == 0) 
+            if (other.Length == 0)
                 return self;
 
             if (self.Length == 0)
                 return other;
 
-            float minX = Math.Min(self.Min(p => p.X), other.Min(p => p.X)); 
+            float minX = Math.Min(self.Min(p => p.X), other.Min(p => p.X));
             float maxX = Math.Max(self.Max(p => p.X), other.Max(p => p.X));
             float minY = Math.Min(self.Min(p => p.Y), other.Min(p => p.Y));
             float maxY = Math.Max(self.Max(p => p.Y), other.Max(p => p.Y));
 
             float width = maxX - minX;
             float height = maxY - minY;
-            
-            return new []
+
+            return new[]
             {
-                new PointF(minX, minY), 
+                new PointF(minX, minY),
                 new PointF(minX + width, minY),
                 new PointF(minX + width, minY + height),
                 new PointF(minX, minY + height),

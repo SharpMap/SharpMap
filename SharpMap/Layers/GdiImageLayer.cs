@@ -16,6 +16,7 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -24,8 +25,6 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers
@@ -39,12 +38,12 @@ namespace SharpMap.Layers
     {
         private Image _image;
 
-        [NonSerialized] 
+        [NonSerialized]
         private Image _tmpImage;
 
         [NonSerialized]
         private WorldFile _worldFile;
-        
+
         [NonSerialized]
         private Envelope _envelope;
 
@@ -65,7 +64,7 @@ namespace SharpMap.Layers
         /// <param name="layerName">The name of the layer</param>
         /// <param name="fileName">The path to the file</param>
         public GdiImageLayer(string layerName, string fileName)
-            :this(layerName, Image.FromFile(fileName))
+            : this(layerName, Image.FromFile(fileName))
         {
             ImageFilename = fileName;
             SetEnvelope(fileName);
@@ -167,10 +166,10 @@ namespace SharpMap.Layers
             if (_image == null)
                 throw new Exception("Image not set");
 
-        
+
             // View to render
             var mapView = map.Envelope;
-            
+
             // Layer view
             var lyrView = _envelope;
 
@@ -179,7 +178,7 @@ namespace SharpMap.Layers
             if (!vi.IsNull)
             {
                 // Image part
-// ReSharper disable InconsistentNaming
+                // ReSharper disable InconsistentNaming
                 var imgLT = Clip(_worldFile.ToRaster(new Coordinate(vi.MinX, vi.MaxY)));
                 var imgRB = Clip(_worldFile.ToRaster(new Coordinate(vi.MaxX, vi.MinY)));
                 var imgRect = new Rectangle(imgLT, PointDiff(imgLT, imgRB, 1));
@@ -188,7 +187,7 @@ namespace SharpMap.Layers
                 var mapLT = Point.Truncate(map.WorldToImage(new Coordinate(vi.MinX, vi.MaxY)));
                 var mapRB = Point.Ceiling(map.WorldToImage(new Coordinate(vi.MaxX, vi.MinY)));
                 var mapRect = new Rectangle(mapLT, PointDiff(mapLT, mapRB, 1));
-// ReSharper restore InconsistentNaming
+                // ReSharper restore InconsistentNaming
 
                 // Set the interpolation mode
                 var tmpInterpolationMode = g.InterpolationMode;
@@ -233,7 +232,7 @@ namespace SharpMap.Layers
 
         private static Size PointDiff(Point p1, Point p2, int invertY = -1)
         {
-            
+
             return new Size(p2.X - p1.X, invertY * (p2.Y - p1.Y));
         }
 
@@ -386,14 +385,14 @@ namespace SharpMap.Layers
 
                 using (var sr = new StreamReader(file))
                 {
-// ReSharper disable AssignNullToNotNullAttribute
+                    // ReSharper disable AssignNullToNotNullAttribute
                     _matrix.A11 = double.Parse(sr.ReadLine(), NumberStyles.Float, NumberFormatInfo.InvariantInfo);
                     _matrix.A21 = double.Parse(sr.ReadLine(), NumberStyles.Float, NumberFormatInfo.InvariantInfo);
                     _matrix.A12 = double.Parse(sr.ReadLine(), NumberStyles.Float, NumberFormatInfo.InvariantInfo);
                     _matrix.A22 = double.Parse(sr.ReadLine(), NumberStyles.Float, NumberFormatInfo.InvariantInfo);
                     B1 = double.Parse(sr.ReadLine(), NumberStyles.Float, NumberFormatInfo.InvariantInfo);
                     B2 = double.Parse(sr.ReadLine(), NumberStyles.Float, NumberFormatInfo.InvariantInfo);
-// ReSharper restore AssignNullToNotNullAttribute
+                    // ReSharper restore AssignNullToNotNullAttribute
                 }
                 _inverse = _matrix.Inverse();
             }
@@ -477,8 +476,8 @@ namespace SharpMap.Layers
             /// <returns>The ground coordinate</returns>
             public Coordinate ToGround(int x, int y)
             {
-                var resX = B1 + (A11*x + A21*y);
-                var resY = B2 + (A12*x + A22*y);
+                var resX = B1 + (A11 * x + A21 * y);
+                var resY = B2 + (A12 * x + A22 * y);
 
                 return new Coordinate(resX, resY);
             }
@@ -491,7 +490,7 @@ namespace SharpMap.Layers
             /// <returns>The ground coordinate</returns>
             public double ToGroundX(int x, int y)
             {
-                return B1 + (A11*x + A21*y);
+                return B1 + (A11 * x + A21 * y);
             }
 
             /// <summary>
@@ -502,7 +501,7 @@ namespace SharpMap.Layers
             /// <returns>The ground coordinate</returns>
             public double ToGroundY(int x, int y)
             {
-                return B2 + (A12*x + A22*y);
+                return B2 + (A12 * x + A22 * y);
             }
 
             /// <summary>
@@ -511,7 +510,7 @@ namespace SharpMap.Layers
             /// <param name="width">The width pixel</param>
             /// <param name="height">The height pixel</param>
             /// <returns>The ground coordinate</returns>
-            public IPolygon ToGroundBounds(int width, int height)
+            public Polygon ToGroundBounds(int width, int height)
             {
                 var ringCoordinates = new List<Coordinate>(5);
                 var leftTop = ToGround(0, 0);
@@ -533,9 +532,9 @@ namespace SharpMap.Layers
                 point.X -= B1;
                 point.Y -= B2;
 
-                var x = (int) Math.Round(_inverse.A11*point.X + _inverse.A21*point.Y,
+                var x = (int)Math.Round(_inverse.A11 * point.X + _inverse.A21 * point.Y,
                     MidpointRounding.AwayFromZero);
-                var y = (int) Math.Round(_inverse.A12*point.X + _inverse.A22*point.Y,
+                var y = (int)Math.Round(_inverse.A12 * point.X + _inverse.A22 * point.Y,
                     MidpointRounding.AwayFromZero);
 
                 return new Point(x, y);
@@ -546,7 +545,7 @@ namespace SharpMap.Layers
                 point.X -= B1;
                 point.Y -= B2;
 
-                return (int) Math.Round(_inverse.A11*point.X + _inverse.A21*point.Y,
+                return (int)Math.Round(_inverse.A11 * point.X + _inverse.A21 * point.Y,
                     MidpointRounding.AwayFromZero);
             }
 
@@ -555,7 +554,7 @@ namespace SharpMap.Layers
                 point.X -= B1;
                 point.Y -= B2;
 
-                return (int) Math.Round(_inverse.A12*point.X + _inverse.A22*point.Y,
+                return (int)Math.Round(_inverse.A12 * point.X + _inverse.A22 * point.Y,
                     MidpointRounding.AwayFromZero);
             }
 
@@ -586,7 +585,7 @@ namespace SharpMap.Layers
                 /// </summary>
                 private double Determinant
                 {
-                    get { return A22*A11 - A21*A12; }
+                    get { return A22 * A11 - A21 * A12; }
                 }
 
                 /// <summary>
@@ -614,10 +613,10 @@ namespace SharpMap.Layers
 
                     return new Matrix2D
                     {
-                        A11 = A22/det,
-                        A21 = -A21/det,
-                        A12 = -A12/det,
-                        A22 = A11/det
+                        A11 = A22 / det,
+                        A21 = -A21 / det,
+                        A12 = -A12 / det,
+                        A22 = A11 / det
                     };
                 }
             }

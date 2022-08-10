@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ProjNet.CoordinateSystems.Transformations;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using GeoAPI.CoordinateSystems.Transformations;
 
 /*------------------------------------------------------------------------------ 
 Create Date : 2011-09-25
@@ -24,7 +24,7 @@ namespace WinFormSamples.Samples
             new Dictionary<SharpMap.Layers.ILayer, ICoordinateTransformation>();
 
         private float _opacity = 0.3f;
-        public  float Opacity
+        public float Opacity
         {
             get { return _opacity; }
             set
@@ -43,7 +43,7 @@ namespace WinFormSamples.Samples
         public CreateTilesSample(SharpMap.Map map, bool transformToMercator, string rootTilesPath)
         {
             _map = map.Clone();
-            
+
             _map.MaximumZoom = double.MaxValue;
             _map.MinimumZoom = 0;
 
@@ -58,7 +58,7 @@ namespace WinFormSamples.Samples
                 Directory.CreateDirectory(_rootTilesPath);
             }
         }
-        
+
         private void TransformLayers(ICoordinateTransformation coorTransform)
         {
             foreach (SharpMap.Layers.ILayer layer in _map.Layers)
@@ -85,7 +85,7 @@ namespace WinFormSamples.Samples
 
         private void RestoreTransformations()
         {
-            foreach (var layer in  _map.Layers)
+            foreach (var layer in _map.Layers)
             {
                 ICoordinateTransformation ct;
                 _coordinateTransformations.TryGetValue(layer, out ct);
@@ -109,19 +109,19 @@ namespace WinFormSamples.Samples
                 var path = string.Format(Path.Combine(_rootTilesPath, level.ToString()));
                 if (!Directory.Exists(path))
                 {
-                    Directory.CreateDirectory(path);                    
+                    Directory.CreateDirectory(path);
                 }
 
                 _map.Size = new Size(256, 256);
                 _map.ZoomToExtents();
-                
+
                 // number images of title on a line
                 var lineNumberImage = (int)(Math.Pow(2, level));
                 _map.Zoom = _map.Zoom / lineNumberImage;
-                
+
                 // 1/2 length image in world
                 var delta = _map.Center.X - _map.Envelope.MinX;
-                
+
                 // image size per tile ( in world )
                 var imageWidth = _map.Envelope.MaxX - _map.Envelope.MinX;
                 var imageHeight = imageWidth;
@@ -131,7 +131,7 @@ namespace WinFormSamples.Samples
                 var centerY0 = _map.Center.Y + (lineNumberImage * imageHeight) / 2 - delta;
 
                 var ia = new System.Drawing.Imaging.ImageAttributes();
-                var cm = new System.Drawing.Imaging.ColorMatrix {Matrix33 = _opacity};
+                var cm = new System.Drawing.Imaging.ColorMatrix { Matrix33 = _opacity };
                 ia.SetColorMatrix(cm, System.Drawing.Imaging.ColorMatrixFlag.Default, System.Drawing.Imaging.ColorAdjustType.Bitmap);
 
                 // All tile columns
@@ -145,17 +145,17 @@ namespace WinFormSamples.Samples
                     var centerY = centerY0;
                     for (var j = 0; j < lineNumberImage; j++, centerY = centerY - imageHeight)
                     {
-                        _map.Center = new GeoAPI.Geometries.Coordinate(centerX, centerY);
+                        _map.Center = new NetTopologySuite.Geometries.Coordinate(centerX, centerY);
                         using (var img = _map.GetMap())
                         {
                             using (var transImg = new System.Drawing.Bitmap(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
                             {
                                 using (var g = System.Drawing.Graphics.FromImage(transImg))
                                 {
-                                    g.DrawImage(img, 
-                                        new[] { 
-                                            new Point(0, 0), 
-                                            new Point(transImg.Size.Width, 0), 
+                                    g.DrawImage(img,
+                                        new[] {
+                                            new Point(0, 0),
+                                            new Point(transImg.Size.Width, 0),
                                             new Point(0, transImg.Size.Height), 
                                             /*new Point(transImg.Size)*/ },
                                             new Rectangle(new Point(0, 0), img.Size), GraphicsUnit.Pixel, ia);
@@ -166,7 +166,8 @@ namespace WinFormSamples.Samples
                     }
                 }
             }
-            catch(Exception ex) {
+            catch (Exception ex)
+            {
                 throw new Exception(ex.Message);
             }
         }
@@ -175,7 +176,7 @@ namespace WinFormSamples.Samples
             switch (type)
             {
                 default:
-                //case 0:
+                    //case 0:
                     img.Save(Path.Combine(colPath, string.Format("{0}.png", imageId)), System.Drawing.Imaging.ImageFormat.Png);
                     break;
                 case 1:

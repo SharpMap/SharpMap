@@ -22,11 +22,17 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Compile Remove="Properties\**" />
+      <EmbeddedResource Remove="Properties\**" />
+      <None Remove="Properties\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Properties\" />
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

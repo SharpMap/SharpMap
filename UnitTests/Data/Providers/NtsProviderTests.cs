@@ -1,9 +1,9 @@
-﻿using System.Data;
-using GeoAPI.Geometries;
-using NetTopologySuite;
+﻿using NetTopologySuite;
 using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
+using System.Data;
 
 namespace UnitTests.Data.Providers
 {
@@ -20,7 +20,7 @@ namespace UnitTests.Data.Providers
             var ds = DataTablePointTests.CreateDataTableSource();
             // add row with null value
             ds.BeginLoadData();
-            
+
             var row = ds.LoadDataRow(new object[] { 1001, null, 1, 1 }, LoadOption.OverwriteChanges);
             ds.EndLoadData();
             Assert.That(ds.Rows.Count, Is.EqualTo(101));
@@ -34,7 +34,7 @@ namespace UnitTests.Data.Providers
             // Create provider
             NtsProvider p = null;
             Assert.DoesNotThrow(() => p = new NtsProvider(dsp));
-            
+
             /*
              * assert
              */
@@ -63,7 +63,7 @@ namespace UnitTests.Data.Providers
             // act
             IProvider p = null;
             Assert.DoesNotThrow(() => p = new NtsProvider(features));
-            
+
             // assert
             Assert.That(p, Is.Not.Null);
             Assert.That(p.GetFeatureCount(), Is.EqualTo(5));

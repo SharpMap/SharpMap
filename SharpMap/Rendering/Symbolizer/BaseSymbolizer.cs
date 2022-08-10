@@ -1,7 +1,7 @@
+using SharpMap.Base;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Base;
 
 namespace SharpMap.Rendering.Symbolizer
 {

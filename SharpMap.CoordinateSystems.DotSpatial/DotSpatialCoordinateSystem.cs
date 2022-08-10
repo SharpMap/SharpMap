@@ -18,16 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
  *
  */
-using System;
 using DotSpatial.Projections;
-using GeoAPI.CoordinateSystems;
+using ProjNet.CoordinateSystems;
+using System;
 
 namespace SharpMap.CoordinateSystems
 {
     /// <summary>
     /// A wrapper around a <see cref="DotSpatial.Projections.ProjectionInfo"/>
     /// </summary>
-    public class DotSpatialCoordinateSystem : ICoordinateSystem
+    public class DotSpatialCoordinateSystem
     {
         private static readonly string[] _latLonNames = { "Longitude", "Latitude" };
         private static readonly string[] _eastNorthNames = { "East", "North" };
@@ -44,13 +44,10 @@ namespace SharpMap.CoordinateSystems
         /// <summary>
         /// Creates an instance of this class using the provided projection info
         /// </summary>
-        /// <param name="projecionInfo">The projection info</param>
-        public DotSpatialCoordinateSystem(ProjectionInfo projecionInfo)
+        /// <param name="projectionInfo">The projection info</param>
+        public DotSpatialCoordinateSystem(ProjectionInfo projectionInfo)
         {
-            if (projecionInfo == null)
-                throw new ArgumentNullException("projecionInfo");
-
-            _projectionInfo = projecionInfo;
+            _projectionInfo = projectionInfo ?? throw new ArgumentNullException("projectionInfo");
         }
 
         /// <summary>
@@ -61,7 +58,7 @@ namespace SharpMap.CoordinateSystems
         /// <param name="abbreviation">The abbreviation</param>
         /// <param name="remarks">The remarks</param>
         public DotSpatialCoordinateSystem(ProjectionInfo projecionInfo, string alias = null, string abbreviation = null, string remarks = null)
-            :this(projecionInfo)
+            : this(projecionInfo)
         {
             _alias = alias;
             _abbreviation = abbreviation;
@@ -89,10 +86,10 @@ namespace SharpMap.CoordinateSystems
         /// <returns></returns>
         public bool EqualParams(object obj)
         {
-            if (obj is DotSpatialCoordinateSystem)
-                return _projectionInfo.Matches(((DotSpatialCoordinateSystem) obj)._projectionInfo);
-            if (obj is ProjectionInfo)
-                return _projectionInfo.Matches((ProjectionInfo)obj);
+            if (obj is DotSpatialCoordinateSystem dcs)
+                return _projectionInfo.Matches(dcs._projectionInfo);
+            if (obj is ProjectionInfo pi)
+                return _projectionInfo.Matches(pi);
             return false;
         }
 
@@ -191,14 +188,14 @@ namespace SharpMap.CoordinateSystems
 
         private abstract class UnitWrapper : IUnit
         {
-            protected readonly IProjDescriptor Descriptor;
+            protected readonly ProjDescriptor Descriptor;
 
-            protected UnitWrapper(IProjDescriptor descriptor)
+            protected UnitWrapper(ProjDescriptor descriptor)
             {
                 Descriptor = descriptor;
             }
 
-            public abstract string Name { get; } 
+            public abstract string Name { get; }
 
             public string Authority { get { return "DS"; } }
             public long AuthorityCode { get { return 20000000; } }
@@ -212,15 +209,15 @@ namespace SharpMap.CoordinateSystems
             public abstract bool EqualParams(object obj);
         }
 
-        private class AngularUnitWrapper : UnitWrapper, IAngularUnit
+        private class AngularUnitWrapper : UnitWrapper
         {
-            private AngularUnit Unit
+            private DotSpatial.Projections.AngularUnit Unit
             {
-                get { return (AngularUnit) Descriptor; }
+                get { return (DotSpatial.Projections.AngularUnit)Descriptor; }
             }
 
-            public AngularUnitWrapper(AngularUnit angularUnit)
-                :base(angularUnit)
+            public AngularUnitWrapper(DotSpatial.Projections.AngularUnit angularUnit)
+                : base(angularUnit)
             {
             }
 
@@ -231,8 +228,8 @@ namespace SharpMap.CoordinateSystems
             public override bool EqualParams(object obj)
             {
                 if (obj == null) return false;
-                if (obj is AngularUnitWrapper)
-                    return ((AngularUnitWrapper) obj).RadiansPerUnit == RadiansPerUnit;
+                if (obj is AngularUnitWrapper auw)
+                    return auw.RadiansPerUnit == RadiansPerUnit;
                 return false;
             }
 
@@ -244,14 +241,14 @@ namespace SharpMap.CoordinateSystems
             }
         }
 
-        private class LinearUnitWrapper : UnitWrapper, ILinearUnit
+        private class LinearUnitWrapper : UnitWrapper
         {
-            private LinearUnit Unit
+            private DotSpatial.Projections.LinearUnit Unit
             {
-                get { return (LinearUnit)Descriptor; }
+                get { return (DotSpatial.Projections.LinearUnit)Descriptor; }
             }
 
-            public LinearUnitWrapper(LinearUnit linearUnit)
+            public LinearUnitWrapper(DotSpatial.Projections.LinearUnit linearUnit)
                 : base(linearUnit)
             {
             }
@@ -263,8 +260,8 @@ namespace SharpMap.CoordinateSystems
             public override bool EqualParams(object obj)
             {
                 if (obj == null) return false;
-                if (obj is LinearUnitWrapper)
-                    return ((LinearUnitWrapper)obj).MetersPerUnit == MetersPerUnit;
+                if (obj is LinearUnitWrapper luw)
+                    return luw.MetersPerUnit == MetersPerUnit;
                 return false;
             }
 

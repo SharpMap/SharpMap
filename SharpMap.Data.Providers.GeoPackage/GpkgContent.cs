@@ -1,9 +1,9 @@
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems;
 using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
-using ICoordinateSystem = GeoAPI.CoordinateSystems.ICoordinateSystem;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -29,7 +29,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         Optional,
     }
-    
+
     /// <summary>
     /// Class representing the content of a GeoPackage
     /// </summary>
@@ -53,13 +53,13 @@ namespace SharpMap.Data.Providers
         public GpkgContent(IDataRecord rdr, string connectionString)
         {
             int index;
-            _tableName = rdr.IsDBNull(index=rdr.GetOrdinal("table_name")) ? string.Empty : rdr.GetString(index);
-            _dataType = rdr.IsDBNull(index=rdr.GetOrdinal("data_type")) ? string.Empty : rdr.GetString(index);
+            _tableName = rdr.IsDBNull(index = rdr.GetOrdinal("table_name")) ? string.Empty : rdr.GetString(index);
+            _dataType = rdr.IsDBNull(index = rdr.GetOrdinal("data_type")) ? string.Empty : rdr.GetString(index);
             _identifier = rdr.IsDBNull(index = rdr.GetOrdinal("identifier")) ? string.Empty : rdr.GetString(index);
             _description = rdr.IsDBNull(index = rdr.GetOrdinal("description")) ? string.Empty : rdr.GetString(index);
             _lastChange = rdr.IsDBNull(index = rdr.GetOrdinal("last_change")) ? DateTime.MinValue : rdr.GetDateTime(index);
             _extent = new Envelope(
-                rdr.GetDouble(rdr.GetOrdinal("min_x")), rdr.GetDouble(rdr.GetOrdinal("max_x")), 
+                rdr.GetDouble(rdr.GetOrdinal("min_x")), rdr.GetDouble(rdr.GetOrdinal("max_x")),
                 rdr.GetDouble(rdr.GetOrdinal("min_y")), rdr.GetDouble(rdr.GetOrdinal("max_y")));
             _srid = rdr.GetInt32(rdr.GetOrdinal("srs_id"));
             _connectionString = connectionString;
@@ -129,14 +129,14 @@ namespace SharpMap.Data.Providers
 
         internal int GeometryType { get; private set; }
 
-        private ICoordinateSystem _spatialReference;
+        private CoordinateSystem _spatialReference;
 
-        internal ICoordinateSystem SpatialReference
+        internal CoordinateSystem SpatialReference
         {
             get { return _spatialReference ?? (_spatialReference = GetSpatialRefernce()); }
         }
 
-        private ICoordinateSystem GetSpatialRefernce()
+        private CoordinateSystem GetSpatialRefernce()
         {
             return null;
         }
@@ -195,7 +195,7 @@ namespace SharpMap.Data.Providers
 
         internal FeatureDataTable GetBaseTable()
         {
-            const string sqlPragmaTableInfo ="PRAGMA table_info('{0}');";
+            const string sqlPragmaTableInfo = "PRAGMA table_info('{0}');";
 
             const string sqlSelectHasColumnData =
                 "SELECT COUNT(*) FROM \"sqlite_master\" WHERE \"type\"='table' AND \"name\"='gpkg_column_data';";
@@ -206,7 +206,7 @@ namespace SharpMap.Data.Providers
                 "SELECT * FROM \"gpkg_column_constraint\" WHERE \"constraint_name\"=?;";
 
             var fdt = new FeatureDataTable();
-            
+
             // Get the geometry column definition if not previously done
             if (string.IsNullOrEmpty(GeometryColumn))
                 GetGeometryColumnDefinition();
@@ -237,10 +237,10 @@ namespace SharpMap.Data.Providers
                 {
                     // Get the column name
                     var columnName = rdrCI.GetString(1);
-                    
+
                     // We don't want the geometry to appear as an attribute in the feature data table;
                     if (columnName == GeometryColumn) continue;
-                    
+
                     // Set up the column
                     // column name and type
                     var dc = new DataColumn(rdrCI.GetString(1), GpkgUtility.GetTypeForDataTypeString(rdrCI.GetString(2)));
@@ -284,7 +284,7 @@ namespace SharpMap.Data.Providers
 
                     if (rdrCI.GetInt32(5) == 1)
                     {
-                        fdt.PrimaryKey = new[] {dc};
+                        fdt.PrimaryKey = new[] { dc };
                         OidColumn = dc.ColumnName;
                     }
                 }

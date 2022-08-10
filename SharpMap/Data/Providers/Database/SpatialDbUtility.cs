@@ -1,9 +1,8 @@
-﻿using System;
+﻿using NetTopologySuite.IO;
+using System;
 using System.Data;
 using System.Data.Common;
 using System.Text;
-using GeoAPI.IO;
-using NetTopologySuite.IO;
 
 namespace SharpMap.Data.Providers
 {
@@ -42,7 +41,7 @@ namespace SharpMap.Data.Providers
         /// <param name="reader"> </param>
         /// <param name="writer"> </param>
         public SpatialDbUtility(string entityDecoratorFormat, string literalDecoratorFormat, string parameterDecoratorFormat,
-            IBinaryGeometryReader reader, IBinaryGeometryWriter writer)
+            WKBReader reader, WKBWriter writer) // TODO: IBinaryGeometryReader/Writer were used...
         {
             EntityDecoratorFormat = entityDecoratorFormat;
             LiteralDecoratorFormat = literalDecoratorFormat;
@@ -284,7 +283,7 @@ namespace SharpMap.Data.Providers
                 case DbType.DateTime2:
                 case DbType.DateTimeOffset:
                     return Convert.ToDateTime(obj);
-                
+
                 case DbType.Decimal:
                     return Convert.ToDecimal(obj);
                 case DbType.Double:
@@ -311,7 +310,7 @@ namespace SharpMap.Data.Providers
 
                 case DbType.Single:
                     return Convert.ToSingle(obj);
-                
+
                 case DbType.Currency:
                     return Convert.ToDecimal(obj);
 
@@ -335,12 +334,12 @@ namespace SharpMap.Data.Providers
         /// <summary>
         /// Reader for geometry data
         /// </summary>
-        public IBinaryGeometryReader Reader { get; private set; }
+        public WKBReader Reader { get; private set; }
 
         /// <summary>
         /// Writer for geometry
         /// </summary>
-        public IBinaryGeometryWriter Writer { get; private set; }
+        public WKBWriter Writer { get; private set; }
 
         #endregion SpatialFunctions
     }

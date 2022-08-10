@@ -1,5 +1,5 @@
-﻿using System;
-using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
+using System;
 
 namespace SharpMap.Utilities
 {
@@ -11,7 +11,7 @@ namespace SharpMap.Utilities
         /// <summary>
         /// Conversion factor degrees to radians
         /// </summary>
-        public const double DegToRad = Math.PI/180d; //0.01745329252; // Convert Degrees to Radians
+        public const double DegToRad = Math.PI / 180d; //0.01745329252; // Convert Degrees to Radians
 
         /// <summary>
         /// Meters per inch
@@ -37,18 +37,18 @@ namespace SharpMap.Utilities
         /// Web Mercator SRID constant
         /// </summary>
         public const int WebMercatorSrid = 3857;
-        
+
         /// <summary>
         /// Web Mercator SRID constant
         /// </summary>
         public const double WebMercatorRadius = 6378137.0;
-        
+
         /// <summary>
         /// Web Mercator Domain as Envelope
         /// </summary>
-        public static readonly Envelope WebMercatorEnv = new Envelope(-20037508.34,20037508.34,-20000000,20000000);
+        public static readonly Envelope WebMercatorEnv = new Envelope(-20037508.34, 20037508.34, -20000000, 20000000);
 
-        
+
         /// <summary>
         /// Calculate the distance between 2 points on the great circle
         /// </summary>
@@ -60,10 +60,10 @@ namespace SharpMap.Utilities
         public static double GreatCircleDistance(double lon1, double lat1, double lon2, double lat2)
         {
             var lonDistance = DiffLongitude(lon1, lon2);
-            var arg1 = Math.Sin(lat1*DegToRad)*Math.Sin(lat2*DegToRad);
-            var arg2 = Math.Cos(lat1*DegToRad)*Math.Cos(lat2*DegToRad)*Math.Cos(lonDistance*DegToRad);
+            var arg1 = Math.Sin(lat1 * DegToRad) * Math.Sin(lat2 * DegToRad);
+            var arg2 = Math.Cos(lat1 * DegToRad) * Math.Cos(lat2 * DegToRad) * Math.Cos(lonDistance * DegToRad);
 
-            return MetersPerDegreeAtEquator*Math.Acos(arg1 + arg2)/DegToRad;
+            return MetersPerDegreeAtEquator * Math.Acos(arg1 + arg2) / DegToRad;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace SharpMap.Utilities
             lat = Math.Abs(lat);
             if (lat >= 90.0)
                 lat = 89.999;
-            var distance = Math.Cos(lat*DegToRad)*MetersPerDegreeAtEquator*lonDistance;
+            var distance = Math.Cos(lat * DegToRad) * MetersPerDegreeAtEquator * lonDistance;
             return distance;
         }
 

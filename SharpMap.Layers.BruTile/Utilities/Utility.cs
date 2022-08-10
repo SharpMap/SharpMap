@@ -1,10 +1,5 @@
 ﻿// Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Reflection;
-using System.Runtime.Serialization;
 using BruTile;
 using BruTile.Cache;
 using BruTile.Predefined;
@@ -17,6 +12,10 @@ using SharpMap.Utilities.Predefined;
 using SharpMap.Utilities.Web;
 using SharpMap.Utilities.Wmts;
 using SharpMap.Utilities.Wmts.Generated;
+using System;
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.Serialization;
 
 namespace SharpMap.Utilities
 {
@@ -47,7 +46,7 @@ namespace SharpMap.Utilities
             var type = obj.GetType();
             var field = SearchField(type, fieldName, bindingFlags);
             if (field != null)
-                return (T) field.GetValue(obj);
+                return (T)field.GetValue(obj);
             System.Diagnostics.Trace.WriteLine(obj,
                                                string.Format("could not get '{0}' from '{1}'", fieldName, obj.GetType()));
             return defaultValue;
@@ -100,7 +99,7 @@ namespace SharpMap.Utilities
         {
             var type = obj.GetType();
             var property = SearchProperty(type, propertyName, bindingFlags, true);
-            
+
             var setObj = (bindingFlags & BindingFlags.Static) == BindingFlags.Static ? null : obj;
             if (property != null)
                 property.SetValue(setObj, newValue, null);
@@ -115,9 +114,9 @@ namespace SharpMap.Utilities
         {
             var type = obj.GetType();
             var property = SearchProperty(type, propertyName, bindingFlags);
-            
+
             if (property != null)
-                return (T) property.GetValue(obj, null);
+                return (T)property.GetValue(obj, null);
             System.Diagnostics.Trace.WriteLine(obj,
                                                string.Format("could not get '{0}' from '{1}'", propertyName,
                                                              obj.GetType()));
@@ -133,18 +132,18 @@ namespace SharpMap.Utilities
             var ss = new SurrogateSelector();
 
             // Base types
-            ss.AddSurrogate(typeof (Extent), new StreamingContext(StreamingContextStates.All), new ExtentSurrogate());
-            ss.AddSurrogate(typeof (Resolution), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(Extent), new StreamingContext(StreamingContextStates.All), new ExtentSurrogate());
+            ss.AddSurrogate(typeof(Resolution), new StreamingContext(StreamingContextStates.All),
                             new ResolutionSurrogate());
-            ss.AddSurrogate(typeof (TileSchema), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(TileSchema), new StreamingContext(StreamingContextStates.All),
                             new TileSchemaSurrogate());
 
             // Caches
-            ss.AddSurrogate(typeof (NullCache), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(NullCache), new StreamingContext(StreamingContextStates.All),
                             new NullCacheSurrogate());
-            ss.AddSurrogate(typeof (MemoryCache<byte[]>), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(MemoryCache<byte[]>), new StreamingContext(StreamingContextStates.All),
                             new MemoryCacheSurrogate<byte[]>());
-            ss.AddSurrogate(typeof (MemoryCache<System.Drawing.Bitmap>),
+            ss.AddSurrogate(typeof(MemoryCache<System.Drawing.Bitmap>),
                             new StreamingContext(StreamingContextStates.All),
                             new MemoryCacheSurrogate<System.Drawing.Bitmap>());
             ss.AddSurrogate(typeof(FileCache),
@@ -153,44 +152,44 @@ namespace SharpMap.Utilities
 
             // Predefined
             var tss1 = new TileSchemaSurrogate();
-            ss.AddSurrogate(typeof (GlobalMercator), new StreamingContext(StreamingContextStates.All), tss1);
+            ss.AddSurrogate(typeof(GlobalMercator), new StreamingContext(StreamingContextStates.All), tss1);
             ss.AddSurrogate(typeof(GlobalSphericalMercator), new StreamingContext(StreamingContextStates.All), tss1);
             //ss.AddSurrogate(typeof(SphericalMercatorWorldSchema), new StreamingContext(StreamingContextStates.All), tss1);
             //ss.AddSurrogate(typeof (SphericalMercatorInvertedWorldSchema), 
             //                new StreamingContext(StreamingContextStates.All),tss1);
             //ss.AddSurrogate(typeof (BingSchema), new StreamingContext(StreamingContextStates.All), tss1);
-            ss.AddSurrogate(typeof (WkstNederlandSchema), new StreamingContext(StreamingContextStates.All), tss1);
-            ss.AddSurrogate(typeof (WmtsTileSchema), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(WkstNederlandSchema), new StreamingContext(StreamingContextStates.All), tss1);
+            ss.AddSurrogate(typeof(WmtsTileSchema), new StreamingContext(StreamingContextStates.All),
                 new WmtsTileSchemaSurrogate());
 
             //Web
             var tss2 = new TileSourceSurrogate();
             ss.AddSurrogate(typeof(TileSource), new StreamingContext(StreamingContextStates.All), tss2);
-            ss.AddSurrogate(typeof (ArcGisTileRequest), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(ArcGisTileRequest), new StreamingContext(StreamingContextStates.All),
                             new ArcGisTileRequestSurrogate());
-            ss.AddSurrogate(typeof (ArcGisTileSource), new StreamingContext(StreamingContextStates.All), 
+            ss.AddSurrogate(typeof(ArcGisTileSource), new StreamingContext(StreamingContextStates.All),
                             new ArcGisTileSourceSurrogate());
-            ss.AddSurrogate(typeof (BasicRequest), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(BasicRequest), new StreamingContext(StreamingContextStates.All),
                             new BasicRequestSurrogate());
-            
+
             ss.AddSurrogate(typeof(TmsRequest), new StreamingContext(StreamingContextStates.All),
                             new TmsRequestSurrogate());
-            ss.AddSurrogate(typeof (TmsTileSource), new StreamingContext(StreamingContextStates.All), tss2);
+            ss.AddSurrogate(typeof(TmsTileSource), new StreamingContext(StreamingContextStates.All), tss2);
 
-            ss.AddSurrogate(typeof (HttpTileProvider), new StreamingContext(StreamingContextStates.All),
+            ss.AddSurrogate(typeof(HttpTileProvider), new StreamingContext(StreamingContextStates.All),
                             new HttpTileProviderSurrogate());
             ss.AddSurrogate(typeof(WmscTileSource), new StreamingContext(StreamingContextStates.All), tss2);
             ss.AddSurrogate(typeof(WmscRequest), new StreamingContext(StreamingContextStates.All),
                             new WmscRequestSurrogate());
 
-            ss.AddSurrogate(typeof(HttpTileSource), new StreamingContext(StreamingContextStates.All), 
+            ss.AddSurrogate(typeof(HttpTileSource), new StreamingContext(StreamingContextStates.All),
                             new HttpTileSourceSurrogate());
 
             //Wmts
             ss.AddSurrogate(typeof(ResourceUrl), new StreamingContext(StreamingContextStates.All), new ResourceUrlSurrogate());
             ss.AddSurrogate(typeof(WmtsRequest), new StreamingContext(StreamingContextStates.All), new WmtsRequestSurrogate());
-            
-            
+
+
             if (formatter.SurrogateSelector != null)
                 formatter.SurrogateSelector.ChainSelector(ss);
             else
@@ -208,7 +207,7 @@ namespace SharpMap.Utilities
         public static void GetList<T>(IList<T> obj, SerializationInfo info, StreamingContext context,
                                       string baseFieldName)
         {
-            info.AddValue(baseFieldName + "IsNull", obj==null);
+            info.AddValue(baseFieldName + "IsNull", obj == null);
             if (obj == null) return;
 
             info.AddValue(baseFieldName + "Type", obj.GetType());
@@ -284,7 +283,7 @@ namespace SharpMap.Utilities
             var count = info.GetInt32(baseFieldName + "Count");
             for (var i = 0; i < count; i++)
             {
-                var key = (TKey) info.GetValue(baseFieldName + "Key" + i, typeof (TKey));
+                var key = (TKey)info.GetValue(baseFieldName + "Key" + i, typeof(TKey));
                 var value = (TValue)info.GetValue(baseFieldName + "Value" + i, typeof(TValue));
                 instance.Add(key, value);
             }

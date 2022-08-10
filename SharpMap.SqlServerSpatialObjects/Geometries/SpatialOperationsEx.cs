@@ -18,11 +18,11 @@
 
 #endregion
 
-using System;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using System;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Geometries
 {
@@ -283,7 +283,7 @@ namespace SharpMap.Geometries
                 return SqlGeometryConverter.ToSharpMapGeometry(sgBoundary);
             }
 
-            throw new ArgumentOutOfRangeException ("Geography does not support STBoundary");
+            throw new ArgumentOutOfRangeException("Geography does not support STBoundary");
         }
 
     }

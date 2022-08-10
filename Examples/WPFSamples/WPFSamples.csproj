@@ -20,10 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="ProjNet4GeoAPI" Version="1.4.1" />
-    </ItemGroup>
-
-    <ItemGroup>
         <Reference Include="PresentationCore" />
         <Reference Include="PresentationFramework" />
         <Reference Include="System.Windows" />
@@ -42,5 +38,9 @@
         <Generator>MSBuild:Compile</Generator>
         <SubType>Designer</SubType>
     </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 </Project>

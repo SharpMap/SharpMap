@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace ExampleCodeSnippets
 {
     /// <summary>
@@ -12,16 +14,16 @@ namespace ExampleCodeSnippets
                 CreatingData.GetRandomOrdinates(50, -180, 180), CreatingData.GetRandomOrdinates(50, -90, 90), null);
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
-            var cps  = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
-                                              {
-                                                  Halo = 1,
-                                                  HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
-                                                  //Font = new System.Drawing.Font("Arial", 12),
-                                                  CharacterIndex = 0xcc,
-                                              };
+            var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
+            {
+                Halo = 1,
+                HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.Wheat),
+                //Font = new System.Drawing.Font("Arial", 12),
+                CharacterIndex = 0xcc,
+            };
             layer.Style.PointSymbolizer = cps;
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));
-            
+
             map.Layers.Add(layer);
             map.ZoomToExtents();
             map.GetMap().Save("CharacterPointSymbolizer1.bmp");
@@ -63,7 +65,7 @@ namespace ExampleCodeSnippets
             map.GetMap().Save("PathPointSymbolizer3.bmp");
 
             var gpTriangle1 = new System.Drawing.Drawing2D.GraphicsPath();
-            gpTriangle1.AddPolygon(new [] { new System.Drawing.Point(0, 0), new System.Drawing.Point(5, 10), new System.Drawing.Point(10, 0), new System.Drawing.Point(0, 0), });
+            gpTriangle1.AddPolygon(new[] { new System.Drawing.Point(0, 0), new System.Drawing.Point(5, 10), new System.Drawing.Point(10, 0), new System.Drawing.Point(0, 0), });
             var gpTriangle2 = new System.Drawing.Drawing2D.GraphicsPath();
             gpTriangle2.AddPolygon(new[] { new System.Drawing.Point(0, 0), new System.Drawing.Point(-5, -10), new System.Drawing.Point(-10, 0), new System.Drawing.Point(0, 0), });
             pps = new
@@ -90,7 +92,8 @@ namespace ExampleCodeSnippets
                                                                         System.Drawing.Color.Red)
                                                                 }
 
-                                                        }){ Rotation = 45 };
+                                                        })
+            { Rotation = 45 };
 
             layer.Style.PointSymbolizer = pps;
             map.GetMap().Save("PathPointSymbolizer4.bmp");
@@ -106,8 +109,12 @@ namespace ExampleCodeSnippets
                 CreatingData.GetRandomOrdinates(50, -180, 180), CreatingData.GetRandomOrdinates(50, -90, 90), null);
             var geometryFeatureProvider = new SharpMap.Data.Providers.GeometryFeatureProvider(fdt);
             var layer = new SharpMap.Layers.VectorLayer("randompoints", geometryFeatureProvider);
+            var stylePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\DemoWinForm\\Resources\\women.png"));
             var rps =
-                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer {Symbol = new System.Drawing.Bitmap("women.png")};
+                new SharpMap.Rendering.Symbolizer.RasterPointSymbolizer { Symbol = new System.Drawing.Bitmap(stylePath) };
 
             layer.Style.PointSymbolizer = rps;
             var map = new SharpMap.Map(new System.Drawing.Size(720, 360));
@@ -120,14 +127,14 @@ namespace ExampleCodeSnippets
             rps.Rotation = 0;
 
             var cps = new SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer
-                          {
-                              Halo = 1,
-                              HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.WhiteSmoke),
-                              Foreground = new System.Drawing.SolidBrush(System.Drawing.Color.Black),
-                              Font = new System.Drawing.Font("Arial", 12),
-                              Text = "Anne",
-                              Offset = new System.Drawing.PointF(0, rps.Size.Height*0.5f)
-                
+            {
+                Halo = 1,
+                HaloBrush = new System.Drawing.SolidBrush(System.Drawing.Color.WhiteSmoke),
+                Foreground = new System.Drawing.SolidBrush(System.Drawing.Color.Black),
+                Font = new System.Drawing.Font("Arial", 12),
+                Text = "Anne",
+                Offset = new System.Drawing.PointF(0, rps.Size.Height * 0.5f)
+
             };
 
             var lps = new SharpMap.Rendering.Symbolizer.ListPointSymbolizer { rps, cps };

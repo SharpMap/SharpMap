@@ -15,12 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
-using SharpMap.Styles;
 
 namespace SharpMap.Rendering
 {
@@ -112,7 +112,7 @@ namespace SharpMap.Rendering
         {
             get { return _top - _height; }
         }
-       
+
         #region IComparable<LabelBox> Members
 
         /// <summary>
@@ -205,7 +205,7 @@ namespace SharpMap.Rendering
             _Text = text;
             //_LabelPoint = labelpoint;
             _Rotation = rotation;
-            _Priority = priority;            
+            _Priority = priority;
             _Style = style;
             _show = true;
         }
@@ -282,10 +282,10 @@ namespace SharpMap.Rendering
         /// <returns></returns>
         public virtual int CompareTo(BaseLabel other)
         {
-//            if (this.TextOnPathLabel != null)
-//            {
-//                return CompareToTextOnPath(other);
-//            }
+            //            if (this.TextOnPathLabel != null)
+            //            {
+            //                return CompareToTextOnPath(other);
+            //            }
             if (this == other)
                 return 0;
             if (_box == null)
@@ -294,33 +294,33 @@ namespace SharpMap.Rendering
                 return 1;
             return _box.CompareTo(other.Box);
         }
-//        private int CompareToTextOnPath(BaseLabel other)
-//        {
-//            if (this == other)
-//                return 0;
-//            if (TextOnPathLabel == null)
-//                return -1;
-//            if (other.TextOnPathLabel == null)
-//                return 1;
-//            
-//            for (int i = 0; i < TextOnPathLabel.RegionList.Count; i++)
-//            {
-//                for (int j = 0; j < other.TextOnPathLabel.RegionList.Count; j++)
-//                {
-//                    if (TextOnPathLabel.RegionList[i].IntersectsWith(other.TextOnPathLabel.RegionList[j]))
-//                        return 0;
-//                }
-//            }
-//            if (_box == null)
-//                return -1;
-//            if (other.Box == null)
-//                return 1;
-//            if (other.Box.Left > this.Box.Right ||
-//                other.Box.Bottom > this.Box.Top)
-//                return 1;
-//            else
-//                return -1;
-//        }
+        //        private int CompareToTextOnPath(BaseLabel other)
+        //        {
+        //            if (this == other)
+        //                return 0;
+        //            if (TextOnPathLabel == null)
+        //                return -1;
+        //            if (other.TextOnPathLabel == null)
+        //                return 1;
+        //            
+        //            for (int i = 0; i < TextOnPathLabel.RegionList.Count; i++)
+        //            {
+        //                for (int j = 0; j < other.TextOnPathLabel.RegionList.Count; j++)
+        //                {
+        //                    if (TextOnPathLabel.RegionList[i].IntersectsWith(other.TextOnPathLabel.RegionList[j]))
+        //                        return 0;
+        //                }
+        //            }
+        //            if (_box == null)
+        //                return -1;
+        //            if (other.Box == null)
+        //                return 1;
+        //            if (other.Box.Left > this.Box.Right ||
+        //                other.Box.Bottom > this.Box.Top)
+        //                return 1;
+        //            else
+        //                return -1;
+        //        }
 
         #endregion
 
@@ -359,7 +359,7 @@ namespace SharpMap.Rendering
             : base(text, rotation, priority, collisionbox, style)
         {
             //if (typeof(T) is ValueType)
-            if (location==null)
+            if (location == null)
                 return;
 
             if (!(location is PointF || location is GraphicsPath))
@@ -413,7 +413,7 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Bounding polygon in world coordinates 
         /// </summary>
-        public IPolygon AffectedArea { get; set; }
+        public Polygon AffectedArea { get; set; }
 
         /// <inheritdoc cref="BaseLabel.CompareTo"/>
         public override int CompareTo(BaseLabel other)
@@ -468,6 +468,6 @@ namespace SharpMap.Rendering
             get;
             set;
         }
-        
+
     }
 }

@@ -1,16 +1,14 @@
 namespace WinFormSamples
 {
+    using BruTile;
+    using BruTile.Cache;
+    using NetTopologySuite.Geometries;
+    using SharpMap;
+    using SharpMap.Layers;
     using System;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
-    using BruTile;
-    using BruTile.Cache;
-
-    using GeoAPI.Geometries;
-
-    using SharpMap;
-    using SharpMap.Layers;
 
     internal class SharpMapTileSource : ITileSource
     {
@@ -76,12 +74,12 @@ namespace WinFormSamples
         private ImageFormat format;
 
         public SharpMapTileProvider(ITileSchema schema, ITileCache<byte[]> cache, params ILayer[] layers)
-        {            
+        {
             if (schema == null)
                 throw new ArgumentNullException("schema");
             if (layers == null)
                 throw new ArgumentNullException("layers");
-            
+
             this.Schema = schema;
             this.cache = cache ?? new NullCache();
 
@@ -102,11 +100,11 @@ namespace WinFormSamples
             TileIndex index = info.Index;
             byte[] bytes = this.cache.Find(index);
             if (bytes != null)
-                return bytes;            
+                return bytes;
 
             using (Image tile = this.CreateTile(info))
             using (MemoryStream ms = new MemoryStream())
-            {                
+            {
                 tile.Save(ms, this.format);
                 bytes = ms.ToArray();
                 this.cache.Add(index, bytes);
@@ -134,7 +132,7 @@ namespace WinFormSamples
 
         private readonly object synclock = new object();
 
-        private Image CreateTile(TileInfo info)        
+        private Image CreateTile(TileInfo info)
         {
             lock (synclock)
             {
@@ -151,5 +149,5 @@ namespace WinFormSamples
                 return map.GetMap();
             }
         }
-    }    
+    }
 }

@@ -1,5 +1,6 @@
 namespace ExampleCodeSnippets
 {
+    using System.IO;
     using cd = CreatingData;
 
     public class SymbolRotationTheming
@@ -19,7 +20,7 @@ namespace ExampleCodeSnippets
         /// </summary>
         /// <param name="styleRotationColumn">Name of the column, which contains the rotation angle in degrees [0°, 360°]</param>
         public SymbolRotationTheming(System.String styleRotationColumn)
-            :this(styleRotationColumn, new SharpMap.Styles.VectorStyle())
+            : this(styleRotationColumn, new SharpMap.Styles.VectorStyle())
         {
         }
 
@@ -38,19 +39,19 @@ namespace ExampleCodeSnippets
         {
             SharpMap.Styles.VectorStyle style =
                 new SharpMap.Styles.VectorStyle
-                    {
-                        Enabled = styleToClone.Enabled,
-                        MinVisible = styleToClone.MinVisible,
-                        MaxVisible = styleToClone.MaxVisible,
-                        Line = styleToClone.Line.Clone() as System.Drawing.Pen,
-                        Fill = styleToClone.Fill.Clone() as System.Drawing.Brush,
-                        Outline = styleToClone.Outline.Clone() as System.Drawing.Pen,
-                        EnableOutline = styleToClone.EnableOutline,
-                        Symbol = styleToClone.Symbol.Clone() as System.Drawing.Bitmap,
-                        SymbolOffset = styleToClone.SymbolOffset,
-                        SymbolRotation = styleToClone.SymbolRotation,
-                        SymbolScale = styleToClone.SymbolScale
-                    };
+                {
+                    Enabled = styleToClone.Enabled,
+                    MinVisible = styleToClone.MinVisible,
+                    MaxVisible = styleToClone.MaxVisible,
+                    Line = styleToClone.Line.Clone() as System.Drawing.Pen,
+                    Fill = styleToClone.Fill.Clone() as System.Drawing.Brush,
+                    Outline = styleToClone.Outline.Clone() as System.Drawing.Pen,
+                    EnableOutline = styleToClone.EnableOutline,
+                    Symbol = styleToClone.Symbol.Clone() as System.Drawing.Bitmap,
+                    SymbolOffset = styleToClone.SymbolOffset,
+                    SymbolRotation = styleToClone.SymbolRotation,
+                    SymbolScale = styleToClone.SymbolScale
+                };
 
             return style;
         }
@@ -132,7 +133,7 @@ namespace ExampleCodeSnippets
                     if (!row.IsNull(SymbolColumn))
                     {
                         dataStyle.Symbol = new System.Drawing.Bitmap(
-                            new System.IO.MemoryStream((byte[]) row[SymbolColumn]));
+                            new System.IO.MemoryStream((byte[])row[SymbolColumn]));
                     }
                     return dataStyle;
                 }
@@ -150,37 +151,41 @@ namespace ExampleCodeSnippets
         {
             System.Double[] arr = new System.Double[size];
             System.Double width = max - min;
-            for(System.Int32 i = 0; i < size; i++)
+            for (System.Int32 i = 0; i < size; i++)
             {
                 System.Double randomValue = _randomNumberGenerator.NextDouble();
-                arr[i] = min + randomValue*width;
+                arr[i] = min + randomValue * width;
             }
             return arr;
         }
-        
+
         [NUnit.Framework.Test]
         public void TestSymbolRotationTheming()
         {
             //Create a map
-            SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720,360));
-            
+            SharpMap.Map map = new SharpMap.Map(new System.Drawing.Size(720, 360));
+
             //Create some random sample data
             SharpMap.Data.FeatureDataTable fdt =
                 cd.CreatePointFeatureDataTableFromArrays(cd.GetRandomOrdinates(80, -180, 180),
                                                          cd.GetRandomOrdinates(80, -90, 90), null);
 
             //Add rotation column and fill with random rotation values
-            fdt.Columns.Add("Rotation", typeof (System.Double));
+            fdt.Columns.Add("Rotation", typeof(System.Double));
             foreach (SharpMap.Data.FeatureDataRow row in fdt.Rows)
-                row["Rotation"] = _randomNumberGenerator.NextDouble()*360d;
+                row["Rotation"] = _randomNumberGenerator.NextDouble() * 360d;
 
 
             //Create layer and datasource
             SharpMap.Layers.VectorLayer vl = new SharpMap.Layers.VectorLayer("Points", new SharpMap.Data.Providers.GeometryFeatureProvider(fdt));
-            
+
             //Create default style
             SharpMap.Styles.VectorStyle defaultStyle = new SharpMap.Styles.VectorStyle();
-            defaultStyle.Symbol = new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
+            var stylePath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\DemoWinForm\\Resources\\flag.png"));
+            defaultStyle.Symbol = new System.Drawing.Bitmap(stylePath);
             defaultStyle.SymbolScale = 0.5f;
 
             //Create theming class and apply to layer
@@ -232,7 +237,11 @@ namespace ExampleCodeSnippets
 
             //Create default style
             SharpMap.Styles.VectorStyle defaultStyle = new SharpMap.Styles.VectorStyle();
-            defaultStyle.Symbol = new System.Drawing.Bitmap(@"..\..\..\DemoWinForm\Resources\flag.png");
+            var resPath = Path.GetFullPath(
+                Path.Combine(
+                    Path.GetDirectoryName(GetType().Assembly.Location),
+                    "..\\..\\..\\..\\DemoWinForm\\Resources\\flag.png"));
+            defaultStyle.Symbol = new System.Drawing.Bitmap(resPath);
             defaultStyle.SymbolScale = 0.5f;
 
             //Create theming class and apply to layer
@@ -247,8 +256,8 @@ namespace ExampleCodeSnippets
 
         private byte[] RandomSymbol(int number)
         {
-            number = number%360;
-            string text ="";
+            number = number % 360;
+            string text = "";
             System.Drawing.Brush brush = null;
             if (number < 60)
                 return null;
@@ -257,7 +266,7 @@ namespace ExampleCodeSnippets
                 text = "<120";
                 brush = System.Drawing.Brushes.DarkGreen;
             }
-            else if(number < 240)
+            else if (number < 240)
             {
                 text = number.ToString();
                 brush = System.Drawing.Brushes.Orange;
@@ -273,7 +282,7 @@ namespace ExampleCodeSnippets
             System.Drawing.RectangleF size = new System.Drawing.RectangleF(0f, 0f, 120f, 60f);
             g.FillRectangle(System.Drawing.Brushes.White, size);
             var sf = new System.Drawing.StringFormat(System.Drawing.StringFormatFlags.NoWrap)
-                         {Alignment = System.Drawing.StringAlignment.Center};
+            { Alignment = System.Drawing.StringAlignment.Center };
 
             g.DrawString(text, new System.Drawing.Font("Arial", 24), brush, size, sf);
             g.Flush();
@@ -296,9 +305,9 @@ namespace ExampleCodeSnippets
                 new SharpMap.Data.Providers.GeometryFeatureProvider(fds.Tables[0]);
 
             System.Data.DataTable dt = new System.Data.DataTable("external");
-            dt.Columns.Add("city", typeof (string));
-            dt.Columns.Add("males", typeof (int));
-            dt.Columns.Add("females", typeof (int));
+            dt.Columns.Add("city", typeof(string));
+            dt.Columns.Add("males", typeof(int));
+            dt.Columns.Add("females", typeof(int));
 
 
         }

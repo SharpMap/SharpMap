@@ -15,13 +15,13 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using Common.Logging;
+using NetTopologySuite.Geometries;
+using SharpMap.Data;
+using SharpMap.Styles;
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
-using Common.Logging;
-using GeoAPI.Geometries;
-using SharpMap.Data;
-using SharpMap.Styles;
 
 namespace SharpMap.Layers
 {
@@ -35,7 +35,7 @@ namespace SharpMap.Layers
     // - What to do with large images
     [Serializable]
     public class GdiImageLayerProxy<T> : ICanQueryLayer, IDisposable
-        where T: class, ILayer
+        where T : class, ILayer
     {
         /// <summary>
         /// Creates a proxy class that transforms all colors to grey scale
@@ -68,7 +68,7 @@ namespace SharpMap.Layers
         /// <param name="layer">The layer to be proxied</param>
         /// <param name="opacity">An opacity value in the range of [0f, 1f]. Values outside of that range will be clipped.</param>
         public GdiImageLayerProxy(T layer, float opacity)
-            : this(layer, new ColorMatrix {Matrix33 = Math.Max(Math.Min(1f, opacity), 0f)})
+            : this(layer, new ColorMatrix { Matrix33 = Math.Max(Math.Min(1f, opacity), 0f) })
         {
         }
 
@@ -107,7 +107,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets a value indicating the proxied base layer
         /// </summary>
-        public T BaseLayer{ get { return _baseLayer; }}
+        public T BaseLayer { get { return _baseLayer; } }
 
         double ILayer.MinVisible
         {
@@ -187,7 +187,7 @@ namespace SharpMap.Layers
                 _baseLayer.Render(g, map);
                 return;
             }
-            
+
             var s = map.Size;
             using (var img = new Bitmap(s.Width, s.Height, PixelFormat.Format32bppArgb))
             {
@@ -198,7 +198,7 @@ namespace SharpMap.Layers
 
                 using (var ia = CreateImageAttributes())
                 {
-                    g.DrawImage(img, new Rectangle(0, 0, s.Width, s.Height), 
+                    g.DrawImage(img, new Rectangle(0, 0, s.Width, s.Height),
                         0, 0, s.Width, s.Height, GraphicsUnit.Pixel, ia);
                 }
             }
@@ -233,7 +233,7 @@ namespace SharpMap.Layers
             }
         }
 
-        void ICanQueryLayer.ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        void ICanQueryLayer.ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             if (_baseLayer is ICanQueryLayer cqLayer)
             {

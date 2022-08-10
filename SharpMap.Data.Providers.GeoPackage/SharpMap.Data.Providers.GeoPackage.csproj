@@ -12,12 +12,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+      <PackageReference Include="System.Data.SQLite.Core" Version="1.0.116" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
         <ProjectReference Include="..\SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

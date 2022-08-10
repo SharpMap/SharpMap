@@ -30,7 +30,7 @@ namespace SharpMap.Rendering.Symbolizer
         private string _text;
 
         private int _characterIndex;
-        
+
         /// <summary>
         /// Initializes a new TextPointStyle
         /// </summary>
@@ -41,7 +41,7 @@ namespace SharpMap.Rendering.Symbolizer
             Foreground = Brushes.Firebrick;
             Halo = 0;
             HaloBrush = Brushes.Transparent;
-            StringFormat = new StringFormat(StringFormatFlags.NoClip){ Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.None };
+            StringFormat = new StringFormat(StringFormatFlags.NoClip) { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.None };
         }
 
         /// <summary>
@@ -76,11 +76,11 @@ namespace SharpMap.Rendering.Symbolizer
         /// <returns>A <see cref="T:SharpMap.Rendering.Symbolizer.CharacterPointSymbolizer"/> that matches this instance</returns>
         public override object Clone()
         {
-            var res = (CharacterPointSymbolizer) MemberwiseClone();
-            res.Font = (Font) Font.Clone();
-            res.Foreground = (Brush) Foreground.Clone();
-            res.HaloBrush = (Brush) HaloBrush.Clone();
-            
+            var res = (CharacterPointSymbolizer)MemberwiseClone();
+            res.Font = (Font)Font.Clone();
+            res.Foreground = (Brush)Foreground.Clone();
+            res.HaloBrush = (Brush)HaloBrush.Clone();
+
             return res;
         }
 
@@ -114,9 +114,9 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// The index of the character, -1 if the <see cref="Text"/> is longer than 1 character.
         /// </summary>
-        public int CharacterIndex 
+        public int CharacterIndex
         {
-            get {return _characterIndex;}
+            get { return _characterIndex; }
             set
             {
                 _characterIndex = value;
@@ -134,7 +134,7 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 if (string.IsNullOrEmpty(value))
                     return;
-                
+
                 _text = value;
 
                 if (_text.Length > 1)
@@ -179,7 +179,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Gets or sets the scale factor for this symbol<br/>Always returns <c>1f</c>
         /// </summary>
-        public override float  Scale
+        public override float Scale
         {
             get
             {
@@ -199,9 +199,9 @@ namespace SharpMap.Rendering.Symbolizer
             {
                 //need to look it up
                 using (var path = new GraphicsPath(FillMode.Winding))
-                using (var haloPen = new Pen(HaloBrush, 2 * Halo) {MiterLimit = 1.0f})
+                using (var haloPen = new Pen(HaloBrush, 2 * Halo) { MiterLimit = 1.0f })
                 {
-                    path.AddString(_text, Font.FontFamily, (int) Font.Style, Font.Size, pt, StringFormat);
+                    path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
                     g.DrawPath(haloPen, path);
                     g.FillPath(Foreground, path);
                     CanvasArea = path.GetBounds();
@@ -212,7 +212,7 @@ namespace SharpMap.Rendering.Symbolizer
                 // g.DrawString(_text, Font, Foreground, pt, StringFormat);    
                 using (var path = new GraphicsPath(FillMode.Winding))
                 {
-                    path.AddString(_text, Font.FontFamily, (int) Font.Style, Font.Size, pt, StringFormat);
+                    path.AddString(_text, Font.FontFamily, (int)Font.Style, Font.Size, pt, StringFormat);
                     g.FillPath(Foreground, path);
                     CanvasArea = path.GetBounds();
                 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 
@@ -10,7 +9,7 @@ namespace UnitTests
         public static ExpandoObject ToExpando(this IDictionary<string, object> dictionary)
         {
             var expando = new ExpandoObject();
-            var expandoDic = (IDictionary<string, object>) expando;
+            var expandoDic = (IDictionary<string, object>)expando;
 
             foreach (var kvp in dictionary)
             {

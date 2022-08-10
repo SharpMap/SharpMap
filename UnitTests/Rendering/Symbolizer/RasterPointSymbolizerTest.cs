@@ -1,10 +1,6 @@
-﻿using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace UnitTests.Rendering.Symbolizer
 {
@@ -21,7 +17,7 @@ namespace UnitTests.Rendering.Symbolizer
             var m = CreateMap();
             m.ZoomToExtents();
             var img = m.GetMap();
-            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this),"RasterPointSymbolizer.png"), System.Drawing.Imaging.ImageFormat.Png);
+            img.Save(System.IO.Path.Combine(UnitTestsFixture.GetImageDirectory(this), "RasterPointSymbolizer.png"), System.Drawing.Imaging.ImageFormat.Png);
         }
 
         private SharpMap.Map CreateMap()

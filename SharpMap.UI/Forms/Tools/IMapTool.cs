@@ -15,9 +15,9 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Forms.Tools
 {
@@ -61,7 +61,7 @@ namespace SharpMap.Forms.Tools
         /// </summary>
         event EventHandler CursorChanged;
 
-        
+
         /// <summary>
         /// Function to perform some action on mouse hover
         /// </summary>
@@ -142,7 +142,7 @@ namespace SharpMap.Forms.Tools
         /// <param name="keyEventArgs">The key event arguments</param>
         /// <returns><value>true</value> if the action was handled and <b>false</b> other action should be taken</returns>
         bool DoKeyUp(Coordinate mapPosition, KeyEventArgs keyEventArgs);
-        
+
     }
 }
 

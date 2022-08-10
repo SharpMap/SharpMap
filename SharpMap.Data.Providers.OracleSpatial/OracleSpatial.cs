@@ -18,14 +18,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Oracle.DataAccess.Client;
 using SharpMap.Data.Providers.OracleUDT;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -370,7 +370,7 @@ namespace SharpMap.Data.Providers
                     {
                         var fdt = new FeatureDataTable(sourceDataset.Tables[0]);
                         foreach (DataColumn col in sourceDataset.Tables[0].Columns)
-                            if (string.Compare(col.ColumnName, GeometryColumn,CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
+                            if (string.Compare(col.ColumnName, GeometryColumn, CultureInfo.InvariantCulture, CompareOptions.OrdinalIgnoreCase) != 0)
                                 fdt.Columns.Add(col.ColumnName, col.DataType, col.Expression);
 
                         if (sourceDataset.Tables[0].Rows.Count > 0)
@@ -549,7 +549,7 @@ namespace SharpMap.Data.Providers
     /// </example>
     /// </remarks>
     [Serializable]
-    public class OracleSpatial<TOid>  : BaseProvider<TOid> where TOid:IComparable<TOid>
+    public class OracleSpatial<TOid> : BaseProvider<TOid> where TOid : IComparable<TOid>
     {
         private string _definitionQuery;
         private string _geometryColumn;

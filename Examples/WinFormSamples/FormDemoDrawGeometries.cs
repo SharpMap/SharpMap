@@ -1,20 +1,10 @@
+using BruTile.Predefined;
+using NetTopologySuite.Geometries;
+using SharpMap.Layers;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
-using SharpMap.Layers;
-using SharpMap.Data;
-using SharpMap.Styles;
-using SharpMap.Rendering.Thematics;
-using BruTile.Web;
-using BruTile.Predefined;
-using SharpMap.Data.Providers;
-
-using GeometryTransform = GeoAPI.CoordinateSystems.Transformations.GeometryTransform;
+using GeometryTransform = NetTopologySuite.CoordinateSystems.Transformations.GeometryTransform;
 
 namespace WinFormSamples
 {
@@ -25,7 +15,7 @@ namespace WinFormSamples
 
         public FormDemoDrawGeometries()
         {
-   
+
             InitializeComponent();
             this.SetStyle(ControlStyles.DoubleBuffer | ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint, true);
             this.UpdateStyles();
@@ -43,7 +33,7 @@ namespace WinFormSamples
 
 
             SharpMap.Layers.VectorLayer vl = new VectorLayer("My Geometries");
-            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<IGeometry>());
+            geoProvider = new SharpMap.Data.Providers.GeometryProvider(new List<Geometry>());
             vl.DataSource = geoProvider;
             this.mapBox1.Map.Layers.Add(vl);
 
@@ -62,7 +52,7 @@ namespace WinFormSamples
             this.mapBox1.MouseMove += new SharpMap.Forms.MapBox.MouseEventHandler(mapBox1_MouseMove);
         }
 
-        void mapBox1_MouseMove(GeoAPI.Geometries.Coordinate worldPos, MouseEventArgs imagePos)
+        void mapBox1_MouseMove(NetTopologySuite.Geometries.Coordinate worldPos, MouseEventArgs imagePos)
         {
             this.label2.Text = worldPos.X.ToString("N4") + "/" + worldPos.Y.ToString("N4");
         }
@@ -72,9 +62,9 @@ namespace WinFormSamples
             this.label1.Text = this.mapBox1.ActiveTool.ToString();
         }
 
-        void mapBox1_GeometryDefined(GeoAPI.Geometries.IGeometry geometry)
+        void mapBox1_GeometryDefined(NetTopologySuite.Geometries.Geometry geometry)
         {
-            MessageBox.Show("Geometry defined!\r\n"+geometry);
+            MessageBox.Show("Geometry defined!\r\n" + geometry);
 
             geoProvider.Geometries.Add(geometry);
 
@@ -105,7 +95,7 @@ namespace WinFormSamples
             this.mapBox1.Refresh();
         }
 
-          private void button7_Click(object sender, EventArgs e)
+        private void button7_Click(object sender, EventArgs e)
         {
             this.mapBox1.ActiveTool = SharpMap.Forms.MapBox.Tools.DrawPoint;
         }
@@ -133,7 +123,7 @@ namespace WinFormSamples
 
         private void button6_Click(object sender, EventArgs e)
         {
-            
+
         }
     }
 }

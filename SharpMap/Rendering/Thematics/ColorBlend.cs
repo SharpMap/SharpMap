@@ -78,10 +78,10 @@ namespace SharpMap.Rendering.Thematics
         public float[] Positions
         {
             get { return _positions; }
-            set 
-            { 
+            set
+            {
                 _positions = value;
-                if ( value == null )
+                if (value == null)
                     _minimum = _maximum = float.NaN;
                 else
                 {
@@ -116,13 +116,13 @@ namespace SharpMap.Rendering.Thematics
             int i = 1;
             while (i < _positions.Length && _positions[i] < pos)
                 i++;
-            float frac = (pos - _positions[i - 1])/(_positions[i] - _positions[i - 1]);
+            float frac = (pos - _positions[i - 1]) / (_positions[i] - _positions[i - 1]);
             frac = Math.Max(frac, 0.0f);
             frac = Math.Min(frac, 1.0f);
-            int R = (int) Math.Round((_colors[i - 1].R*(1 - frac) + _colors[i].R*frac));
-            int G = (int) Math.Round((_colors[i - 1].G*(1 - frac) + _colors[i].G*frac));
-            int B = (int) Math.Round((_colors[i - 1].B*(1 - frac) + _colors[i].B*frac));
-            int A = (int) Math.Round((_colors[i - 1].A*(1 - frac) + _colors[i].A*frac));
+            int R = (int)Math.Round((_colors[i - 1].R * (1 - frac) + _colors[i].R * frac));
+            int G = (int)Math.Round((_colors[i - 1].G * (1 - frac) + _colors[i].G * frac));
+            int B = (int)Math.Round((_colors[i - 1].B * (1 - frac) + _colors[i].B * frac));
+            int A = (int)Math.Round((_colors[i - 1].A * (1 - frac) + _colors[i].A * frac));
             return Color.FromArgb(A, R, G, B);
         }
 
@@ -160,8 +160,8 @@ namespace SharpMap.Rendering.Thematics
             get
             {
                 return new ColorBlend(
-                    new Color[] {Color.FromArgb(0,0,127),   Color.FromArgb(0,0,255),   Color.FromArgb(0,255,255), Color.FromArgb(0,255,0), 
-                                 Color.FromArgb(127,255,0), Color.FromArgb(255,255,0), Color.FromArgb(255,127,0), Color.FromArgb(255,0,0), 
+                    new Color[] {Color.FromArgb(0,0,127),   Color.FromArgb(0,0,255),   Color.FromArgb(0,255,255), Color.FromArgb(0,255,0),
+                                 Color.FromArgb(127,255,0), Color.FromArgb(255,255,0), Color.FromArgb(255,127,0), Color.FromArgb(255,0,0),
                                  Color.FromArgb(127,0,0)},
                     new float[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1f });
             }
@@ -179,7 +179,7 @@ namespace SharpMap.Rendering.Thematics
             get
             {
                 return new ColorBlend(
-                    new Color[] {Color.FromArgb(127,0,0), Color.FromArgb(255,0,0), Color.FromArgb(255,127,0), Color.FromArgb(255,255,0),  
+                    new Color[] {Color.FromArgb(127,0,0), Color.FromArgb(255,0,0), Color.FromArgb(255,127,0), Color.FromArgb(255,255,0),
                                  Color.FromArgb(127,255,0), Color.FromArgb(0,255,0), Color.FromArgb(0,255,255), Color.FromArgb(0,0,255),
                                  Color.FromArgb(0,0,127)},
                     new float[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1f });
@@ -197,8 +197,8 @@ namespace SharpMap.Rendering.Thematics
             get
             {
                 return new ColorBlend(
-                    new Color[] 
-                    {Color.FromArgb(16, 56, 0), Color.FromArgb(38, 127, 0), Color.FromArgb(58, 193, 0), Color.FromArgb(255, 247, 176), 
+                    new Color[]
+                    {Color.FromArgb(16, 56, 0), Color.FromArgb(38, 127, 0), Color.FromArgb(58, 193, 0), Color.FromArgb(255, 247, 176),
                         Color.FromArgb(244, 170, 81), Color.FromArgb(239, 139, 2), Color.FromArgb(205, 112, 9), Color.FromArgb(148, 82, 17),
                         Color.FromArgb(99, 66, 3)},
                     new float[] { 0f, 0.125f, 0.25f, 0.375f, 0.5f, 0.625f, 0.75f, 0.875f, 1f });
@@ -216,7 +216,7 @@ namespace SharpMap.Rendering.Thematics
             get
             {
                 return new ColorBlend(
-                    new Color[] {Color.FromArgb(254, 255, 255), Color.FromArgb(223, 241, 251), Color.FromArgb(187, 228, 246), 
+                    new Color[] {Color.FromArgb(254, 255, 255), Color.FromArgb(223, 241, 251), Color.FromArgb(187, 228, 246),
                                  Color.FromArgb(133,208, 239), Color.FromArgb(63,189, 237), Color.FromArgb(87, 153, 203)},
                     new float[] { 0f, 0.2f, 0.4f, 0.6f, 0.8f, 1.0f });
             }
@@ -251,8 +251,8 @@ namespace SharpMap.Rendering.Thematics
             get
             {
                 return new ColorBlend(
-                    new[] {Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue},
-                    new[] {0f, 0.25f, 0.5f, 0.75f, 1f});
+                    new[] { Color.Red, Color.Yellow, Color.Green, Color.Cyan, Color.Blue },
+                    new[] { 0f, 0.25f, 0.5f, 0.75f, 1f });
             }
         }
 
@@ -261,7 +261,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend BlackToWhite
         {
-            get { return new ColorBlend(new[] {Color.Black, Color.White}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Black, Color.White }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend WhiteToBlack
         {
-            get { return new ColorBlend(new[] {Color.White, Color.Black}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.White, Color.Black }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend RedToGreen
         {
-            get { return new ColorBlend(new[] {Color.Red, Color.Green}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Red, Color.Green }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend GreenToRed
         {
-            get { return new ColorBlend(new[] {Color.Green, Color.Red}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Green, Color.Red }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend BlueToGreen
         {
-            get { return new ColorBlend(new[] {Color.Blue, Color.Green}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Blue, Color.Green }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend GreenToBlue
         {
-            get { return new ColorBlend(new[] {Color.Green, Color.Blue}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Green, Color.Blue }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -309,7 +309,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend RedToBlue
         {
-            get { return new ColorBlend(new[] {Color.Red, Color.Blue}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Red, Color.Blue }, new[] { 0f, 1f }); }
         }
 
         /// <summary>
@@ -317,7 +317,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend BlueToRed
         {
-            get { return new ColorBlend(new[] {Color.Blue, Color.Red}, new[] {0f, 1f}); }
+            get { return new ColorBlend(new[] { Color.Blue, Color.Red }, new[] { 0f, 1f }); }
         }
 
         #endregion
@@ -332,7 +332,7 @@ namespace SharpMap.Rendering.Thematics
         /// <returns></returns>
         public static ColorBlend TwoColors(Color fromColor, Color toColor)
         {
-            return new ColorBlend(new[] {fromColor, toColor}, new[] {0f, 1f});
+            return new ColorBlend(new[] { fromColor, toColor }, new[] { 0f, 1f });
         }
 
         /// <summary>
@@ -340,7 +340,7 @@ namespace SharpMap.Rendering.Thematics
         /// </summary>
         public static ColorBlend ThreeColors(Color fromColor, Color middleColor, Color toColor)
         {
-            return new ColorBlend(new[] {fromColor, middleColor, toColor}, new[] {0f, 0.5f, 1f});
+            return new ColorBlend(new[] { fromColor, middleColor, toColor }, new[] { 0f, 0.5f, 1f });
         }
 
         #endregion

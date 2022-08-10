@@ -15,11 +15,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using SharpMap.Data;
+using SharpMap.Styles;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using SharpMap.Data;
-using SharpMap.Styles;
 
 namespace SharpMap.Rendering.Thematics
 {
@@ -257,9 +257,9 @@ namespace SharpMap.Rendering.Thematics
         protected Pen InterpolatePen(Pen min, Pen max, double attr)
         {
             var oldMin = min;
-            min = (Pen) oldMin.Clone();
+            min = (Pen)oldMin.Clone();
             var oldMax = max;
-            max = (Pen) oldMax.Clone();
+            max = (Pen)oldMax.Clone();
 
             if (min.PenType != PenType.SolidColor || max.PenType != PenType.SolidColor)
                 throw (new ArgumentException("Only SolidColor pens are supported in GradientTheme"));
@@ -295,10 +295,10 @@ namespace SharpMap.Rendering.Thematics
         protected Color InterpolateColor(Color minCol, Color maxCol, double attr)
         {
             double frac = Fraction(attr);
-            
+
             if (frac == 1)
                 return maxCol;
-            
+
             if (frac == 0)
                 return minCol;
 
@@ -310,7 +310,7 @@ namespace SharpMap.Rendering.Thematics
             if (g > 255) g = 255;
             if (b > 255) b = 255;
             if (a > 255) a = 255;
-            
+
             return Color.FromArgb((int)a, (int)r, (int)g, (int)b);
         }
 
@@ -434,11 +434,11 @@ namespace SharpMap.Rendering.Thematics
         /// <inheritdoc cref="ICloneable.Clone"/>
         public object Clone()
         {
-            var res = (GradientTheme) MemberwiseClone();
+            var res = (GradientTheme)MemberwiseClone();
             if (res.MinStyle is ICloneable)
-                res.MinStyle = (IStyle) ((ICloneable) MinStyle).Clone();
+                res.MinStyle = (IStyle)((ICloneable)MinStyle).Clone();
             if (res.MaxStyle is ICloneable)
-                res.MaxStyle = (IStyle) ((ICloneable) MaxStyle).Clone();
+                res.MaxStyle = (IStyle)((ICloneable)MaxStyle).Clone();
 
             return res;
         }

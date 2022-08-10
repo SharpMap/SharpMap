@@ -1,7 +1,7 @@
-using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
+using System;
 
 namespace SharpMap.Layers.Symbolizer
 {
@@ -9,14 +9,14 @@ namespace SharpMap.Layers.Symbolizer
     /// A vector layer class that can symbolize polygonal geometries.
     /// </summary>
     [Serializable]
-    public class PolygonalVectorLayer : BaseVectorLayer<IPolygonal> 
+    public class PolygonalVectorLayer : BaseVectorLayer<IPolygonal>
     {
 
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
         /// <param name="layerName">The layers's name</param>
-        public PolygonalVectorLayer(string layerName) 
+        public PolygonalVectorLayer(string layerName)
             : this(layerName, null)
         {
         }

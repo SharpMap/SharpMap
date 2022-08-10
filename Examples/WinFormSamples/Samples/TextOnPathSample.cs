@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using SharpMap;
+﻿using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
-using SharpMap.Rendering;
-using SharpMap.Rendering.Symbolizer;
 using SharpMap.Styles;
-using Point = GeoAPI.Geometries.Coordinate;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Text;
 namespace WinFormSamples.Samples
 {
     class TextOnPathSample
@@ -52,16 +46,16 @@ namespace WinFormSamples.Samples
             layLabel.SRID = 4326;
             //layLabel.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
 
-          
+
             //Add the layers to the map object.
             //The order we add them in are the order they are drawn, so we add the rivers last to put them on top
-            map.Layers.Add(layRoads);          
-            map.Layers.Add(layLabel);        
+            map.Layers.Add(layRoads);
+            map.Layers.Add(layLabel);
 
 
             //limit the zoom to 360 degrees width
             //map.MaximumZoom = 360;
-           // map.BackColor = Color.LightBlue;
+            // map.BackColor = Color.LightBlue;
 
             map.ZoomToExtents();
 

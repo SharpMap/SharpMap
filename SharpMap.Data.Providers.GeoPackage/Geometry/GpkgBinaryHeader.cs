@@ -1,7 +1,7 @@
+using NetTopologySuite.DataStructures;
+using NetTopologySuite.Geometries;
 using System;
 using System.IO;
-using GeoAPI.DataStructures;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Data.Providers.Geometry
 {
@@ -15,8 +15,8 @@ namespace SharpMap.Data.Providers.Geometry
         {
             Standard, Extended
         }
-        
-        private byte[] _magic = new byte[]{ 0x47, 0x50 };
+
+        private byte[] _magic = new byte[] { 0x47, 0x50 };
         private byte _version;
         private byte _flags;
         private int _srs_id;
@@ -151,7 +151,7 @@ namespace SharpMap.Data.Providers.Geometry
         /// <summary>
         /// Gets a value indicating that this geometry is empty
         /// </summary>
-        public bool IsEmpty { get { return (_flags & IsEmptyFlag) == IsEmptyFlag; }}
+        public bool IsEmpty { get { return (_flags & IsEmptyFlag) == IsEmptyFlag; } }
 
         /// <summary>
         /// Gets a value indicating that this geometry is empty
@@ -161,12 +161,12 @@ namespace SharpMap.Data.Providers.Geometry
         /// <summary>
         /// Gets the magic number
         /// </summary>
-        public byte[] Magic { get { return _magic; }}
+        public byte[] Magic { get { return _magic; } }
 
         /// <summary>
         /// Gets a value indicating the version of the geometry data
         /// </summary>
-        public byte Version { get { return _version; }}
+        public byte Version { get { return _version; } }
 
         /// <summary>
         /// Gets a value indicating the spatial reference id
@@ -179,7 +179,7 @@ namespace SharpMap.Data.Providers.Geometry
             internal set { _extent = value; }
         }
 
-        public Interval ZRange { get { return _zrange; }}
+        public Interval ZRange { get { return _zrange; } }
         public Interval MRange { get { return _mrange; } }
     }
 }

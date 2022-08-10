@@ -2,7 +2,7 @@ using System.Drawing;
 
 namespace SharpMap.Rendering.Symbolizer
 {
-    
+
     /// <summary>
     /// An extended interface for <see cref="IPointSymbolizer"/>
     /// </summary>

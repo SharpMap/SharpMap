@@ -46,7 +46,7 @@ namespace SharpMap.Rendering.Thematics
     /// when they make use of <see cref="T:System.Drawing.Pen"/>, <see cref="T:System.Drawing.Brush"/> or likewise 
     /// objects of the <see cref="N:System.Drawing"/> namespace. Otherwise they are prone to GDI+ rendering exceptions.
     /// </remarks>
-    public interface IThemeEx: ITheme
+    public interface IThemeEx : ITheme
     {
         /// <summary>
         /// Calculates a style for a given <paramref name="feature"/> based on a given <paramref name="mapViewPort"/>. 

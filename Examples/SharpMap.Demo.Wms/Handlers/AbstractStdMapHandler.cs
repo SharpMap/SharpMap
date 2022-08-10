@@ -1,22 +1,12 @@
 namespace SharpMap.Demo.Wms.Handlers
 {
+    using SharpMap.Demo.Wms.Helpers;
     using System;
     using System.Web;
-
-    using GeoAPI;
-
-    using NetTopologySuite;
-
-    using SharpMap.Demo.Wms.Helpers;
 
     public abstract class AbstractStdMapHandler : IHttpHandler
     {
         private static readonly object SyncLock = new object();
-
-        static AbstractStdMapHandler()
-        {
-            GeometryServiceProvider.SetInstanceIfNotAlreadySetDirectly(NtsGeometryServices.Instance);
-        }
 
         public abstract void ProcessRequest(HttpContext context);
 
@@ -27,7 +17,7 @@ namespace SharpMap.Demo.Wms.Handlers
             return uri.Query.Length <= 0 ? absoluteUri : absoluteUri.Replace(uri.Query, String.Empty);
         }
 
-        protected Web.Wms.Capabilities.WmsServiceDescription GetDescription(string url) 
+        protected Web.Wms.Capabilities.WmsServiceDescription GetDescription(string url)
         {
             var description = new Web.Wms.Capabilities.WmsServiceDescription("Acme Corp. Map Server", url);
             description.MaxWidth = 500;
@@ -44,7 +34,7 @@ namespace SharpMap.Demo.Wms.Handlers
 
         protected Map GetMap(HttpRequest request)
         {
-            string type = request.Params["MAP_TYPE"];            
+            string type = request.Params["MAP_TYPE"];
             if (String.Equals(type, "DEF", StringComparison.InvariantCultureIgnoreCase))
                 return ShapefileHelper.Default();
             if (String.Equals(type, "SPH", StringComparison.InvariantCultureIgnoreCase))
@@ -53,7 +43,7 @@ namespace SharpMap.Demo.Wms.Handlers
                 return DatabaseHelper.SqlServer();
             string format = String.Format("unsupported map type: '{0}'", type);
             throw new NotSupportedException(format);
-        }        
+        }
 
         public bool IsReusable
         {

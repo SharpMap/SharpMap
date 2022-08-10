@@ -28,7 +28,7 @@ namespace SharpMap.Web
         /// Gets or set a value indicating the <see cref="ICredentials"/> to use for accessing the <see cref="Proxy"/>.
         /// </summary>
         ICredentials Credentials { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating the base uniform resource locator of the web service.
         /// </summary>
@@ -58,7 +58,7 @@ namespace SharpMap.Web
         /// 
         /// </summary>
         string[] ExceptionFormats { get; }
-        
+
         /// <summary>
         /// Gets a value indicating the web-servers result as an <see cref="XmlDocument"/>
         /// </summary>

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Common.Logging;
+using SharpMap.Layers;
+using SharpMap.Styles;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using Common.Logging;
-using SharpMap.Layers;
-using SharpMap.Styles;
 
 namespace SharpMap.Rendering
 {
@@ -119,7 +119,7 @@ namespace SharpMap.Rendering
             _images = new Image[_layers.Length];
 
             var res = Parallel.For(0, _layers.Length, RenderToImage);
-            
+
             var tmpTransform = g.Transform;
             g.Transform = new Matrix();
             if (res.IsCompleted)
@@ -142,7 +142,7 @@ namespace SharpMap.Rendering
                 return;
 
             var layer = _layers[layerIndex];
-            
+
             if (layer.Enabled)
             {
                 double compare = layer.VisibilityUnits == VisibilityUnits.ZoomLevel ? _mapViewPort.Zoom : _mapScale;
@@ -152,10 +152,10 @@ namespace SharpMap.Rendering
                     using (var g = Graphics.FromImage(image))
                     {
                         g.PageUnit = GraphicsUnit.Pixel;
-                        ApplyTransform(_mapViewPort.MapTransform , g);
+                        ApplyTransform(_mapViewPort.MapTransform, g);
 
                         g.Clear(Color.Transparent);
-                        RenderLayer(layer, g, _mapViewPort );
+                        RenderLayer(layer, g, _mapViewPort);
                     }
                 }
             }
@@ -182,10 +182,10 @@ namespace SharpMap.Rendering
                     var size = mapViewport.Size;
 
                     g.DrawLine(pen, 0, 0, size.Width, size.Height);
-                    g.DrawLine(pen, size.Width,0, 0, size.Height);
+                    g.DrawLine(pen, size.Width, 0, 0, size.Height);
                     g.DrawRectangle(pen, 0, 0, size.Width, size.Height);
                 }
-                
+
             }
         }
 
@@ -202,7 +202,7 @@ namespace SharpMap.Rendering
             {
                 foreach (var image in _images)
                 {
-                    if (image != null)image.Dispose();
+                    if (image != null) image.Dispose();
                 }
             }
         }

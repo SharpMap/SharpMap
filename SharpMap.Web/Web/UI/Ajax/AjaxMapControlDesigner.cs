@@ -42,7 +42,7 @@ namespace SharpMap.Web.UI.Ajax
         /// <returns></returns>
         public override string GetDesignTimeHtml()
         {
-            ControlCollection childControls = ((AjaxMapControl) Component).Controls;
+            ControlCollection childControls = ((AjaxMapControl)Component).Controls;
             return base.GetDesignTimeHtml();
         }
 
@@ -55,7 +55,7 @@ namespace SharpMap.Web.UI.Ajax
             if (!(component is AjaxMapControl))
                 throw (new ArgumentException("Component must be an AjaxMapControl", "Component"));
             AjaxMapControl mapControl = component as AjaxMapControl;
-            mapControl.Map = new Map(new Size((int) mapControl.Width.Value, (int) mapControl.Height.Value));
+            mapControl.Map = new Map(new Size((int)mapControl.Width.Value, (int)mapControl.Height.Value));
             base.Initialize(component);
         }
     }

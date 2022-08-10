@@ -1,8 +1,8 @@
 ﻿namespace SharpMap.Converters.GeoJSON
 {
+    using SharpMap.Data;
     using System;
     using System.Collections.Generic;
-    using SharpMap.Data;
 
     /// <summary>
     /// GeoJSON helper class
@@ -40,6 +40,6 @@
                     }
                 }
             }
-        }        
+        }
     }
 }

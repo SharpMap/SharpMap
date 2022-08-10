@@ -15,13 +15,11 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Net.Mime;
-using System.Runtime.CompilerServices;
 using Common.Logging;
 using SharpMap.Rendering.Thematics;
+using System;
+using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace SharpMap.Styles
 {
@@ -31,8 +29,8 @@ namespace SharpMap.Styles
     [Serializable]
     public class LabelStyle : Style, ICloneable
     {
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (LabelStyle));
-        
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(LabelStyle));
+
         #region HorizontalAlignmentEnum enum
 
         /// <summary>
@@ -136,7 +134,7 @@ namespace SharpMap.Styles
         /// <returns>A LabelStyle resembling this instance.</returns>
         public LabelStyle Clone()
         {
-            var res = (LabelStyle) MemberwiseClone();
+            var res = (LabelStyle)MemberwiseClone();
 
             lock (this)
             {
@@ -147,7 +145,7 @@ namespace SharpMap.Styles
                     res._Halo = (Pen)_Halo.Clone();
 
                 if (_BackColor != null)
-                    res._BackColor = (Brush) _BackColor.Clone();
+                    res._BackColor = (Brush)_BackColor.Clone();
             }
 
             return res;
@@ -205,7 +203,7 @@ namespace SharpMap.Styles
             set
             {
                 if (value.Unit != GraphicsUnit.Point)
-                    _logger.Error( fmh => fmh("Only assign fonts with size in Points"));
+                    _logger.Error(fmh => fmh("Only assign fonts with size in Points"));
                 _Font = value;
 
                 // we can't dispose the previous font 
@@ -215,7 +213,7 @@ namespace SharpMap.Styles
             }
         }
 
-        [NonSerialized] 
+        [NonSerialized]
         private float _cachedDpiY = 0f;
         [NonSerialized]
         private Font _cachedFontForGraphics = null;

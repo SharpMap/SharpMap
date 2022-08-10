@@ -1,8 +1,7 @@
-﻿using BruTile.Wmsc;
+﻿using BruTile;
+using BruTile.Wmsc;
 using SharpMap;
 using SharpMap.Layers;
-using BruTile.Web;
-using BruTile;
 using System.Collections.Generic;
 
 namespace WinFormSamples.Samples
@@ -30,12 +29,12 @@ namespace WinFormSamples.Samples
 
             var source = new List<ITileSource>(WmscTileSource.CreateFromWmscCapabilties(new System.Uri(url)));
 
-//            foreach (ITileSource src in source)
-//            {
-                tileLayer = new TileAsyncLayer(source[16], "tileLayer" + source[16]);
-                tileLayer.MapNewTileAvaliable += map.MapNewTileAvaliableHandler;
-                map.BackgroundLayer.Add(tileLayer);
-//            }
+            //            foreach (ITileSource src in source)
+            //            {
+            tileLayer = new TileAsyncLayer(source[16], "tileLayer" + source[16]);
+            tileLayer.MapNewTileAvaliable += map.MapNewTileAvaliableHandler;
+            map.BackgroundLayer.Add(tileLayer);
+            //            }
             map.ZoomToExtents();
 
 

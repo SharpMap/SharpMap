@@ -1,6 +1,6 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Drawing;
-using NUnit.Framework;
 
 namespace UnitTests.WMS
 {
@@ -38,6 +38,6 @@ namespace UnitTests.WMS
             Assert.IsTrue(string.Compare(urlEncode, escapeDataString, StringComparison.InvariantCultureIgnoreCase) == 0);
         }
 
-        
+
     }
 }

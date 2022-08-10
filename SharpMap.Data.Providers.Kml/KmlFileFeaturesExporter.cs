@@ -15,6 +15,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpKml.Base;
+using SharpKml.Engine;
+using SharpMap.Rendering.Thematics;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -25,14 +33,6 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
-using SharpKml.Base;
-using SharpKml.Dom;
-using SharpKml.Engine;
-using SharpMap.Rendering.Thematics;
-using SharpMap.Styles;
 using ColorMode = SharpKml.Dom.ColorMode;
 using Point = SharpKml.Dom.Point;
 
@@ -63,7 +63,7 @@ namespace SharpMap.Data.Providers
         #endregion
 
         #region ExportContext
-        
+
         /// <summary>
         /// An export context
         /// </summary>
@@ -118,9 +118,9 @@ namespace SharpMap.Data.Providers
         private int _sequence;
         //private ICoordinateTransformationFactory _coordinateTransformationFactory;
         //private ICoordinateSystemFactory _coordinateSystemFactory;
-        private IGeometryFactory _earthGeometryFactory;
+        private NetTopologySuite.Geometries.GeometryFactory _earthGeometryFactory;
         private int _earthSrid;
-        private ICoordinateSystem _earthCs;
+        private CoordinateSystem _earthCs;
         private readonly List<string> _additionalFiles;
         #endregion
 
@@ -177,9 +177,9 @@ namespace SharpMap.Data.Providers
         public string Snippet { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating a delegate function to get <see cref="StyleSelector"/> for an <see cref="ExportContext"/>.
+        /// Gets or sets a value indicating a delegate function to get <see cref="SharpKml.Dom.StyleSelector"/> for an <see cref="ExportContext"/>.
         /// </summary>
-        public Func<ExportContext, StyleSelector> GetStyle { get; set; }
+        public Func<ExportContext, SharpKml.Dom.StyleSelector> GetStyle { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating a delegate function to get a snippet string for an <see cref="ExportContext"/>
@@ -203,7 +203,7 @@ namespace SharpMap.Data.Providers
                 if (_earthSrid != value)
                 {
                     _earthSrid = value;
-                    _earthGeometryFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(value);
+                    _earthGeometryFactory = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(value);
 
                     _earthCs = SharpMap.Session.Instance.CoordinateSystemServices.GetCoordinateSystem(value);
                 }
@@ -285,7 +285,7 @@ namespace SharpMap.Data.Providers
 
                 if (vectorStyle.Line != null)
                 {
-                    var lineStyle = new LineStyle();
+                    var lineStyle = new SharpKml.Dom.LineStyle();
                     style.Line = lineStyle;
 
                     var color = vectorStyle.Line.Color;
@@ -297,7 +297,7 @@ namespace SharpMap.Data.Providers
                 var solidColor = ConvertToColor32(vectorStyle.Fill);
                 if (solidColor != null)
                 {
-                    var polygonStyle = new PolygonStyle();
+                    var polygonStyle = new SharpKml.Dom.PolygonStyle();
                     style.Polygon = polygonStyle;
 
                     polygonStyle.Fill = true;
@@ -308,7 +308,7 @@ namespace SharpMap.Data.Providers
                 {
                     if (vectorStyle.PointSize > 0)
                     {
-                        var iconStyle = new IconStyle();
+                        var iconStyle = new SharpKml.Dom.IconStyle();
 
                         var pointColor = vectorStyle.PointColor != null
                             ? ConvertToColor32(vectorStyle.PointColor) ?? new Color32(255, 0, 0, 0)
@@ -316,7 +316,7 @@ namespace SharpMap.Data.Providers
 
                         iconStyle.Color = pointColor;
                         iconStyle.ColorMode = ColorMode.Normal;
-                        iconStyle.Icon = new IconStyle.IconLink(Pushpins.ShadedDot);
+                        iconStyle.Icon = new SharpKml.Dom.IconStyle.IconLink(Pushpins.ShadedDot);
                         iconStyle.Scale = vectorStyle.PointSize / 6;
 
                         style.Icon = iconStyle;
@@ -329,9 +329,9 @@ namespace SharpMap.Data.Providers
 
                     context.AdditionalFiles.Add(additionalFile);
 
-                    var iconStyle = new IconStyle
+                    var iconStyle = new SharpKml.Dom.IconStyle
                     {
-                        Icon = new IconStyle.IconLink(new Uri(context.IsKmz ? Path.GetFileName(additionalFile) : additionalFile, UriKind.Relative)),
+                        Icon = new SharpKml.Dom.IconStyle.IconLink(new Uri(context.IsKmz ? Path.GetFileName(additionalFile) : additionalFile, UriKind.Relative)),
                         Scale = vectorStyle.SymbolScale
                     };
 
@@ -412,7 +412,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>A geometry in WGS84</returns>
-        protected virtual IGeometry ToTarget(IGeometry geometry)
+        protected virtual Geometry ToTarget(Geometry geometry)
         {
             if (geometry.SRID == EarthSrid || (geometry.SRID <= 0 && CoordinateTransformation == null))
                 return geometry;
@@ -444,7 +444,7 @@ namespace SharpMap.Data.Providers
         /// <param name="feature">The feature</param>
         /// <param name="style">A style selector</param>
         /// <returns>A KML feature</returns>
-        protected virtual Feature CreateKmlFeature(FeatureDataRow feature, StyleSelector style)
+        protected virtual SharpKml.Dom.Feature CreateKmlFeature(FeatureDataRow feature, SharpKml.Dom.StyleSelector style)
         {
             var geometry = feature.Geometry;
 
@@ -461,7 +461,7 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.MultiPoint:
                     {
-                        var multiGeometry = new MultipleGeometry();
+                        var multiGeometry = new SharpKml.Dom.MultipleGeometry();
 
                         foreach (var coordinate in geometry.Coordinates)
                         {
@@ -480,7 +480,7 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.Polygon:
                     {
-                        var polygon = (IPolygon)geometry;
+                        var polygon = (Polygon)geometry;
 
                         var kmlPolygon = CreateKmlPolygon(polygon);
 
@@ -488,9 +488,9 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.MultiLineString:
                     {
-                        var multiGeometry = new MultipleGeometry();
+                        var multiGeometry = new SharpKml.Dom.MultipleGeometry();
 
-                        var multiLineString = (IMultiLineString)geometry;
+                        var multiLineString = (MultiLineString)geometry;
                         foreach (var innerGeometry in multiLineString.Geometries)
                         {
                             var lineString = CreateLineString(innerGeometry);
@@ -502,10 +502,10 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.MultiPolygon:
                     {
-                        var multiGeometry = new MultipleGeometry();
-                        var multiPoly = (IMultiPolygon)geometry;
+                        var multiGeometry = new SharpKml.Dom.MultipleGeometry();
+                        var multiPoly = (MultiPolygon)geometry;
 
-                        foreach (var innerGeometry in multiPoly.Geometries.Cast<IPolygon>())
+                        foreach (var innerGeometry in multiPoly.Geometries.Cast<Polygon>())
                         {
                             var polygon = CreateKmlPolygon(innerGeometry);
 
@@ -540,18 +540,18 @@ namespace SharpMap.Data.Providers
         /// Creates a KML specific root document
         /// </summary>
         /// <returns>A KML root document</returns>
-        protected virtual Document CreateRootDocument()
+        protected virtual SharpKml.Dom.Document CreateRootDocument()
         {
-            var document = new Document { Name = _featureDataTable.TableName, Open = true, Visibility = true };
+            var document = new SharpKml.Dom.Document { Name = _featureDataTable.TableName, Open = true, Visibility = true };
 
             // document's name can't be empty
             if (string.IsNullOrEmpty(document.Name))
                 document.Name = "Document" + Guid.NewGuid();
 
             if (!string.IsNullOrEmpty(Snippet))
-                document.Snippet = new Snippet { MaximumLines = 2, Text = Snippet };
+                document.Snippet = new SharpKml.Dom.Snippet { MaximumLines = 2, Text = Snippet };
 
-            document.Time = new Timestamp { When = DateTime.Now };
+            document.Time = new SharpKml.Dom.Timestamp { When = DateTime.Now };
 
             return document;
         }
@@ -566,13 +566,13 @@ namespace SharpMap.Data.Providers
 
             _additionalFiles.Clear();
 
-            var kml = new Kml();
+            var kml = new SharpKml.Dom.Kml();
 
             var document = CreateRootDocument();
 
             kml.Feature = document;
 
-            var embeddedStyles = new Dictionary<string, StyleSelector>();
+            var embeddedStyles = new Dictionary<string, SharpKml.Dom.StyleSelector>();
 
             foreach (FeatureDataRow featureRow in _featureDataTable.Rows)
             {
@@ -599,7 +599,7 @@ namespace SharpMap.Data.Providers
             return kmlFile;
         }
 
-        private static string GetStyleXml(Element e)
+        private static string GetStyleXml(SharpKml.Dom.Element e)
         {
             var kml = KmlFile.Create(e, true);
             // we must to use NotCloseableMemoryStream because kml.Save pretend to close the stream we provide, but we do not want that.
@@ -620,9 +620,9 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private LineString CreateLineString(IGeometry geometry)
+        private SharpKml.Dom.LineString CreateLineString(Geometry geometry)
         {
-            var lineString = new LineString { Coordinates = new CoordinateCollection() };
+            var lineString = new SharpKml.Dom.LineString { Coordinates = new SharpKml.Dom.CoordinateCollection() };
 
             foreach (var coordinate in geometry.Coordinates)
             {
@@ -632,12 +632,12 @@ namespace SharpMap.Data.Providers
 
             return lineString;
         }
-        private Polygon CreateKmlPolygon(IPolygon polygon)
+        private SharpKml.Dom.Polygon CreateKmlPolygon(Polygon polygon)
         {
-            var kmlPolygon = new Polygon();
-            var ring = new LinearRing { Coordinates = new CoordinateCollection() };
+            var kmlPolygon = new SharpKml.Dom.Polygon();
+            var ring = new SharpKml.Dom.LinearRing { Coordinates = new SharpKml.Dom.CoordinateCollection() };
 
-            kmlPolygon.OuterBoundary = new OuterBoundary { LinearRing = ring };
+            kmlPolygon.OuterBoundary = new SharpKml.Dom.OuterBoundary { LinearRing = ring };
 
             foreach (var coordinate in polygon.ExteriorRing.Coordinates)
             {
@@ -646,10 +646,10 @@ namespace SharpMap.Data.Providers
 
             foreach (var interiorRing in polygon.InteriorRings)
             {
-                var innerBoundary = new InnerBoundary();
+                var innerBoundary = new SharpKml.Dom.InnerBoundary();
                 kmlPolygon.AddInnerBoundary(innerBoundary);
 
-                ring = new LinearRing { Coordinates = new CoordinateCollection() };
+                ring = new SharpKml.Dom.LinearRing { Coordinates = new SharpKml.Dom.CoordinateCollection() };
 
                 innerBoundary.LinearRing = ring;
 
@@ -693,17 +693,17 @@ namespace SharpMap.Data.Providers
             return null;
         }
 
-        private Placemark WrapPlacemark(Geometry kmlGeometry, StyleSelector style, FeatureDataRow feature)
+        private SharpKml.Dom.Placemark WrapPlacemark(SharpKml.Dom.Geometry kmlGeometry, SharpKml.Dom.StyleSelector style, FeatureDataRow feature)
         {
-            var placemark = new Placemark();
+            var placemark = new SharpKml.Dom.Placemark();
             if (!string.IsNullOrEmpty(NameColumn))
                 placemark.Name = Get(feature, NameColumn);
 
-            placemark.Description = new Description { Text = CreateDescription(feature) };
+            placemark.Description = new SharpKml.Dom.Description { Text = CreateDescription(feature) };
             placemark.Geometry = kmlGeometry;
             if (GetFeatureSnippet != null)
             {
-                placemark.Snippet = new Snippet { Text = GetFeatureSnippet(new ExportContext(this, _additionalFiles, feature)) };
+                placemark.Snippet = new SharpKml.Dom.Snippet { Text = GetFeatureSnippet(new ExportContext(this, _additionalFiles, feature)) };
             }
 
             if (style != null)

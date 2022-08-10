@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Common.Logging;
+using NetTopologySuite.Geometries;
+using SharpMap.Layers;
+using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Common.Logging;
-using GeoAPI.Geometries;
-using SharpMap.Layers;
+using Point = System.Drawing.Point;
 
 namespace SharpMap.Forms.ImageGenerator
 {
@@ -179,7 +178,7 @@ namespace SharpMap.Forms.ImageGenerator
             var mapBox = _mapBox;
             var map = _map;
 
-            if (mapBox.IsDisposed || _isDisposed )
+            if (mapBox.IsDisposed || _isDisposed)
                 return;
 
             Image oldRef;
@@ -330,7 +329,7 @@ namespace SharpMap.Forms.ImageGenerator
                 _logger.DebugFormat("{0} - {1} / {2}", res.Generation, res.bbox, res.UpdateArea);
 
             var mapBox = _mapBox;
-            if ((mapBox.SetToolsNoneWhileRedrawing|| mapBox.ShowProgressUpdate) && mapBox.InvokeRequired)
+            if ((mapBox.SetToolsNoneWhileRedrawing || mapBox.ShowProgressUpdate) && mapBox.InvokeRequired)
             {
                 try
                 {
@@ -398,7 +397,7 @@ namespace SharpMap.Forms.ImageGenerator
 
 #if DEBUG
                 if (res.Watch != null)
-                { 
+                {
                     res.Watch.Stop();
                     mapBox.LastRefreshTime = res.Watch.Elapsed;
                 }
@@ -419,7 +418,7 @@ namespace SharpMap.Forms.ImageGenerator
         private Bitmap MergeImages(long generation, Rectangle rectangle)
         {
             var res = generation == _idImageGeneration
-                ? (Bitmap) _image
+                ? (Bitmap)_image
                 : new Bitmap(MapBox.Size.Width, MapBox.Size.Height);
 
             int counter = 0;
@@ -502,7 +501,7 @@ namespace SharpMap.Forms.ImageGenerator
             int width = _mapBox.Width;
             int height = _mapBox.Height;
             if (_imageStatic == null && _imageVariable == null && _imageBackground == null
-                && !forceRefresh 
+                && !forceRefresh
                 || width == 0 || height == 0) return;
 
             var bbox = _map.Envelope;
@@ -546,9 +545,13 @@ namespace SharpMap.Forms.ImageGenerator
                         GetImagesAsync(bbox, generation);
                         GetImagesAsyncEnd(new GetImageEndResult
                         {
-                            Tool = oldTool, bbox = bbox, Generation = generation, UpdateArea = updateArea
+                            Tool = oldTool,
+                            bbox = bbox,
+                            Generation = generation,
+                            UpdateArea = updateArea
 #if DEBUG
-                            , Watch = watch
+                            ,
+                            Watch = watch
 #endif
                         });
                     });
@@ -557,10 +560,13 @@ namespace SharpMap.Forms.ImageGenerator
             {
                 GetImagesAsyncEnd(new GetImageEndResult
                 {
-                    Tool = null, bbox = bbox, Generation = _imageGeneration,
+                    Tool = null,
+                    bbox = bbox,
+                    Generation = _imageGeneration,
                     UpdateArea = updateArea
 #if DEBUG
-                    , Watch = watch
+                    ,
+                    Watch = watch
 #endif
                 });
             }

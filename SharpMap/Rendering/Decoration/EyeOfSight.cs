@@ -10,12 +10,12 @@ namespace SharpMap.Rendering.Decoration
     [Serializable]
     public class EyeOfSight : NorthArrow
     {
-        private static readonly string[] Directions = {"N", "E", "S", "W"};
+        private static readonly string[] Directions = { "N", "E", "S", "W" };
 
         private static Bitmap GetEyeOfSightImage()
         {
             var roestte = new Bitmap(120, 120);
-            
+
             //Anyone for a more sophisticated roestte?
             using (var g = Graphics.FromImage(roestte))
             {
@@ -25,8 +25,8 @@ namespace SharpMap.Rendering.Decoration
                 var f = new Font(FontFamily.GenericSansSerif, 20, FontStyle.Bold);
                 var b = new SolidBrush(Color.Black);
                 var p = new Pen(Color.Black, 5);
-                var sf = new StringFormat(StringFormat.GenericTypographic) {Alignment = StringAlignment.Center};
-                var rect = new RectangleF(- 45f, - 45f, 90f, 90f);
+                var sf = new StringFormat(StringFormat.GenericTypographic) { Alignment = StringAlignment.Center };
+                var rect = new RectangleF(-45f, -45f, 90f, 90f);
 
                 foreach (var s in Directions)
                 {
@@ -44,17 +44,17 @@ namespace SharpMap.Rendering.Decoration
         {
             NorthArrowImage = GetEyeOfSightImage();
         }
-        
+
         /// <summary>
         /// Gets or sets the outline color 
         /// </summary>
         public Color NeedleOutlineColor { get; set; }
-        
+
         /// <summary>
         /// The width of the needle outline
         /// </summary>
         public int NeedleOutlineWidth { get; set; }
-        
+
         /// <summary>
         /// The color to
         /// </summary>
@@ -67,10 +67,10 @@ namespace SharpMap.Rendering.Decoration
         {
             // Render the rosetta
             base.OnRender(g, mvp);
-            
+
             var clip = g.ClipBounds;
             //var oldTransform = g.Transform;
-            var newTransform = new Matrix(1f, 0f, 0f, 1f, clip.Left + Size.Width*0.5f, clip.Top + Size.Height*0.5f);
+            var newTransform = new Matrix(1f, 0f, 0f, 1f, clip.Left + Size.Width * 0.5f, clip.Top + Size.Height * 0.5f);
 
             g.Transform = newTransform;
 
@@ -86,13 +86,13 @@ namespace SharpMap.Rendering.Decoration
             };
 
             // need to outline the needle
-            if (NeedleOutlineWidth>0)
+            if (NeedleOutlineWidth > 0)
             {
                 g.DrawPolygon(new Pen(OpacityColor(NeedleOutlineColor), NeedleOutlineWidth), pts);
             }
 
             // need to outline the needle
-            g.FillPolygon(new SolidBrush(OpacityColor(NeedleFillColor)), pts );
+            g.FillPolygon(new SolidBrush(OpacityColor(NeedleFillColor)), pts);
 
             //g.Transform = oldTransform;
         }

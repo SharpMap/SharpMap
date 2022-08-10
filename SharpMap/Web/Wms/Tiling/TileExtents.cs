@@ -15,9 +15,9 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {
@@ -41,23 +41,23 @@ namespace SharpMap.Web.Wms.Tiling
             double xOrigin = tileSet.BoundingBox.MinX;
             double yOrigin = tileSet.BoundingBox.MinY;
 
-            double tileWorldUnits = tileResolution*tileSet.Width;
+            double tileWorldUnits = tileResolution * tileSet.Width;
 
             var tileBbox = new Envelope(
-                Math.Floor((extent.MinX - xOrigin)/tileWorldUnits)*tileWorldUnits + xOrigin,
-                Math.Floor((extent.MinY - yOrigin)/tileWorldUnits)*tileWorldUnits + yOrigin,
-                Math.Ceiling((extent.MaxX - xOrigin)/tileWorldUnits)*tileWorldUnits + xOrigin,
-                Math.Ceiling((extent.MaxY - yOrigin)/tileWorldUnits)*tileWorldUnits + yOrigin);
+                Math.Floor((extent.MinX - xOrigin) / tileWorldUnits) * tileWorldUnits + xOrigin,
+                Math.Floor((extent.MinY - yOrigin) / tileWorldUnits) * tileWorldUnits + yOrigin,
+                Math.Ceiling((extent.MaxX - xOrigin) / tileWorldUnits) * tileWorldUnits + xOrigin,
+                Math.Ceiling((extent.MaxY - yOrigin) / tileWorldUnits) * tileWorldUnits + yOrigin);
 
-            int tileCountX = (int) Math.Round((tileBbox.MaxX - tileBbox.MinX)/tileWorldUnits);
-            int tileCountY = (int) Math.Round((tileBbox.MaxY - tileBbox.MinY)/tileWorldUnits);
+            int tileCountX = (int)Math.Round((tileBbox.MaxX - tileBbox.MinX) / tileWorldUnits);
+            int tileCountY = (int)Math.Round((tileBbox.MaxY - tileBbox.MinY) / tileWorldUnits);
 
             for (int x = 0; x < tileCountX; x++)
             {
                 for (int y = 0; y < tileCountY; y++)
                 {
-                    double x1 = tileBbox.MinX    + x*tileWorldUnits;
-                    double y1 = tileBbox.MinY + y*tileWorldUnits;
+                    double x1 = tileBbox.MinX + x * tileWorldUnits;
+                    double y1 = tileBbox.MinY + y * tileWorldUnits;
                     double x2 = x1 + tileWorldUnits;
                     double y2 = y1 + tileWorldUnits;
 

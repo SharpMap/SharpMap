@@ -1,7 +1,7 @@
-﻿using System.IO;
+﻿using SharpMap.Utilities;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using SharpMap.Utilities;
 
 namespace UnitTests.Serialization
 {

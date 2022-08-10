@@ -74,8 +74,8 @@ namespace SharpMap.Web
             if (cached is Image)
             {
                 //context.Response.ContentType = "image/png";
-                var b = (Image) cached;
-                
+                var b = (Image)cached;
+
                 // send the image to the viewer
                 using (var ms = new MemoryStream())
                 {
@@ -126,7 +126,7 @@ namespace SharpMap.Web
                         {
                             {
                                 var tmpBuffer = new byte[ChunkSize];
-                                
+
                                 var length = ms.Read(tmpBuffer, 0, tmpBuffer.Length);
                                 response.OutputStream.Write(tmpBuffer, 0, length);
                                 response.Flush();

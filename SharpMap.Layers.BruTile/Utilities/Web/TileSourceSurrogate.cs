@@ -1,9 +1,10 @@
 // Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile;
+using BruTile.Web;
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile;
 
 namespace SharpMap.Utilities.Web
 {
@@ -18,10 +19,10 @@ namespace SharpMap.Utilities.Web
 
             info.AddValue("name", ts.Name);
 
-            // Provider
-            var tp = Utility.GetFieldValue<ITileProvider>(ts, "_provider");
-            info.AddValue("providerType", tp.GetType());
-            info.AddValue("provider", tp);
+            // Request
+            var tr = Utility.GetFieldValue<IRequest>(ts, "_request");
+            info.AddValue("requestType", tr.GetType());
+            info.AddValue("request", tr);
 
             // Schema
             info.AddValue("schemaType", ts.Schema.GetType());
@@ -30,12 +31,10 @@ namespace SharpMap.Utilities.Web
 
         public object SetObjectData(object obj, SerializationInfo info, StreamingContext context, ISurrogateSelector selector)
         {
-            var ts = (TileSource) obj;
+            var ts = (TileSource)obj;
             ts.Name = info.GetString("name");
 
-            var type = (Type) info.GetValue("providerType", typeof (Type));
-            Utility.SetFieldValue(ref obj, "_provider", BindingFlags.NonPublic | BindingFlags.Instance, (ITileProvider)info.GetValue("provider", type));
-            type = (Type)info.GetValue("schemaType", typeof(Type));
+            var type = (Type)info.GetValue("schemaType", typeof(Type));
             Utility.SetPropertyValue(ref obj, "Schema", BindingFlags.Public | BindingFlags.Instance, (ITileSchema)info.GetValue("schema", type));
             return obj;
         }

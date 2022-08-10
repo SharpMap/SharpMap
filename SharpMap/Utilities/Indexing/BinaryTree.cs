@@ -15,15 +15,14 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using Common.Logging;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using Common.Logging;
 
 namespace SharpMap.Utilities.Indexing
 {
-// Binary Tree not working yet on Mono 
-// see bug: http://bugzilla.ximian.com/show_bug.cgi?id=78502
+    // Binary Tree not working yet on Mono 
+    // see bug: http://bugzilla.ximian.com/show_bug.cgi?id=78502
 #if !MONO
     [Serializable]
     internal class Node<T, U> where T : IComparable<T>
@@ -74,7 +73,7 @@ namespace SharpMap.Utilities.Indexing
     [Serializable]
     public class BinaryTree<T, U> where T : IComparable<T>
     {
-        static readonly ILog _logger = LogManager.GetLogger(typeof(BinaryTree<T,U>));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(BinaryTree<T, U>));
 
         private readonly Node<T, U> _root;
 
@@ -221,10 +220,10 @@ namespace SharpMap.Utilities.Indexing
                 if (root.LeftNode != null)
                 {
                     //if (root.LeftNode.Item.Value.CompareTo(value) > 0)
-                        foreach (ItemValue item in ScanFind(value, root.LeftNode))
-                        {
-                            yield return item;
-                        }
+                    foreach (ItemValue item in ScanFind(value, root.LeftNode))
+                    {
+                        yield return item;
+                    }
                 }
             }
 
@@ -236,10 +235,10 @@ namespace SharpMap.Utilities.Indexing
                 if (root.RightNode != null)
                 {
                     //if (root.RightNode.Item.Value.CompareTo(value) > 0)
-                        foreach (ItemValue item in ScanFind(value, root.RightNode))
-                        {
-                            yield return item;
-                        }
+                    foreach (ItemValue item in ScanFind(value, root.RightNode))
+                    {
+                        yield return item;
+                    }
                 }
             }
         }

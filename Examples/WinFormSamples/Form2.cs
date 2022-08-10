@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Linq;
-using BruTile.Predefined;
-using SharpMap.Data;
+﻿using BruTile.Predefined;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.Graticule;
 using SharpMap.Rendering.Decoration.ScaleBar;
@@ -9,21 +6,21 @@ using WinFormSamples.Samples;
 
 namespace WinFormSamples
 {
+    using BruTile;
+    using NetTopologySuite.CoordinateSystems.Transformations;
+    //using BruTile.PreDefined;
+    using NetTopologySuite.Geometries;
+    using ProjNet.CoordinateSystems.Transformations;
+    using SharpMap.Data.Providers;
+    using SharpMap.Forms;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.IO;
     using System.Windows.Forms;
-    using BruTile;
-    //using BruTile.PreDefined;
-    using GeoAPI.Geometries;
-    using NetTopologySuite.Geometries;
-    using GeoAPI.CoordinateSystems.Transformations;
-    using SharpMap.Data.Providers;
-    using SharpMap.Forms;
-    using SharpMap.Layers;
-    using SharpMap.Styles;
 
     public partial class Form2 : Form
     {
@@ -37,19 +34,19 @@ namespace WinFormSamples
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            var tileLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging, userAgent:TileLayerSample.DefaultUserAgent), "TileLayer");
+            var tileLayer = new TileAsyncLayer(KnownTileSources.Create(KnownTileSource.BingRoadsStaging, userAgent: TileLayerSample.DefaultUserAgent), "TileLayer");
 
             this.mapBox1.Map.BackgroundLayer.Add(tileLayer);
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
 
-            IMathTransform mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
+            MathTransform mathTransform = LayerTools.Wgs84toGoogleMercator.MathTransform;
             Envelope geom = GeometryTransform.TransformBox(
                 new Envelope(-9.205626, -9.123736, 38.690993, 38.740837),
                 mathTransform);
 
             //Adds a pushpin layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
-            List<IGeometry> geos = new List<IGeometry>();
+            List<Geometry> geos = new List<Geometry>();
             geos.Add(gf.CreatePoint(geom.Centre));
             GeometryProvider geoProvider = new GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;
@@ -67,14 +64,14 @@ namespace WinFormSamples
             // Graticule
             this.mapBox1.Map.Decorations.Add(new Graticule()
             {
-                Enabled =  chkGraticule.Checked,
+                Enabled = chkGraticule.Checked,
                 PcsGraticuleMode = PcsGraticuleMode.WebMercatorScaleLines,
                 PcsGraticuleStyle =
                 {
                     NumSubdivisions = 2
                 }
             });
-            
+
             this.mapBox1.Map.ZoomToBox(geom);
             this.mapBox1.Map.Zoom = 8500;
             this.mapBox1.Refresh();
@@ -141,10 +138,10 @@ namespace WinFormSamples
         private static ILayer[] CreateLayers()
         {
             ILayer countries = CreateLayer("GeoData/World/countries.shp",
-                new VectorStyle {EnableOutline = true, Fill = new SolidBrush(Color.Green)});
-            ILayer rivers = CreateLayer("GeoData/World/rivers.shp", new VectorStyle {Line = new Pen(Color.Blue)});
+                new VectorStyle { EnableOutline = true, Fill = new SolidBrush(Color.Green) });
+            ILayer rivers = CreateLayer("GeoData/World/rivers.shp", new VectorStyle { Line = new Pen(Color.Blue) });
             ILayer cities = CreateLayer("GeoData/World/cities.shp", new VectorStyle());
-            return new[] {countries, rivers, cities};
+            return new[] { countries, rivers, cities };
         }
 
         private static ILayer CreateLayer(string path, VectorStyle style)

@@ -16,8 +16,8 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
 using System;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Layers
 {
@@ -32,7 +32,7 @@ namespace SharpMap.Layers
     internal class GeoTransform
     {
         private const double Epsilon = double.Epsilon;
-        
+
         private readonly double[] _inverseTransform = new double[6];
         private readonly double[] _transform = new double[6];
 
@@ -72,13 +72,13 @@ namespace SharpMap.Layers
             {
                 return //East-West
                        Math.Abs(_transform[0]) < Epsilon &&
-                       Math.Abs(_transform[1] - 1) < Epsilon && 
+                       Math.Abs(_transform[1] - 1) < Epsilon &&
                        Math.Abs(_transform[2]) < Epsilon &&
                        //North-South
                        Math.Abs(_transform[3]) < Epsilon &&
                        Math.Abs(_transform[4]) < Epsilon &&
                        Math.Abs(_transform[5] - 1) < Epsilon;
-                       
+
             }
         }
 
@@ -173,7 +173,7 @@ namespace SharpMap.Layers
         /// <summary>
         /// Constructor
         /// </summary>
-        public GeoTransform(double offsetX, double offsetY, double pixelSizeX = 1, double pixelSizeY = - 1, double rotationX = 0, double rotationY = 0)
+        public GeoTransform(double offsetX, double offsetY, double pixelSizeX = 1, double pixelSizeY = -1, double rotationX = 0, double rotationY = 0)
         {
             _transform[0] = offsetX; /* x-offset */
             _transform[1] = pixelSizeX; /* west-east pixel resolution */
@@ -183,7 +183,7 @@ namespace SharpMap.Layers
             _transform[5] = rotationY; /* north-south pixel resolution */
             ComputeInverse();
         }
-        
+
         /// <summary>
         /// Creates an instance of this class
         /// </summary>
@@ -204,7 +204,7 @@ namespace SharpMap.Layers
         {
             if (gdalDataSet == null)
                 throw new ArgumentException("GeoTransform constructor invoked with null dataset.", nameof(gdalDataSet));
-            
+
             gdalDataSet.GetGeoTransform(_transform);
             ComputeInverse();
         }
@@ -255,21 +255,21 @@ namespace SharpMap.Layers
         public Coordinate ImageToGround(Coordinate imagePoint)
         {
             return new Coordinate
-                       {
-                           X = _transform[0] + _transform[1]*imagePoint.X + _transform[2]*imagePoint.Y,
-                           Y = _transform[3] + _transform[4]*imagePoint.X + _transform[5]*imagePoint.Y
-                       };
+            {
+                X = _transform[0] + _transform[1] * imagePoint.X + _transform[2] * imagePoint.Y,
+                Y = _transform[3] + _transform[4] * imagePoint.X + _transform[5] * imagePoint.Y
+            };
         }
 
         public Coordinate GroundToImage(Coordinate groundPoint)
         {
             return new Coordinate
-                       {
-                           X = _inverseTransform[0] + _inverseTransform[1]*groundPoint.X +
-                               _inverseTransform[2]*groundPoint.Y,
-                           Y = _inverseTransform[3] + _inverseTransform[4]*groundPoint.X +
-                               _inverseTransform[5]*groundPoint.Y
-                       };
+            {
+                X = _inverseTransform[0] + _inverseTransform[1] * groundPoint.X +
+                               _inverseTransform[2] * groundPoint.Y,
+                Y = _inverseTransform[3] + _inverseTransform[4] * groundPoint.X +
+                               _inverseTransform[5] * groundPoint.Y
+            };
         }
 
         public Envelope GroundToImage(Envelope e)

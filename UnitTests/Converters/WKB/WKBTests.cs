@@ -1,19 +1,17 @@
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Text;
-using GeoAPI.Geometries;
-using NUnit.Framework;
 using NetTopologySuite.Geometries;
+using NUnit.Framework;
 using SharpMap.Converters.WellKnownBinary;
 using SharpMap.Converters.WellKnownText;
+using System.IO;
+using System.Text;
 
 namespace UnitTests.Converters.WKB
 {
     [TestFixture]
     public class WKBTests
     {
-        private static readonly IGeometryFactory Factory = new GeometryFactory();
-        
+        private static readonly GeometryFactory Factory = new GeometryFactory();
+
         private string point = "POINT (20.564 346.3493254)";
         private string multipoint = "MULTIPOINT (20.564 346.3493254, 45 32, 23 54)";
         private string linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
@@ -23,7 +21,7 @@ namespace UnitTests.Converters.WKB
 
         private string polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 21 29, 29 29, 29 21, 21 21))";
 
-        private IGeometry ToBinaryAndBack(IGeometry gIn, WkbByteOrder byteOrder)
+        private Geometry ToBinaryAndBack(Geometry gIn, WkbByteOrder byteOrder)
         {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
@@ -84,7 +82,7 @@ namespace UnitTests.Converters.WKB
         [Test]
         public void TestHugeGeometryCollection()
         {
-            IGeometry geom = null;
+            Geometry geom = null;
             string filePath = TestUtility.GetPathToTestFile("Base 64.txt");
 
             if (!File.Exists(filePath))
@@ -98,7 +96,7 @@ namespace UnitTests.Converters.WKB
                     sb.AppendLine(sr.ReadLine());
                 }
                 var wkb = System.Convert.FromBase64String(sb.ToString());
-                Assert.DoesNotThrow( () => geom = GeometryFromWKB.Parse(wkb, new GeometryFactory()));
+                Assert.DoesNotThrow(() => geom = GeometryFromWKB.Parse(wkb, new GeometryFactory()));
             }
             Assert.IsTrue(geom.OgcGeometryType == OgcGeometryType.GeometryCollection);
         }

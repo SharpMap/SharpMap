@@ -1,8 +1,8 @@
-﻿using System;
-using System.Drawing;
-using GeoAPI.Geometries;
+﻿using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using SharpMap.Utilities;
+using System;
+using System.Drawing;
 
 namespace SharpMap
 {
@@ -40,7 +40,7 @@ namespace SharpMap
         /// <param name="mapTransform">An affine map transform matrix</param>
         /// <param name="mapTransformInverted">The affine map transformation that inverts <paramref name="mapTransform"/></param>
         /// <param name="mapTransformRotation">The rotation in degrees applied by <paramref name="mapTransform"/></param>
-        public MapViewport(Guid mapId, int srid, double zoom, double mapHeight, Envelope env, Size size, double pixelAspectRatio, 
+        public MapViewport(Guid mapId, int srid, double zoom, double mapHeight, Envelope env, Size size, double pixelAspectRatio,
             System.Drawing.Drawing2D.Matrix mapTransform, System.Drawing.Drawing2D.Matrix mapTransformInverted,
             float mapTransformRotation)
         {
@@ -55,7 +55,7 @@ namespace SharpMap
             _center = env.Centre;
 
             PixelAspectRatio = pixelAspectRatio;
-            PixelWidth = Zoom / size.Width; 
+            PixelWidth = Zoom / size.Width;
             PixelHeight = PixelWidth * pixelAspectRatio;
 
             _mapTransformElements = mapTransform.Elements;
@@ -182,7 +182,7 @@ namespace SharpMap
                     _worldToMapElements[5]
                 );
         }
-        
+
         /// <summary>
         /// Gets a value indicating the center of the map viewport
         /// </summary>
@@ -218,7 +218,7 @@ namespace SharpMap
         /// Applicable to non-rotated views only, returning the minimum X value of the map viewport in world units
         /// </summary>
         public double Left { get; }
-        
+
         /// <summary>
         /// Applicable to non-rotated views only, returning the maximum Y value of the map viewport in world units
         /// </summary>
@@ -278,7 +278,7 @@ namespace SharpMap
             var matrix = WorldToMapTransform(careAboutMapTransform);
             return Transform.WorldToMap(coordinates, matrix);
         }
-        
+
         /// <summary>
         /// Converts a point in world coordinates to image coordinates based on the current <see cref="Zoom"/>, <see cref="Center"/>,
         /// map <see cref="Size"/>, and (optionally) the <see cref="MapTransform"/>.
@@ -289,7 +289,7 @@ namespace SharpMap
         /// <returns>PointF in image coordinates</returns>
         public PointF WorldToImage(Coordinate p, bool careAboutMapTransform = false)
         {
-            var points = WorldToImage(new Coordinate[] {p}, careAboutMapTransform);
+            var points = WorldToImage(new Coordinate[] { p }, careAboutMapTransform);
             return points[0];
         }
 
@@ -320,7 +320,7 @@ namespace SharpMap
         /// <returns>Point in world coordinates</returns>
         public Coordinate ImageToWorld(PointF p, bool careAboutMapTransform = false)
         {
-            var pts = ImageToWorld(new PointF[] {p}, careAboutMapTransform);
+            var pts = ImageToWorld(new PointF[] { p }, careAboutMapTransform);
             return pts[0];
         }
 

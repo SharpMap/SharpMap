@@ -1,8 +1,8 @@
-﻿using System;
-using System.Net;
-using GeoAPI.Geometries;
-using NetTopologySuite.Features;
+﻿using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
+using System;
+using System.Net;
 
 namespace UnitTests.Issues
 {
@@ -74,7 +74,7 @@ namespace UnitTests.Issues
                 var rasterLyr = new SharpMap.Layers.GdalRasterLayer("Raster", rasterFile);
                 map.Layers.Add(rasterLyr);
 
-                var linePoints = new[] { new GeoAPI.Geometries.Coordinate(0, 0), new GeoAPI.Geometries.Coordinate(10, 10) };
+                var linePoints = new[] { new NetTopologySuite.Geometries.Coordinate(0, 0), new NetTopologySuite.Geometries.Coordinate(10, 10) };
                 var line = NetTopologySuite.NtsGeometryServices.Instance.CreateGeometryFactory(4326).CreateLineString(linePoints);
                 var linealDs = new SharpMap.Data.Providers.GeometryProvider(line);
                 var linealLyr = new SharpMap.Layers.VectorLayer("Lineal", linealDs) { SRID = 4326 };
@@ -106,7 +106,7 @@ namespace UnitTests.Issues
 
             SharpMap.Layers.WmsLayer wmsLayer = null;
             ServicePointManager.SecurityProtocol = sptFail;
-            Assert.That(() => wmsLayer = new SharpMap.Layers.WmsLayer("WMSFAIL", url), Throws.InstanceOf<System.ApplicationException>() );
+            Assert.That(() => wmsLayer = new SharpMap.Layers.WmsLayer("WMSFAIL", url), Throws.InstanceOf<System.ApplicationException>());
             ServicePointManager.SecurityProtocol = sptSucceed;
             Assert.That(() => wmsLayer = new SharpMap.Layers.WmsLayer("WMSSUCCED", url), Throws.Nothing);
             Assert.That(wmsLayer, Is.Not.Null, "wmsLayer null");

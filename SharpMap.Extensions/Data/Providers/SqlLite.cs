@@ -15,15 +15,15 @@
 // along with SqlLiteProvider; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+using Common.Logging;
+using SharpMap.Converters.WellKnownText;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
-using SharpMap.Converters.WellKnownText;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
-using Common.Logging;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {
@@ -125,7 +125,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var geom = GeometryFromWKT.Parse((string) dr[0]);
+                                var geom = GeometryFromWKT.Parse((string)dr[0]);
                                 if (geom != null)
                                     features.Add(geom);
                             }
@@ -160,7 +160,7 @@ namespace SharpMap.Data.Providers
                         {
                             if (dr[0] != DBNull.Value)
                             {
-                                var id = (uint) (int) dr[0];
+                                var id = (uint)(int)dr[0];
                                 objectlist.Add(id);
                             }
                         }
@@ -187,7 +187,7 @@ namespace SharpMap.Data.Providers
                         while (dr.Read())
                         {
                             if (dr[0] != DBNull.Value)
-                                geom = GeometryFromWKT.Parse((string) dr[0]);
+                                geom = GeometryFromWKT.Parse((string)dr[0]);
                         }
                     }
                 }
@@ -200,14 +200,14 @@ namespace SharpMap.Data.Providers
         protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
-            
+
             //index of last added feature data table
             var index = ds.Tables.Count - 1;
             if (index <= 0) return;
 
             var res = CloneTableStructure(ds.Tables[index]);
             res.BeginLoadData();
-            
+
             var fdt = ds.Tables[index];
             foreach (FeatureDataRow row in fdt.Rows)
             {
@@ -257,7 +257,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKT.Parse((string) dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKT.Parse((string)dr["sharpmap_tempgeometry"]);
                             fdt.AddRow(fdr);
                         }
                         ds.Tables.Add(fdt);
@@ -278,7 +278,7 @@ namespace SharpMap.Data.Providers
                 using (var command = new SQLiteCommand(strSQL, conn))
                 {
                     conn.Open();
-                    count = (int) command.ExecuteScalar();
+                    count = (int)command.ExecuteScalar();
                     conn.Close();
                 }
             }
@@ -314,7 +314,7 @@ namespace SharpMap.Data.Providers
                                     !col.ColumnName.StartsWith("Envelope_"))
                                     fdr[col.ColumnName] = dr[col];
                             if (dr["sharpmap_tempgeometry"] != DBNull.Value)
-                                fdr.Geometry = GeometryFromWKT.Parse((string) dr["sharpmap_tempgeometry"]);
+                                fdr.Geometry = GeometryFromWKT.Parse((string)dr["sharpmap_tempgeometry"]);
                             return fdr;
                         }
                         return null;
@@ -341,7 +341,7 @@ namespace SharpMap.Data.Providers
                     using (SQLiteDataReader dr = command.ExecuteReader())
                         if (dr.Read())
                         {
-                            box = new BoundingBox((double) dr[0], (double) dr[2], (double) dr[1], (double) dr[3]);
+                            box = new BoundingBox((double)dr[0], (double)dr[2], (double)dr[1], (double)dr[3]);
                         }
                     conn.Close();
                 }
@@ -417,7 +417,7 @@ namespace SharpMap.Data.Providers
                 string sql = "CREATE TABLE " + tablename + " (fid INTEGER PRIMARY KEY, geom TEXT, " +
                              "minx REAL, miny REAL, maxx REAL, maxy REAL, oid INTEGER";
                 foreach (DataColumn col in columns)
-                    if (col.DataType != typeof (String))
+                    if (col.DataType != typeof(String))
                         sql += ", " + col.ColumnName + " " + Type2SqlLiteTypeString(col.DataType);
                     else
                         sql += ", " + col.ColumnName + " TEXT";
@@ -582,8 +582,8 @@ namespace SharpMap.Data.Providers
         }
 
         [Obsolete]
-        private static readonly char[] _hexDigits = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        
+        private static readonly char[] _hexDigits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
+
         /// <summary>
         /// 
         /// </summary>
@@ -592,12 +592,12 @@ namespace SharpMap.Data.Providers
         [Obsolete]
         public static string ToHexString(byte[] bytes)
         {
-            char[] chars = new char[bytes.Length*2];
+            char[] chars = new char[bytes.Length * 2];
             for (int i = 0; i < bytes.Length; i++)
             {
                 int b = bytes[i];
-                chars[i*2] = _hexDigits[b >> 4];
-                chars[i*2 + 1] = _hexDigits[b & 0xF];
+                chars[i * 2] = _hexDigits[b >> 4];
+                chars[i * 2 + 1] = _hexDigits[b & 0xF];
             }
             return new string(chars);
         }

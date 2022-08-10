@@ -5,7 +5,7 @@ namespace UnitTests.Data.Providers
     [NUnit.Framework.TestFixture]
     public class ShapeFileProviderTests : ProviderTest
     {
-        
+
         private long _msLineal;
         private long _msVector;
         private const int NumberOfRenderCycles = 1;
@@ -28,11 +28,12 @@ namespace UnitTests.Data.Providers
             int fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(1149, fc);
             NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
-            var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
+            var featsInView = sh.GetGeometriesInView(new NetTopologySuite.Geometries.Envelope(sh.GetExtents()));
             NUnit.Framework.Assert.AreEqual(1149, featsInView.Count);
             foreach (var item in featsInView)
             {
                 NUnit.Framework.Assert.IsNotNull(item.Coordinate.Z);
+                NUnit.Framework.Assert.IsFalse(double.IsNaN(item.Coordinate.Z));
             }
             NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinate.Z, 146.473);
             NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinate.Z, 181.374);
@@ -53,21 +54,22 @@ namespace UnitTests.Data.Providers
             int fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(1221, fc);
             NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
-            var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
+            var featsInView = sh.GetGeometriesInView(new NetTopologySuite.Geometries.Envelope(sh.GetExtents()));
             NUnit.Framework.Assert.AreEqual(1221, featsInView.Count);
             foreach (var item in featsInView)
             {
                 NUnit.Framework.Assert.IsNotNull(item.Coordinate.Z);
+                NUnit.Framework.Assert.IsFalse(double.IsNaN(item.Coordinate.Z));
             }
             NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinates[0].Z, 35.865);
             NUnit.Framework.Assert.AreEqual(featsInView[0].Coordinates[1].Z, 35.743);
-            
+
             NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinates[0].Z, 35.518);
             NUnit.Framework.Assert.AreEqual(featsInView[1].Coordinates[1].Z, 35.518);
-            
+
             NUnit.Framework.Assert.AreEqual(featsInView[2].Coordinates[0].Z, 37.438);
             NUnit.Framework.Assert.AreEqual(featsInView[2].Coordinates[1].Z, 37.441);
-            
+
             NUnit.Framework.Assert.AreEqual(featsInView[3].Coordinates[0].Z, 37.441);
             NUnit.Framework.Assert.AreEqual(featsInView[3].Coordinates[1].Z, 37.441);
 
@@ -84,12 +86,12 @@ namespace UnitTests.Data.Providers
                     System.Diagnostics.Trace.WriteLine(reader.ReadInt32());
                 }
                 NUnit.Framework.Assert.Throws<System.ObjectDisposedException>(() => System.Diagnostics.Trace.WriteLine(s.Position));
-            } 
+            }
         }
 
         private static void CopyShapeFile(string path, out string tmp)
         {
-            tmp = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(),".shp");
+            tmp = System.IO.Path.ChangeExtension(System.IO.Path.GetTempFileName(), ".shp");
             if (!System.IO.File.Exists(path)) throw new NUnit.Framework.IgnoreException("File not found");
             foreach (var file in System.IO.Directory.GetFiles(System.IO.Path.GetDirectoryName(path), System.IO.Path.GetFileNameWithoutExtension(path) + ".*"))
             {
@@ -133,7 +135,7 @@ namespace UnitTests.Data.Providers
             int fc = sh.GetFeatureCount();
             NUnit.Framework.Assert.AreEqual(4342, fc);
             NUnit.Framework.Assert.AreEqual(0, sh.GetObjectIDsInView(sh.GetExtents())[0]);
-            var featsInView = sh.GetGeometriesInView(new GeoAPI.Geometries.Envelope(sh.GetExtents()));
+            var featsInView = sh.GetGeometriesInView(new NetTopologySuite.Geometries.Envelope(sh.GetExtents()));
             NUnit.Framework.Assert.AreEqual(4342, featsInView.Count);
             sh.Close();
         }
@@ -171,17 +173,17 @@ namespace UnitTests.Data.Providers
 
             var shp = new SharpMap.Data.Providers.ShapeFile(TestUtility.GetPathToTestFile("roads_ugl.shp"), false, false);
             var lyr = new SharpMap.Layers.Symbolizer.LinealVectorLayer("Roads", shp)
-                          {
-                              Symbolizer =
+            {
+                Symbolizer =
                                   new SharpMap.Rendering.Symbolizer.BasicLineSymbolizer
-                                      {Line = new System.Drawing.Pen(System.Drawing.Color.Black)}
-                          };
+                                  { Line = new System.Drawing.Pen(System.Drawing.Color.Black) }
+            };
             map.Layers.Add(lyr);
             map.ZoomToExtents();
 
             RepeatedRendering(map, shp.GetFeatureCount(), NumberOfRenderCycles, out _msLineal);
             System.Diagnostics.Trace.WriteLine("\nWith testing if record is deleted ");
-            
+
             shp.CheckIfRecordIsDeleted = true;
             long tmp;
             RepeatedRendering(map, shp.GetFeatureCount(), 1, out tmp);
@@ -211,7 +213,7 @@ namespace UnitTests.Data.Providers
                 sw.Reset();
             }
 
-            avgRenderTime = totalRenderTime/numberOfTimes;
+            avgRenderTime = totalRenderTime / numberOfTimes;
             System.Diagnostics.Trace.WriteLine("\n Average rendering time:" + avgRenderTime.ToString(
                                          System.Globalization.NumberFormatInfo.CurrentInfo) + "ms.");
         }
@@ -241,7 +243,7 @@ namespace UnitTests.Data.Providers
             var fds = new SharpMap.Data.FeatureDataSet();
             var bbox = shp.GetExtents();
             //narrow it down
-            bbox.ExpandBy(-0.425*bbox.Width, -0.425*bbox.Height);
+            bbox.ExpandBy(-0.425 * bbox.Width, -0.425 * bbox.Height);
 
             //Just to avoid that initial query does not impose performance penalty
             shp.DoTrueIntersectionQuery = false;
@@ -256,7 +258,7 @@ namespace UnitTests.Data.Providers
             System.Diagnostics.Trace.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
             fds.Tables.RemoveAt(0);
-            
+
             shp.DoTrueIntersectionQuery = true;
             sw.Reset();
             sw.Start();
@@ -278,7 +280,7 @@ namespace UnitTests.Data.Providers
             var fds = new SharpMap.Data.FeatureDataSet();
             var bbox = shp.GetExtents();
             //narrow it down
-            bbox.ExpandBy(-0.425*bbox.Width, -0.425*bbox.Height);
+            bbox.ExpandBy(-0.425 * bbox.Width, -0.425 * bbox.Height);
 
             //Just to avoid that initial query does not impose performance penalty
             shp.DoTrueIntersectionQuery = false;
@@ -295,7 +297,7 @@ namespace UnitTests.Data.Providers
             System.Diagnostics.Trace.WriteLine("Queried using just envelopes:\n" + fds.Tables[0].Rows.Count + " in " +
                                      sw.ElapsedMilliseconds + "ms.");
             fds.Tables.RemoveAt(0);
-            
+
             shp.DoTrueIntersectionQuery = true;
             sw.Reset();
             sw.Start();

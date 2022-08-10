@@ -1,16 +1,9 @@
+using NetTopologySuite.Geometries;
+using SharpMap.Layers;
 using System;
-using System.Configuration;
-using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using GeoAPI.Geometries;
-using SharpMap.Data.Providers;
-using SharpMap.Layers;
-using System.Data.SqlClient;
 
 namespace WinFormSamples.Samples
 {

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Reflection;
 
 namespace WinFormSamples.Samples
@@ -88,7 +87,7 @@ namespace WinFormSamples.Samples
                         map.Layers.Add(shapeLayer);
                         break;
                 }
-                
+
                 //if (layer != null)
                 //    layer.UseRotation = true;
 
@@ -119,10 +118,10 @@ namespace WinFormSamples.Samples
 
         private static readonly string[] Vrts =
         {
-            @"..\DEM\Golden_CO.dem", 
-            "contours_sample_polyline_play_polyline.asc", 
-            "contours_sample_polyline_play1_polyline.vrt", 
-            "contours_sample_polyline_play2_polyline.vrt", 
+            @"..\DEM\Golden_CO.dem",
+            "contours_sample_polyline_play_polyline.asc",
+            "contours_sample_polyline_play1_polyline.vrt",
+            "contours_sample_polyline_play2_polyline.vrt",
             "contours_sample_polyline_play3_polyline.vrt"
         };
 
@@ -148,7 +147,7 @@ namespace WinFormSamples.Samples
             System.Drawing.Drawing2D.Matrix mat = new System.Drawing.Drawing2D.Matrix();
             mat.RotateAt(angle, map.WorldToImage(map.Center));
             map.MapTransform = mat;
-            
+
             return map;
         }
 

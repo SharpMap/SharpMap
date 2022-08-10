@@ -1,13 +1,13 @@
-﻿using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Net;
-using SharpMap;
+﻿using SharpMap;
 using SharpMap.Data.Providers;
 using SharpMap.Layers;
 using SharpMap.Styles;
 using SharpMap.Utilities.Wfs;
-using Point = GeoAPI.Geometries.Coordinate;
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Net;
+using Point = NetTopologySuite.Geometries.Coordinate;
 
 namespace WinFormSamples.Samples
 {

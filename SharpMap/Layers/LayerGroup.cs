@@ -15,15 +15,15 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.Data;
+using SharpMap.Styles;
 using System;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
-using SharpMap.Data;
-using GeoAPI.Geometries;
-using SharpMap.Styles;
-using GeoAPI.CoordinateSystems.Transformations;
 
 namespace SharpMap.Layers
 {
@@ -121,13 +121,13 @@ namespace SharpMap.Layers
                     var layerEnvelope = layers[i].Envelope;
                     if (layerEnvelope != null)
                     {
-                        if(bbox == null)
+                        if (bbox == null)
                             bbox = new Envelope(layerEnvelope);
                         else
                             bbox.ExpandToInclude(layerEnvelope);
                     }
                 }
-                    
+
                 return bbox;
             }
         }
@@ -141,7 +141,7 @@ namespace SharpMap.Layers
         public virtual bool SkipTransformationPropagation { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="ProjNet.CoordinateSystems.Transformations.CoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
 
@@ -163,7 +163,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="ProjNet.CoordinateSystems.Transformations.CoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
         /// If your CoordinateTransformation can be inverted you can leave this property to null
         /// </summary>
@@ -236,7 +236,7 @@ namespace SharpMap.Layers
             var layers = GetSnapshot();
             foreach (var layer in layers.OfType<IDisposable>().Where(layer => layer != null))
                 layer.Dispose();
-            
+
             Layers.Clear();
             base.ReleaseManagedResources();
         }
@@ -263,8 +263,8 @@ namespace SharpMap.Layers
         public override void Render(Graphics g, MapViewport map)
         {
             var layers = GetSnapshot();
-            var compare = VisibilityUnits == VisibilityUnits.ZoomLevel 
-                ? map.Zoom 
+            var compare = VisibilityUnits == VisibilityUnits.ZoomLevel
+                ? map.Zoom
                 : map.GetMapScale((int)g.DpiX);
 
             foreach (var layer in layers)
@@ -275,7 +275,7 @@ namespace SharpMap.Layers
             }
         }
 
-         #region Implementation of ICanQueryLayer
+        #region Implementation of ICanQueryLayer
 
         /// <summary>
         /// Returns the data associated with all the geometries that are intersected by 'geom'
@@ -297,7 +297,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public virtual void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public virtual void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             var layers = GetSnapshot();
 
@@ -307,7 +307,7 @@ namespace SharpMap.Layers
             }
         }
 
-         #endregion
+        #endregion
 
         /// <summary>
         /// Create an empty new LayerGroup instance.
@@ -350,7 +350,7 @@ namespace SharpMap.Layers
             {
                 var cloneable = layer as ICloneable;
                 if (cloneable != null)
-                    clonedGroup.Layers.Add((ILayer) cloneable.Clone());
+                    clonedGroup.Layers.Add((ILayer)cloneable.Clone());
                 else
                     clonedGroup.Layers.Add(layer);
             }

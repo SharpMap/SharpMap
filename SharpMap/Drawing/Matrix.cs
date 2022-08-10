@@ -10,10 +10,10 @@ namespace SharpMap.Drawing
         public static Matrix Identity { get { return _identity; } }
 
 
-        private readonly double[] _elements ;
+        private readonly double[] _elements;
 
         public Matrix()
-            : this(new[] {1d, 0, 0, 1, 0, 0, 0, 0, 0})
+            : this(new[] { 1d, 0, 0, 1, 0, 0, 0, 0, 0 })
         {
         }
 
@@ -26,7 +26,7 @@ namespace SharpMap.Drawing
 
         public bool IsIdentity { get; }
 
-        public double [] Elements { get { return _elements; } }
+        public double[] Elements { get { return _elements; } }
 
         public double ScaleX { get { return M11; } set { M11 = value; } }
 
@@ -64,7 +64,7 @@ namespace SharpMap.Drawing
 
         public void Scale(double scaleX, double scaleY, MatrixOrder matrixOrder)
         {
-            var scaleMatrix = new Matrix {M11 = scaleX, M22 = scaleY};
+            var scaleMatrix = new Matrix { M11 = scaleX, M22 = scaleY };
             var m1 = matrixOrder == MatrixOrder.Append
                 ? this
                 : scaleMatrix;
@@ -86,8 +86,8 @@ namespace SharpMap.Drawing
         {
             return new Point
             {
-                X = (int)Math.Round(input.X*M11 + input.Y*M12 + OffsetX, MidpointRounding.AwayFromZero),
-                Y = (int)Math.Round(input.X*M21 + input.Y*M22 + OffsetY, MidpointRounding.AwayFromZero)
+                X = (int)Math.Round(input.X * M11 + input.Y * M12 + OffsetX, MidpointRounding.AwayFromZero),
+                Y = (int)Math.Round(input.X * M21 + input.Y * M22 + OffsetY, MidpointRounding.AwayFromZero)
             };
         }
 

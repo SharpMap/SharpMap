@@ -1,8 +1,7 @@
-﻿using System.Drawing;
-using System.Drawing.Drawing2D;
-using SharpMap;
+﻿using SharpMap;
 using SharpMap.Layers;
-using Point=GeoAPI.Geometries.Coordinate;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace WinFormSamples.Samples
 {
@@ -13,7 +12,7 @@ namespace WinFormSamples.Samples
             string wmsUrl = "http://resource.sgu.se/service/wms/130/brunnar";
 
             Map map = new Map();
-            
+
 
             WmsLayer layWms = new WmsLayer("Brunnar", wmsUrl);
 
@@ -23,14 +22,14 @@ namespace WinFormSamples.Samples
 
             layWms.SetImageFormat(layWms.OutputFormats[0]);
             layWms.ContinueOnError = true;
-                //Skip rendering the WMS Map if the server couldn't be requested (if set to false such an event would crash the app)
+            //Skip rendering the WMS Map if the server couldn't be requested (if set to false such an event would crash the app)
             layWms.TimeOut = 20000; //Set timeout to 5 seconds
             layWms.SRID = 3006;
 
             //map.BackgroundLayer.Add(AsyncLayerProxyLayer.Create(layWms, new Size(256, 256)));
             map.BackgroundLayer.Add(layWms);
             map.MaximumExtents = layWms.Envelope;
-            
+
             //limit the zoom to 360 degrees width
             map.ZoomToExtents();
             map.BackColor = Color.LightBlue;
@@ -43,7 +42,7 @@ namespace WinFormSamples.Samples
             map.MapTransform = mat;
 
             map.ZoomToExtents();
-            map.Zoom = map.Envelope.Width/3;
+            map.Zoom = map.Envelope.Width / 3;
             return map;
         }
     }

@@ -1,11 +1,15 @@
-using System;
-using GeoAPI.Geometries;
-using NUnit.Framework;
 using Microsoft.SqlServer.Types;
+using NetTopologySuite;
+using NetTopologySuite.Geometries;
+using NUnit.Framework;
+using ProjNet.CoordinateSystems;
+using ProjNet.CoordinateSystems.Transformations;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Converters.WellKnownText;
-using SharpMap.Geometries;
+using SharpMap.CoordinateSystems;
 using SharpMap.Data.Providers;
+using SharpMap.Geometries;
+using System;
 
 namespace UnitTests.Converters
 {
@@ -28,12 +32,20 @@ namespace UnitTests.Converters
         [OneTimeSetUp]
         public void SetupFixture()
         {
-            GeoAPI.GeometryServiceProvider.Instance = new NetTopologySuite.NtsGeometryServices();
             //SqlServerTypes.Utilities.LoadNativeAssemblies(AppDomain.CurrentDomain.BaseDirectory);
+            var gss = NtsGeometryServices.Instance;
+            var css = new CoordinateSystemServices(
+                new CoordinateSystemFactory(),
+                new CoordinateTransformationFactory(),
+                SpatialReference.GetAllReferenceSystems());
+            SharpMap.Session.Instance
+                .SetGeometryServices(gss)
+                .SetCoordinateSystemServices(css)
+                .SetCoordinateSystemRepository(css);
         }
 
 
-        private IGeometry ToSqlServerAndBack(IGeometry gIn, SqlServerSpatialObjectType spatialType)
+        private Geometry ToSqlServerAndBack(Geometry gIn, SqlServerSpatialObjectType spatialType)
         {
             Assert.That(gIn, Is.Not.Null);
             //Assert.That(gIn.SRID, Is.EqualTo(-1));
@@ -78,7 +90,7 @@ namespace UnitTests.Converters
             gPl.SRID = srid;
             gMPol.SRID = srid;
 
-            var comparison = new Comparison<IGeometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
+            var comparison = new Comparison<Geometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
 
             Assert.That(ToSqlServerAndBack(gPn, spatialType), Is.EqualTo(gPn).Using(comparison));
             Assert.That(ToSqlServerAndBack(gMp, spatialType), Is.EqualTo(gMp).Using(comparison));

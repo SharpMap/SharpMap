@@ -15,12 +15,12 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
-using System;
-using System.Text;
-using System.Windows.Forms;
 using NetTopologySuite;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
+using System;
+using System.Windows.Forms;
 
 namespace DemoWinForm
 {
@@ -32,13 +32,11 @@ namespace DemoWinForm
         [STAThread]
         private static void Main()
         {
-            var gss = new NtsGeometryServices();
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
+            var gss = NtsGeometryServices.Instance;
+            var css = new CoordinateSystemServices(
                 new CoordinateSystemFactory(),
                 new CoordinateTransformationFactory(),
                 SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
-
-            GeoAPI.GeometryServiceProvider.Instance = gss;
             SharpMap.Session.Instance
                 .SetGeometryServices(gss)
                 .SetCoordinateSystemServices(css)

@@ -12,10 +12,6 @@
         <PlatformTarget>x64</PlatformTarget>
     </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="GeoAPI.Core" Version="1.7.5" />
-    </ItemGroup>
-
     <ItemGroup Condition=" '$(PlatformTarget)' == 'x86' ">
         <Reference Include="Esri.FileGDBAPI">
             <HintPath>Libraries\bin\Esri.FileGDBAPI.dll</HintPath>
@@ -28,11 +24,15 @@
     </ItemGroup>
 
     <ItemGroup Condition=" '$(Configuration)' == 'Debug' ">
-        <PackageReference Include="NUnit" Version="3.12.0" />
+        <PackageReference Include="NUnit" Version="3.13.3" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\SharpMap\SharpMap.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.1.1" />
     </ItemGroup>
 
 </Project>

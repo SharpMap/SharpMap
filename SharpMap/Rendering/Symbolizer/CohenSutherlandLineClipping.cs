@@ -1,6 +1,6 @@
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
-using GeoAPI.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -20,7 +20,7 @@ namespace SharpMap.Rendering.Symbolizer
             Top = 8
         }
 
-        private readonly double _xmin, _xmax, _ymin, _ymax ;
+        private readonly double _xmin, _xmax, _ymin, _ymax;
 
         /// <summary>
         /// Creates an instance of this class
@@ -55,17 +55,17 @@ namespace SharpMap.Rendering.Symbolizer
         }
 
         /// <summary>
-        /// Clips a <see cref="ILineString"/> to the bounding box defined by <see cref="CohenSutherlandLineClipping(double,double,double,double)"/>.
+        /// Clips a <see cref="LineString"/> to the bounding box defined by <see cref="CohenSutherlandLineClipping(double,double,double,double)"/>.
         /// </summary>
         /// <param name="lineString">The line string to clip</param>
         /// <returns>A (possibly multi) line string</returns>
-        public IMultiLineString ClipLineString(ILineString lineString)
+        public MultiLineString ClipLineString(LineString lineString)
         {
             //Factory
             var factory = lineString.Factory;
 
             //List of line strings that make up the multi line string result
-            var lineStrings = new List<ILineString>();
+            var lineStrings = new List<LineString>();
 
             //list of clipped vertices for current pass
             var clippedVertices = new List<Coordinate>();
@@ -78,10 +78,10 @@ namespace SharpMap.Rendering.Symbolizer
             double x0, y0;
             OutsideClipCodes oc0Initial;
             var oc0 = oc0Initial = ComputeClipCode(vertices[0], out x0, out y0);
-            
+
             //Point is inside => add it to the list
             if (oc0 == OutsideClipCodes.Inside)
-                clippedVertices.Add( vertices[0] );
+                clippedVertices.Add(vertices[0]);
 
             double x1Old = double.NaN, y1Old = double.NaN;
 
@@ -122,25 +122,25 @@ namespace SharpMap.Rendering.Symbolizer
                     if ((ocOut & OutsideClipCodes.Top) == OutsideClipCodes.Top)
                     {
                         // point is above the clip rectangle
-                        x = x0 + (x1 - x0)*(_ymax - y0)/(y1 - y0);
+                        x = x0 + (x1 - x0) * (_ymax - y0) / (y1 - y0);
                         y = _ymax;
                     }
                     else if ((ocOut & OutsideClipCodes.Bottom) == OutsideClipCodes.Bottom)
                     {
                         // point is below the clip rectangle
-                        x = x0 + (x1 - x0)*(_ymin - y0)/(y1 - y0);
+                        x = x0 + (x1 - x0) * (_ymin - y0) / (y1 - y0);
                         y = _ymin;
                     }
                     else if ((ocOut & OutsideClipCodes.Right) == OutsideClipCodes.Right)
                     {
                         // point is to the right of clip rectangle
-                        y = y0 + (y1 - y0)*(_xmax - x0)/(x1 - x0);
+                        y = y0 + (y1 - y0) * (_xmax - x0) / (x1 - x0);
                         x = _xmax;
                     }
                     else if ((ocOut & OutsideClipCodes.Left) == OutsideClipCodes.Left)
                     {
                         // point is to the left of clip rectangle
-                        y = y0 + (y1 - y0)*(_xmin - x0)/(x1 - x0);
+                        y = y0 + (y1 - y0) * (_xmin - x0) / (x1 - x0);
                         x = _xmin;
                     }
                     // Now we move outside point to intersection point to clip
@@ -158,12 +158,12 @@ namespace SharpMap.Rendering.Symbolizer
                         oc1 = ComputeClipCode(x, y);
                     }
                 }
-                
+
                 if (accept)
                 {
                     if (oc0Initial != oc0)
                         clippedVertices.Add(new Coordinate(x0, y0));
-                    
+
                     if (x1Old != x1 || y1Old != y1)
                         clippedVertices.Add(new Coordinate(x1, y1));
 
@@ -189,22 +189,22 @@ namespace SharpMap.Rendering.Symbolizer
 
 
         /// <summary>
-        /// Clips a <see cref="IMultiLineString"/> to the bounding box defined by <see cref="CohenSutherlandLineClipping(double,double,double,double)"/>.
+        /// Clips a <see cref="MultiLineString"/> to the bounding box defined by <see cref="CohenSutherlandLineClipping(double,double,double,double)"/>.
         /// </summary>
         /// <param name="lineStrings">The multi-line string to clip</param>
         /// <returns>A (possibly multi) line string</returns>
-        public IMultiLineString ClipLineString(IMultiLineString lineStrings)
+        public MultiLineString ClipLineString(MultiLineString lineStrings)
         {
-            var clippedLineStringList = new List<ILineString>();
+            var clippedLineStringList = new List<LineString>();
 
 
             for (var i = 0; i < lineStrings.NumGeometries; i++)
             {
-                var s = (ILineString) lineStrings.GetGeometryN(i);
+                var s = (LineString)lineStrings.GetGeometryN(i);
                 var clippedLineStrings = ClipLineString(s);
                 for (var j = 0; j < clippedLineStrings.NumGeometries; j++)
                 {
-                    var clippedLineString = (ILineString)clippedLineStrings.GetGeometryN(j);
+                    var clippedLineString = (LineString)clippedLineStrings.GetGeometryN(j);
                     clippedLineStringList.Add(clippedLineString);
                 }
             }

@@ -37,9 +37,9 @@
 
 #region Using
 
+using SharpMap.Converters.WellKnownText.IO;
 using System;
 using System.IO;
-using SharpMap.Converters.WellKnownText.IO;
 
 #endregion
 

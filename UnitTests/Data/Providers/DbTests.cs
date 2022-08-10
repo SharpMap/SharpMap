@@ -18,7 +18,7 @@
                 throw new NUnit.Framework.IgnoreException("Provider cound not be instantiated!");
             }
         }
-        
+
         protected abstract System.Data.Common.DbConnection GetOpenConnection();
         protected TProvider GetProvider()
         {
@@ -107,8 +107,8 @@
         {
             using (var provider = GetProvider())
             {
-                GeoAPI.Geometries.IGeometry result = null;
-                NUnit.Framework.Assert.DoesNotThrow( () => result = provider.GetGeometryByID(1));
+                NetTopologySuite.Geometries.Geometry result = null;
+                NUnit.Framework.Assert.DoesNotThrow(() => result = provider.GetGeometryByID(1));
                 NUnit.Framework.Assert.IsNotNull(result);
             }
         }
@@ -119,7 +119,7 @@
             using (var provider = GetProvider())
             {
                 var ext = provider.GetExtents();
-                ext.ExpandBy(-0.25*ext.Width, -0.25*ext.Height);
+                ext.ExpandBy(-0.25 * ext.Width, -0.25 * ext.Height);
 
                 var fds = new SharpMap.Data.FeatureDataSet();
                 NUnit.Framework.Assert.DoesNotThrow(() => provider.ExecuteIntersectionQuery(ext, fds));
@@ -144,14 +144,14 @@
                 NUnit.Framework.Assert.Less(fds.Tables[0].Count, provider.GetFeatureCount());
             }
         }
-    
+
         [NUnit.Framework.Test]
         public void Test11GetFeature()
         {
             using (var provider = GetProvider())
             {
                 SharpMap.Data.FeatureDataRow feature = null;
-                NUnit.Framework.Assert.DoesNotThrow(()=>  feature = provider.GetFeature(5));
+                NUnit.Framework.Assert.DoesNotThrow(() => feature = provider.GetFeature(5));
                 NUnit.Framework.Assert.NotNull(feature);
                 NUnit.Framework.Assert.AreEqual(5, feature[provider.ObjectIdColumn]);
             }

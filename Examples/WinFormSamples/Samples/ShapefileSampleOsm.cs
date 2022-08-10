@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Timers;
 using SharpMap;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
@@ -10,6 +5,11 @@ using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Thematics;
 using SharpMap.Styles;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Timers;
 
 namespace WinFormSamples.Samples
 {
@@ -21,7 +21,7 @@ namespace WinFormSamples.Samples
         public const string PathOsm = "GeoData/OSM";
 
 
-        private static GeoAPI.Geometries.Envelope _roadsExtents;
+        private static NetTopologySuite.Geometries.Envelope _roadsExtents;
 
         //Could have used SharpMap.Rendering.Thematics.CustomTheme,
         //but that one does not perserve styles for fast retrieval.
@@ -40,7 +40,7 @@ namespace WinFormSamples.Samples
                 _stylePreserver = new Dictionary<string, IStyle>();
                 _columnName = columnName;
             }
-            
+
 
             #region Implementation of ITheme
 
@@ -89,7 +89,7 @@ namespace WinFormSamples.Samples
             Map map = new Map();
             map.BackColor = Color.Cornsilk;
             map.SRID = 31466;
-            
+
             var encoding = System.Text.Encoding.UTF8;
 
             //Set up the countries layer
@@ -100,7 +100,7 @@ namespace WinFormSamples.Samples
             layNatural.Style = transparentStyle;
             //Set theme
             ThemeViaDelegate theme = new ThemeViaDelegate(layNatural.Style, "type");
-            theme.GetStyleFunction = delegate(FeatureDataRow row)
+            theme.GetStyleFunction = delegate (FeatureDataRow row)
                                          {
                                              string caseVal = (String)row["type"];
                                              caseVal = caseVal.ToLowerInvariant();
@@ -144,7 +144,7 @@ namespace WinFormSamples.Samples
             //layRoads.DataSource.Close();
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeRoads = new ThemeViaDelegate(transparentStyle, "type");
-            themeRoads.GetStyleFunction = delegate(FeatureDataRow row)
+            themeRoads.GetStyleFunction = delegate (FeatureDataRow row)
                                               {
                                                   VectorStyle returnStyle = new VectorStyle();
 
@@ -236,7 +236,7 @@ namespace WinFormSamples.Samples
             layWaterways.DataSource = new ShapeFile(string.Format("{0}/waterways.shp", PathOsm)) { Encoding = encoding };
             layRoads.Style = transparentStyle;
             ThemeViaDelegate themeWater = new ThemeViaDelegate(transparentStyle, "type");
-            themeWater.GetStyleFunction = delegate(FeatureDataRow row)
+            themeWater.GetStyleFunction = delegate (FeatureDataRow row)
             {
                 VectorStyle returnStyle = new VectorStyle();
                 returnStyle.Line.Brush = Brushes.Aqua;
@@ -270,7 +270,7 @@ namespace WinFormSamples.Samples
             layPoints.DataSource = new ShapeFile(string.Format("{0}/points.shp", PathOsm)) { Encoding = encoding };
             layPoints.Style = transparentStyle2;
             ThemeViaDelegate themePoints = new ThemeViaDelegate(transparentStyle2, "type");
-            themePoints.GetStyleFunction = delegate(FeatureDataRow row)
+            themePoints.GetStyleFunction = delegate (FeatureDataRow row)
             {
                 VectorStyle returnStyle = new VectorStyle();
                 switch ((String)row["type"])
@@ -344,11 +344,11 @@ namespace WinFormSamples.Samples
             map.Center = layRoads.Envelope.Centre;
 
             var disclaimer = new Disclaimer
-                {
-                    Font = new Font(FontFamily.GenericSansSerif, 7f, FontStyle.Italic),
-                    Text = "Geodata from OpenStreetMap (CC-by-SA)\nTransformed to Shapefile by geofabrik.de",
-                    Anchor = MapDecorationAnchor.CenterBottom
-                };
+            {
+                Font = new Font(FontFamily.GenericSansSerif, 7f, FontStyle.Italic),
+                Text = "Geodata from OpenStreetMap (CC-by-SA)\nTransformed to Shapefile by geofabrik.de",
+                Anchor = MapDecorationAnchor.CenterBottom
+            };
             map.Decorations.Add(disclaimer);
             transparentStyle2.MaxVisible = map.MaximumZoom * 0.3;
 
@@ -365,12 +365,12 @@ namespace WinFormSamples.Samples
             private int _id;
             private int _modValue;
             public ShapeProvider(string file)
-                :this(file, true)
+                : this(file, true)
             {
             }
 
             public ShapeProvider(string file, bool fbi)
-                :base(file, fbi)
+                : base(file, fbi)
             {
                 FilterDelegate = Filter;
                 Open();

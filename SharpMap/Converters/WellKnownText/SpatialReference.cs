@@ -31,7 +31,7 @@ namespace SharpMap.Converters.WellKnownText
     {
         private static readonly Dictionary<int, string> _wkts = new Dictionary<int, string>();
         private static readonly Dictionary<int, string> _proj4s = new Dictionary<int, string>();
-        
+
         /// <summary>
         /// Converts a Spatial Reference ID to a Well-known Text representation
         /// </summary>
@@ -81,7 +81,7 @@ namespace SharpMap.Converters.WellKnownText
                 nodes = null;
             }
 
-            if (nodes == null) 
+            if (nodes == null)
                 yield break;
 
             foreach (XmlNode referenceNode in nodes)
@@ -135,9 +135,9 @@ namespace SharpMap.Converters.WellKnownText
         {
             using (var wc = new WebClient())
                 wc.DownloadFile(
-                    new Uri("https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/SharpMap/SpatialRefSys.xml"), 
+                    new Uri("https://raw.githubusercontent.com/SharpMap/SharpMap/Branches/1.0/SharpMap/SpatialRefSys.xml"),
                     path);
-            
+
         }
     }
 }

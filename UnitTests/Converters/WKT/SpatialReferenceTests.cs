@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using ProjNet.CoordinateSystems;
 using ProjNet.CoordinateSystems.Transformations;
 
@@ -34,7 +33,7 @@ namespace UnitTests.Converters.WKT
 
             var csf = new CoordinateSystemFactory();
             var cs = csf.CreateFromWkt(wkt);
-            
+
             var ctf = new CoordinateTransformationFactory();
             Assert.DoesNotThrow(() => ctf.CreateFromCoordinateSystems(cs, GeographicCoordinateSystem.WGS84),
                 "Could not reproject SRID:" + srid);

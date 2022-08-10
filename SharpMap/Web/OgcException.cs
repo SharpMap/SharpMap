@@ -28,9 +28,9 @@ namespace SharpMap.Web
         /// <summary>
         /// Gets the version number
         /// </summary>
-        public string Version { get ; private set; }
+        public string Version { get; private set; }
     }
-    
+
     /// <summary>
     /// The ServiceExceptionType type defines the ServiceException
     /// element.  The content of the element is an exception message

@@ -17,20 +17,20 @@
  * 
  */
 
+using NetTopologySuite.Geometries;
+using ProjNet.CoordinateSystems.Transformations;
+using SharpMap.Data;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using GeoAPI.Geometries;
-using SharpMap.Data;
-using GeoAPI.CoordinateSystems.Transformations;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using Point = System.Drawing.Point;
 
 namespace SharpMap.Layers
 {
-    
+
     /// <summary>
     /// A cache for <see cref="GdalRasterLayer"/>.
     /// </summary>
@@ -74,7 +74,7 @@ namespace SharpMap.Layers
         {
             LayerName = strLayerName;
             _innerLayer = new GdalRasterLayer(strLayerName, imageFilename);
-        } 
+        }
         #endregion
 
         /// <summary>

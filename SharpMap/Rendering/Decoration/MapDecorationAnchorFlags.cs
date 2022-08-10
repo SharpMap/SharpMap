@@ -12,7 +12,7 @@ namespace SharpMap.Rendering.Decoration
         /// No anchor specified
         /// </summary>
         None = 0,
-        
+
         /// <summary>
         /// Left anchor
         /// </summary>
@@ -47,12 +47,12 @@ namespace SharpMap.Rendering.Decoration
         /// 
         /// </summary>
         Vertical = Top | VerticalCenter | Bottom,
-        
+
         /// <summary>
         /// 
         /// </summary>
         Horizontal = Left | HorizontalCenter | Right
     }
 
-    
+
 }

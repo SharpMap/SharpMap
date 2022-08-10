@@ -1,10 +1,10 @@
 // Copyright (c) BruTile developers team. All rights reserved. See License.txt in the project root for license information.
 
+using BruTile;
+using BruTile.Web;
 using System;
 using System.Reflection;
 using System.Runtime.Serialization;
-using BruTile;
-using BruTile.Web;
 
 namespace SharpMap.Utilities.Web
 {
@@ -14,10 +14,10 @@ namespace SharpMap.Utilities.Web
 
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            var agts = (ArcGisTileSource) obj;
-            
+            var agts = (ArcGisTileSource)obj;
+
             // This is broken because of ITileSource.GetTile change
-            
+
             // Provider
             //var type = agts.GetType();
             //info.AddValue("providerType", type);
@@ -41,7 +41,7 @@ namespace SharpMap.Utilities.Web
             Utility.SetPropertyValue(ref obj, "Provider", BindingFlags.NonPublic | BindingFlags.Instance, (ITileProvider)info.GetValue("provider", type));
 
             //Schema
-            type = (Type) info.GetValue("schemaType", typeof (Type));
+            type = (Type)info.GetValue("schemaType", typeof(Type));
             Utility.SetPropertyValue(ref obj, "Schema", BindingFlags.NonPublic | BindingFlags.Instance, (ITileSchema)info.GetValue("schema", type));
 
             //BaseUrl

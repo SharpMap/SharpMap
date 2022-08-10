@@ -15,6 +15,15 @@
 // along with SharpMap; if not, write to the Free Software
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
+using NetTopologySuite.Geometries;
+using NetTopologySuite.Geometries.Utilities;
+using NetTopologySuite.Utilities;
+using SharpMap.Data;
+using SharpMap.Data.Providers;
+using SharpMap.Rendering;
+using SharpMap.Rendering.Symbolizer;
+using SharpMap.Rendering.Thematics;
+using SharpMap.Styles;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -22,16 +31,6 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
-using SharpMap.Data;
-using SharpMap.Data.Providers;
-using GeoAPI.Geometries;
-using NetTopologySuite.Geometries;
-using NetTopologySuite.Geometries.Utilities;
-using NetTopologySuite.Utilities;
-using SharpMap.Rendering;
-using SharpMap.Rendering.Thematics;
-using SharpMap.Styles;
-using SharpMap.Rendering.Symbolizer;
 
 
 namespace SharpMap.Layers
@@ -153,7 +152,7 @@ namespace SharpMap.Layers
         /// Creates a new instance of a LabelLayer
         /// </summary>
         public LabelLayer(string layername)
-            :base(new LabelStyle())
+            : base(new LabelStyle())
         {
             //_Style = new LabelStyle();
             LayerName = layername;
@@ -264,14 +263,14 @@ namespace SharpMap.Layers
         /// </summary>
         /// <remarks>
         /// <para>If this method is not null, it will override the position based on the centroid of the boundingbox of the feature </para>
-        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a GeoAPI.Geometries.Coordinate.</para>
+        /// <para>The label delegate must take a <see cref="SharpMap.Data.FeatureDataRow"/> and return a NetTopologySuite.Geometries.Coordinate.</para>
         /// <para>If the delegate returns a null, the centroid of the feature will be used</para>
         /// <example>
         /// Creating a custom position by using X and Y values from the FeatureDataRow attributes "LabelX" and "LabelY", using
         /// an anonymous delegate:
         /// <code lang="C#">
         /// myLabelLayer.LabelPositionDelegate = delegate(SharpMap.Data.FeatureDataRow fdr)
-        ///				{ return new GeoAPI.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
+        ///				{ return new NetTopologySuite.Geometries.Coordinate(Convert.ToDouble(fdr["LabelX"]), Convert.ToDouble(fdr["LabelY"]));};
         /// </code>
         /// </example>
         /// </remarks>
@@ -430,7 +429,7 @@ namespace SharpMap.Layers
                     labels = CreateLabelDefinitions(g, map, ds.Tables[0]);
                 }
             }
-            
+
             if (labels == null || labels.Count == 0)
             {
                 // Obsolete (and will cause infinite loop)
@@ -442,29 +441,29 @@ namespace SharpMap.Layers
                 _labelFilter?.Invoke(labels);
 
             var combinedArea = RectangleF.Empty;
-            
+
             for (int i = 0; i < labels.Count; i++)
             {
-                var baseLabel = labels[i]; 
+                var baseLabel = labels[i];
                 if (!baseLabel.Show)
                     continue;
 
                 var font = baseLabel.Style.GetFontForGraphics(g);
-                
+
                 if (labels[i] is Label)
                 {
                     var label = baseLabel as Label;
                     var canvasArea = VectorRenderer.DrawLabelEx(
                         g, label.Location, label.Style.Offset,
-                        font, label.Style.ForeColor, label.Style.BackColor, 
-                        label.Style.Halo, label.Rotation, label.Text, map, 
+                        font, label.Style.ForeColor, label.Style.BackColor,
+                        label.Style.Halo, label.Rotation, label.Text, map,
                         label.Style.HorizontalAlignment, label.LabelPoint);
 
                     combinedArea = canvasArea.ExpandToInclude(combinedArea);
                 }
                 else if (labels[i] is PathLabel)
                 {
-                    var pathLabel  = labels[i] as PathLabel;
+                    var pathLabel = labels[i] as PathLabel;
                     var lblStyle = pathLabel.Style;
 
                     var background = pathLabel.AffectedArea.ExteriorRing.TransformToImage(map);
@@ -475,15 +474,15 @@ namespace SharpMap.Layers
                             g.FillPath(lblStyle.BackColor, gp);
                         }
 
-                    g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor), 
-                        pathLabel.Text, font.FontFamily, (int) font.Style, font.Size,
+                    g.DrawString(lblStyle.Halo, new SolidBrush(lblStyle.ForeColor),
+                        pathLabel.Text, font.FontFamily, (int)font.Style, font.Size,
                         lblStyle.GetStringFormat(), lblStyle.IgnoreLength, pathLabel.Location, pathLabel.Box.Height);
-                    
+
                     combinedArea = background.ToRectangleF().ExpandToInclude(combinedArea);
                 }
             }
 
-            CanvasArea = combinedArea; 
+            CanvasArea = combinedArea;
             // Obsolete (and will cause infinite loop)
             //base.Render(g, map);
         }
@@ -545,8 +544,8 @@ namespace SharpMap.Layers
                     // but perhaps need complexity threshold (eg Pts < 500) so as not to impact rendering
                     // or new prop bool PartialPolygonalLabel
                 }
-                
-                if (feature.Geometry is IGeometryCollection geoms)
+
+                if (feature.Geometry is GeometryCollection geoms)
                 {
                     if (MultipartGeometryBehaviour == MultipartGeometryBehaviourEnum.All)
                     {
@@ -601,22 +600,22 @@ namespace SharpMap.Layers
                             for (var j = 0; j < geoms.NumGeometries; j++)
                             {
                                 var geom = geoms.GetGeometryN(j);
-                                if (geom is ILineString lineString && lineString.Length > largestVal)
+                                if (geom is LineString lineString && lineString.Length > largestVal)
                                 {
                                     largestVal = lineString.Length;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IMultiLineString multiLineString && multiLineString.Length > largestVal)
+                                if (geom is MultiLineString multiLineString && multiLineString.Length > largestVal)
                                 {
                                     largestVal = multiLineString.Length;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IPolygon polygon && polygon.Area > largestVal)
+                                if (geom is Polygon polygon && polygon.Area > largestVal)
                                 {
                                     largestVal = polygon.Area;
                                     idxOfLargest = j;
                                 }
-                                if (geom is IMultiPolygon multiPolygon && multiPolygon.Area > largestVal)
+                                if (geom is MultiPolygon multiPolygon && multiPolygon.Area > largestVal)
                                 {
                                     largestVal = multiPolygon.Area;
                                     idxOfLargest = j;
@@ -640,13 +639,13 @@ namespace SharpMap.Layers
 
             return labels;
         }
-        private static BaseLabel CreateLabelDefinition(FeatureDataRow fdr, IGeometry geom, string text, float rotation, 
+        private static BaseLabel CreateLabelDefinition(FeatureDataRow fdr, Geometry geom, string text, float rotation,
             int priority, LabelStyle style, MapViewport map, Graphics g, GetLocationMethod getLocationMethod)
         {
             //ONLY atomic geometries
-            Debug.Assert(!(geom is IGeometryCollection));
+            Debug.Assert(!(geom is GeometryCollection));
 
-            if (geom == null) 
+            if (geom == null)
                 return null;
 
             BaseLabel lbl;
@@ -654,7 +653,7 @@ namespace SharpMap.Layers
 
             var size = VectorRenderer.SizeOfString(g, text, font);
 
-            if (geom is ILineString ls)
+            if (geom is LineString ls)
                 return CreatePathLabel(ls, text, size, priority, style, map);
 
             var worldPosition = getLocationMethod == null
@@ -666,8 +665,8 @@ namespace SharpMap.Layers
             var position = map.WorldToImage(worldPosition);
 
             var location = new PointF(
-                position.X - size.Width*(short) style.HorizontalAlignment*0.5f,
-                position.Y - size.Height*(short) (2 - (int) style.VerticalAlignment)*0.5f);
+                position.X - size.Width * (short)style.HorizontalAlignment * 0.5f,
+                position.Y - size.Height * (short)(2 - (int)style.VerticalAlignment) * 0.5f);
 
             if (location.X - size.Width > map.Size.Width || location.X + size.Width < 0 ||
                 location.Y - size.Height > map.Size.Height || location.Y + size.Height < 0)
@@ -675,22 +674,22 @@ namespace SharpMap.Layers
 
             if (!style.CollisionDetection)
                 lbl = new Label(text, location, rotation, priority, null, style)
-                    {LabelPoint = position};
+                { LabelPoint = position };
             else
             {
                 //Collision detection is enabled so we need to measure the size of the string
                 lbl = new Label(text, location, rotation, priority,
                                 new LabelBox(location.X - style.CollisionBuffer.Width,
                                              location.Y - style.CollisionBuffer.Height,
-                                             size.Width + 2f*style.CollisionBuffer.Width,
-                                             size.Height + 2f*style.CollisionBuffer.Height), style) 
-                                { LabelPoint = position }; 
+                                             size.Width + 2f * style.CollisionBuffer.Width,
+                                             size.Height + 2f * style.CollisionBuffer.Height), style)
+                { LabelPoint = position };
             }
 
             return lbl;
         }
 
-        private static BaseLabel CreatePathLabel(ILineString line, string text, SizeF textMeasure,
+        private static BaseLabel CreatePathLabel(LineString line, string text, SizeF textMeasure,
             int priority, LabelStyle style, MapViewport map)
         {
             if (line == null)
@@ -735,7 +734,7 @@ namespace SharpMap.Layers
                 // extract slightly more than label length to ensure offsetCurve follows line geometry
                 var halfLen = labelLength * 0.6;
                 // ensure non-negative indexes constrained to line length (due to special LengthIndexLine functionality) 
-                line = (LineString) lil.ExtractLine(Math.Max(0, mid - halfLen), Math.Min(mid + halfLen, line.Length));
+                line = (LineString)lil.ExtractLine(Math.Max(0, mid - halfLen), Math.Min(mid + halfLen, line.Length));
                 // reset start
                 lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(line);
                 mid = lil.IndexOf(midPt);
@@ -762,13 +761,13 @@ namespace SharpMap.Layers
                 start = end;
                 end = start - labelLength;
             }
-            line = (ILineString) lil.ExtractLine(start, end);
+            line = (LineString)lil.ExtractLine(start, end);
 
             // Build offset curve
-            ILineString offsetCurve;
+            LineString offsetCurve;
             var bufferParameters =
                 new NetTopologySuite.Operation.Buffer.BufferParameters(4,
-                    GeoAPI.Operation.Buffer.EndCapStyle.Flat);
+                    NetTopologySuite.Operation.Buffer.EndCapStyle.Flat);
 
             // determine offset curve that will run through the vertical centre of the text
             if (style.VerticalAlignment != LabelStyle.VerticalAlignmentEnum.Middle)
@@ -778,7 +777,7 @@ namespace SharpMap.Layers
 
                 // Left side positive
                 var offsetCurvePoints = ocb.GetOffsetCurve(line.Coordinates,
-                    ((int) style.VerticalAlignment - 1) * 0.5 * labelHeight - offsetY);
+                    ((int)style.VerticalAlignment - 1) * 0.5 * labelHeight - offsetY);
                 offsetCurve = factory.CreateLineString(offsetCurvePoints);
             }
             else
@@ -795,28 +794,28 @@ namespace SharpMap.Layers
             }
 
             // enclosing polygon in world coords
-            var affectedArea = (IPolygon) offsetCurve.Buffer(0.5d * labelHeight, bufferParameters);
+            var affectedArea = (Polygon)offsetCurve.Buffer(0.5d * labelHeight, bufferParameters);
 
             // fast, basic check (technically should use polygons for rotated views)
             if (!map.Envelope.Contains(affectedArea.EnvelopeInternal))
                 return null;
 
             // using labelBox to pass text height to WarpedPath
-            return new PathLabel(text, LineStringToPath(offsetCurve, map), 0, priority, 
-                new LabelBox(0,0,textMeasure.Width,textMeasure.Height), style)
+            return new PathLabel(text, LineStringToPath(offsetCurve, map), 0, priority,
+                new LabelBox(0, 0, textMeasure.Width, textMeasure.Height), style)
             {
                 AffectedArea = affectedArea
             };
         }
 
-        private static ILineString ExtendLine(ILineString line, double startDist, double endDist)
+        private static LineString ExtendLine(LineString line, double startDist, double endDist)
         {
             var numPts = (startDist > 0 ? 1 : 0) + (endDist > 0 ? 1 : 0);
             if (numPts == 0) return line;
 
             var cs = line.Factory.CoordinateSequenceFactory.Create(line.CoordinateSequence.Count + numPts, line.CoordinateSequence.Dimension);
             var offset = 0;
-            
+
             if (startDist > 0)
             {
                 var rad = Azimuth(line.Coordinates[1], line.Coordinates[0]);
@@ -833,7 +832,7 @@ namespace SharpMap.Layers
 
             if (endDist > 0)
             {
-                var endPoints = new  []
+                var endPoints = new[]
                 {
                     line.Coordinates[line.Coordinates.Length - 2],
                     line.Coordinates[line.Coordinates.Length - 1]
@@ -851,13 +850,13 @@ namespace SharpMap.Layers
             return line.Factory.CreateLineString(cs);
         }
 
-        private static double Azimuth( Coordinate c1, Coordinate c2)
+        private static double Azimuth(Coordinate c1, Coordinate c2)
         {
             var dX = c2.X - c1.X;
             var dY = c2.Y - c1.Y;
-            return  Math.PI / 2 - Math.Atan2(dY, dX);
+            return Math.PI / 2 - Math.Atan2(dY, dX);
         }
-        
+
         private static Coordinate Traverse(Coordinate coord, double azimuth, double dist)
         {
             return new Coordinate(
@@ -865,18 +864,18 @@ namespace SharpMap.Layers
                 coord.Y + dist * Math.Cos(azimuth)
             );
         }
-        private IGeometry ClipLinealGeomToViewExtents(MapViewport map, IGeometry geom)
+        private Geometry ClipLinealGeomToViewExtents(MapViewport map, Geometry geom)
         {
             if (map.MapTransform.IsIdentity)
             {
                 var lineClipping = new CohenSutherlandLineClipping(map.Envelope.MinX, map.Envelope.MinY,
                     map.Envelope.MaxX, map.Envelope.MaxY);
 
-                if (geom is ILineString)
-                    return lineClipping.ClipLineString(geom as ILineString);
-                
-                if (geom is IMultiLineString)
-                    return lineClipping.ClipLineString(geom as IMultiLineString);
+                if (geom is LineString)
+                    return lineClipping.ClipLineString(geom as LineString);
+
+                if (geom is MultiLineString)
+                    return lineClipping.ClipLineString(geom as MultiLineString);
             }
             else
             {
@@ -893,18 +892,18 @@ namespace SharpMap.Layers
                 var at = AffineTransformation.RotationInstance(
                     Degrees.ToRadians(map.MapTransformRotation), map.Center.X, map.Center.Y);
 
-                clipPolygon = (Polygon) at.Transform(clipPolygon);
+                clipPolygon = (Polygon)at.Transform(clipPolygon);
 
-                if (geom is ILineString)
-                    return clipPolygon.Intersection(geom as ILineString);
-                
-                if (geom is IMultiLineString)
-                    return clipPolygon.Intersection(geom as IMultiLineString);
+                if (geom is LineString)
+                    return clipPolygon.Intersection(geom as LineString);
+
+                if (geom is MultiLineString)
+                    return clipPolygon.Intersection(geom as MultiLineString);
             }
 
             return null;
         }
-       
+
         /// <summary>
         /// Very basic test to check for positive direction of Linestring, taking into account map rotation
         /// </summary>
@@ -923,18 +922,18 @@ namespace SharpMap.Layers
             }
             else
             {
-                var pts = map.WorldToImage(new[] {start, end}, true);
+                var pts = map.WorldToImage(new[] { start, end }, true);
                 startX = pts[0].X;
                 endX = pts[1].X;
             }
-            
+
             var dx = endX - startX;
             if (isRightToLeft && dx < 0)
                 return false;
-            
+
             return isRightToLeft || !(dx >= 0);
         }
-        
+
         /// <summary>
         /// Function to transform a linestring to a graphics path for further processing
         /// </summary>
@@ -942,10 +941,10 @@ namespace SharpMap.Layers
         /// <param name="map">The map</param>
         /// <!--<param name="useClipping">A value indicating whether clipping should be applied or not</param>-->
         /// <returns>A GraphicsPath</returns>
-        public static GraphicsPath LineStringToPath(ILineString lineString, MapViewport map/*, bool useClipping*/)
+        public static GraphicsPath LineStringToPath(LineString lineString, MapViewport map/*, bool useClipping*/)
         {
             var gp = new GraphicsPath(FillMode.Alternate);
-                gp.AddLines(lineString.TransformToImage(map));
+            gp.AddLines(lineString.TransformToImage(map));
             return gp;
         }
     }
