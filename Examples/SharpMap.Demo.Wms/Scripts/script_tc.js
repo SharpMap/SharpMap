@@ -4,12 +4,10 @@
     var zoom = 10;
 
     var map = new L.Map('map');
-    var cmurl = ['http://{s}tile.cloudmade.com', '/1a235b638b614b458deeb77c7dae4f80', '/997/256/{z}/{x}/{y}.png'].join('');
-    var cloudmade = new L.TileLayer(cmurl, {
-         maxZoom: 18,
-         subdomains: ['a.', 'b.', 'c.', '']
-    });
-    map.addLayer(cloudmade);
+    var osm = new L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    })
+    map.addLayer(osm);
 
     var tile = new L.TileLayer.TileJSON({
         debug: false,

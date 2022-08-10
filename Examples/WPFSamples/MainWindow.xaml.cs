@@ -16,8 +16,6 @@ namespace WPFSamples
     {
         public MainWindow()
         {
-            InitializeComponent();
-
             var gss = NetTopologySuite.NtsGeometryServices.Instance;
             var css = new CoordinateSystemServices(
                 new ProjNet.CoordinateSystems.CoordinateSystemFactory(),
@@ -28,6 +26,7 @@ namespace WPFSamples
                 .SetCoordinateSystemServices(css)
                 .SetCoordinateSystemRepository(css);
 
+            InitializeComponent();
         }
 
         private void MenuItem_OnClick(object sender, RoutedEventArgs e)

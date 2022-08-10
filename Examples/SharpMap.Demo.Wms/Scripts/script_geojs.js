@@ -12,7 +12,7 @@ $(document).ready(function () {
     options = {
         wms: 'WMS',
         controls: [],
-        projection: 'EPSG:900913',
+        projection: 'EPSG:3857',
         displayProjection: 'EPSG:4326',
         format: 'text/json'
     };
