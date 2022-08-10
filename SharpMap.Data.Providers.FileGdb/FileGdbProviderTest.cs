@@ -50,6 +50,7 @@ namespace SharpMap.Data.Providers
         */
 
         [Test]
+        [Ignore("Only run if you have the test geodatabase properly configured")]
         public void TestSampleSources()
         {
             var di = new DirectoryInfo(@"D:\GIS\FileGDB\samples\data");
@@ -82,6 +83,7 @@ namespace SharpMap.Data.Providers
         }
 
         [Test]
+        [Ignore("Only run if you have the test geodatabase properly configured")]
         public void TestMap()
         {
             var m = new Map(new Size(1024, 786)) { BackColor = Color.FloralWhite };
