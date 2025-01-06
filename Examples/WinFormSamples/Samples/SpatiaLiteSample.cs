@@ -178,11 +178,11 @@ namespace WinFormSamples.Samples
             if (row == null) return 0;
             if (row.Geometry == null)
                 return 0;
-            var ml = row.Geometry as GeoAPI.Geometries.IMultiLineString;
+            var ml = row.Geometry as NetTopologySuite.Geometries.MultiLineString;
             if (ml != null)
                 return System.Convert.ToInt32(ml.Length);
 
-            var l = row.Geometry as GeoAPI.Geometries.ILineString;
+            var l = row.Geometry as NetTopologySuite.Geometries.LineString;
             if (l != null)
                 return System.Convert.ToInt32(l.Length);
             return 0;

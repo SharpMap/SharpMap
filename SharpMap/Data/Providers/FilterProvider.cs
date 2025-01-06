@@ -39,10 +39,10 @@
         /// [...]
         /// public static bool CountryFilter(SharpMap.Data.FeatureDataRow row)
         /// {
-        ///		if(row.Geometry.GetType()==typeof(GeoAPI.Geometries.IPolygon))
-        ///			return ((row.Geometry as GeoAPI.Geometries.IPolygon).Area>5);
-        ///		if (row.Geometry.GetType() == typeof(GeoAPI.Geometries.IMultiPolygon))
-        ///			return ((row.Geometry as GeoAPI.Geometries.IMultiPolygon).Area > 5);
+        ///		if(row.Geometry.GetType()==typeof(NetTopologySuite.Geometries.Polygon))
+        ///			return ((row.Geometry as NetTopologySuite.Geometries.Polygon).Area>5);
+        ///		if (row.Geometry.GetType() == typeof(NetTopologySuite.Geometries.MultiPolygon))
+        ///			return ((row.Geometry as NetTopologySuite.Geometries.MultiPolygon).Area > 5);
         ///		else return true;
         /// }
         /// </code>

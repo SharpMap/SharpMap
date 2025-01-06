@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 using System.Globalization;
 using System.Text;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems;
+using NetTopologySuite.Geometries;
 using NetTopologySuite;
 using NUnit.Framework;
 using ProjNet.CoordinateSystems;

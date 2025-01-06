@@ -16,14 +16,14 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
 
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Text;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {

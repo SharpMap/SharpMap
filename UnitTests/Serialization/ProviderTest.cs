@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data.Providers;
 

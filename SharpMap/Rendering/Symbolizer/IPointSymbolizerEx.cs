@@ -4,9 +4,9 @@ namespace SharpMap.Rendering.Symbolizer
 {
     
     /// <summary>
-    /// An extended interface for <see cref="IPointSymbolizer"/>
+    /// An extended interface for <see cref="NetTopologySuite.Geometries.PointSymbolizer"/>
     /// </summary>
-    public interface IPointSymbolizerEx : IPointSymbolizer
+    public interface NetTopologySuite.Geometries.PointSymbolizerEx : NetTopologySuite.Geometries.PointSymbolizer
     {
         /// <summary>
         /// Gets a value indicating the rectangle enclosing the extent of this symbol 

@@ -23,10 +23,10 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Globalization;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Oracle.ManagedDataAccess.Client;
 using SharpMap.Converters.WellKnownBinary;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Data.Providers
 {

@@ -4,9 +4,9 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using SharpMap.Layers;
 using System.Drawing;
-using GeoAPI.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems.Transformations;
 using ProjNet.CoordinateSystems.Transformations;
-using GeoAPI.CoordinateSystems;
+using SharpMap.CoordinateSystems;
 using ProjNet.CoordinateSystems;
 
 namespace WinFormSamples

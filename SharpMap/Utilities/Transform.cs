@@ -17,7 +17,7 @@
 
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 
 namespace SharpMap.Utilities

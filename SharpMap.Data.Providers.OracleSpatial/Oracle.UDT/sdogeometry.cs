@@ -1,7 +1,7 @@
 using System.ComponentModel.Design;
 using System.Linq;
 using GeoAPI;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Oracle.DataAccess.Types;
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,7 @@ namespace SharpMap.Data.Providers.OracleUDT
         /// Oracle Documentation for SDO_GTYPE.
         /// This represents the last two digits in a GTYPE, where the first item is dimension(ality) and the second is LRS
         /// </summary>
-        public enum Gtype { UnknownGeometry = 00, Point = 01, Line = 02, Curve = 02, Polygon = 03, Collection = 04, Multipoint = 05, Multiline = 06, Multicurve = 06, Multipolygon = 07 }
+        public enum Gtype { UnknownGeometry = 00, Point = 01, Line = 02, Curve = 02, Polygon = 03, Collection = 04, MultiPoint = 05, Multiline = 06, Multicurve = 06, MultiPolygon = 07 }
         public enum Dimension { Dim2D = 2, Dim3D = 3, LRSDim3 = 3, LRSDim4 = 4 }
     }
     [Serializable]
@@ -223,10 +223,10 @@ namespace SharpMap.Data.Providers.OracleUDT
         }
 
         /// <summary>
-        /// Get geometry as GeoAPI IGeometry
+        /// Get geometry as GeoAPI Geometry
         /// </summary>
         /// <returns></returns>
-        public IGeometry AsGeometry()
+        public Geometry AsGeometry()
         {
             if (!SdoGtype.HasValue)
                 return null;

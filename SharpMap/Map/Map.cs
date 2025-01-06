@@ -28,14 +28,14 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite;
 using SharpMap.Layers;
 using SharpMap.Rendering;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Styles;
 using SharpMap.Utilities;
-using Point = GeoAPI.Geometries.Coordinate;
+using Point = NetTopologySuite.Geometries.Coordinate;
 using System.Drawing.Imaging;
 using Common.Logging;
 using System.Reflection;
@@ -107,10 +107,10 @@ namespace SharpMap
                     {
                         _logger.Debug("Returned null, setting it to default");
                         Trace.WriteLine("Returned null, setting it to default");
-                        var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                        var ntsApGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
                         GeoAPI.GeometryServiceProvider.Instance =
-                            ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                                GeoAPI.IGeometryServices;
+                            ntsApGeometryServices.GetProperty("Instance").GetValue(null, null) as
+                                GeoAPI.GeometryServices;
                     }
                 }
 
@@ -118,10 +118,10 @@ namespace SharpMap
                 {
                     _logger.Debug("InvalidOperationException thrown, setting it to default");
                     Trace.WriteLine("InvalidOperationException thrown, setting it to default");
-                    var ntsApiGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
+                    var ntsApGeometryServices = ntsAssembly.GetType("NetTopologySuite.NtsGeometryServices");
                     GeoAPI.GeometryServiceProvider.Instance =
-                        ntsApiGeometryServices.GetProperty("Instance").GetValue(null, null) as
-                            GeoAPI.IGeometryServices;
+                        ntsApGeometryServices.GetProperty("Instance").GetValue(null, null) as
+                            GeoAPI.GeometryServices;
                 }
                 _logger.Debug("Exiting design mode handling");
                 Trace.WriteLine("Exiting design mode handling");
@@ -1159,7 +1159,7 @@ namespace SharpMap
         /// <summary>
         /// Factory used to create geometries
         /// </summary>
-        public IGeometryFactory Factory { get; private set; }
+        public GeometryFactory Factory { get; private set; }
 
         /// <summary>
         /// List of all map decorations

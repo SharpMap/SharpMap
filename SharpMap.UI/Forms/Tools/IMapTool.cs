@@ -17,7 +17,7 @@
 
 using System;
 using System.Windows.Forms;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Forms.Tools
 {

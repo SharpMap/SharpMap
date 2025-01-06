@@ -4,7 +4,7 @@ namespace SharpMap.Converters.GeoJSON
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
     using Newtonsoft.Json;
 
     /// <summary>
@@ -130,27 +130,27 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="geometry">The geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IGeometry geometry, JsonTextWriter writer)
+        public static void Write(Geometry geometry, JsonTextWriter writer)
         {
             if (geometry == null)
                 return;
             if (writer == null)
                 throw new ArgumentNullException("writer", "A valid JSON writer object is required");
 
-            if (geometry is IPoint)
-                Write(geometry as IPoint, writer);
-            else if (geometry is ILineString)
-                Write(geometry as ILineString, writer);
-            else if (geometry is IPolygon)
-                Write(geometry as IPolygon, writer);
-            else if (geometry is IMultiPoint)
-                Write(geometry as IMultiPoint, writer);
-            else if (geometry is IMultiLineString)
-                Write(geometry as IMultiLineString, writer);
-            else if (geometry is IMultiPolygon)
-                Write(geometry as IMultiPolygon, writer);
-            else if (geometry is IGeometryCollection)
-                Write(geometry as IGeometryCollection, writer);
+            if (geometry is NetTopologySuite.Geometries.Point)
+                Write(geometry as NetTopologySuite.Geometries.Point, writer);
+            else if (geometry is LineString)
+                Write(geometry as LineString, writer);
+            else if (geometry is Polygon)
+                Write(geometry as Polygon, writer);
+            else if (geometry is MultiPoint)
+                Write(geometry as MultiPoint, writer);
+            else if (geometry is MultiLineString)
+                Write(geometry as MultiLineString, writer);
+            else if (geometry is MultiPolygon)
+                Write(geometry as MultiPolygon, writer);
+            else if (geometry is GeometryCollection)
+                Write(geometry as GeometryCollection, writer);
         }
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="geometry">The geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IGeometry geometry, TextWriter writer)
+        public static void Write(Geometry geometry, TextWriter writer)
         {
             if (geometry == null)
                 return;
@@ -173,7 +173,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="point">The point geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IPoint point, JsonTextWriter writer)
+        public static void Write(NetTopologySuite.Geometries.Point point, JsonTextWriter writer)
         {
             if (point == null)
                 return;
@@ -199,7 +199,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="point">The point geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IPoint point, TextWriter writer)
+        public static void Write(NetTopologySuite.Geometries.Point point, TextWriter writer)
         {
             if (point == null)
                 return;
@@ -211,11 +211,11 @@ namespace SharpMap.Converters.GeoJSON
         }
 
         /// <summary>
-        /// Method to write a multipoint geometry to the <paramref name="writer"/>
+        /// Method to write a MultiPoint geometry to the <paramref name="writer"/>
         /// </summary>
-        /// <param name="points">The multipoint geometry</param>
+        /// <param name="points">The MultiPoint geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IMultiPoint points, JsonTextWriter writer)
+        public static void Write(MultiPoint points, JsonTextWriter writer)
         {
             if (points == null)
                 return;
@@ -237,11 +237,11 @@ namespace SharpMap.Converters.GeoJSON
         }
 
         /// <summary>
-        /// Method to write a multipoint geometry to the <paramref name="writer"/>
+        /// Method to write a MultiPoint geometry to the <paramref name="writer"/>
         /// </summary>
-        /// <param name="points">The multipoint geometry</param>
+        /// <param name="points">The MultiPoint geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IMultiPoint points, TextWriter writer)
+        public static void Write(MultiPoint points, TextWriter writer)
         {
             if (points == null)
                 return;
@@ -257,7 +257,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="line">The linestring geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(ILineString line, JsonTextWriter writer)
+        public static void Write(LineString line, JsonTextWriter writer)
         {
             if (line == null)
                 return;
@@ -282,7 +282,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="line">The linestring geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(ILineString line, TextWriter writer)
+        public static void Write(LineString line, TextWriter writer)
         {
             if (line == null)
                 return;
@@ -297,7 +297,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="lines">The multi linestring geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IMultiLineString lines, JsonTextWriter writer)
+        public static void Write(MultiLineString lines, JsonTextWriter writer)
         {
             if (lines == null)
                 return;
@@ -311,7 +311,7 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteStartArray();
             for (var i = 0; i < lines.Count; i++)
             {
-                var line = (ILineString)lines[i];
+                var line = (LineString)lines[i];
                 WriteCoord(line.Coordinates, writer);
             }
             writer.WriteEndArray();
@@ -323,7 +323,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="lines">The multi linestring geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IMultiLineString lines, TextWriter writer)
+        public static void Write(MultiLineString lines, TextWriter writer)
         {
             if (lines == null)
                 return;
@@ -338,7 +338,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="area">The polygon geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IPolygon area, JsonTextWriter writer)
+        public static void Write(Polygon area, JsonTextWriter writer)
         {
             if (area == null)
                 return;
@@ -362,7 +362,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="area">The polygon geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IPolygon area, TextWriter writer)
+        public static void Write(Polygon area, TextWriter writer)
         {
             if (area == null)
                 return;
@@ -377,7 +377,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="areas">The multi polygon geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IMultiPolygon areas, JsonTextWriter writer)
+        public static void Write(MultiPolygon areas, JsonTextWriter writer)
         {
             if (areas == null)
                 return;
@@ -391,7 +391,7 @@ namespace SharpMap.Converters.GeoJSON
             writer.WriteStartArray();
             for ( var i = 0; i < areas.NumGeometries; i++)
             {
-                var area = (IPolygon) areas[i];
+                var area = (Polygon) areas[i];
 
                 writer.WriteStartArray();
                 WriteCoord(area.ExteriorRing.Coordinates, writer);
@@ -408,7 +408,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="areas">The multi polygon geometry</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IMultiPolygon areas, TextWriter writer)
+        public static void Write(MultiPolygon areas, TextWriter writer)
         {
             if (areas == null)
                 return;
@@ -423,7 +423,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="geometries">The collection of geometries</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IGeometryCollection geometries, JsonTextWriter writer)
+        public static void Write(GeometryCollection geometries, JsonTextWriter writer)
         {
             if (geometries == null)
                 return;
@@ -449,7 +449,7 @@ namespace SharpMap.Converters.GeoJSON
         /// </summary>
         /// <param name="geometries">The collection of geometries</param>
         /// <param name="writer">The JSON writer</param>
-        public static void Write(IGeometryCollection geometries, TextWriter writer)
+        public static void Write(GeometryCollection geometries, TextWriter writer)
         {
             if (geometries == null)
                 return;

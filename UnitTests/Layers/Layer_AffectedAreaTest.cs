@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NUnit.Framework;
@@ -159,7 +159,7 @@ namespace UnitTests.Layers
 
         private void AddAffectedAreaLayer(Map map, Polygon affectedArea)
         {
-            var geoms = new List<IGeometry>(){affectedArea};
+            var geoms = new List<Geometry>(){affectedArea};
             if (!map.MapTransform.IsIdentity)
             {
                 // affectedArea is aligned with Graphics Canvas (not with north arrow)
@@ -432,7 +432,7 @@ namespace UnitTests.Layers
             fdt.EndInit();
             fdt.BeginLoadData();
             var fdr = (SharpMap.Data.FeatureDataRow) fdt.LoadDataRow(new object[] {1, text}, true);
-            fdr.Geometry = CreateSineLine(new GeoAPI.Geometries.Coordinate(10, 10));
+            fdr.Geometry = CreateSineLine(new NetTopologySuite.Geometries.Coordinate(10, 10));
             fdt.EndLoadData();
 
             var vLyr = new SharpMap.Layers.VectorLayer("Geometry", new GeometryFeatureProvider(fdt));
@@ -453,15 +453,15 @@ namespace UnitTests.Layers
             map.Layers.Add(lLyr);
         }
 
-        private static GeoAPI.Geometries.ILineString CreateSineLine(GeoAPI.Geometries.Coordinate offset,
+        private static NetTopologySuite.Geometries.LineString CreateSineLine(NetTopologySuite.Geometries.Coordinate offset,
             double scaleY = 100)
         {
             var factory = new NetTopologySuite.Geometries.GeometryFactory();
             var cs = factory.CoordinateSequenceFactory.Create(181, 2);
             for (int i = 0; i <= 180; i++)
             {
-                cs.SetOrdinate(i, GeoAPI.Geometries.Ordinate.X, offset.X + 2 * i);
-                cs.SetOrdinate(i, GeoAPI.Geometries.Ordinate.Y, offset.Y + scaleY * System.Math.Sin(2d * i * System.Math.PI/180d));
+                cs.SetOrdinate(i, NetTopologySuite.Geometries.Ordinate.X, offset.X + 2 * i);
+                cs.SetOrdinate(i, NetTopologySuite.Geometries.Ordinate.Y, offset.Y + scaleY * System.Math.Sin(2d * i * System.Math.PI/180d));
             }
             return factory.CreateLineString(cs);        
         }

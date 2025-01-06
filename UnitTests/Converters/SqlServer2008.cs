@@ -1,5 +1,5 @@
 using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
@@ -16,14 +16,14 @@ namespace UnitTests.Converters
     public class SqlServer2008
     {
         private const string Point = "POINT (20.564 46.3493254)";
-        private const string Multipoint = "MULTIPOINT (20.564 46.3493254, 45 32, 23 54)";
+        private const string MultiPoint = "MultiPoint (20.564 46.3493254, 45 32, 23 54)";
         private const string Linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
 
-        private const string MultiLinestring =
-            "MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), (21 21, 50 20, 50 60, 21 21))";
+        private const string MultiLineString =
+            "MultiLineString ((10 10, 40 50), (20 20, 30 20), (21 21, 50 20, 50 60, 21 21))";
 
         private const string Polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 21 29, 29 29, 29 21, 21 21))";
-        private const string MultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((41 41, 41 49, 49 49, 49 41, 41 41)))";
+        private const string MultiPolygon = "MultiPolygon (((20 20, 20 30, 30 30, 30 20, 20 20)), ((41 41, 41 49, 49 49, 49 41, 41 41)))";
 
         [OneTimeSetUp]
         public void SetupFixture()
@@ -33,7 +33,7 @@ namespace UnitTests.Converters
         }
 
 
-        private IGeometry ToSqlServerAndBack(IGeometry gIn, SqlServerSpatialObjectType spatialType)
+        private Geometry ToSqlServerAndBack(Geometry gIn, SqlServerSpatialObjectType spatialType)
         {
             Assert.That(gIn, Is.Not.Null);
             //Assert.That(gIn.SRID, Is.EqualTo(-1));
@@ -64,9 +64,9 @@ namespace UnitTests.Converters
 
             //Prepare data
             var gPn = GeometryFromWKT.Parse(Point);
-            var gMp = GeometryFromWKT.Parse(Multipoint);
+            var gMp = GeometryFromWKT.Parse(MultiPoint);
             var gLi = GeometryFromWKT.Parse(Linestring);
-            var gML = GeometryFromWKT.Parse(MultiLinestring);
+            var gML = GeometryFromWKT.Parse(MultiLineString);
             var gPl = GeometryFromWKT.Parse(Polygon);
             var gMPol = GeometryFromWKT.Parse(MultiPolygon);
 
@@ -78,7 +78,7 @@ namespace UnitTests.Converters
             gPl.SRID = srid;
             gMPol.SRID = srid;
 
-            var comparison = new Comparison<IGeometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
+            var comparison = new Comparison<Geometry>((u, v) => u.EqualsExact(v) ? 0 : 1);
 
             Assert.That(ToSqlServerAndBack(gPn, spatialType), Is.EqualTo(gPn).Using(comparison));
             Assert.That(ToSqlServerAndBack(gMp, spatialType), Is.EqualTo(gMp).Using(comparison));
@@ -97,11 +97,11 @@ namespace UnitTests.Converters
             //Prepare data
             var gPn = GeometryFromWKT.Parse(Point);
             gPn.SRID = srid;
-            var gMp = GeometryFromWKT.Parse(Multipoint);
+            var gMp = GeometryFromWKT.Parse(MultiPoint);
             gMp.SRID = srid;
             var gLi = GeometryFromWKT.Parse(Linestring);
             gLi.SRID = srid;
-            var gML = GeometryFromWKT.Parse(MultiLinestring);
+            var gML = GeometryFromWKT.Parse(MultiLineString);
             gML.SRID = srid;
             var gPl = GeometryFromWKT.Parse(Polygon);
             gPl.SRID = srid;
@@ -125,7 +125,7 @@ namespace UnitTests.Converters
         public void FailingConversionGeom()
         {
             //Prepare data
-            const string invalidMultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
+            const string invalidMultiPolygon = "MultiPolygon (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
             var gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
             gMP.SRID = 4326;
             Assert.Throws<SqlGeometryConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geometry));
@@ -135,7 +135,7 @@ namespace UnitTests.Converters
         public void FailingConversionGeog()
         {
             //Prepare data
-            const string invalidMultiPolygon = "MULTIPOLYGON (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
+            const string invalidMultiPolygon = "MultiPolygon (((20 20, 20 30, 30 30, 30 20, 20 20)), ((21 21, 21 29, 29 29, 29 21, 21 21)))";
             var gMP = GeometryFromWKT.Parse(invalidMultiPolygon);
             gMP.SRID = 4326;
             Assert.Throws<SqlGeographyConverterException>(() => gMP = ToSqlServerAndBack(gMP, SqlServerSpatialObjectType.Geography));

@@ -20,7 +20,7 @@ using System;
 using Microsoft.SqlServer.Types;
 using SharpMap.Converters.SqlServer2008SpatialObjects;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 
 namespace SharpMap.Geometries
 {

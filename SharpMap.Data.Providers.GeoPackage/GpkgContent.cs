@@ -2,8 +2,8 @@ using System;
 using System.Data;
 using System.Data.SQLite;
 using System.Diagnostics;
-using ICoordinateSystem = GeoAPI.CoordinateSystems.ICoordinateSystem;
-using GeoAPI.Geometries;
+using ICoordinateSystem = SharpMap.CoordinateSystems.ICoordinateSystem;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -176,11 +176,11 @@ namespace SharpMap.Data.Providers
                     return 2; //OgcGeometryType.Geometry;
                 case "POLYGON":
                     return 3; //OgcGeometryType.Geometry;
-                case "MULTIPOINT":
+                case "MultiPoint":
                     return 4; //OgcGeometryType.Geometry;
-                case "MULTILINESTRING":
+                case "MultiLineString":
                     return 5; //OgcGeometryType.Geometry;
-                case "MULTIPOLYGON":
+                case "MultiPolygon":
                     return 6; //OgcGeometryType.Geometry;
                 case "GEOMETRYCOLLECTION":
                     return 7; //OgcGeometryType.Geometry;

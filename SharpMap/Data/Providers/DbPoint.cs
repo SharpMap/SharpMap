@@ -19,7 +19,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Data.Providers
 {
@@ -120,9 +120,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var features = new Collection<IGeometry>();
+            var features = new Collection<Geometry>();
             using (var conn = DbProvider.CreateConnection())
             {
                 conn.ConnectionString = ConnectionString;
@@ -207,7 +207,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
             using (var conn = DbProvider.CreateConnection())
             {
@@ -280,7 +280,7 @@ namespace SharpMap.Data.Providers
         /// <param name="ds">FeatureDataSet to fill data into</param>
         public override void ExecuteIntersectionQuery(Envelope bbox, FeatureDataSet ds)
         {
-            //List<Geometries.Geometry> features = new List<GeoAPI.Geometries.IGeometry>();
+            //List<Geometries.Geometry> features = new List<NetTopologySuite.Geometries.Geometry>();
             using (var conn = DbProvider.CreateConnection())
             {
                 conn.ConnectionString = ConnectionString;

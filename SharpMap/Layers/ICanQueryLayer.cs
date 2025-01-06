@@ -1,4 +1,4 @@
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 
 namespace SharpMap.Layers
@@ -24,7 +24,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds);
+        void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds);
 
         /// <summary>
         /// Whether the layer is queryable when used in a SharpMap.Web.Wms.WmsServer, 

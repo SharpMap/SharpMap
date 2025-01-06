@@ -21,7 +21,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Web.Wms.Tiling
 {

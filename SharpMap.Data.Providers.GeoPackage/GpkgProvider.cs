@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.SQLite;
 using System.Text;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers.IO;
 
 namespace SharpMap.Data.Providers
@@ -126,13 +126,13 @@ namespace SharpMap.Data.Providers
         public string DefinitionQuery { get; set; }
 
         /// <summary>
-        /// Gets the features within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox"></param>
-        /// <returns>Features within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        /// <returns>Features within the specified <see cref="NetTopologySuite.Geometries.Envelope"/></returns>
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var res = new Collection<IGeometry>();
+            var res = new Collection<Geometry>();
             using (var reader = CreateReader(2, bbox))
             {
                 while (reader.Read())
@@ -154,11 +154,11 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Returns all objects whose <see cref="GeoAPI.Geometries.Envelope"/> intersects 'bbox'.
+        /// Returns all objects whose <see cref="NetTopologySuite.Geometries.Envelope"/> intersects 'bbox'.
         /// </summary>
         /// <remarks>
         /// This method is usually much faster than the QueryFeatures method, because intersection tests
-        /// are performed on objects simplified by their <see cref="GeoAPI.Geometries.Envelope"/>, and using the Spatial Index
+        /// are performed on objects simplified by their <see cref="NetTopologySuite.Geometries.Envelope"/>, and using the Spatial Index
         /// </remarks>
         /// <param name="bbox">Box that objects should intersect</param>
         /// <returns></returns>
@@ -181,7 +181,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
             using (var rdr = CreateReader(2, null, string.Format("\"{0}\"={1}", _content.OidColumn, oid)))
             {
@@ -289,7 +289,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">The geometry to use as filter</param>
         /// <param name="ds">The feature data set to store the results in</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             var prepGeom = NetTopologySuite.Geometries.Prepared.PreparedGeometryFactory.Prepare(geom);
 

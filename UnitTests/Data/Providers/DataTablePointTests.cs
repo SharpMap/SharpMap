@@ -20,7 +20,7 @@ using System.Data;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries;
 
 namespace UnitTests.Data.Providers
@@ -144,7 +144,7 @@ namespace UnitTests.Data.Providers
             DataRow row = source.Select("oid = 43")[0];
             Point expected = new Point((double) row["x"], (double) row["y"]);
 
-            IGeometry actual = provider.GetGeometryByID(43);
+            Geometry actual = provider.GetGeometryByID(43);
 
             Assert.IsNotNull(actual);
             Assert.IsTrue(actual is Point);

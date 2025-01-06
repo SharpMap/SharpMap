@@ -7,11 +7,11 @@ namespace SharpMap.Demo.Wms.Controllers
     using System.Linq;
     using System.Web.Mvc;
 
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     using Mapstache;
 
-    using GeoAPI.CoordinateSystems.Transformations;
+    using SharpMap.CoordinateSystems.Transformations;
 
     using SharpMap.Converters.GeoJSON;
     using SharpMap.Data;
@@ -74,7 +74,7 @@ namespace SharpMap.Demo.Wms.Controllers
                 int i = 1;
                 foreach (GeoJSON val in data)
                 {
-                    IGeometry geom = val.Geometry;
+                    Geometry geom = val.Geometry;
                     IDictionary<string, object> dict = val.Values;
                     grid.FillPolygon(geom, i, dict);
                     i = i + 1;

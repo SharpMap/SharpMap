@@ -19,7 +19,7 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Reflection;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Rendering.Symbolizer;
 using Common.Logging;
 #if NETSTANDARD2_0
@@ -257,7 +257,7 @@ namespace SharpMap.Styles
         /// Gets or sets the symbolizer for puntal geometries
         /// </summary>
         /// <remarks>Setting this property will lead to ignorance towards all <see cref="IPuntal"/> related style settings</remarks>
-        public IPointSymbolizer PointSymbolizer { get; set; }
+        public NetTopologySuite.Geometries.PointSymbolizer PointSymbolizer { get; set; }
 
         /// <summary>
         /// Gets or sets the symbolizer for lineal geometries
@@ -268,8 +268,8 @@ namespace SharpMap.Styles
         /// <summary>
         /// Gets or sets the symbolizer for polygonal geometries
         /// </summary>
-        /// <remarks>Setting this property will lead to ignorance towards all <see cref="IPolygonal"/> related style settings</remarks>
-        public IPolygonSymbolizer PolygonSymbolizer { get; set; }
+        /// <remarks>Setting this property will lead to ignorance towards all <see cref="Polygonal"/> related style settings</remarks>
+        public PolygonSymbolizer PolygonSymbolizer { get; set; }
 
 #endregion
 

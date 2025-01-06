@@ -25,9 +25,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems;
+using SharpMap.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 using SharpKml.Base;
 using SharpKml.Dom;
 using SharpKml.Engine;
@@ -118,7 +118,7 @@ namespace SharpMap.Data.Providers
         private int _sequence;
         //private ICoordinateTransformationFactory _coordinateTransformationFactory;
         //private ICoordinateSystemFactory _coordinateSystemFactory;
-        private IGeometryFactory _earthGeometryFactory;
+        private GeometryFactory _earthGeometryFactory;
         private int _earthSrid;
         private ICoordinateSystem _earthCs;
         private readonly List<string> _additionalFiles;
@@ -412,7 +412,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>A geometry in WGS84</returns>
-        protected virtual IGeometry ToTarget(IGeometry geometry)
+        protected virtual Geometry ToTarget(Geometry geometry)
         {
             if (geometry.SRID == EarthSrid || (geometry.SRID <= 0 && CoordinateTransformation == null))
                 return geometry;
@@ -461,16 +461,16 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.MultiPoint:
                     {
-                        var multiGeometry = new MultipleGeometry();
+                        var multGeometry = new MultipleGeometry();
 
                         foreach (var coordinate in geometry.Coordinates)
                         {
                             var p = new Point { Coordinate = new Vector(coordinate.Y, coordinate.X) };
 
-                            multiGeometry.AddGeometry(p);
+                            multGeometry.AddGeometry(p);
                         }
 
-                        return WrapPlacemark(multiGeometry, style, feature);
+                        return WrapPlacemark(multGeometry, style, feature);
                     }
                 case OgcGeometryType.LineString:
                     {
@@ -480,7 +480,7 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.Polygon:
                     {
-                        var polygon = (IPolygon)geometry;
+                        var polygon = (Polygon)geometry;
 
                         var kmlPolygon = CreateKmlPolygon(polygon);
 
@@ -488,31 +488,31 @@ namespace SharpMap.Data.Providers
                     }
                 case OgcGeometryType.MultiLineString:
                     {
-                        var multiGeometry = new MultipleGeometry();
+                        var multGeometry = new MultipleGeometry();
 
-                        var multiLineString = (IMultiLineString)geometry;
-                        foreach (var innerGeometry in multiLineString.Geometries)
+                        var MultiLineString = (MultiLineString)geometry;
+                        foreach (var innerGeometry in MultiLineString.Geometries)
                         {
                             var lineString = CreateLineString(innerGeometry);
 
-                            multiGeometry.AddGeometry(lineString);
+                            multGeometry.AddGeometry(lineString);
                         }
 
-                        return WrapPlacemark(multiGeometry, style, feature);
+                        return WrapPlacemark(multGeometry, style, feature);
                     }
                 case OgcGeometryType.MultiPolygon:
                     {
-                        var multiGeometry = new MultipleGeometry();
-                        var multiPoly = (IMultiPolygon)geometry;
+                        var multGeometry = new MultipleGeometry();
+                        var multiPoly = (MultiPolygon)geometry;
 
-                        foreach (var innerGeometry in multiPoly.Geometries.Cast<IPolygon>())
+                        foreach (var innerGeometry in multiPoly.Geometries.Cast<Polygon>())
                         {
                             var polygon = CreateKmlPolygon(innerGeometry);
 
-                            multiGeometry.AddGeometry(polygon);
+                            multGeometry.AddGeometry(polygon);
                         }
 
-                        return WrapPlacemark(multiGeometry, style, feature);
+                        return WrapPlacemark(multGeometry, style, feature);
                     }
                 default:
                     throw new InvalidOperationException("Geometry not supported");
@@ -620,7 +620,7 @@ namespace SharpMap.Data.Providers
             }
         }
 
-        private LineString CreateLineString(IGeometry geometry)
+        private LineString CreateLineString(Geometry geometry)
         {
             var lineString = new LineString { Coordinates = new CoordinateCollection() };
 
@@ -632,7 +632,7 @@ namespace SharpMap.Data.Providers
 
             return lineString;
         }
-        private Polygon CreateKmlPolygon(IPolygon polygon)
+        private Polygon CreateKmlPolygon(Polygon polygon)
         {
             var kmlPolygon = new Polygon();
             var ring = new LinearRing { Coordinates = new CoordinateCollection() };

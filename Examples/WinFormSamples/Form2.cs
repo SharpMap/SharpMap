@@ -17,9 +17,9 @@ namespace WinFormSamples
     using System.Windows.Forms;
     using BruTile;
     //using BruTile.PreDefined;
-    using GeoAPI.Geometries;
     using NetTopologySuite.Geometries;
-    using GeoAPI.CoordinateSystems.Transformations;
+    using NetTopologySuite.Geometries;
+    using SharpMap.CoordinateSystems.Transformations;
     using SharpMap.Data.Providers;
     using SharpMap.Forms;
     using SharpMap.Layers;
@@ -49,7 +49,7 @@ namespace WinFormSamples
 
             //Adds a pushpin layer
             VectorLayer pushPinLayer = new VectorLayer("PushPins");
-            List<IGeometry> geos = new List<IGeometry>();
+            List<Geometry> geos = new List<Geometry>();
             geos.Add(gf.CreatePoint(geom.Centre));
             GeometryProvider geoProvider = new GeometryProvider(geos);
             pushPinLayer.DataSource = geoProvider;

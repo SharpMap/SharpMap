@@ -22,7 +22,7 @@
 // Note - Supports both Geometry AND Geography types for SQL Server 2008 onwards. 
 // The '2008' suffix in the class name is to distinguish from SharpMap.Data.Providers.MsSqlSpatial provider (Sql Server 2005).
 // SqlServer2008 requests WKB from the database (hence will work with Sql Server 2008, 2012, 2016 etc), 
-// and WKB is then parsed to an IGeometry instance using NetTopologySuite.IO.WkbReader
+// and WKB is then parsed to an Geometry instance using NetTopologySuite.IO.WkbReader
 //
 // Alternatively, to work with native Sql Spatial types, see SharpMap.SqlServerSpatialObjects which requests
 // raw spatial bytes from the database and uses Microsoft.SqlServer.Types to convert Sql bytes on the client.
@@ -36,7 +36,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Globalization;
 using System.Text;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Common.Logging;
 using GeoAPI;
 
@@ -494,9 +494,9 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="bbox"></param>   
         /// <returns></returns>   
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var features = new Collection<IGeometry>();
+            var features = new Collection<Geometry>();
             using (var conn = new SqlConnection(ConnectionString))
             {
                 var sb = new StringBuilder($"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} {BuildTableHints()} WHERE ");
@@ -539,9 +539,9 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="oid">Object ID</param>   
         /// <returns>geometry</returns>   
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
-            IGeometry geom = null;
+            Geometry geom = null;
             using (var conn = new SqlConnection(ConnectionString))
             {
                 string strSql = $"SELECT {GeometryColumn}{GetMakeValidString()}.STAsBinary() FROM {QualifiedTable} " +
@@ -635,7 +635,7 @@ namespace SharpMap.Data.Providers
         /// </summary>   
         /// <param name="geom"></param>   
         /// <param name="fds">FeatureDataSet to fill data into</param>   
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet fds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet fds)
         {
             var sb = new StringBuilder($"SELECT {GetAttributeColumnNames()}, {GeometryColumn}{GetMakeValidString()}.STAsBinary() As {SharpMapWkb} " +
                                        $"FROM {QualifiedTable} {BuildTableHints()} WHERE ");

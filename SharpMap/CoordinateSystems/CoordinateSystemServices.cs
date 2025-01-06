@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using GeoAPI;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
+using SharpMap.CoordinateSystems.Transformations;
 using SharpMap.Converters.WellKnownText;
 
 namespace SharpMap.CoordinateSystems
@@ -240,7 +240,7 @@ namespace SharpMap.CoordinateSystems
         /// Method to create a coordinate tranformation between two spatial reference systems, defined by their identifiers
         /// </summary>
         /// <remarks>
-        /// This is a convenience function for <see cref="M:GeoAPI.ICoordinateSystemServices.CreateTransformation(GeoAPI.CoordinateSystems.ICoordinateSystem,GeoAPI.CoordinateSystems.ICoordinateSystem)"/>.
+        /// This is a convenience function for <see cref="M:GeoAPI.ICoordinateSystemServices.CreateTransformation(SharpMap.CoordinateSystems.ICoordinateSystem,SharpMap.CoordinateSystems.ICoordinateSystem)"/>.
         /// </remarks>
         /// <param name="sourceSrid">The identifier for the source spatial reference system.</param><param name="targetSrid">The identifier for the target spatial reference system.</param>
         /// <returns>

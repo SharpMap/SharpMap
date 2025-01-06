@@ -1,6 +1,6 @@
 using System.IO;
 using GeoAPI.DataStructures;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 
 namespace SharpMap.Data.Providers.Geometry
@@ -40,7 +40,7 @@ namespace SharpMap.Data.Providers.Geometry
         /// <returns>
         /// The geometry
         /// </returns>
-        internal IGeometry GetGeometry()
+        internal Geometry GetGeometry()
         {
             var geom = _wkbReader.Read(WellKnownBytes);
             geom.SRID = Header.SrsId;

@@ -33,7 +33,7 @@ namespace ExampleCodeSnippets
     /// X' = _a*X + _b*Y + _c
     /// Y' = _d*X + _e*Y + _f
     /// </summary>
-    public class AffineCoordinateTransformation2D : ProjNet.CoordinateSystems.Transformations.MathTransform, GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation
+    public class AffineCoordinateTransformation2D : ProjNet.CoordinateSystems.Transformations.MathTransform, SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation
     {
         private readonly double _a, _b, _c, _d, _e, _f;
         private readonly double _ainv, _binv, _cinv, _dinv, _einv, _finv;
@@ -110,7 +110,7 @@ namespace ExampleCodeSnippets
 
         #region Overrides of MathTransform
 
-        public override GeoAPI.CoordinateSystems.Transformations.IMathTransform Inverse()
+        public override SharpMap.CoordinateSystems.Transformations.IMathTransform Inverse()
         {
             //#warning(System.Drawing.Drawing2D.Matrix uses single precision floating point numbers. This involves reduction of precision, not at all accurate!)
 
@@ -201,7 +201,7 @@ namespace ExampleCodeSnippets
             get { throw new System.NotImplementedException(); }
         }
 
-        public GeoAPI.CoordinateSystems.Transformations.IMathTransform MathTransform
+        public SharpMap.CoordinateSystems.Transformations.IMathTransform MathTransform
         {
             get { return this; }
         }
@@ -216,19 +216,19 @@ namespace ExampleCodeSnippets
             get { return ""; }
         }
 
-        public GeoAPI.CoordinateSystems.ICoordinateSystem SourceCS
+        public SharpMap.CoordinateSystems.ICoordinateSystem SourceCS
         {
             get { return null; }
         }
 
-        public GeoAPI.CoordinateSystems.ICoordinateSystem TargetCS
+        public SharpMap.CoordinateSystems.ICoordinateSystem TargetCS
         {
             get { return null; }
         }
 
-        public GeoAPI.CoordinateSystems.Transformations.TransformType TransformType
+        public SharpMap.CoordinateSystems.Transformations.TransformType TransformType
         {
-            get { return GeoAPI.CoordinateSystems.Transformations.TransformType.Transformation; }
+            get { return SharpMap.CoordinateSystems.Transformations.TransformType.Transformation; }
         }
 
         #endregion
@@ -262,7 +262,7 @@ namespace ExampleCodeSnippets
                 for (System.Int32 i = 0; i < fdtClone.Columns.Count; i++)
                     newRow[i] = row[i];
 
-                GeoAPI.Geometries.IPoint smpt = (GeoAPI.Geometries.IPoint)row.Geometry;
+                NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point smpt = (NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point)row.Geometry;
                 System.Drawing.PointF[] pts = new System.Drawing.PointF[] 
                     { new System.Drawing.PointF((float)smpt.X, (float)smpt.Y) };
                 matrix.TransformPoints(pts);
@@ -369,8 +369,8 @@ namespace ExampleCodeSnippets
             //Get affine transformation calculates mean points to improve accuaracy
             //Unfortunately the result is not very good, so, since I know better I manually set these
             //mean points.
-            lst.SetMeanPoints(new GeoAPI.Geometries.IPoint(0, 0), 
-                              new GeoAPI.Geometries.IPoint(matrix.OffsetX, matrix.OffsetY));
+            lst.SetMeanPoints(new NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point(0, 0), 
+                              new NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point(matrix.OffsetX, matrix.OffsetY));
              */
 
             //Create Affine
@@ -440,7 +440,7 @@ namespace ExampleCodeSnippets
         }
 
 public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
-    GeoAPI.CoordinateSystems.ICoordinateSystem target)
+    SharpMap.CoordinateSystems.ICoordinateSystem target)
 {
     for (var i = 0; i < fds.Tables.Count; i ++)
     {
@@ -451,7 +451,7 @@ public static void ReprojectFeatureDataSet(SharpMap.Data.FeatureDataSet fds,
 }
 
 public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
-    GeoAPI.CoordinateSystems.ICoordinateSystem target)
+    SharpMap.CoordinateSystems.ICoordinateSystem target)
 {
     var source = SharpMap.CoordinateSystems.CoordinateSystemExtensions.GetCoordinateSystem(fdt[0].Geometry);
 
@@ -464,7 +464,7 @@ public static void ReprojectFeatureDataTable(SharpMap.Data.FeatureDataTable fdt,
     {
         var fdr = fdt[i];
         fdr.Geometry =
-            GeoAPI.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
+            SharpMap.CoordinateSystems.Transformations.GeometryTransform.TransformGeometry(fdr.Geometry,
                 ct.MathTransform, geomFactory);
     }
 }

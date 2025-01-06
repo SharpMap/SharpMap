@@ -430,7 +430,7 @@
             <fes:GeometryOperand name="gml:MultiPolygon"/>
             <fes:GeometryOperand name="gml:Surface"/>
             <fes:GeometryOperand name="gml:MultiSurface"/>
-            <fes:GeometryOperand name="gml:MultiGeometry"/>
+            <fes:GeometryOperand name="gml:MultGeometry"/>
             <fes:GeometryOperand name="gml:Box"/>
             <fes:GeometryOperand name="gml:Envelope"/>
          </fes:GeometryOperands>

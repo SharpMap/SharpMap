@@ -3,11 +3,11 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Runtime.CompilerServices;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
-using IGeometry = GeoAPI.Geometries.IGeometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using Common.Logging;
 
 namespace SharpMap.Layers.Symbolizer
@@ -18,13 +18,13 @@ namespace SharpMap.Layers.Symbolizer
     /// <typeparam name="TGeometry">The geometry type</typeparam>
     [Serializable]
     public abstract class BaseVectorLayer<TGeometry> : Layer, ICanQueryLayer
-        where TGeometry : class//, IGeometry
+        where TGeometry : class//, Geometry
     {
         #region Private fields
 
         private readonly object _dataSourceLock = new object();
         private IProvider _dataSource;
-        private Collection<IGeometry> _geometries;
+        private Collection<Geometry> _geometries;
 
         #endregion
 
@@ -227,7 +227,7 @@ namespace SharpMap.Layers.Symbolizer
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             geometry = ToSource(geometry);
 

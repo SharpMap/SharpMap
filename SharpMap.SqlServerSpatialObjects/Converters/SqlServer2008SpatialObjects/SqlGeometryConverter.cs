@@ -21,20 +21,20 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Microsoft.SqlServer.Types;
 using SharpMap.Data.Providers;
-using SMGeometry = GeoAPI.Geometries.IGeometry;
-using SMGeometryType = GeoAPI.Geometries.OgcGeometryType;
-using SMPoint = GeoAPI.Geometries.IPoint;
-using SMLineString = GeoAPI.Geometries.ILineString;
-using SMLinearRing = GeoAPI.Geometries.ILinearRing;
-using SMPolygon = GeoAPI.Geometries.IPolygon;
-using SMMultiPoint = GeoAPI.Geometries.IMultiPoint;
-using SMMultiLineString = GeoAPI.Geometries.IMultiLineString;
-using SMMultiPolygon = GeoAPI.Geometries.IMultiPolygon;
-using SMGeometryCollection = GeoAPI.Geometries.IGeometryCollection;
-using Factory = GeoAPI.Geometries.IGeometryFactory;
+using SMGeometry = NetTopologySuite.Geometries.Geometry;
+using SMGeometryType = NetTopologySuite.Geometries.OgcGeometryType;
+using SMPoint = NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point;
+using SMLineString = NetTopologySuite.Geometries.LineString;
+using SMLinearRing = NetTopologySuite.Geometries.ILinearRing;
+using SMPolygon = NetTopologySuite.Geometries.Polygon;
+using SMMultiPoint = NetTopologySuite.Geometries.MultiPoint;
+using SMMultiLineString = NetTopologySuite.Geometries.MultiLineString;
+using SMMultiPolygon = NetTopologySuite.Geometries.MultiPolygon;
+using SMGeometryCollection = NetTopologySuite.Geometries.GeometryCollection;
+using Factory = NetTopologySuite.Geometries.GeometryFactory;
 
 namespace SharpMap.Converters.SqlServer2008SpatialObjects
 {
@@ -119,7 +119,7 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
     /// </summary>
     public static class SqlGeometryConverter
     {
-        private static readonly GeoAPI.IGeometryServices Services = GeoAPI.GeometryServiceProvider.Instance;
+        private static readonly GeoAPI.GeometryServices Services = GeoAPI.GeometryServiceProvider.Instance;
 
         /// <summary>
         /// A reduction tolerance
@@ -214,27 +214,27 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
             geomBuilder.EndGeometry();
         }
 
-        private static void SharpMapMultiPolygonToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiPolygon multiPolygon)
+        private static void SharpMapMultiPolygonToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiPolygon MultiPolygon)
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.MultiPolygon);
-            for (int i = 0; i < multiPolygon.NumGeometries; i++)
-                SharpMapPolygonToSqlGeometry(geomBuilder, multiPolygon[i] as SMPolygon);
+            for (int i = 0; i < MultiPolygon.NumGeometries; i++)
+                SharpMapPolygonToSqlGeometry(geomBuilder, MultiPolygon[i] as SMPolygon);
             geomBuilder.EndGeometry();
         }
 
-        private static void SharpMapMultiLineStringToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiLineString multiLineString)
+        private static void SharpMapMultiLineStringToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiLineString MultiLineString)
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.MultiLineString);
-            for (int i = 0; i < multiLineString.NumGeometries; i++)
-                SharpMapLineStringToSqlGeometry(geomBuilder, multiLineString[i] as SMLineString);
+            for (int i = 0; i < MultiLineString.NumGeometries; i++)
+                SharpMapLineStringToSqlGeometry(geomBuilder, MultiLineString[i] as SMLineString);
             geomBuilder.EndGeometry();
         }
 
-        private static void SharpMapMultiPointToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiPoint multiPoint)
+        private static void SharpMapMultiPointToSqlGeometry(SqlGeometryBuilder geomBuilder, SMMultiPoint MultiPoint)
         {
             geomBuilder.BeginGeometry(OpenGisGeometryType.MultiPoint);
-            for(int i = 0; i < multiPoint.NumPoints; i++)
-                SharpMapPointToSqlGeometry(geomBuilder, multiPoint[i] as SMPoint);
+            for(int i = 0; i < MultiPoint.NumPoints; i++)
+                SharpMapPointToSqlGeometry(geomBuilder, MultiPoint[i] as SMPoint);
             geomBuilder.EndGeometry();
         }
 
@@ -374,11 +374,11 @@ namespace SharpMap.Converters.SqlServer2008SpatialObjects
                     return OpenGisGeometryType.LineString;
                 case "POLYGON":
                     return OpenGisGeometryType.Polygon;
-                case "MULTIPOINT":
+                case "MultiPoint":
                     return OpenGisGeometryType.MultiPoint;
-                case "MULTILINESTRING":
+                case "MultiLineString":
                     return OpenGisGeometryType.MultiLineString;
-                case "MULTIPOLYGON":
+                case "MultiPolygon":
                     return OpenGisGeometryType.MultiPolygon;
                 case "GEOMETRYCOLLECTION":
                     return OpenGisGeometryType.GeometryCollection;

@@ -28,8 +28,8 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
 using ColorBlend = SharpMap.Rendering.Thematics.ColorBlend;
@@ -275,7 +275,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geometry, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geometry, FeatureDataSet ds)
         {
             if (CoordinateTransformation != null)
             {

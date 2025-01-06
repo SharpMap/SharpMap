@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using GeoAPI;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {
@@ -34,11 +34,11 @@ namespace SharpMap.Utilities.Wfs
         /// </summary>
         SurfacePropertyType,
         /// <summary>
-        /// Multipoint
+        /// MultiPoint
         /// </summary>
         MultiPointPropertyType,
         /// <summary>
-        /// MultiLinestring
+        /// MultiLineString
         /// </summary>
         MultiLineStringPropertyType,
         /// <summary>
@@ -67,7 +67,7 @@ namespace SharpMap.Utilities.Wfs
     {
         #region Fields with Properties
 
-        internal IGeometryFactory Factory { get; private set; }
+        internal GeometryFactory Factory { get; private set; }
 
         private BoundingBox _BoundingBox = new BoundingBox();
         private string _Cs = ",";

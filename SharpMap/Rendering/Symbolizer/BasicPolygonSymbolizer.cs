@@ -1,6 +1,6 @@
 using System;
 using System.Drawing;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -63,7 +63,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The feature</param>
         /// <param name="g">The graphics object</param>
-        protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
+        protected override void OnRenderInternal(MapViewport map, Polygon polygon, Graphics g)
         {
             // convert points
             var pts = /*LimitValues(*/polygon.TransformToImage(map, UseClipping)/*)*/;
@@ -140,7 +140,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="map">The map</param>
         /// <param name="polygon">The polygon to render</param>
         /// <param name="g">The graphics object to use</param>
-        protected override void OnRenderInternal(MapViewport map, IPolygon polygon, Graphics g)
+        protected override void OnRenderInternal(MapViewport map, Polygon polygon, Graphics g)
         {
             // convert points
             var pts = /*VectorRenderer.LimitValues*(*/polygon.TransformToImage(map)/*, VectorRenderer.ExtremeValueLimit))*/;

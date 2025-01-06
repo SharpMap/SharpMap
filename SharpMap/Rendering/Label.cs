@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Styles;
 
 namespace SharpMap.Rendering
@@ -413,7 +413,7 @@ namespace SharpMap.Rendering
         /// <summary>
         /// Bounding polygon in world coordinates 
         /// </summary>
-        public IPolygon AffectedArea { get; set; }
+        public Polygon AffectedArea { get; set; }
 
         /// <inheritdoc cref="BaseLabel.CompareTo"/>
         public override int CompareTo(BaseLabel other)

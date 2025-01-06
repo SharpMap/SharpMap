@@ -21,8 +21,8 @@ using System.Data;
 using System.Data.SQLite;
 using System.Globalization;
 using SharpMap.Converters.WellKnownText;
-using BoundingBox = GeoAPI.Geometries.Envelope;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using Common.Logging;
 
 namespace SharpMap.Data.Providers

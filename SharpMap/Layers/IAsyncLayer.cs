@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Layers
 {

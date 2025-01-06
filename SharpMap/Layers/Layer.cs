@@ -17,8 +17,8 @@
 
 using System;
 using System.Drawing;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using SharpMap.Base;
 using SharpMap.Rendering;
@@ -101,8 +101,8 @@ namespace SharpMap.Layers
 
         private ICoordinateTransformation _coordinateTransform;
         private ICoordinateTransformation _reverseCoordinateTransform;
-        private IGeometryFactory _sourceFactory;
-        private IGeometryFactory _targetFactory;
+        private GeometryFactory _sourceFactory;
+        private GeometryFactory _targetFactory;
 
         private string _layerName;
         private string _layerTitle;
@@ -150,7 +150,7 @@ namespace SharpMap.Layers
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
+        /// Gets or sets the <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> applied 
         /// to this vectorlayer prior to rendering
         /// </summary>
         public virtual ICoordinateTransformation CoordinateTransformation
@@ -230,15 +230,15 @@ namespace SharpMap.Layers
         /// <summary>
         /// Gets the geometry factory to create source geometries
         /// </summary>
-        protected internal IGeometryFactory SourceFactory { get { return _sourceFactory ?? (_sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID)); } }
+        protected internal GeometryFactory SourceFactory { get { return _sourceFactory ?? (_sourceFactory = GeoAPI.GeometryServiceProvider.Instance.CreateGeometryFactory(SRID)); } }
 
         /// <summary>
         /// Gets the geometry factory to create target geometries
         /// </summary>
-        protected internal IGeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
+        protected internal GeometryFactory TargetFactory { get { return _targetFactory ?? _sourceFactory; } }
 
         /// <summary>
-        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
+        /// Certain Transformations cannot be inverted in ProjNet, in those cases use this property to set the reverse <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> (of CoordinateTransformation) to fetch data from Datasource
         /// 
         /// If your CoordinateTransformation can be inverted you can leave this property to null
         /// </summary>
@@ -583,7 +583,7 @@ namespace SharpMap.Layers
         /// Utility function to transform given envelope using a specific transformation
         /// </summary>
         /// <param name="envelope">The source envelope</param>
-        /// <param name="coordinateTransformation">The <see cref="GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
+        /// <param name="coordinateTransformation">The <see cref="SharpMap.CoordinateSystems.Transformations.ICoordinateTransformation"/> to use.</param>
         /// <returns>The target envelope</returns>
         protected virtual Envelope ToTarget(Envelope envelope, ICoordinateTransformation coordinateTransformation)
         {
@@ -633,7 +633,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>The transformed geometry</returns>
-        protected virtual IGeometry ToTarget(IGeometry geometry)
+        protected virtual Geometry ToTarget(Geometry geometry)
         {
             if (geometry.SRID == TargetSRID)
                 return geometry;
@@ -651,7 +651,7 @@ namespace SharpMap.Layers
         /// </summary>
         /// <param name="geometry">A geometry</param>
         /// <returns>The transformed geometry</returns>
-        protected virtual IGeometry ToSource(IGeometry geometry)
+        protected virtual Geometry ToSource(Geometry geometry)
         {
             if (geometry.SRID == SRID)
                 return geometry;

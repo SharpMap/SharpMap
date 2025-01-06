@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Common;
 using Common.Logging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Npgsql;
 using System.Globalization;
@@ -291,9 +291,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns></returns>
-        public override Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public override Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var features = new Collection<IGeometry>();
+            var features = new Collection<Geometry>();
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 conn.Open();
@@ -340,9 +340,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>The geometry</returns>
-        public override IGeometry GetGeometryByID(uint oid)
+        public override Geometry GetGeometryByID(uint oid)
         {
-            IGeometry geom = null;
+            Geometry geom = null;
             using (var conn = new NpgsqlConnection(ConnectionString))
             {
                 conn.Open();
@@ -429,7 +429,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom"></param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             GetNonSpatialColumns();
 
@@ -491,7 +491,7 @@ namespace SharpMap.Data.Providers
                         fdt.BeginLoadData();
                         while (reader.Read())
                         {
-                            IGeometry g = null;
+                            Geometry g = null;
                             if (!reader.IsDBNull(geomIndex))
                                 g = geoReader.Read((byte[])reader.GetValue(geomIndex));
 
@@ -560,7 +560,7 @@ namespace SharpMap.Data.Providers
                             fdt.BeginLoadData();
                             while (reader.Read())
                             {
-                                IGeometry g = null;
+                                Geometry g = null;
                                 if (!reader.IsDBNull(geomIndex))
                                     g = geoReader.Read((byte[]) reader.GetValue(geomIndex));
 
@@ -673,7 +673,7 @@ namespace SharpMap.Data.Providers
                         fdt.BeginLoadData();
                         while (reader.Read())
                         {
-                            IGeometry g = null;
+                            Geometry g = null;
                             if (!reader.IsDBNull(geomIndex))
                                 g = geoReader.Read((byte[])reader.GetValue(geomIndex));
 

@@ -24,20 +24,20 @@ using System.Drawing.Imaging;
 using System.IO;
 using Common.Logging;
 using GeoAPI;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using OSGeo.GDAL;
-using GeoAPI.CoordinateSystems;
-using GeoAPI.CoordinateSystems.Transformations;
+using SharpMap.CoordinateSystems;
+using SharpMap.CoordinateSystems.Transformations;
 using NetTopologySuite.Index.Strtree;
 using SharpMap.Base;
 using SharpMap.CoordinateSystems;
 using SharpMap.Data;
 using SharpMap.Extensions.Data;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using SharpMap.Rendering.Thematics;
 using Point = System.Drawing.Point;
 
-using Polygon = GeoAPI.Geometries.IPolygon;
+using Polygon = NetTopologySuite.Geometries.Polygon;
 
 namespace SharpMap.Layers
 {
@@ -70,13 +70,13 @@ namespace SharpMap.Layers
         /// </summary>
         private STRtree<string> _subDataSets;
 
-        private IGeometryFactory _factory;
+        private GeometryFactory _factory;
         
         /// <summary>
         /// Gets or sets a value indicating the geometry factory to use when creating geometries.
         /// </summary>
         /// <returns>A geometry factory</returns>
-        protected IGeometryFactory Factory
+        protected GeometryFactory Factory
         {
             get
             {

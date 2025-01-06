@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <Import Project="$(SolutionDir)SharpMap.Common.props" />
+
+    <PropertyGroup>
+      <TargetFramework>net472</TargetFramework>
+      <RootNamespace>SharpMap.CoordinateSystems</RootNamespace>
+  </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ProjNet4GeoAPI" version="2.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../SharpMap/SharpMap.csproj" />
+    </ItemGroup>
+    
+</Project>

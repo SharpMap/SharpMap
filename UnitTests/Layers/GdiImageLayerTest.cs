@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap;
 using SharpMap.Layers;

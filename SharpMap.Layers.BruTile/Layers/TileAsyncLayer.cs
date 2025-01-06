@@ -8,7 +8,7 @@ using BruTile;
 using BruTile.Cache;
 using System.IO;
 using System.Net;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Common.Logging;

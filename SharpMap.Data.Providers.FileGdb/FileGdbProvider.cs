@@ -21,7 +21,7 @@ using System.Configuration;
 using System.Data;
 using System.Globalization;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers.Converter;
 
 using EsriGdb = Esri.FileGDB.Geodatabase;
@@ -196,9 +196,9 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="bbox"></param>
         /// <returns>Features within the specified <see cref="Envelope"/></returns>
-        public Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        public Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
-            var res = new Collection<IGeometry>();
+            var res = new Collection<Geometry>();
             foreach (var row in _esriTable.Search("*", string.Empty, FileGdbGeometryConverter.ToEsriExtent(bbox), Esri.FileGDB.RowInstance.Recycle))
             {
                 using (var buffer = row.GetGeometry())
@@ -233,7 +233,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">Object ID</param>
         /// <returns>geometry</returns>
-        public IGeometry GetGeometryByID(uint oid)
+        public Geometry GetGeometryByID(uint oid)
         {
             var fdt = CreateTable(_esriTable);
             var where = string.Format(CultureInfo.InvariantCulture, "{0}={1}", fdt.PrimaryKey[0].ColumnName, oid);
@@ -249,7 +249,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">Geometry to intersect with</param>
         /// <param name="ds">FeatureDataSet to fill data into</param>
-        public void ExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        public void ExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             ExecuteIntersectionQuery(geom.EnvelopeInternal, ds);
         }

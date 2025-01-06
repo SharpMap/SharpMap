@@ -6,7 +6,7 @@ using System.Drawing;
 using SharpMap.Layers;
 using System.Globalization;
 using SharpMap.Styles;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 namespace SharpMap.Serialization
 {
     /// <summary>

@@ -28,7 +28,7 @@ namespace SharpMap
         /// <summary>
         /// The geometry services instance
         /// </summary>
-        public IGeometryServices GeometryServices { get; set; }
+        public GeometryServices GeometryServices { get; set; }
 
         /// <summary>
         /// Gets the coordinate system services instance
@@ -60,7 +60,7 @@ namespace SharpMap
         /// </summary>
         /// <param name="geometryServices">The geometry services class</param>
         /// <returns>A reference to this session</returns>
-        public ISession SetGeometryServices(IGeometryServices geometryServices)
+        public ISession SetGeometryServices(GeometryServices geometryServices)
         {
             GeometryServices = geometryServices;
             return this;

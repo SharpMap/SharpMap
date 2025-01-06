@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <PackageReference Include="SharpSbn.GeoAPI" Version="1.2.0" />
+      <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
 
     <ItemGroup>

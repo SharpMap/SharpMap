@@ -1,7 +1,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
@@ -12,18 +12,18 @@ namespace UnitTests.Converters.WKB
     [TestFixture]
     public class WKBTests
     {
-        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly GeometryFactory Factory = new GeometryFactory();
         
         private string point = "POINT (20.564 346.3493254)";
-        private string multipoint = "MULTIPOINT (20.564 346.3493254, 45 32, 23 54)";
+        private string MultiPoint = "MultiPoint (20.564 346.3493254, 45 32, 23 54)";
         private string linestring = "LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)";
 
-        private string multiLinestring =
-            "MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))";
+        private string MultiLineString =
+            "MultiLineString ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))";
 
         private string polygon = "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 21 29, 29 29, 29 21, 21 21))";
 
-        private IGeometry ToBinaryAndBack(IGeometry gIn, WkbByteOrder byteOrder)
+        private Geometry ToBinaryAndBack(Geometry gIn, WkbByteOrder byteOrder)
         {
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
@@ -39,9 +39,9 @@ namespace UnitTests.Converters.WKB
         {
             //Prepare data
             var gPn = GeometryFromWKT.Parse(point);
-            var gMp = GeometryFromWKT.Parse(multipoint);
+            var gMp = GeometryFromWKT.Parse(MultiPoint);
             var gLi = GeometryFromWKT.Parse(linestring);
-            var gML = GeometryFromWKT.Parse(multiLinestring);
+            var gML = GeometryFromWKT.Parse(MultiLineString);
             var gPl = GeometryFromWKT.Parse(polygon);
 
             //Test with Xdr
@@ -63,9 +63,9 @@ namespace UnitTests.Converters.WKB
         public void Convert()
         {
             var gPn0 = GeometryFromWKT.Parse(point);
-            var gMp0 = GeometryFromWKT.Parse(multipoint);
+            var gMp0 = GeometryFromWKT.Parse(MultiPoint);
             var gLi0 = GeometryFromWKT.Parse(linestring);
-            var gML0 = GeometryFromWKT.Parse(multiLinestring);
+            var gML0 = GeometryFromWKT.Parse(MultiLineString);
             var gPl0 = GeometryFromWKT.Parse(polygon);
 
             var gPn1 = GeometryFromWKB.Parse(gPn0.AsBinary(), gPn0.Factory);
@@ -84,7 +84,7 @@ namespace UnitTests.Converters.WKB
         [Test]
         public void TestHugeGeometryCollection()
         {
-            IGeometry geom = null;
+            Geometry geom = null;
             string filePath = TestUtility.GetPathToTestFile("Base 64.txt");
 
             if (!File.Exists(filePath))

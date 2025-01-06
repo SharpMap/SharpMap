@@ -6,7 +6,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using Moq;
 using NUnit.Framework;
 using NetTopologySuite.Geometries;
@@ -14,22 +14,22 @@ using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.IO;
 using SharpMap;
 using SharpMap.Data.Providers;
-using Geometry = GeoAPI.Geometries.IGeometry;
+using Geometry = NetTopologySuite.Geometries.Geometry;
 using SharpMap.Layers;
 using SharpMap.Rendering.Decoration;
 using SharpMap.Rendering.Decoration.ScaleBar;
-using Point = GeoAPI.Geometries.Coordinate;
-using BoundingBox = GeoAPI.Geometries.Envelope;
+using Point = NetTopologySuite.Geometries.Coordinate;
+using BoundingBox = NetTopologySuite.Geometries.Envelope;
 
 namespace UnitTests
 {
     [TestFixture]
     public class MapTest
     {
-        private static readonly IGeometryFactory Factory = new GeometryFactory();
+        private static readonly GeometryFactory Factory = new GeometryFactory();
         private static readonly WKTReader WktReader = new WKTReader(Factory);
 
-        public static IGeometry GeomFromText(string wkt)
+        public static Geometry GeomFromText(string wkt)
         {
             return WktReader.Read(wkt);
         }
@@ -42,17 +42,17 @@ namespace UnitTests
                                 GeomFromText(
                                     "GEOMETRYCOLLECTION (POINT (10 10), POINT (30 30), LINESTRING (15 15, 20 20))"),
                                 GeomFromText(
-                                    "MULTIPOLYGON (((0 0, 10 0, 10 10, 0 10, 0 0)), ((5 5, 7 5, 7 7, 5 7, 5 5)))"),
+                                    "MultiPolygon (((0 0, 10 0, 10 10, 0 10, 0 0)), ((5 5, 7 5, 7 7, 5 7, 5 5)))"),
                                 GeomFromText("LINESTRING (20 20, 20 30, 30 30, 30 20, 40 20)"),
                                 GeomFromText(
-                                    "MULTILINESTRING ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))"),
+                                    "MultiLineString ((10 10, 40 50), (20 20, 30 20), (20 20, 50 20, 50 60, 20 20))"),
                                 GeomFromText(
                                     "POLYGON ((20 20, 20 30, 30 30, 30 20, 20 20), (21 21, 29 21, 29 29, 21 29, 21 21), (23 23, 23 27, 27 27, 27 23, 23 23))"),
                                 GeomFromText("POINT (20.564 346.3493254)"),
-                                GeomFromText("MULTIPOINT (20.564 346.3493254, 45 32, 23 54)"),
-                                GeomFromText("MULTIPOLYGON EMPTY"),
-                                GeomFromText("MULTILINESTRING EMPTY"),
-                                GeomFromText("MULTIPOINT EMPTY"),
+                                GeomFromText("MultiPoint (20.564 346.3493254, 45 32, 23 54)"),
+                                GeomFromText("MultiPolygon EMPTY"),
+                                GeomFromText("MultiLineString EMPTY"),
+                                GeomFromText("MultiPoint EMPTY"),
                                 GeomFromText("LINESTRING EMPTY")
                             };
             return new GeometryProvider(geoms);
@@ -291,11 +291,11 @@ namespace UnitTests
         public void WorldToImageTransform_Benchmark(string shapeFileName, float mapTransformRotation)
         {
             // previous World >> Image transform calculations were for each individual coordinate in an array 
-            // new method transforms entire array (eg linestring, polygon ring, multipoint).
+            // new method transforms entire array (eg linestring, polygon ring, MultiPoint).
             // When there is no map rotation, a simplified calculation is used. When map is rotated, an affine transformation is used
             // (one affine transformation object instantiated per array, previously one affine transformation per coordinate). 
 
-            // Hypothesis: There should be minimal change for point layers, but significant improvements for geometries with ILineString and IMultiPoint
+            // Hypothesis: There should be minimal change for point layers, but significant improvements for geometries with LineString and MultiPoint
 
             // New methods typically much faster as shown below from several tests:
             // roads_ugl: 3361 polylines (avg 52 vertices per feature)
@@ -580,7 +580,7 @@ namespace UnitTests
             
             //CLOCKWISE ProjNet affine transform (negate degrees)
             //double rad = -1 * deg * Math.PI / 180.0;
-            //GeoAPI.CoordinateSystems.Transformations.IMathTransform trans =
+            //SharpMap.CoordinateSystems.Transformations.IMathTransform trans =
             //    new ProjNet.CoordinateSystems.Transformations.AffineTransform(
             //        scaleX * Math.Cos(rad),
             //        -scaleX * Math.Sin(rad),

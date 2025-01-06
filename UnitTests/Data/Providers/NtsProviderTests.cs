@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite;
 using NetTopologySuite.Features;
 using NUnit.Framework;

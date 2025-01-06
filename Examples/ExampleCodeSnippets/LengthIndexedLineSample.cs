@@ -5,8 +5,8 @@ namespace ExampleCodeSnippets
     [NUnit.Framework.TestFixture]
     public class LengthIndexedLineSample
     {
-public GeoAPI.Geometries.IMultiLineString SplitLineString(
-    GeoAPI.Geometries.ILineString lineString, 
+public NetTopologySuite.Geometries.MultiLineString SplitLineString(
+    NetTopologySuite.Geometries.LineString lineString, 
     System.Double length)
 {
     if (lineString == null || lineString.IsEmpty)
@@ -16,13 +16,13 @@ public GeoAPI.Geometries.IMultiLineString SplitLineString(
     //var ntsLine = (NetTopologySuite.Geometries.LineString)
     //                SharpMap.Converters.NTS.GeometryConverter.ToNTSGeometry(lineString, gf);
 
-    var ret = new System.Collections.Generic.List<GeoAPI.Geometries.ILineString>();
+    var ret = new System.Collections.Generic.List<NetTopologySuite.Geometries.LineString>();
     var lil = new NetTopologySuite.LinearReferencing.LengthIndexedLine(lineString);
 
     double currentLength = 0d;
     while (currentLength  < lineString.Length)
     {
-        var tmpLine = (GeoAPI.Geometries.ILineString)
+        var tmpLine = (NetTopologySuite.Geometries.LineString)
             lil.ExtractLine(currentLength, currentLength + length);
         ret.Add(tmpLine);
         currentLength += length;
@@ -36,8 +36,8 @@ public GeoAPI.Geometries.IMultiLineString SplitLineString(
             var gf = new NetTopologySuite.Geometries.GeometryFactory();
             var l = gf.CreateLineString(
                 new []
-                    {   new GeoAPI.Geometries.Coordinate(0, 0), 
-                        new GeoAPI.Geometries.Coordinate(300, 100),});
+                    {   new NetTopologySuite.Geometries.Coordinate(0, 0), 
+                        new NetTopologySuite.Geometries.Coordinate(300, 100),});
 
             System.Console.WriteLine(SplitLineString(l, 20d));
         }

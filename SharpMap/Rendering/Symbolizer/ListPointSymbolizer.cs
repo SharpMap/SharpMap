@@ -19,9 +19,9 @@ using System;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Base;
-using Point = GeoAPI.Geometries.IPoint;
+using Point = NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point;
 
 namespace SharpMap.Rendering.Symbolizer    
 {
@@ -29,7 +29,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// ListPointSymbolizer class
     /// </summary>
     [Serializable]
-    public class ListPointSymbolizer : Collection<PointSymbolizer>, IPointSymbolizerEx, IDisposableEx
+    public class ListPointSymbolizer : Collection<PointSymbolizer>, NetTopologySuite.Geometries.PointSymbolizerEx, IDisposableEx
     {
         private Size _size;
 
@@ -106,7 +106,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <summary>
         /// Gets or sets the Size of the symbol
         /// <para>
-        /// Implementations may ignore the setter, the getter must return a <see cref="IPointSymbolizer.Size"/> with positive width and height values.
+        /// Implementations may ignore the setter, the getter must return a <see cref="NetTopologySuite.Geometries.PointSymbolizer.Size"/> with positive width and height values.
         /// </para>
         /// </summary>
         public Size Size

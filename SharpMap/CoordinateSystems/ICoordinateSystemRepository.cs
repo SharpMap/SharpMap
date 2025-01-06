@@ -1,6 +1,6 @@
 ﻿﻿using System;
 using System.Collections.Generic;
-using GeoAPI.CoordinateSystems;
+using SharpMap.CoordinateSystems;
 
 namespace GeoAPI
 {

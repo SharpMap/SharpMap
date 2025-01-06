@@ -6,7 +6,7 @@ using System.IO;
 using System.Text;
 using System.Xml;
 using SharpMap.Data.Providers;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {

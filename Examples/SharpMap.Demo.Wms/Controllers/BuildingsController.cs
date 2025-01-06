@@ -7,7 +7,7 @@ namespace SharpMap.Demo.Wms.Controllers
     using System.Web.Mvc;
 
     using GeoAPI;
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     using NetTopologySuite;
     using NetTopologySuite.Geometries;
@@ -73,7 +73,7 @@ namespace SharpMap.Demo.Wms.Controllers
                 if (h <= 1) 
                     h = 1;
 
-                IGeometry geometry = row.Geometry;
+                Geometry geometry = row.Geometry;
                 Coordinate[] coords = geometry.Coordinates;
                 int total = coords.Length;
                 double[] values = new double[total * 2];

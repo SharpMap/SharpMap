@@ -153,8 +153,8 @@ public Class UniqueValuesThemeTest
         return "The quick brown fox ..."
     End function
 
-    Private Shared Function LabelBezeichnungPos(fdr As SharpMap.Data.FeatureDataRow) As GeoAPI.Geometries.Coordinate
-        return new GeoAPI.Geometries.Coordinate(0, 0)
+    Private Shared Function LabelBezeichnungPos(fdr As SharpMap.Data.FeatureDataRow) As NetTopologySuite.Geometries.Coordinate
+        return new NetTopologySuite.Geometries.Coordinate(0, 0)
     End Function
     
     Private shared function GetObjektLabelStyle(fdr As SharpMap.Data.FeatureDataRow) As SharpMap.Styles.LabelStyle

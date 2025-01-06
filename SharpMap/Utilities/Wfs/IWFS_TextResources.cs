@@ -1,7 +1,7 @@
 ﻿// WFS provider by Peter Robineau (peter.robineau@gmx.at)
 // This file can be redistributed and/or modified under the terms of the GNU Lesser General Public License.
 
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Utilities.Wfs
 {

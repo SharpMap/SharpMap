@@ -1,6 +1,6 @@
 using BruTile.Predefined;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries;
 using SharpMap;
 using SharpMap.Data;
@@ -633,7 +633,7 @@ namespace WinFormSamples
             return new VectorLayer(name, new GeometryFeatureProvider(fdt));
         }
                
-        private static VectorLayer CreateGeomLayer(string name, IGeometry[] geometries, System.Drawing.Color lineColor)
+        private static VectorLayer CreateGeomLayer(string name, Geometry[] geometries, System.Drawing.Color lineColor)
         {
             var lyr = new VectorLayer(name)
             {

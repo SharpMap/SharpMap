@@ -16,15 +16,15 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
-using GeoAPI.Geometries;
-using Point = GeoAPI.Geometries.IPoint;
+using NetTopologySuite.Geometries;
+using Point = NetTopologySuite.Geometries.NetTopologySuite.Geometries.Point;
 
 namespace SharpMap.Rendering.Symbolizer
 {
     /// <summary>
     /// Interface for all classes that can symbolize Points
     /// </summary>
-    public interface IPointSymbolizer : ISymbolizer<IPuntal>
+    public interface NetTopologySuite.Geometries.PointSymbolizer : ISymbolizer<IPuntal>
     {
         /// <summary>
         /// Offset of the point from the point

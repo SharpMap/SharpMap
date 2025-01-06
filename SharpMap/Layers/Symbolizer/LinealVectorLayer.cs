@@ -1,5 +1,5 @@
 using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Data.Providers;
 using SharpMap.Rendering.Symbolizer;
 

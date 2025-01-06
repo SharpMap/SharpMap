@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite.IO;
 using Npgsql;
@@ -144,7 +144,7 @@ namespace UnitTests.Data.Providers
         {
             foreach (var sq in GetTestProvider())
             {
-                GeoAPI.Geometries.Envelope extents = sq.GetExtents();
+                NetTopologySuite.Geometries.Envelope extents = sq.GetExtents();
                 Assert.IsNotNull(extents);
             }
         }

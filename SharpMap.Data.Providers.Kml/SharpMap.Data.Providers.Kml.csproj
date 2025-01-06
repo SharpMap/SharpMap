@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <PackageReference Include="SharpKml.Core" Version="5.1.0" />
+      <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
 
     <ItemGroup>

@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data;
 using System.Data.Common;
 using System.Text;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpMap.Converters.WellKnownBinary;
 
 namespace SharpMap.Data.Providers
@@ -701,7 +701,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">The object id</param>
         /// <returns>A geometry</returns>
-        public override sealed IGeometry GetGeometryByID(uint oid)
+        public override sealed Geometry GetGeometryByID(uint oid)
         {
             Initialize();
             return GetGeometryByIDInternal(oid);
@@ -712,7 +712,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="oid">The object id</param>
         /// <returns>A geometry</returns>
-        protected virtual IGeometry GetGeometryByIDInternal(uint oid)
+        protected virtual Geometry GetGeometryByIDInternal(uint oid)
         {
             using (var cn = CreateOpenDbConnection())
             {
@@ -737,24 +737,24 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets the geometries of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the geometries of features that lie within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
-        /// <returns>Geometries within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        public override sealed Collection<IGeometry> GetGeometriesInView(Envelope bbox)
+        /// <returns>Geometries within the specified <see cref="NetTopologySuite.Geometries.Envelope"/></returns>
+        public override sealed Collection<Geometry> GetGeometriesInView(Envelope bbox)
         {
             Initialize();
             return GetGeometriesInViewInternal(bbox);
         }
 
         /// <summary>
-        /// Gets the geometries of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the geometries of features that lie within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
-        /// <returns>Geometries within the specified <see cref="GeoAPI.Geometries.Envelope"/></returns>
-        protected virtual Collection<IGeometry> GetGeometriesInViewInternal(Envelope bbox)
+        /// <returns>Geometries within the specified <see cref="NetTopologySuite.Geometries.Envelope"/></returns>
+        protected virtual Collection<Geometry> GetGeometriesInViewInternal(Envelope bbox)
         {
-            var res = new Collection<IGeometry>();
+            var res = new Collection<Geometry>();
 
             using (var cn = CreateOpenDbConnection())
             {
@@ -789,10 +789,10 @@ namespace SharpMap.Data.Providers
         /// <param name="bbox">The geometry</param>
         /// <param name="command">The command object, that is supposed to execute the query.</param>
         /// <returns>The spatial component of a SQL where clause</returns>
-        protected abstract string GetSpatialWhere(IGeometry bbox, DbCommand command);
+        protected abstract string GetSpatialWhere(Geometry bbox, DbCommand command);
 
         /// <summary>
-        /// Gets the object of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the object of features that lie within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
         /// <returns>A collection of object ids</returns>
@@ -803,7 +803,7 @@ namespace SharpMap.Data.Providers
         }
 
         /// <summary>
-        /// Gets the object ids of features that lie within the specified <see cref="GeoAPI.Geometries.Envelope"/>
+        /// Gets the object ids of features that lie within the specified <see cref="NetTopologySuite.Geometries.Envelope"/>
         /// </summary>
         /// <param name="bbox">The bounding box</param>
         /// <returns>A collection of object ids</returns>
@@ -868,7 +868,7 @@ namespace SharpMap.Data.Providers
                     }
                     else
                     {
-                        var geom = spatialWhere as IGeometry;
+                        var geom = spatialWhere as Geometry;
                         if (geom != null)
                         {
                             from = GetFrom(geom, cmd);
@@ -932,7 +932,7 @@ namespace SharpMap.Data.Providers
         /// <param name="geometry">The envelope to query</param>
         /// <param name="command">The command object that is supposed to perform the query</param>
         /// <returns>A SQL From statement string</returns>
-        protected virtual string GetFrom(IGeometry geometry, DbCommand command)
+        protected virtual string GetFrom(Geometry geometry, DbCommand command)
         {
             return _dbUtility.DecorateTable(_schema, _table);
         }
@@ -941,7 +941,7 @@ namespace SharpMap.Data.Providers
         /// Method to perform preparatory things for executing an intersection query against the data source
         /// </summary>
         /// <param name="geom">The geometry to use as filter.</param>
-        protected override sealed void OnBeginExecuteIntersectionQuery(IGeometry geom)
+        protected override sealed void OnBeginExecuteIntersectionQuery(Geometry geom)
         {
             Initialize();
             OnBeginExecuteIntersectionQueryInternal(geom);
@@ -963,7 +963,7 @@ namespace SharpMap.Data.Providers
         /// Method to perform preparatory things for executing an intersection query against the data source
         /// </summary>
         /// <param name="geom">The geometry to use as filter.</param>
-        protected virtual void OnBeginExecuteIntersectionQueryInternal(IGeometry geom)
+        protected virtual void OnBeginExecuteIntersectionQueryInternal(Geometry geom)
         {
         }
 
@@ -972,7 +972,7 @@ namespace SharpMap.Data.Providers
         /// </summary>
         /// <param name="geom">The geometry to use as filter</param>
         /// <param name="ds">The feature data set to store the results in</param>
-        protected override void OnExecuteIntersectionQuery(IGeometry geom, FeatureDataSet ds)
+        protected override void OnExecuteIntersectionQuery(Geometry geom, FeatureDataSet ds)
         {
             ExecuteIntersectionQueryInternal(geom, ds);
         }

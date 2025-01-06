@@ -7,7 +7,7 @@ namespace WinFormSamples
     using BruTile;
     using BruTile.Cache;
 
-    using GeoAPI.Geometries;
+    using NetTopologySuite.Geometries;
 
     using SharpMap;
     using SharpMap.Layers;

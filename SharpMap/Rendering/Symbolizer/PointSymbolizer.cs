@@ -18,7 +18,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -26,7 +26,7 @@ namespace SharpMap.Rendering.Symbolizer
     /// Base class for all possible Point symbolizers
     /// </summary>
     [Serializable]
-    public abstract class PointSymbolizer : BaseSymbolizer, IPointSymbolizerEx
+    public abstract class PointSymbolizer : BaseSymbolizer, NetTopologySuite.Geometries.PointSymbolizerEx
     {
         private float _scale = 1f;
 
@@ -135,10 +135,10 @@ namespace SharpMap.Rendering.Symbolizer
         internal abstract void OnRenderInternal(PointF pt, Graphics g);
 
         /// <summary>
-        /// Utility function to transform any <see cref="IPointSymbolizer"/> into an unscaled <see cref="RasterPointSymbolizer"/>. This may bring performance benefits.
+        /// Utility function to transform any <see cref="NetTopologySuite.Geometries.PointSymbolizer"/> into an unscaled <see cref="RasterPointSymbolizer"/>. This may bring performance benefits.
         /// </summary>
         /// <returns></returns>
-        public virtual IPointSymbolizer ToRasterPointSymbolizer()
+        public virtual NetTopologySuite.Geometries.PointSymbolizer ToRasterPointSymbolizer()
         {
             var bitmap = new Bitmap(Size.Width, Size.Height);
             using (var g = Graphics.FromImage(bitmap))
@@ -165,7 +165,7 @@ namespace SharpMap.Rendering.Symbolizer
         /// <param name="graphics">The graphics object to use.</param>
         public void Render(MapViewport map, IPuntal geometry, Graphics graphics)
         {
-            var mp = geometry as IMultiPoint;
+            var mp = geometry as MultiPoint;
             if (mp != null)
             {
                 var combinedArea = RectangleF.Empty;
@@ -177,7 +177,7 @@ namespace SharpMap.Rendering.Symbolizer
                 CanvasArea = combinedArea;
                 return;
             }
-            RenderPoint(map, ((IPoint)geometry).Coordinate, graphics);
+            RenderPoint(map, ((NetTopologySuite.Geometries.Point)geometry).Coordinate, graphics);
         }
     }
 }

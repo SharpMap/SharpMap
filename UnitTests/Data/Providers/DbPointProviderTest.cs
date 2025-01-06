@@ -1,5 +1,5 @@
 ﻿using System;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using SharpMap.Data;
 using SharpMap.Data.Providers;
@@ -105,7 +105,7 @@ namespace UnitTests.Data.Providers
         {
             using (var p = CreateProvider())
             {
-                IGeometry feature = null;
+                Geometry feature = null;
                 Assert.DoesNotThrow(() => feature = p.GetGeometryByID(3));
                 Assert.IsNotNull(feature);
                 Assert.AreEqual(feature.Centroid.Coordinate,

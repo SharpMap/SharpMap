@@ -35,7 +35,7 @@ namespace WinFormSamples.Samples
             l.HeatColorBlend = SharpMap.Layers.HeatLayer.Classic;
 
             var env = l.Envelope;
-            GeoAPI.Geometries.GeoAPIEx.Grow(env, env.Width * 0.05, env.Height * 0.05);
+            NetTopologySuite.Geometries.GeoAPIEx.Grow(env, env.Width * 0.05, env.Height * 0.05);
             //m.EnforceMaximumExtents = true;
             //m.MaximumExtents = env;
             m.ZoomToBox(env);
@@ -61,7 +61,7 @@ namespace WinFormSamples.Samples
             foreach (var datas in PointData())
             {
                 var row = (SharpMap.Data.FeatureDataRow)table.LoadDataRow(new object[] { id++, datas[0] }, System.Data.LoadOption.OverwriteChanges);
-                row.Geometry = factory.CreatePoint(new GeoAPI.Geometries.Coordinate(datas[2], datas[1]));
+                row.Geometry = factory.CreatePoint(new NetTopologySuite.Geometries.Coordinate(datas[2], datas[1]));
             }
             table.EndLoadData();
         }

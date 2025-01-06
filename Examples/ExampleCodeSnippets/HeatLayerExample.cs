@@ -2,7 +2,7 @@
 using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NUnit.Framework;
 using NetTopologySuite;
 using SharpMap.Data;

@@ -17,6 +17,7 @@
     <ItemGroup>
         <PackageReference Include="BruTile" Version="2.1.2" />
         <PackageReference Include="BruTile.Desktop" Version="2.1.2" />
+        <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
 
 </Project>

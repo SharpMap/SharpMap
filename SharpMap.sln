@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29503.13
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{480154D8-0960-416E-AE45-AF6B06794F77}"
 EndProject
@@ -75,6 +75,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.CoordinateSystems.
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpMap.Layers.BruTile", "SharpMap.Layers.BruTile\SharpMap.Layers.BruTile.csproj", "{D84F31ED-3D81-42F2-9190-3D021D6038A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reprojection", "Reprojection", "{4E8E6EB5-0C53-444C-B680-227F5398A12F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpMap.CoordinateSystems.ProjNet", "SharpMap.CoordinateSystems.ProjNet\SharpMap.CoordinateSystems.ProjNet.csproj", "{4EA1C83C-8B83-4928-9E2B-4A48976A7710}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -303,6 +307,16 @@ Global
 		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseDotNet|Any CPU.Build.0 = Release|Any CPU
 		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
 		{D84F31ED-3D81-42F2-9190-3D021D6038A0}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.DebugDotNet|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.DebugDotNet|Any CPU.Build.0 = Debug|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.ReleaseDotNet|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.ReleaseDotNet|Any CPU.Build.0 = Release|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -314,6 +328,8 @@ Global
 		{7EF67DF8-D868-4177-8817-4CC2E94ABD66} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{28AC314E-35C1-484B-9DD3-116BD8AFC4EA} = {480154D8-0960-416E-AE45-AF6B06794F77}
 		{E9AC999C-5C90-4851-ABFE-8A9CA899FAEF} = {480154D8-0960-416E-AE45-AF6B06794F77}
+		{A019B82E-3766-44A3-907A-0487FF9EBA49} = {4E8E6EB5-0C53-444C-B680-227F5398A12F}
+		{4EA1C83C-8B83-4928-9E2B-4A48976A7710} = {4E8E6EB5-0C53-444C-B680-227F5398A12F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E37B5837-0C9C-4732-ABE4-50B623CDA3D8}

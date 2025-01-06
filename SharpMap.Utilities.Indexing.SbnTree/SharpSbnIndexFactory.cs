@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using SharpSbn;
-using SbnEnvelope = GeoAPI.Geometries.Envelope;
+using SbnEnvelope = NetTopologySuite.Geometries.Envelope;
 
 namespace SharpMap.Utilities.Indexing
 {

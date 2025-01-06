@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <PackageReference Include="System.Data.SQLite.Core" Version="1.0.112" />
+      <PackageReference Include="System.Memory" Version="4.5.4" />
     </ItemGroup>
 
     <ItemGroup>

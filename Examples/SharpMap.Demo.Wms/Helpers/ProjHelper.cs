@@ -5,9 +5,9 @@
     using System.Drawing;
     using System.Drawing.Drawing2D;
 
-    using GeoAPI.CoordinateSystems;
+    using SharpMap.CoordinateSystems;
     using ProjNet.CoordinateSystems;
-    using GeoAPI.CoordinateSystems.Transformations;
+    using SharpMap.CoordinateSystems.Transformations;
     using ProjNet.CoordinateSystems.Transformations;
 
     using SharpMap.Layers;

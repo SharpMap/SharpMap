@@ -21,18 +21,18 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using GeoAPI;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries;
 
 
 using EsriExtent = Esri.FileGDB.Envelope;
 
 using EsriShapeBuffer = Esri.FileGDB.ShapeBuffer;
-using EsriPointShapeBuffer = Esri.FileGDB.PointShapeBuffer;
-using EsriMultiPointShapeBuffer = Esri.FileGDB.MultiPointShapeBuffer;
+using EsrNetTopologySuite.Geometries.PointShapeBuffer = Esri.FileGDB.PointShapeBuffer;
+using EsrMultiPointShapeBuffer = Esri.FileGDB.MultiPointShapeBuffer;
 using EsriMultiPartShapeBuffer = Esri.FileGDB.MultiPartShapeBuffer;
 
-using EsriGeometryType = Esri.FileGDB.GeometryType;
+using EsrGeometryType = Esri.FileGDB.GeometryType;
 using EsriShapeType = Esri.FileGDB.ShapeType;
 using EsriShapeModifiers = Esri.FileGDB.ShapeModifiers;
 
@@ -44,7 +44,7 @@ namespace SharpMap.Data.Providers.Converter
     internal class FileGdbGeometryConverter
     {
 
-        private static readonly IGeometryFactory geometryFactory = GeometryServiceProvider.Instance.CreateGeometryFactory();
+        private static readonly GeometryFactory geometryFactory = GeometryServiceProvider.Instance.CreateGeometryFactory();
 
 
         internal static EsriExtent ToEsriExtent(Envelope bbox)
@@ -52,9 +52,9 @@ namespace SharpMap.Data.Providers.Converter
             return new EsriExtent(bbox.MinX, bbox.MinY, bbox.MaxX, bbox.MaxY);
         }
 
-        internal static EsriGeometryType EsriGeometryType(EsriShapeBuffer buffer)
+        internal static EsrGeometryType EsrGeometryType(EsriShapeBuffer buffer)
         {
-            return (EsriGeometryType)buffer.geometryType;
+            return (EsrGeometryType)buffer.geometryType;
         }
 
         private static EsriShapeType EsriShapeType(EsriShapeBuffer buffer)
@@ -62,12 +62,12 @@ namespace SharpMap.Data.Providers.Converter
             return (EsriShapeType)buffer.shapeType;
         }
 
-        internal static IGeometry ToSharpMapGeometry(EsriShapeBuffer buffer)
+        internal static Geometry ToSharpMapGeometry(EsriShapeBuffer buffer)
         {
             if (buffer == null || buffer.IsEmpty)
                 return null;
 
-            var geometryType = EsriGeometryType(buffer);
+            var geometryType = EsrGeometryType(buffer);
 
             switch (geometryType)
             {
@@ -77,7 +77,7 @@ namespace SharpMap.Data.Providers.Converter
                 case Esri.FileGDB.GeometryType.Point:
                     return ToSharpMapPoint(buffer);
 
-                case Esri.FileGDB.GeometryType.Multipoint:
+                case Esri.FileGDB.GeometryType.MultiPoint:
                     return ToSharpMapMultiPoint(buffer);
 
                 case Esri.FileGDB.GeometryType.Polyline:
@@ -91,7 +91,7 @@ namespace SharpMap.Data.Providers.Converter
             }
         }
 
-        private static IGeometry ToSharpMapMultiLineString(EsriShapeBuffer shapeBuffer)
+        private static Geometry ToSharpMapMultiLineString(EsriShapeBuffer shapeBuffer)
         {
             if (shapeBuffer == null)
                 return null;
@@ -104,7 +104,7 @@ namespace SharpMap.Data.Providers.Converter
             }
 
             var hasZ = EsriShapeBuffer.HasZs(shapeBuffer.shapeType);
-            var lines = new List<ILineString>();
+            var lines = new List<LineString>();
 
             var offset = 0;
             for (var i = 0; i < multiPartShapeBuffer.NumParts; i++)
@@ -129,7 +129,7 @@ namespace SharpMap.Data.Providers.Converter
 
         }
 
-        private static IGeometry ToSharpMapMultiPolygon(EsriShapeBuffer shapeBuffer)
+        private static Geometry ToSharpMapMultiPolygon(EsriShapeBuffer shapeBuffer)
         {
             if (shapeBuffer == null)
                 return null;
@@ -142,8 +142,8 @@ namespace SharpMap.Data.Providers.Converter
             }
 
             var hasZ = EsriShapeBuffer.HasZs(shapeBuffer.shapeType);
-            IList<IPolygon> polygons = new List<IPolygon>();
-            //IPolygon poly = null;
+            IList<Polygon> polygons = new List<Polygon>();
+            //Polygon poly = null;
             ILinearRing shell = null;
             IList<ILinearRing> holes = new List<ILinearRing>();
             var offset = 0;
@@ -184,7 +184,7 @@ namespace SharpMap.Data.Providers.Converter
             return new MultiPolygon(polygons.ToArray());
         }
 
-        private static IGeometry FromShapeFilePolygon(EsriShapeBuffer shapeBuffer, out Envelope box)
+        private static Geometry FromShapeFilePolygon(EsriShapeBuffer shapeBuffer, out Envelope box)
         {
             box = null;
             if (shapeBuffer == null)
@@ -209,7 +209,7 @@ namespace SharpMap.Data.Providers.Converter
                     parts[i] = reader.ReadInt32();
                 parts[numParts] = numPoints;
 
-                //IPolygon poly = null;
+                //Polygon poly = null;
                 ILinearRing shell = null;
                 IList<ILinearRing> holes = new List<ILinearRing>();
                 for (var i = 0; i < numParts; i++)
@@ -255,7 +255,7 @@ namespace SharpMap.Data.Providers.Converter
         }
 
 
-        private static IGeometry FromShapeFilePolyLine(EsriShapeBuffer shapeBuffer, out Envelope box)
+        private static Geometry FromShapeFilePolyLine(EsriShapeBuffer shapeBuffer, out Envelope box)
         {
             box = null;
             if (shapeBuffer == null)
@@ -280,7 +280,7 @@ namespace SharpMap.Data.Providers.Converter
                     parts[i] = reader.ReadInt32();
                 parts[numParts] = numPoints;
 
-                var lines = new List<ILineString>();
+                var lines = new List<LineString>();
 
                 for (var i = 0; i < numParts; i++)
                 {
@@ -314,7 +314,7 @@ namespace SharpMap.Data.Providers.Converter
             }
         }
 
-        private static IGeometry FromShapeFileMultiPoint(EsriShapeBuffer shapeBuffer, out Envelope box)
+        private static Geometry FromShapeFileMultiPoint(EsriShapeBuffer shapeBuffer, out Envelope box)
         {
             box = null;
             if (shapeBuffer == null)
@@ -332,7 +332,7 @@ namespace SharpMap.Data.Providers.Converter
 
                 var numPoints = reader.ReadInt32();
 
-                IList<IPoint> points = new List<IPoint>();
+                IList<NetTopologySuite.Geometries.Point> points = new List<NetTopologySuite.Geometries.Point>();
 
                 for (var i = 0; i < numPoints; i++)
                 {
@@ -358,7 +358,7 @@ namespace SharpMap.Data.Providers.Converter
             }
         }
 
-        private static IGeometry FromShapeFilePoint(EsriShapeBuffer shapeBuffer, out Envelope box)
+        private static Geometry FromShapeFilePoint(EsriShapeBuffer shapeBuffer, out Envelope box)
         {
             box = null;
             if (shapeBuffer == null)
@@ -378,29 +378,29 @@ namespace SharpMap.Data.Providers.Converter
             }
         }
 
-        private static IGeometry ToSharpMapMultiPoint(EsriShapeBuffer shapeBuffer)
+        private static Geometry ToSharpMapMultiPoint(EsriShapeBuffer shapeBuffer)
         {
-            var multiPointShapeBuffer = shapeBuffer as EsriMultiPointShapeBuffer;
-            if (multiPointShapeBuffer == null)
+            var MultiPointShapeBuffer = shapeBuffer as EsrMultiPointShapeBuffer;
+            if (MultiPointShapeBuffer == null)
             {
                 Envelope box;
                 return FromShapeFileMultiPoint(shapeBuffer, out box);
             }
 
-            var hasZ = EsriShapeBuffer.HasZs(multiPointShapeBuffer.shapeType);
-            IList<IPoint> points = new List<IPoint>();
+            var hasZ = EsriShapeBuffer.HasZs(MultiPointShapeBuffer.shapeType);
+            IList<NetTopologySuite.Geometries.Point> points = new List<NetTopologySuite.Geometries.Point>();
             var offset = 0;
-            foreach (var point in multiPointShapeBuffer.Points)
+            foreach (var point in MultiPointShapeBuffer.Points)
                 points.Add(hasZ
-                    ? new Point(point.x, point.y, multiPointShapeBuffer.Zs[offset++])
+                    ? new Point(point.x, point.y, MultiPointShapeBuffer.Zs[offset++])
                     : new Point(point.x, point.y));
 
             return geometryFactory.CreateMultiPoint(points.ToArray());
         }
 
-        private static IGeometry ToSharpMapPoint(EsriShapeBuffer shapeBuffer)
+        private static Geometry ToSharpMapPoint(EsriShapeBuffer shapeBuffer)
         {
-            var pointShapeBuffer = shapeBuffer as EsriPointShapeBuffer;
+            var pointShapeBuffer = shapeBuffer as EsrNetTopologySuite.Geometries.PointShapeBuffer;
             if (pointShapeBuffer == null)
             {
                 Envelope box;

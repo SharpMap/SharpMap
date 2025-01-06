@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using DotSpatial.Projections;
-using GeoAPI.CoordinateSystems.Transformations;
-using GeoAPI.Geometries;
+using SharpMap.CoordinateSystems.Transformations;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.CoordinateSystems.Transformations
 {

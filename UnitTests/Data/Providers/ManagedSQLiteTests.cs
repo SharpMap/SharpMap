@@ -1,7 +1,7 @@
 ﻿//#if !LINUX
 using System;
 using System.IO;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 using NetTopologySuite.Operation.Distance;
 using NUnit.Framework;
 using SharpMap.Data.Providers;

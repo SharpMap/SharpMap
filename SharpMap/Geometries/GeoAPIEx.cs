@@ -8,11 +8,12 @@ using NetTopologySuite.Geometries;
 using SharpMap.Rendering;
 using SharpMap.Utilities;
 
-namespace GeoAPI.Geometries
+namespace NetTopologySuite.Geometries
 {
     /// <summary>
     /// Set of extension methods for use of GeoAPI within SharpMap
     /// </summary>
+    [Obsolete]
     public static class GeoAPIEx
     {
 
@@ -112,8 +113,8 @@ namespace GeoAPI.Geometries
         /// <returns>The original sequence, if it was a valid ring, or a new sequence which is valid.</returns>
         public static void EnsureValidRing(this List<Coordinate> coordinates)
         {
-            var seq = GeometryServiceProvider.Instance.DefaultCoordinateSequenceFactory.Create(coordinates.ToArray());
-            seq = EnsureValidRing(GeometryServiceProvider.Instance.DefaultCoordinateSequenceFactory, seq);
+            var seq = NtsGeometryServices.Instance.DefaultCoordinateSequenceFactory.Create(coordinates.ToArray());
+            seq = EnsureValidRing(NtsGeometryServices.Instance.DefaultCoordinateSequenceFactory, seq);
             if (seq.Count != coordinates.Count)
             {
                 for (int i = coordinates.Count; i < seq.Count; i++)
@@ -262,12 +263,12 @@ namespace GeoAPI.Geometries
         }
 
         /// <summary>
-        /// Transforms a <see cref="ILineString"/> to an array of <see cref="PointF"/>s.
+        /// Transforms a <see cref="LineString"/> to an array of <see cref="PointF"/>s.
         /// </summary>
         /// <param name="self">The linestring</param>
         /// <param name="map">The mapviewport defining transformation parameters</param>
         /// <returns>The array of <see cref="PointF"/>s</returns>
-        public static PointF[] TransformToImage(this ILineString self, MapViewport map)
+        public static PointF[] TransformToImage(this LineString self, MapViewport map)
         {
             if (map.MapTransformRotation.Equals(0f))
                 return Transform.WorldToMap(self.Coordinates, map.Left, map.Top, map.PixelWidth, map.PixelHeight);
@@ -319,13 +320,13 @@ namespace GeoAPI.Geometries
         }
 
         /// <summary>
-        /// Transforms a <see cref="IPolygon"/> to an array of <see cref="PointF"/>s
+        /// Transforms a <see cref="Polygon"/> to an array of <see cref="PointF"/>s
         /// </summary>
         /// <param name="self">The polygon</param>
         /// <param name="map">The map that defines the affine coordinate transformation.</param>
         /// <param name="useClipping">Use clipping for the polygon</param>
         /// <returns>An array of PointFs</returns>
-        public static GraphicsPath TransformToImage(this IPolygon self, MapViewport map, bool useClipping = false)
+        public static GraphicsPath TransformToImage(this Polygon self, MapViewport map, bool useClipping = false)
         {
             var res = new GraphicsPath(FillMode.Alternate);
             if (useClipping)
@@ -365,7 +366,7 @@ namespace GeoAPI.Geometries
         /// <param name="self"></param>
         /// <param name="wkt"></param>
         /// <returns></returns>
-        public static IGeometry GeomFromText(this IGeometry self, string wkt)
+        public static Geometry GeomFromText(this Geometry self, string wkt)
         {
             var factory = self == null ? new NetTopologySuite.Geometries.GeometryFactory() : self.Factory;
             var reader = new NetTopologySuite.IO.WKTReader(factory);

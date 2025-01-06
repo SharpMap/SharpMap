@@ -16,7 +16,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA 
 
 using System.Drawing;
-using GeoAPI.Geometries;
+using NetTopologySuite.Geometries;
 
 namespace SharpMap.Rendering.Symbolizer
 {
@@ -38,9 +38,9 @@ namespace SharpMap.Rendering.Symbolizer
         /// Method to render the Point to the <see cref="Graphics"/> object.
         /// </summary>
         /// <param name="map">The map object</param>
-        /// <param name="multiLineString">MutliLinestring to symbolize</param>
+        /// <param name="MultiLineString">MutlLineString to symbolize</param>
         /// <param name="g">The graphics object to use.</param>
-        void Render(Map map, MultiLineString multiLineString, Graphics g);
+        void Render(Map map, MultiLineString MultiLineString, Graphics g);
          */
     }
 }
